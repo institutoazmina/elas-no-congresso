@@ -6,9 +6,8 @@ import { legislaturasKeys } from "../lib/dados";
 
 <BaseLayout title="Propostas">
     <main>
-        <header class="abertura-propostas-votacoes tw:!min-h-[50vh]">
+        <header class="abertura-propostas-votacoes tw:min-h-[50vh]!">
             <Share />
-
             <div class="container-fluid wrap">
                 <div class="row">
                     <div class="col-xs-12">
@@ -31,7 +30,7 @@ import { legislaturasKeys } from "../lib/dados";
                     class="tw:max-w-prose tw:flex tw:flex-col tw:items-center tw:text-center tw:mx-auto tw:border tw:border-black/10 tw:shadow-xl tw:mb-8 tw:p-4 tw:py-6"
                 >
                     <div
-                        class="tw:w-24 tw:h-4 tw:bg-gradient-to-r tw:from-[#8cd89c] tw:via-[#f9df79] tw:to-[#ff808a] tw:relative"
+                        class="tw:w-24 tw:h-4 tw:bg-linear-to-r tw:from-[#8cd89c] tw:via-[#f9df79] tw:to-[#ff808a] tw:relative"
                     >
                         <div
                             class="tw:absolute tw:-translate-x-1/2 tw:left-0 tw:-top-0.5 tw:h-[calc(100%+4px)] tw:w-1.5 tw:bg-black/15"
@@ -65,7 +64,7 @@ import { legislaturasKeys } from "../lib/dados";
                     </div>
 
                     <h3
-                        class="ff1 tw:font-bold tw:uppercase tw:!mb-2 tw:text-2xl tw:!mt-8"
+                        class="ff1 tw:font-bold tw:uppercase tw:mb-2! tw:text-2xl tw:mt-8!"
                     >
                         Quiteriômetro
                     </h3>
@@ -74,7 +73,7 @@ import { legislaturasKeys } from "../lib/dados";
                         maior o risco da proposição para meninas, mulheres e
                         LGBTQIAPN+.
                     </p>
-                    <p class="tw:text-sm tw:!mb-0">
+                    <p class="tw:text-sm tw:mb-0!">
                         Obs: Essa base de dados inclui o nome da proposição;
                         autoria, com partido e UF; resumo; nome da organização
                         avaliadora; avaliação humana e avaliação da QuitérIA. <strong
@@ -246,11 +245,7 @@ import { legislaturasKeys } from "../lib/dados";
                                     </tr>
                                     <tbody id="rankingPropostas">
                                         <tr>
-                                            <td
-                                                colspan="6"
-                                                height="100"
-                                                class="relative"
-                                            >
+                                            <td colspan="6" class="relative">
                                                 <div class="preloader"></div>
                                             </td>
                                         </tr>
