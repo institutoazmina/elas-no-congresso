@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Share from '../components/Share.astro';
+import { getPartidos } from '../lib/partidos';
+import { legislaturasKeys } from '../lib/dados';
+
+const partidos = getPartidos();
+const estados = ['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA','MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN','RS','RO','RR','SC','SP','SE','TO'];
+const regioes = ['Norte', 'Nordeste', 'Centro-Oeste', 'Sul', 'Sudeste'];
+---
+
+<BaseLayout title="Ranking">
+<main>
+    <header class="abertura-ranking">
+        <Share />
+        <div class="container-fluid wrap">
+            <div class="row">
+                <div class="col-xs-12 col-md-10 col-md-offset-1">
+                    <h2 class="titulo-variavel tcb t8 mb2">
+                        <span class="linha">
+                            <span class="w900 wdth300">Ranking</span>
+                            <span class="w300 wdth300">Dos</span>
+                        </span>
+                        <span class="w900 wdth200">Parlamentares</span>
+                    </h2>
+
+                    <h3 class="ff1 w400 tcb wdth350 t7 uc">Veja o desempenho da(o)s deputada(o)s e senadores(as)</h3>
+                </div>
+            </div>
+        </div>
+    </header>
+    <article class="conteudo-ranking">
+        <div class="container-fluid wrap">
+            <!-- Filtros -->
+            <section class="row mb2">
+                <div class="col-xs-12 col-md-10 col-md-offset-1">
+                    <form class="filtros" onsubmit="event.preventDefault(); event.stopPropagation();return false;">
+                        <div class="row center-xs mb2">
+                            <div class="col-xs">
+                                <span class="custom-select big">
+                                    <select name="legislatura" onchange="window.legislatura=this.value;rank.filtrar();">
+                                        {legislaturasKeys.map(l => (
+                                            <option value={l}>{l}ª legislatura ({2019 + ((Number(l) - 56) * 4)}-{2019 + ((Number(l) - 56) * 4 + 4)})</option>
+                                        ))}
+                                    </select>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row center-xs mb2">
+                            <div class="col-xs">
+                                <div class="switch">
+                                    <label>
+                                        <input type="radio" name="cargo" onchange="rank.cargo=this.value;rank.filtrar();" value="Deputado" checked>
+                                        <span>Câmara</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="cargo" onchange="rank.cargo=this.value;rank.filtrar();" value="Senador">
+                                        <span>Senado</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="filtragem">
+                                    <input type="checkbox" name="filtros" id="filtros-extras">
+                                    <input type="checkbox" name="filtros" id="filtros-exibicao">
+                                    <input type="checkbox" name="filtros" id="filtros-busca">
+                                    <label class="ativar-extras" for="filtros-extras">
+                                        <span>Filtros</span>
+                                        <span>Remover</span>
+                                    </label>
+                                    <label class="ativar-exibicao-simples" for="filtros-exibicao">
+                                    </label>
+                                    <label class="ativar-busca" for="filtros-busca">
+                                    </label>
+                                    <div data-filtros="filtros-extras">
+                                        <span class="filtrar">Filtrar por</span>
+                                        <span class="custom-select">
+                                            <select name="genero" onchange="rank.genero=this.value;rank.filtrar();">
+                                                <option value="">Gênero</option>
+                                                <option value="M">Homem</option>
+                                                <option value="F">Mulher</option>
+                                            </select>
+                                        </span>
+                                        <span class="custom-select">
+                                            <select name="partido" onchange="rank.partido=this.value;rank.filtrar();">
+                                                <option value="">partidos</option>
+                                                {partidos.map(p => (
+                                                    <option value={p}>{p}</option>
+                                                ))}
+                                            </select>
+                                        </span>
+                                        <span class="custom-select">
+                                            <select name="regiao" onchange="rank.regiao=this.value;rank.filtrar();">
+                                                <option value="">Região</option>
+                                                {regioes.map(r => (
+                                                    <option value={r}>{r}</option>
+                                                ))}
+                                            </select>
+                                        </span>
+                                        <span class="custom-select">
+                                            <select name="estado" onchange="rank.estado=this.value;rank.filtrar();">
+                                                <option value="">Estado</option>
+                                                {estados.map(e => (
+                                                    <option value={e}>{e}</option>
+                                                ))}
+                                            </select>
+                                        </span>
+                                    </div>
+                                    <div data-filtros="filtros-exibicao">
+                                        <div>
+                                            <span class="ordenar">Ordenar por</span>
+                                            <span class="custom-select">
+                                                <select name="ordem" onchange="if(rank.ordem==this.value){rank.ordemdir*=-1;}else{rank.ordem=this.value;rank.ordemdir=1;};rank.montar();">
+                                                    <option value="v">Nota</option>
+                                                    <option value="slug">Deputado(a)</option>
+                                                    <option value="partido">Partido</option>
+                                                    <option value="estado">UF</option>
+                                                    <option value="autorias">Autorias</option>
+                                                </select>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div data-filtros="filtros-busca">
+                                        <label class="busca">
+                                            <input type="text" name="busca" placeholder="Buscar deputado" list="parlamentares" onkeyup="rank.nome = this.value;rank.filtrar();">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+            <div id="paginaRanking"></div>
+        </div>
+    </article>
+</main>
+</BaseLayout>

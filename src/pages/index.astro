@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NewsletterSection from '../components/NewsletterSection.astro';
+import HomeCta from '../components/dataviz/HomeCta.astro';
+import HomeCharts from '../components/dataviz/HomeCharts.astro';
+import HomeQuotes from '../components/dataviz/HomeQuotes.astro';
+import HomePosts from '../components/dataviz/HomePosts.astro';
+import DatavizIncludes from '../components/dataviz/DatavizIncludes.astro';
+import { fetchReportagens, type WpPost } from '../lib/wp';
+
+const posts = await fetchReportagens(2685, 2);
+---
+
+<BaseLayout title="Home">
+  <DatavizIncludes />
+  <main>
+    <HomeCta />
+    <HomeCharts />
+
+    <!-- Cards -->
+    <article class="banners tw:relative tw:!mb-0 tw:text-black">
+        <div class="tw:max-w-7xl tw:!mx-auto tw:z-3 tw:relative tw:!pb-12">
+            <div class="tw:grid tw:md:grid-cols-3 tw:gap-8 tw:px-4 tw:items-end">
+                <div class="">
+                    <a href="/quiteria" class="tw:group"> 
+                        <figure class="tw:z-2">
+                            <img src="/assets/images/banner3.png">
+                        </figure>
+                        <div class="bga tw:bg-[#5abfc8] tw:p-6 tw:pb-4 tw:pt-10 tw:-translate-y-5 tw:-z-1 tw:relative">
+                            <h3 class="ff1 tw:text-3xl tw:md:text-2xl tw:xl:text-3xl tw:uppercase tw:!mb-3"><span class="w900 wdth300">Inteligência</span> <span class="linha"><span class="w300 wdth400"> Artificial </span></span></h3>
+                            <p class="tw:leading-snug">Conheça a QuitérIA, ferramenta de IA feminista treinada para monitorar o Congresso Nacional de forma automatizada. </p>
+                            <p class="tw:uppercase tw:font-black tw:flex tw:gap-3 tw:group-hover:gap-6 tw:duration-100 tw:items-center tw:w-fit tw:cursor-pointer tw:tracking-wide tw:lg:text-lg">
+                                Conheça <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right-icon lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                            </p>
+                        </div>
+                        
+                    </a>
+                </div>
+                <div class="">
+                    <a href="/propostas-e-votacoes" class="tw:group"> 
+                        <figure class="tw:z-2">
+                            <img src="/assets/images/banner2.png">
+                        </figure>
+                        <div class="bgvd tw:p-6 tw:pb-4 tw:pt-10 tw:-translate-y-5 tw:-z-1 tw:relative">
+                            <h3 class="ff1 tw:text-3xl tw:md:text-2xl tw:xl:text-3xl tw:uppercase tw:!mb-3"><span class="w900 wdth300">Propostas</span> <span class="linha"><span class="w300 wdth400">e </span><span class="w900 wdth300">votações</span></span></h3>
+                            <p class="tw:leading-snug">Levantamos todas as propostas feitas no Congresso que tocam os direitos das mulheres e avaliamos quais são favoráveis ou desfavoráveis. </p>
+                            <p class="tw:uppercase tw:font-black tw:flex tw:gap-3 tw:group-hover:gap-6 tw:duration-100 tw:items-center tw:w-fit tw:cursor-pointer tw:tracking-wide tw:lg:text-lg">
+                                Ver propostas <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right-icon lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                            </p>
+                        </div>
+                        
+                    </a>
+                </div>
+                <div class="">
+                    <a  href="/metodologia" class="tw:group"> 
+                        <figure class="tw:z-2">
+                            <img src="/assets/images/banner1.png">
+                        </figure>
+                        <div class="bgvm tw:p-6 tw:pb-4 tw:pt-10 tw:-translate-y-5 tw:-z-1 tw:relative">
+                            <h3 class="ff1 tw:text-3xl tw:md:text-2xl tw:xl:text-3xl tw:uppercase tw:!mb-3"><span class="linha"><span class="w800 wdth150">Entenda como</span></span><span class="linha"><span class="w900 wdth200"> avaliamos</span><span class="w300 wdth200"> as </span><span class="w300 wdth200">propostas</span></span></h3>
+                            <p class="tw:leading-snug">Parceria com organizações que defendem os direitos das mulheres unidas com cálculos matemáticos são a base da nossa metodologia.</p>
+                            <p class="tw:uppercase tw:font-black tw:flex tw:gap-3 tw:group-hover:gap-6 tw:duration-100 tw:items-center tw:w-fit tw:cursor-pointer tw:tracking-wide tw:lg:text-lg">
+                                Entenda <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-move-right-icon lucide-move-right"><path d="M18 8L22 12L18 16"/><path d="M2 12H22"/></svg>
+                            </p>
+                        </div>
+                        
+                    </a>
+                </div>
+            </div>
+        </div> 
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1440 123"
+            class="tw:absolute tw:h-auto tw:w-[100svw] tw:bottom-0 tw:rotate-180 tw:z-2 tw:translate-y-[20%]"
+        >
+            <path
+                d="M505.4,3.9l28.9,8.4,26,2.4h18.1l36.3,1.5,9.8-1.5q30.9-1.5,30.9,0c0,1.5,26.9,3.4,26.9,3.4l18.2-3.4,24,5.9s21.6-4.4,25-4.4h29.4L798,14.7l19.1,1.5h22.1q2.4,0,25.5-3.9l1.5-5.4h44.1c2.4,0,43.1-3,44.6-3S961.3,0,962.7,0s9.7,2.3,26,6.9h41.2l21.1-3,26.4,3,8.9-2.5L1096.5,0l30.9,6.9h54.9l42.7,3.4,56.8-6.4L1323.5,0H1440V123H0V6.9H6.4l13.2,5.4H26L40.2,8.8h9.3l14.7,1.5,10.3,4.4h6.4l9.8-2.4,13.2,3.9,7.4-1.5,13.2-4.4,12.2-1.5H150l10.8,3.5,11.7,2.4,9.3,1.5,7.9-1.5,2.4,1.5h10.3l3.5-1.5,24.5-2.4H247l5.9,2.4,4.4,1.5h14.2L300,12.3l6.8-3.5h19.7l4.9-1.9,5.8,1.9v3.5h6.4l9.3,2.4,12.8-4.4,19.1,4.4,7.3,1.5,65.7,1.9,6.9-1.9,5.4-1.5,11.7-7.8h20.1Z"
+                fill="#fff"
+                fill-rule="evenodd"
+            />
+        </svg>
+    </article>
+    <HomeQuotes />
+    <HomePosts posts={posts} />
+    <NewsletterSection />
+  </main>
+</BaseLayout>

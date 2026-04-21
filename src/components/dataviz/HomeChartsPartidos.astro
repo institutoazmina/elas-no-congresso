@@ -1,0 +1,129 @@
+---
+---
+<Fragment set:html={`
+<div
+    id="porPartido"
+    class="bgae tw:bg-[url('/assets/images/papel.jpg')] tw:bg-blend-multiply tw:pt-24 tw:lg:pt-36 tw:px-4 tw:pb-48 tw:lg:pb-56"
+>
+    <h2 class="ff1 tw:text-3xl tw:sm:text-4xl tw:md:text-5xl tw:uppercase tw:!mb-5 tw:text-center tw:text-white">
+        <span class="wdth250 tw:font-black">Como fica o desempenho</span> <br />de cada partido?
+    </h2>
+    <!-- Seletor -->
+    <p class="tw:!mb-2 tw:text-xs tw:tracking-wide tw:text-center tw:text-white">
+        Clique nos botões abaixo para mudar a visualização
+    </p>
+    <div class="tw:flex tw:gap-3 tw:uppercase ff1 tw:text-sm tw:justify-center wdth250 tw:mb-5">
+        <div
+            :class="'tw:px-3 tw:h-10 tw:flex tw:items-center tw:cursor-pointer tw:duration-150 tw:hover:opacity-80 ' + (porPartidoModo === 'porcentagem' ? 'bgvm tw:font-bold wdth150' : 'bgo')"
+            @click="porPartidoModo = 'porcentagem'"
+        >
+            Por porcentagem
+        </div>
+        <div
+            :class="'tw:px-3 tw:h-10 tw:flex tw:items-center tw:cursor-pointer tw:duration-150 tw:hover:opacity-80 ' + (porPartidoModo === 'quantidade' ? 'bgvm tw:font-bold wdth150' : 'bgo')"
+            @click="porPartidoModo = 'quantidade'"
+        >
+            Por quantidade
+        </div>
+    </div>
+    <!-- Legenda -->
+    <p
+        v-if="porPartidoModo === 'quantidade'"
+        class="tw:leading-snug tw:sm:text-lg tw:md:text-xl tw:max-w-prose tw:pb-5 tw:!mb-12 tw:text-white tw:text-center tw:!mx-auto"
+    >
+        As barras abaixo representam o total de proposições assinadas por parlamentares de cada partido, com as cores
+        verde
+        <span class="tw:size-3.5 tw:rounded-full tw:inline-block tw:ml-0.5 tw:mr-1.5 tw:bg-[#8cd89c] tw:-mb-0.5"></span>
+        para a parcela favorável e vermelha
+        <span class="tw:size-3.5 tw:rounded-full tw:inline-block tw:ml-0.5 tw:mr-1.5 bgvm tw:-mb-0.5"></span> para a
+        desfavorável. Essas cores também valem para os números no topo das barras. Partidos com mais parlamentares
+        tendem a apresentar mais propostas.
+    </p>
+    <p
+        v-if="porPartidoModo === 'porcentagem'"
+        class="tw:leading-snug tw:sm:text-lg tw:md:text-xl tw:max-w-prose tw:pb-5 tw:!mb-12 tw:text-white tw:text-center tw:!mx-auto"
+    >
+        As barras abaixo representam a participação de cada partido com mais de 10 proposições apresentadas, com as
+        cores verde
+        <span class="tw:size-3.5 tw:rounded-full tw:inline-block tw:ml-0.5 tw:mr-1.5 tw:bg-[#8cd89c]"></span>
+        para as favoráveis e vermelha
+        <span class="tw:size-3.5 tw:rounded-full tw:inline-block tw:ml-0.5 tw:mr-1.5 bgvm"></span> para as
+        desfavoráveis. No topo está a % favorável, que mostra a propensão do partidos a apoiar ou atacar a agenda de
+        gênero, independentemente do volume de projetos.
+    </p>
+    <!-- Porcentagem -->
+    <div
+        v-if="porPartidoModo === 'porcentagem'"
+        class="tw:w-full tw:max-w-7xl tw:mx-auto tw:flex tw:gap-0.5 tw:min-[24rem]:gap-1 tw:sm:gap-2 tw:md:gap-3 tw:lg:gap-4"
+    >
+        <div
+            v-for="partido in dadosPartidos?.partidos"
+            class="tw:w-full tw:relative tw:duration-150 tw:flex tw:flex-col tw:justify-center tw:h-64"
+            :key="partido.partido"
+        >
+            <div
+                class="tw:bg-[#8cd89c] tw:w-full tw:duration-150 tw:relative"
+                :style="{
+                height: partido.indice * 100 + '%'
+            }"
+            >
+                <div
+                    class="tw:absolute tw:left-1/2 tw:-translate-x-1/2 tw:-top-2 tw:md:-top-3 tw:lg:-top-1 tw:-translate-y-full tw:z-2 tw:text-[8px] tw:min-[24rem]:text-[10px] tw:md:text-xs tw:uppercase tw:font-semibold tw:px-0.5 tcvd tw:-rotate-45 tw:lg:rotate-0 tw:group-hover:text-base tw:group-hover:-top-4 tw:group-hover:!text-lime-200 tw:group-focus:text-base tw:group-focus:-top-4 tw:group-focus:!text-lime-200"
+                >
+                    {{ (partido.indice * 100).toFixed(0) }}%
+                </div>
+            </div>
+            <div
+                class="bgvm tw:w-full tw:relative tw:duration-150 tw:mt-[1px]"
+                :style="{
+                height: (1 - partido.indice) * 100 + '%'
+            }"
+            >
+                <div
+                    class="tw:absolute tw:rotate-90 tw:md:rotate-75 tw:md:translate-y-2 tw:-translate-x-[0.3vw] tw:md:translate-x-[0.4vw] tw:left-0 tw:bottom-0 tw:origin-bottom-left tw:pl-1 tw:text-[10px] tw:md:text-xs tw:lg:text-sm tw:tracking-wider tw:z-2 tw:text-white tw:text-shadow-sm"
+                >
+                    {{ partido.partido }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Quantidade -->
+    <div v-if="porPartidoModo === 'quantidade'" class="tw:w-full tw:max-w-7xl tw:mx-auto">
+        <div
+            class="tw:w-full tw:flex tw:gap-0.5 tw:min-[24rem]:gap-1 tw:sm:gap-2 tw:md:gap-3 tw:lg:gap-4 tw:items-end tw:relative tw:border-b-[0.5px] tw:border-white/20 tw:pb-[1px] tw:mb-[1px]"
+        >
+            <div
+                :key="partido.partido"
+                v-for="partido in dadosPartidos?.partidos"
+                class="tw:bg-[#8cd89c] tw:w-full tw:duration-150 tw:h-12 tw:relative"
+                :style="{
+                height: partido.favoravel + 'px'
+            }"
+            >
+                <div
+                    class="tw:absolute tw:left-1/2 tw:-translate-x-1/2 tw:-top-0.5 tw:md:-top-2 tw:lg:-top-1 tw:-translate-y-full tw:z-2 tw:text-[8px] tw:sm:text-[10px] tw:uppercase tw:font-semibold tw:px-0.5 tw:text-white tw:rotate-45 tw:lg:rotate-0 tw:leading-none tw:text-right tw:hidden tw:sm:block"
+                >
+                    <span class="tcvd">{{ partido.favoravel }}</span>
+                    <span class="tcvm">{{ partido.desfavoravel }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="tw:w-full tw:flex tw:gap-1 tw:sm:gap-2 tw:md:gap-3 tw:lg:gap-4 tw:items-start tw:relative">
+            <div
+                :key="partido.partido"
+                v-for="partido in dadosPartidos?.partidos"
+                class="bgvm tw:w-full tw:duration-150 tw:h-12 tw:relative"
+                :style="{
+                height: partido.desfavoravel + 'px'
+            }"
+            >
+                <div
+                    class="tw:absolute tw:rotate-90 tw:md:rotate-75 tw:md:translate-y-2 tw:-translate-x-[0.3vw] tw:md:translate-x-[0.4vw] tw:left-0 tw:bottom-0 tw:origin-bottom-left tw:pl-1 tw:text-[10px] tw:md:text-xs tw:lg:text-sm tw:tracking-wider tw:z-2 tw:text-white tw:text-shadow-sm"
+                >
+                    {{ partido.partido }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+`} />

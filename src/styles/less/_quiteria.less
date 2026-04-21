@@ -1,0 +1,241 @@
+.pagina-quiteria {
+	a {
+		.link-azul;
+	}
+
+	img {
+		max-width: 100%;
+		height: auto;
+	}
+
+	ul,
+	ol {
+		.mb1;
+
+		margin-left: 0;
+		padding-left: 0;
+	}
+
+	li {
+		list-style-position: inside;
+
+		&::marker {
+			.mr1;
+			.tca;
+		}
+	}
+
+	ul li {
+		list-style-type: disc;
+	}
+
+	ol li {
+		list-style-type: none;
+		counter-increment: item;
+
+		&::before {
+			content: counter(item) ' - ';
+			.tca;
+			.t4;
+			.ff1;
+			.wdth100;
+			.w300;
+		}
+	}
+
+	.compartilhar li {
+		list-style-type: none;
+	}
+
+	nav li {
+		display: block;
+		list-style-type: none;
+	}
+
+	table {
+		display: table;
+		width: 100%;
+		border-collapse: separate;
+		border-spacing: 0 4px;
+	}
+
+	// heavy overrides
+	table tbody tr th,
+	table tbody tr td,
+	table thead tr th {
+		width: unset;
+	}
+
+	colgroup {
+		display: table-column-group;
+	}
+
+	thead {
+		display: table-header-group;
+		color: darken(desaturate(@azul-claro, 20%), 18%);
+	}
+
+	thead tr {
+		background: none;
+	}
+
+	tbody {
+		display: table-row-group;
+	}
+
+	tbody tr:last-child {
+		background-color: mix(white, @azul, 80%);
+		font-weight: 600;
+	}
+
+	tbody tr:hover {
+		background-color: #d4ebeb;
+	}
+
+	tfoot {
+		display: table-footer-group;
+	}
+
+	tr {
+		position: relative;
+		display: table-row;
+		border: 0;
+		background-color: mix(white, @azul-claro, 85%);
+	}
+
+	th,
+	td {
+		display: table-cell;
+		color: inherit;
+	}
+
+	th {
+		font-weight: 600;
+	}
+
+	tbody th {
+		text-align: left;
+	}
+
+	td {
+		font-variant-numeric: tabular-nums;
+	}
+
+	.titulo-variavel {
+		overflow: clip;
+		text-overflow: ellipsis;
+	}
+}
+
+.abertura-quiteria {
+	.mb2;
+	.pt1;
+	.pb3;
+
+	position: relative;
+	background-image: url(/assets/images/quiteria/abertura-bg--cropped.webp);
+	background-size: auto;
+	background-repeat: repeat;
+	background-position: center top;
+	background-color: @azul;
+
+	@media screen and (min-width: 1000px) {
+		&::before,
+		&::after {
+			content: '';
+			display: block;
+			background-size: 100% auto;
+			background-repeat: no-repeat;
+			position: absolute;
+			bottom: 0;
+			z-index: 2;
+			pointer-events: none;
+		}
+
+		&::before {
+			background-image: url(/assets/images/quiteria/justica-e-estrela.webp);
+			background-position: top right;
+			background-size: 525px auto;
+			height: 500px;
+			right: calc(50% + 183px);
+			left: 0;
+		}
+
+		&::after {
+			background-image: url(/assets/images/quiteria/mulher-analise.webp);
+			background-position: top left;
+			background-size: 280px auto;
+			height: 350px;
+			left: calc(50% + 324px);
+			right: 0;
+		}
+	}
+}
+
+.abertura-quiteria .compartilhar {
+	.pl1;
+	.pr1;
+
+	position: relative;
+	z-index: 99;
+}
+
+.abertura-quiteria__conteudo {
+	display: flex;
+	justify-content: center;
+	align-items: stretch;
+
+	&::before {
+		content: '';
+		display: block;
+		width: 100%;
+		background-size: 1108px auto;
+		background-repeat: no-repeat;
+		background-position: center;
+		position: absolute;
+		right: 0;
+		left: 0;
+		pointer-events: none;
+
+		background-image: url(/assets/images/quiteria/celular-e-raios.webp);
+		background-position: center bottom;
+		height: 100%;
+		top: 0;
+	}
+
+	@media screen and (min-width: 992px) {
+		height: 390px;
+
+		&::before {
+			height: 80%;
+		}
+	}
+}
+
+.abertura-quiteria__titulo-variavel {
+	overflow: hidden;
+	text-indent: -105%;
+	white-space: nowrap;
+	background-image: url(/assets/images/quiteria/logo.webp);
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 100%;
+	max-width: 468px;
+	height: 190px;
+	margin: 0 auto;
+	margin: auto;
+	position: relative;
+}
+
+.conteudo-quiteria {
+	.conteudo-sobre;
+
+	&::before {
+		bottom: calc(100% + 2rem);
+		height: 2rem;
+	}
+}
+
+.nav-quiteria {
+	.nav-sobre;
+}

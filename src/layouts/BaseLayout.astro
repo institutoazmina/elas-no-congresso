@@ -1,0 +1,145 @@
+---
+import "../styles/global.less";
+import "../styles/tailwind.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+    title?: string;
+    description?: string;
+    ogImage?: string;
+    currentUrl?: string;
+}
+
+const {
+    title,
+    description = "",
+    ogImage = "/assets/images/share.jpg",
+    currentUrl,
+} = Astro.props;
+
+const pageTitle =
+    title && title !== "Home"
+        ? `${title} - Elas no congresso`
+        : "Elas no congresso";
+
+const canonicalUrl = currentUrl ?? Astro.url.href;
+---
+
+<!doctype html>
+<html lang="pt_br">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <meta name="language" content="pt-br" />
+        <title>{pageTitle}</title>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Elas no Congresso | AzMina" />
+        <meta property="og:description" content={description} />
+        <meta
+            property="og:image"
+            content={`https://www.elasnocongresso.com.br${ogImage}`}
+        />
+        <meta property="og:url" content={canonicalUrl} />
+        <meta name="copyright" content="AzMina" />
+        <link rel="icon" type="image/png" href="/assets/images/favicon.png" />
+        <link href="/assets/images/favicon.png" rel="shortcut icon" />
+        <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=UA-67010839-2"
+        ></script>
+    </head>
+    <body>
+        <Header />
+        <slot />
+        <Footer />
+        <!-- tooltip anchor used by _base.js -->
+        <div id="tooltip"></div>
+        <script is:inline>
+            const home_url = "/";
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/d3@7" is:inline></script>
+        <script
+            src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous"></script>
+        <script src="/build/script.js" is:inline></script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer
+        ></script>
+        <script is:inline>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "UA-67010839-2");
+
+            var _grecaptcha_response;
+            var _grepatcha_autosubmit = false;
+            if (typeof MauticSDKLoaded == "undefined") {
+                var MauticSDKLoaded = true;
+                var head = document.getElementsByTagName("head")[0];
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.src =
+                    "https://mautic.azmina.com.br/media/js/mautic-form.js";
+                script.onload = function () {
+                    MauticSDK.onLoad();
+                };
+                head.appendChild(script);
+                var MauticDomain = "https://mautic.azmina.com.br";
+                var MauticLang = { submittingMessage: "Enviando..." };
+            }
+            if (typeof MauticFormCallback == "undefined") {
+                var MauticFormCallback = {};
+            }
+            MauticFormCallback["cadastroelasnocongresso"] = {
+                onResponseEnd: function (a, b) {
+                    if (a.success) {
+                        document.getElementById(
+                            "mauticform_input_cadastroelasnocongresso_submit",
+                        ).style.display = "none";
+                        document.getElementById(
+                            "mauticform_input_cadastroelasnocongresso_email",
+                        ).style.display = "none";
+                    }
+                },
+                onValidateEnd: function () {
+                    if (_grecaptcha_response) {
+                        document.getElementById(
+                            "mauticform_input_cadastroelasnocongresso_recaptcha",
+                        ).value = _grecaptcha_response;
+                        return null;
+                    } else {
+                        grecaptcha.execute();
+                        _grepatcha_autosubmit = true;
+                        document.getElementById(
+                            "mauticform_input_cadastroelasnocongresso_submit",
+                        ).innerHTML = "Aguarde...";
+                        return false;
+                    }
+                },
+            };
+            function verifyCallback_e10068afdf79d881576531463016bb15(response) {
+                _grecaptcha_response = response;
+                if (_grepatcha_autosubmit) {
+                    document.getElementById(
+                        "mauticform_input_cadastroelasnocongresso_submit",
+                    ).innerHTML = "Enviando...";
+                    document.getElementById(
+                        "mauticform_input_cadastroelasnocongresso_recaptcha",
+                    ).value = _grecaptcha_response;
+                    document
+                        .getElementById("mauticform_cadastroelasnocongresso")
+                        .submit();
+                }
+            }
+        </script>
+    </body>
+</html>

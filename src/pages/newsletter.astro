@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Share from '../components/Share.astro';
+import FormSubstack from '../components/FormSubstack.astro';
+---
+<BaseLayout title="Assine nossa newsletter">
+<main>
+    <header class="abertura-newsletter">
+        <Share title="Assine nossa newsletter" />
+        <div class="container-fluid wrap">
+            <div class="row">
+                <div class="col-xs-12 col-md-7 col-md-offset-1">
+                    <h2 class="titulo-variavel tcb t9 mb2">
+                        <span class="w900 wdth400">Assine</span>
+                        <span class="w400 wdth300"> nossa </span>
+                        <span class="w900 wdth250 wdth400-sm linha">newsletter</span>
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <article class="conteudo-newsletter">
+        <div class="container-fluid wrap">
+            <div class="row">
+                <div class="col-xs-12 col-md-7 col-md-offset-1">
+                    <h3 class="titulo-variavel tca mb1">
+                        <span class="w600 wdth150">Fique de olho no</span>
+                        <span class="w900 wdth350">congresso</span>
+                    </h3>
+                    <p class="t3 mb2 lh1-25">Receba semanalmente direto no seu e-mail um monitoramento completo de tudo que tem rolado ligado aos direitos das mulheres no Congresso Nacional. Com análises e contextualizações exclusivas, para saber não só o que tem acontecido, mas o que está por trás, quem está envolvido e como você pode entrar em ação.</p>
+                    <FormSubstack />
+                </div>
+            </div>
+        </div>
+    </article>
+</main>
+</BaseLayout>

@@ -1,0 +1,130 @@
+---
+---
+<div
+    id="homeQuotesContainer"
+    class=" tw:bg-[url('/assets/images/papel.jpg')] tw:bg-blend-multiply tw:bg-no-repeat tw:bg-cover bgae tw:text-white tw:px-6"
+>
+    <div
+        id="homeQuotes"
+        @vue:mounted="mounted"
+        @vue:unmounted="unmounted"
+        class="tw:py-36 tw:text-shadow-2xs"
+    >
+        <div
+            class="tw:md:px-16 tw:max-w-6xl tw:!mx-auto tw:relative"
+            @mouseenter="clearInterval(interval)"
+            @mouseleave="mounted"
+        >
+            <h3 class="tw:uppercase ff1 wdth300 tcvd tw:!mb-5"><span class="wdth200 tw:font-black">O que dizem as</span> avaliadoras</h3>
+            <div>
+                <h2 class="tw:text-3xl tw:sm:text-4xl tw:w-full tw:max-w-prose tw:leading-snug tw:font-bold tw:text-pretty ff1 tw:relative">
+                    <span class="tca wdth400 tw:font-black">"</span>
+                    <Fragment set:html={'{{ quotes[slide].comentario }}'} />
+                    <span class="tca wdth400 tw:font-black">"</span>
+                </h2>
+                <div class="flex middle-xs tw:!mt-8 tw:!mb-0">
+                    <div
+                        :class="quotes[slide].favoravel === 1 ? 'icone favoravel tcvd' : 'icone desfavoravel tcvm'"
+                    ></div>
+                    <p class="ff1 t3 tcb w900 wdth350 m0">
+                        <Fragment set:html={'{{ quotes[slide].favoravel === 1 ? "Favorável" : "Desfavorável" }}'} />
+                    </p>
+                </div>
+                <p class="tw:uppercase ff1 tw:md:text-xl tw:!mt-3 tw:lg:!mt-5">
+                    <span class="wdth400 tw:font-black"><Fragment set:html={'{{ quotes[slide].avaliador }}'} /></span
+                    >, sobre o
+                    <a
+                        :href="'/proposta/' + quotes[slide].slug"
+                        ><span class="tw:underline tw:cursor-pointer tw:hover:text-blue-500 tw:font-medium wdth350"><Fragment set:html={'{{ quotes[slide].numero }}'} /></span></a
+                    >
+                </p>
+            </div>
+            <!-- Dots (and mobile arrows) -->
+            <div class="tw:flex tw:gap-4 tw:items-center tw:justify-center tw:mt-8">
+                <svg 
+                @click="previous" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left-icon lucide-chevron-left tw:size-8 tw:cursor-pointer tw:hover:text-[#def279] tw:duration-100 tw:!m-0 tw:md:hidden"><path d="m15 18-6-6 6-6"/></svg>
+                <div
+                    v-for="(quote, index) in quotes"
+                    :class="slide === index ? 'tw:size-3 tw:rounded-full bgvd tw:duration-150 tw:cursor-pointer' : 'tw:size-3 tw:rounded-full bga tw:duration-150 tw:cursor-pointer tw:hover:!bg-white'"
+                    :key="quote.slug"
+                    @click="slide = index"
+                ></div>
+                <svg
+                @click="next"xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right tw:size-8 tw:cursor-pointer tw:hover:text-[#def279] tw:duration-100 tw:!m-0 tw:md:hidden"><path d="m9 18 6-6-6-6"/></svg>
+            </div>
+            <!-- Arrows -->
+                <svg 
+                @click="previous" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left-icon lucide-chevron-left tw:size-12 tw:cursor-pointer tw:hover:text-[#def279] tw:duration-100 tw:hidden tw:md:block tw:md:absolute tw:md:left-0 tw:md:top-1/2 tw:md:-translate-y-1/2 tw:!m-0"><path d="m15 18-6-6 6-6"/></svg>
+                <svg
+                @click="next"xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right tw:size-12 tw:cursor-pointer tw:hover:text-[#def279] tw:duration-100 tw:hidden tw:md:block tw:md:absolute tw:md:right-0 tw:md:top-1/2 tw:md:-translate-y-1/2 tw:!m-0"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
+    </div>
+</div>
+<!-- Rasgado -->
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 1440 123"
+    class="tw:h-auto tw:w-[100svw] tw:z-0 tw:-translate-y-[20%]"
+>
+    <path
+        d="M505.4,3.9l28.9,8.4,26,2.4h18.1l36.3,1.5,9.8-1.5q30.9-1.5,30.9,0c0,1.5,26.9,3.4,26.9,3.4l18.2-3.4,24,5.9s21.6-4.4,25-4.4h29.4L798,14.7l19.1,1.5h22.1q2.4,0,25.5-3.9l1.5-5.4h44.1c2.4,0,43.1-3,44.6-3S961.3,0,962.7,0s9.7,2.3,26,6.9h41.2l21.1-3,26.4,3,8.9-2.5L1096.5,0l30.9,6.9h54.9l42.7,3.4,56.8-6.4L1323.5,0H1440V123H0V6.9H6.4l13.2,5.4H26L40.2,8.8h9.3l14.7,1.5,10.3,4.4h6.4l9.8-2.4,13.2,3.9,7.4-1.5,13.2-4.4,12.2-1.5H150l10.8,3.5,11.7,2.4,9.3,1.5,7.9-1.5,2.4,1.5h10.3l3.5-1.5,24.5-2.4H247l5.9,2.4,4.4,1.5h14.2L300,12.3l6.8-3.5h19.7l4.9-1.9,5.8,1.9v3.5h6.4l9.3,2.4,12.8-4.4,19.1,4.4,7.3,1.5,65.7,1.9,6.9-1.9,5.4-1.5,11.7-7.8h20.1Z"
+        fill="#fff"
+        fill-rule="evenodd"
+    />
+</svg>
+<script is:inline>
+    const quotes = [
+        {
+            numero: "PL 116/2021",
+            link: "http://www.camara.gov.br/proposicoesWeb/prop_mostrarintegra?codteor=1959851",
+            comentario:
+                "É preciso repensar movimentos pró-criminalização de condutas, tendo em vista a comprovada ineficiência do punitivismo penal.",
+            slug: "pl_1162021",
+            avaliador: "deFEMde",
+            favoravel: -1,
+            legislatura: 56,
+        },
+        {
+            numero: "PL 68/2025",
+            link: "https://www.camara.leg.br/proposicoesWeb/prop_mostrarintegra?codteor=2849857",
+            comentario:
+                "Desenvolve o conceito de violência política contra mulheres, traz dimensões de proteção e de campanhas de concientização também.",
+            slug: "pl_682025",
+            avaliador: "Artigo 19",
+            favoravel: 1,
+            legislatura: 57,
+        },
+        {
+            numero: "PL 444/2023",
+            link: "https://www.camara.leg.br/proposicoesWeb/fichadetramitacao?idProposicao=2348355",
+            comentario:
+                "Embora seja interessante facilitar o acesso à laqueadura para parturientes, a proibição do procedimento após aborto é discriminatória.",
+            slug: "pl_4442023",
+            avaliador: "Anis",
+            favoravel: -1,
+            legislatura: 57,
+        },
+    ];
+    const quotesApp = {
+        quotes,
+        slide: 0,
+        interval: null,
+        get nextSlide() {
+            return (this.slide + 1) % this.quotes.length;
+        },
+        next() {
+            this.slide = (this.slide + 1) % this.quotes.length;
+        },
+        previous() {
+            this.slide = (this.slide - 1) < 0 ? this.quotes.length - 1 : (this.slide - 1) 
+        },
+        mounted() {
+           this.interval = setInterval(() => this.next(), 8000);
+        },
+        unmounted() {
+            clearInterval(this.interval);
+        },
+       
+    };
+    PetiteVue.createApp(quotesApp).mount("#homeQuotes");
+</script>

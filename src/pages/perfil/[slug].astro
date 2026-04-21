@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Share from '../../components/Share.astro';
+import { getAllParlamentareSlugs, getParlamentarBySlug, getProximos, mediaPartido, mediaCasa } from '../../lib/parlamentar';
+import { genero, avaliacao } from '../../lib/formatters';
+import { legislaturas, legislaturasKeys } from '../../lib/dados';
+
+export async function getStaticPaths() {
+  const slugs = getAllParlamentareSlugs();
+  return slugs.map(slug => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const { parlamentar, legislatureAtual, legislaturasDisponiveis } = getParlamentarBySlug(slug!);
+
+if (!parlamentar) {
+  return Astro.redirect('/');
+}
+
+const mediaP = mediaPartido(parlamentar, legislatureAtual);
+const mediaC = mediaCasa(parlamentar, legislatureAtual);
+
+const autoriasEntries = Object.entries(parlamentar.autorias || {});
+const favoraveis = autoriasEntries.filter(([_, v]) => v > 0);
+const desfavoraveis = autoriasEntries.filter(([_, v]) => v < 0);
+
+function getProposicaoById(id: string) {
+  for (const legKey of legislaturasKeys) {
+    const leg = legislaturas[legKey];
+    if (leg?.proposicoes?.[id]) {
+      return leg.proposicoes[id];
+    }
+  }
+  return null;
+}
+---
+
+<BaseLayout title={parlamentar.nome}>
+<main>
+    <header class="abertura-perfil">
+        <Share />
+        <div class="container-fluid wrap">
+            <div class="row middle-md">
+                <div class="col-xs-12 col-md-3 pt2 pb2">
+                    <div class="resumo-parlamentar tcb" style="width: 100%">
+                        <div class={`thumbnail bgec${parlamentar.v ?? 0} tc tr-md`} style="margin-left:auto;margin-right:auto!important">
+                          {parlamentar.foto && <img src={parlamentar.foto} alt={`Foto de ${parlamentar.nome}`} title={`${parlamentar.nome} (${parlamentar.partido}-${parlamentar.estado})`} />}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-9 tc tl-md">
+                    <p class="tcb t4 ff1 w300 uc wdth200">
+                      {genero(parlamentar.cargo, parlamentar.genero)}
+                      {parlamentar.cargo.includes('fora') && <span class="icone fora ml05 sombra"></span>}
+                    </p>
+                    <h1 class="tcb t8 ff1 w900 uc wdth250">{parlamentar.nome}</h1>
+                    <h2 class="tcb t6 ff1 w300 uc wdth400">{parlamentar.partido}-{parlamentar.estado}</h2>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {autoriasEntries.length > 0 && (
+        <article class="conteudo-propostas">
+            <div class="container-fluid wrap">
+                <div class="row center-xs mb2">
+                    <div class="col-xs">
+                        <span class="custom-select big">
+                            <select name="legislatura" onchange="/* TODO: ?legislatura= not supported in static */">
+                                {legislaturasDisponiveis.map(l => (
+                                    <option value={l}>{l}ª legislatura ({2019 + ((Number(l) - 56) * 4)}-{2019 + ((Number(l) - 56) * 4 + 4)})</option>
+                                ))}
+                            </select>
+                        </span>
+                    </div>
+                </div>
+                <section class="row">
+                    <div class="col-xs-12 col-md-10 col-md-offset-1">
+                        <div class="row middle-xs mb05">
+                            <div class="col-xs-12 col-md-7">
+                                <h3 class="titulo-variavel tca"><span class="w900 wdth300">Propostas</span></h3>
+                            </div>
+                            <div class="col-xs-12 col-md-5 tr-md mb1 mb0-md">
+                                <a href="/metodologia" class="t3 tcvm uc w300 wdth200 ff1 mb0" data-info="informacao">como avaliamos <span class="w900 wdth300">as Propostas?</span></a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 flex flex-column flex-row-md">
+                                {favoraveis.length > 0 && (
+                                    <div class="flex middle-xs mb05 mb0-md mr2-md">
+                                        <div class="icone favoravel"></div>
+                                        <p class="t5 tca w300 wdth200 ff1 mb0"><span class="w900 wdth300">{favoraveis.length}</span> favoráve{favoraveis.length > 1 ? 'is' : 'l'}</p>
+                                    </div>
+                                )}
+                                {desfavoraveis.length > 0 && (
+                                    <div class="flex middle-xs">
+                                        <div class="icone desfavoravel"></div>
+                                        <p class="t5 tca w300 wdth200 ff1 mb0"><span class="w900 wdth300">{desfavoraveis.length}</span> desfavoráve{desfavoraveis.length > 1 ? 'is' : 'l'}</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="row mt2">
+                    <div class="col-xs-12 col-md-10 col-md-offset-1">
+                        <div class="_table-wrap">
+                            <table class="propostas perfil">
+                                <thead>
+                                    <tr>
+                                        <th><span>Proposta</span></th>
+                                        <th><span>Resumo</span></th>
+                                        <th><span>Organização<br />Avaliadora</span></th>
+                                        <th><span>Avaliação<br /> humana</span></th>
+                                        <th><span>Quiteriômetro</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {autoriasEntries.map(([id, v]) => {
+                                        const prop = getProposicaoById(id);
+                                        if (!prop) return null;
+                                        return (
+                                        <tr>
+                                            <td data-label="Proposta">
+                                                <span class="proposta">{prop.numero}</span>
+                                                <a href={`/proposta/${prop.slug}`} class="link-ext">Acompanhe</a>
+                                            </td>
+                                            <td data-label="Resumo"><span class="resumo">{prop.resumo ?? ''}</span></td>
+                                            <td data-label="Avaliador"><span class="avaliador">{prop.avaliador ?? ''}</span></td>
+                                            <td data-label="Avaliação"><span class={`avaliacao ${avaliacao(prop.favoravel).toLowerCase()}`}>{avaliacao(prop.favoravel)}</span></td>
+                                            {prop.quiteria_prob ? (
+                                                <td data-label="Quiteriômetro" class="tw:!pt-4">
+                                                    <div class="tw:w-24 tw:h-4 tw:bg-gradient-to-r tw:from-[#8cd89c] tw:via-[#f9df79] tw:to-[#ff808a] tw:relative">
+                                                        <div class="tw:absolute tw:-translate-x-1/2 tw:left-0 tw:-top-0.5 tw:h-[calc(100%+4px)] tw:w-1.5 tw:bg-black/15"
+                                                            style={`left: ${prop.quiteria_prob * 100}%`}></div>
+                                                    </div>
+                                                    <div class="tw:w-24 tw:relative">
+                                                        <div class="tw:absolute tw:-translate-x-1 tw:left-0 tw:-top-3"
+                                                            style={`left: ${prop.quiteria_prob * 100}%`}>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mouse-pointer2-icon lucide-mouse-pointer-2 tw:fill-white tw:text-black">
+                                                                <path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z" />
+                                                            </svg>
+                                                            <div class="tw:text-xs tw:text-center">{prop.quiteria_prob}</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            ) : (
+                                                <td data-label="Quiteriômetro"><span class="tw:text-3xl tw:opacity-50 ff1 wdth400 tw:leading-[0.8]">-</span></td>
+                                            )}
+                                        </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </article>
+    )}
+</main>
+</BaseLayout>

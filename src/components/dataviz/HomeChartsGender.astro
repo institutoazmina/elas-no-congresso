@@ -1,0 +1,258 @@
+---
+---
+<Fragment set:html={`
+<div class="tw:relative tw:pb-12">
+    <!-- Título -->
+    <div class="tw:w-full tw:max-w-7xl tw:px-4 tw:lg:px-8 tw:!mx-auto tw:text-center tw:items-center tw:pt-12">
+        <h2 class="tcae ff1 tw:text-3xl tw:sm:text-4xl tw:md:text-5xl tw:uppercase tw:!mb-3">
+            <span class="wdth200 tw:font-black">Cerca de 1 em cada 4</span> <br class="tw:xl:hidden" />proposições
+            analisadas<br class="tw:xl:hidden" />
+            <span class="wdth150 tw:font-semibold">ataca direitos das mulheres</span>
+        </h2>
+    </div>
+    <!-- Seletor -->
+    <div class="tw:sticky tw:top-16 tw:mb-8 tw:py-3 tw:bg-white tw:z-10">
+        <p class="tw:!mb-2 tw:text-xs tw:tracking-wide tw:text-center">Filtrar resultados por gênero</p>
+        <div class="tw:flex tw:gap-3 tw:uppercase ff1 tw:text-sm tw:justify-center wdth250">
+            <div
+                :class="'tw:px-3 tw:border-2 tw:border-black tw:h-10 tw:flex tw:items-center tw:cursor-pointer ' + (genero === null ? 'bgae tw:text-white tw:font-bold wdth150' : 'bgo')"
+                @click="genero = null;"
+            >
+                Ambos
+            </div>
+            <div
+                :class="'tw:px-3 tw:border-2 tw:border-black tw:h-10 tw:flex tw:items-center tw:cursor-pointer ' + (genero === 'M' ? 'bgae tw:text-white tw:font-bold wdth150' : 'bgo')"
+                @click="genero = genero === 'M' ? null : 'M'; "
+            >
+                Masculino
+            </div>
+            <div
+                :class="'tw:px-3 tw:border-2 tw:border-black tw:h-10 tw:flex tw:items-center tw:cursor-pointer ' + (genero === 'F' ? 'bgae tw:text-white tw:font-bold wdth150' : 'bgo')"
+                @click="genero = genero === 'F' ? null : 'F'; "
+            >
+                Feminino
+            </div>
+        </div>
+    </div>
+    <!-- Porcentagem e barras -->
+    <div
+        class="tw:py-8 tw:grid tw:md:grid-cols-2 tw:lg:grid-cols-3 tw:items-end tw:gap-8 tw:max-w-7xl tw:!mx-auto tw:text-pretty tw:px-4 tw:relative tw:z-3"
+    >
+        <div class="tw:flex tw:gap-8 tw:items-end tw:justify-center">
+            <div class="tw:text-6xl tw:font-black ff1 tw:text-right tw:!mb-0">
+                {{ genderData && (genderData
+                    .proposicoes
+                    .filter(p => p.favoravel !== 1).length / genderData.proposicoes.length * 100).toFixed(0) }}% <br /><span class="tw:text-lg tw:font-semibold">de proposições <br />desfavoráveis</span>
+            </div>
+            <div class="tw:relative tw:z-2">
+                <div class="tw:h-64 tw:flex tw:gap-4 tw:items-end">
+                    <div
+                        class="bgvm tw:w-16 tw:relative tw:duration-1000"
+                        :style="{
+                height: (genderData?.proposicoes.filter((p) => p.favoravel !== 1).length / genderData?.proposicoes.filter((p) => p.favoravel === 1).length) * 100 + '%'
+            }"
+                    >
+                        <div
+                            class="tw:absolute tw:-top-2 tw:-translate-y-full tw:left-0 tw:flex tw:items-center tw:justify-center tw:font-bold ff1 wdth150"
+                        >
+                            <div class="icone desfavoravel"></div>
+                            {{genderData?.proposicoes .filter(p => p.favoravel !== 1).length}}
+                        </div>
+                    </div>
+                    <div class="tw:bg-[#8cd89c] tw:w-16 tw:h-full tw:relative">
+                        <div
+                            class="tw:absolute tw:-top-2 tw:-translate-y-full tw:left-0 tw:flex tw:items-center tw:justify-center tw:font-bold ff1 wdth150"
+                        >
+                            <div class="icone favoravel"></div>
+                            {{genderData?.proposicoes .filter(p => p.favoravel === 1).length}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- "Bolinhas" -->
+        <div class="tw:lg:col-span-2">
+            <div v-if="genero === null">
+                <p class="tw:!mb-0 tw:text-lg tw:md:text-xl tw:max-w-prose tw:pb-5 tw:md:pb-8">
+                    Cada círculo abaixo representa um parlamentar que assinou ao menos cinco dos projetos analisados. A
+                    cor varia de vermelho<span
+                        class="tw:size-3.5 tw:rounded-full tw:inline-block tw:ml-0.5 tw:mr-1.5 bgvm tw:-mb-0.5"
+                    ></span
+                    >, quando aquela pessoa apresentou muitos projetos desfavoráveis à pauta de gênero, a verde<span
+                        class="tw:size-3.5 tw:rounded-full tw:inline-block tw:ml-0.5 tw:mr-1.5 tw:bg-[#8cd89c] tw:-mb-0.5"
+                    ></span
+                    >, quando a atuação legislativa foi considerada positiva para o campo.
+                </p>
+            </div>
+            <div v-if="genero !== null">
+                <h4
+                    v-if='genero === "M"'
+                    class="ff1 tw:text-xl lg:text-2xl tw:max-w-prose tw:font-black tw:!mb-1 wdth150 tw:text-pretty"
+                >
+                    Eles são maioria no Congresso e atacam mais os direitos das mulheres
+                </h4>
+                <h4
+                    v-if='genero === "F"'
+                    class="ff1 tw:text-xl lg:text-2xl tw:max-w-prose tw:font-black tw:!mb-1 wdth150 tw:text-pretty"
+                >
+                    Elas são minoria, mas produzem mais que os homens
+                </h4>
+                <p v-if='genero === "M"' class="tw:!mb-0 tw:text-lg tw:md:text-xl tw:max-w-prose tw:pb-5 tw:md:pb-8">
+                    Homens são cerca de 82% do Congresso Nacional e apresentaram quase
+                    {{ ((genderData?.proposicoes.length / genderData.totalProposicoes) * 100).toFixed(1) }}% das
+                    proposições sobre os direitos de meninas, mulheres e pessoas LGBTQIAPN+. Eles assinam mais que o
+                    dobro dos projetos desfavoráveis do que as mulheres.
+                </p>
+                <p v-if='genero === "F"' class="tw:!mb-0 tw:text-lg tw:md:text-xl tw:max-w-prose tw:pb-5 tw:md:pb-8">
+                    Entre elas,
+                    {{
+                            ((genderData?.proposicoes.filter(v => v.favoravel === 1).length / genderData.proposicoes.length) * 100).toFixed(1)
+                    }}% dos projetos analisados são favoráveis aos direitos das mulheres. A produtividade também é
+                    maior: em média, são
+                    {{
+                        (genderData?.proposicoes.length / genderData[genero === "M" ? "masculino" : "feminino"].length)
+                            .toFixed(1)
+                            .replace(".", ",")
+                    }}
+                    autorias, contra 3,5 dos homens.
+                </p>
+            </div>
+            <div
+                v-if="genero === 'F' && genderData"
+                class="tw:flex tw:flex-wrap tw:items-center tw:gap-1"
+            >
+                <div
+                    v-for="parlamentar in _.orderBy(genderData.feminino, ['indice', 'totalProposicoes'], ['asc', 'desc'])"
+                    :class="\`tw:rounded-full tw:size-5 tw:border tw:border-transparent \${selectedParlamentar && selectedParlamentar.nome === parlamentar.nome ? 'tw:!border-black' : ''}\`"
+                    :style='{
+                    background: color(parlamentar?.indice, [0, 0.5, 1], ["#ff808a", "#f9df79", "#8cd89c"]),
+                }'
+                    @mouseover="handleHoverParlamentar(parlamentar,$el)"
+                    @mouseleave="handleLeaveParlamentar()"
+                >
+                    <a
+                        :href="\`/perfil/\${ parlamentar.slug}\`"
+                        target="_blank"
+                        class="tw:hidden tw:h-full tw:w-full tw:lg:block"
+                    ></a>
+                </div>
+            </div>
+            <div v-if="genero === 'M' && genderData" class="tw:flex tw:flex-wrap tw:items-center tw:gap-1">
+                <div
+                    v-for="parlamentar in _.orderBy(genderData?.masculino, ['indice', 'totalProposicoes'], ['asc', 'desc'])"
+                    :class="\`tw:rounded-full tw:size-5 tw:border tw:border-transparent \${selectedParlamentar && selectedParlamentar.nome === parlamentar.nome ? 'tw:!border-black' : ''}\`"
+                    :style='{
+                    background: color(parlamentar?.indice, [0, 0.5, 1], ["#ff808a", "#f9df79", "#8cd89c"]),
+                }'
+                    @mouseover="handleHoverParlamentar(parlamentar,$el)"
+                    @mouseleave="handleLeaveParlamentar()"
+                >
+                    <a
+                        :href="\`/perfil/\${ parlamentar.slug}\`"
+                        target="_blank"
+                        class="tw:hidden tw:h-full tw:w-full tw:lg:block"
+                    ></a>
+                </div>
+            </div>
+            <div v-if="genero === null && genderData" class="tw:flex tw:flex-wrap tw:items-center tw:gap-1">
+                <div
+                    v-for="parlamentar in _.orderBy([...genderData.masculino,...genderData.feminino], ['indice', 'totalProposicoes'], ['asc', 'desc']).filter(p => p.totalProposicoes >= 5)"
+                    :class="\`tw:rounded-full tw:size-5 tw:border tw:border-transparent \${selectedParlamentar && selectedParlamentar.nome === parlamentar.nome ? 'tw:!border-black' : ''}\`"
+                    :style='{
+                    background: color(parlamentar?.indice, [0, 0.5, 1], ["#ff808a", "#f9df79", "#8cd89c"]),
+                }'
+                    @mouseover="handleHoverParlamentar(parlamentar,$el)"
+                    @mouseleave="handleLeaveParlamentar()"
+                >
+                    <a
+                        :href="\`/perfil/\${ parlamentar.slug}\`"
+                        target="_blank"
+                        class="tw:hidden tw:h-full tw:w-full tw:lg:block"
+                    ></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tw:relative tw:z-3 tw:px-4">
+        <div
+            class="tcae tw:max-w-prose tw:mx-auto tw:text-lg tw:md:text-xl tw:flex tw:flex-col tw:gap-5 tw:relative tw:z-3"
+        ></div>
+    </div>
+    <!-- Rasgado -->
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1440 123"
+        class="tw:absolute tw:h-auto tw:w-[100svw] tw:bottom-0 tw:rotate-180 tw:z-1 tw:translate-y-[20%]"
+    >
+        <path
+            d="M505.4,3.9l28.9,8.4,26,2.4h18.1l36.3,1.5,9.8-1.5q30.9-1.5,30.9,0c0,1.5,26.9,3.4,26.9,3.4l18.2-3.4,24,5.9s21.6-4.4,25-4.4h29.4L798,14.7l19.1,1.5h22.1q2.4,0,25.5-3.9l1.5-5.4h44.1c2.4,0,43.1-3,44.6-3S961.3,0,962.7,0s9.7,2.3,26,6.9h41.2l21.1-3,26.4,3,8.9-2.5L1096.5,0l30.9,6.9h54.9l42.7,3.4,56.8-6.4L1323.5,0H1440V123H0V6.9H6.4l13.2,5.4H26L40.2,8.8h9.3l14.7,1.5,10.3,4.4h6.4l9.8-2.4,13.2,3.9,7.4-1.5,13.2-4.4,12.2-1.5H150l10.8,3.5,11.7,2.4,9.3,1.5,7.9-1.5,2.4,1.5h10.3l3.5-1.5,24.5-2.4H247l5.9,2.4,4.4,1.5h14.2L300,12.3l6.8-3.5h19.7l4.9-1.9,5.8,1.9v3.5h6.4l9.3,2.4,12.8-4.4,19.1,4.4,7.3,1.5,65.7,1.9,6.9-1.9,5.4-1.5,11.7-7.8h20.1Z"
+            fill="#fff"
+            fill-rule="evenodd"
+        />
+    </svg>
+</div>
+
+<!-- Tooltip -->
+<div
+    id="tooltipVue"
+    class="tw:fixed tw:pointer-events-none tw:z-20 tw:top-0 tw:left-0 tw:transition-opacity tw:duration-500"
+>
+    <!-- Tooltip para parlamentar -->
+    <div
+        v-if="tooltipContent === 'parlamentar' && selectedParlamentar"
+        class="tw:bg-white tw:w-fit tw:max-w-56 tw:shadow-xl tw:rounded-xs tw:overflow-hidden"
+    >
+        <div
+            class="tw:w-full tw:h-32 tw:flex tw:items-center tw:justify-center tw:gap-10 tw:pb-2 tw:px-4"
+            :style='{
+            background: color(selectedParlamentar.indice, [0, 0.5, 1], ["#ff808a", "#f9df79", "#8cd89c"])
+        }'
+        >
+            <!-- Foto do parlamentar -->
+            <div
+                v-if="!!selectedParlamentar?.foto"
+                class="tw:h-24 tw:aspect-square tw:overflow-hidden tw:rounded-full tw:relative tw:border-white tw:border-2"
+            >
+                <img
+                    :src="selectedParlamentar?.foto"
+                    alt=""
+                    class="tw:w-full tw:h-full tw:object-center tw:object-cover tw:mix-blend-multiply tw:saturate-0"
+                />
+            </div>
+        </div>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1440 123"
+            class="tw:w-full tw:relative tw:z-10 tw:-translate-y-1/2"
+        >
+            <path
+                d="M505.4,3.9l28.9,8.4,26,2.4h18.1l36.3,1.5,9.8-1.5q30.9-1.5,30.9,0c0,1.5,26.9,3.4,26.9,3.4l18.2-3.4,24,5.9s21.6-4.4,25-4.4h29.4L798,14.7l19.1,1.5h22.1q2.4,0,25.5-3.9l1.5-5.4h44.1c2.4,0,43.1-3,44.6-3S961.3,0,962.7,0s9.7,2.3,26,6.9h41.2l21.1-3,26.4,3,8.9-2.5L1096.5,0l30.9,6.9h54.9l42.7,3.4,56.8-6.4L1323.5,0H1440V123H0V6.9H6.4l13.2,5.4H26L40.2,8.8h9.3l14.7,1.5,10.3,4.4h6.4l9.8-2.4,13.2,3.9,7.4-1.5,13.2-4.4,12.2-1.5H150l10.8,3.5,11.7,2.4,9.3,1.5,7.9-1.5,2.4,1.5h10.3l3.5-1.5,24.5-2.4H247l5.9,2.4,4.4,1.5h14.2L300,12.3l6.8-3.5h19.7l4.9-1.9,5.8,1.9v3.5h6.4l9.3,2.4,12.8-4.4,19.1,4.4,7.3,1.5,65.7,1.9,6.9-1.9,5.4-1.5,11.7-7.8h20.1Z"
+                fill="#fff"
+                fill-rule="evenodd"
+            />
+        </svg>
+        <div class="tw:px-4 tw:pb-4 tw:-mt-2 tca ff1 tw:uppercase">
+            <p class="tw:text-sm tw:font-stretch-[300%] tw:leading-[1] tw:!mb-0.5">
+                {{ selectedParlamentar?.cargo }}
+            </p>
+            <p class="tw:text-2xl tw:font-black tw:leading-[1] tw:!mb-1 tcae">
+                {{ selectedParlamentar?.nome }}
+            </p>
+            <p class="tw:text-lg tw:font-stretch-[250%] tw:leading-[1] tw:!mb-3">
+                {{ selectedParlamentar?.partido }} - {{ selectedParlamentar?.estado }}
+            </p>
+            <p class="tw:uppercase tw:text-xs tcae tw:font-semibold tw:!mb-1 wdth300">Propostas</p>
+            <div class="tw:flex tw:gap-5 tcae">
+                <div class="tw:flex tw:items-center tw:justify-center tw:font-bold ff1 wdth150">
+                    <div class="icone favoravel"></div>
+                    {{ Object.values(selectedParlamentar?.autorias || {}).filter(v => v === 1).length }}
+                </div>
+                <div class="tw:flex tw:items-center tw:justify-center tw:font-bold ff1 wdth150">
+                    <div class="icone desfavoravel"></div>
+                    {{ Object.values(selectedParlamentar?.autorias || {}).filter(v => v === -1).length }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+`} />

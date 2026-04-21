@@ -1,0 +1,132 @@
+/* Formulário */
+	// Checkbox & Radio //
+		.radio{
+			padding-left: 60px;
+			display: inline-block;
+			input{
+				display: none;
+				&:checked{
+					~ span{
+						&:before{
+							background: @principal;
+						}
+						&:after{
+							transform: scale(0.5) rotate(-45deg) translate(0%, -50%);
+						}
+					}
+				}
+			}
+			span{
+				position: relative;
+				cursor: pointer;
+				&:before, &::after{
+					content: "";
+					width: 20px;
+					height: 20px;
+					background: white;
+					border: 2px solid @principal;
+					border-radius: 50%;
+					position: absolute;
+					left: -60px;
+					top: 50%;
+					box-sizing: border-box;
+					transform: translate(0%, -50%);
+					.transition();
+				}
+				&:after{
+					border-radius: 0;
+					background: transparent;
+					border-width: 0px 0px 5px 5px;
+					border-style: solid;
+					border-color: white;
+					height: 12px;
+					width: 20px;
+					transform: scale(0) rotate(-45deg) translate(0%, -50%);
+					top: ~"calc(50% - 5px)";
+					left: -58px;
+				}
+			}
+		}
+
+	// Select & Dropdown //
+		.custom-select {
+			.relative;
+			.inline-block;
+			.ls014;
+			select{
+				display: none;
+			}
+		}
+
+		.select-selected {
+			background-color: transparent;
+			.t2;
+			.tcb;
+			.w700;
+			.uc;
+			cursor: pointer;
+			padding: .25rem 2rem .25rem 1rem;
+			min-height: 30px;
+			line-height: 1.6;
+			border: 1px solid @verde;
+			&:after{
+				content: "";
+				height: 7px;
+				width: 7px;
+				border-style: solid;
+				border-color: @verde;
+				border-width: 0px 1px 1px 0px;
+				transform: translate(-50%, -70%) rotate(45deg);
+				position: absolute;
+				top: 50%;
+				right: .5rem;
+				.transition;
+			}
+			&.select-arrow-active{
+				&:after{
+					transform: translate(-50%, -30%) rotate(225deg);
+				}
+			}
+		}
+
+		.select-items {
+			.absolute;
+			.bgvd;
+			top: 100%;
+			left: 0;
+			right: 0;
+			max-height: 70vh;
+			overflow: auto;
+			.z4;
+			div{
+				.t2;
+				.tca;
+				.uc;
+				.w700;
+				.p1;
+				cursor: pointer;
+			}
+		}
+
+		.select-hide {
+			display: none;
+		}
+
+		.select-items div:hover, .same-as-selected {
+			background-color: darken(@verde, 10%);
+		}
+
+		.custom-select.big{
+			.select-selected{
+				.ff1;
+				.w900;
+				.ls01;
+				.t3;
+				.uc;
+				.tca;
+				.bgvd;
+				&:after{border-color: @azul;}
+			}
+			.select-items{
+			}
+		}

@@ -1,0 +1,13 @@
+---
+import HomeChartsGender from './HomeChartsGender.astro';
+import HomeChartsPartidos from './HomeChartsPartidos.astro';
+---
+<div id="homeCharts" @vue:mounted="mounted" class="tw:grid tw:relative tw:z-2">
+    <div v-if="!isLoaded" class="tw:absolute tw:w-full tw:h-full tw:top-0 tw:left-0 tw:z-50 tw:backdrop-blur-md tw:text-black tw:bg-white/80 tw:uppercase"><div class="tw:h-full tw:w-full tw:max-h-screen tw:sticky tw:top-0 tw:flex tw:items-center tw:justify-center tw:animate-pulse ff1 tw:text-xl"><span class="wdth200">Carregando </span> <span class="wdth150 tw:font-bold tw:pl-1">dados</span>...</div></div>
+    <HomeChartsGender />
+    <HomeChartsPartidos />
+</div>
+
+<script is:inline type="module">
+    PetiteVue.createApp(vueApp).mount("#homeCharts");
+</script>

@@ -1,0 +1,305 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Share from '../components/Share.astro';
+import Participantes from '../components/Participantes.astro';
+---
+<BaseLayout title="QuitérIA">
+<main class="pagina-quiteria">
+    <header class="abertura-quiteria">
+        <Share title="QuitérIA" />
+
+        <div class="container-fluid wrap abertura-quiteria__conteudo">
+            <h2 class="abertura-quiteria__titulo-variavel titulo-variavel tcb t9 mb2">
+                <span class="w900 wdth200">QuitérIA:</span>
+            </h2>
+        </div>
+    </header>
+
+    <article class="conteudo-quiteria">
+        <div class="container-fluid wrap">
+            <div class="row">
+                <section class="col-xs-12 col-md-7 col-md-offset-1">
+                    <article id="sobre-o-projeto">
+                        <h3 class="titulo-variavel tca mb1">
+                            <span class="w300 wdth250">uma Inteligência Artificial</span>
+                            <span class="w300 wdth150">feminista</span>
+                            <span class="w900 wdth200">de monitoramento legislativo</span>
+                        </h3>
+                        <div class="t3">
+                            <p>A <strong>QuitérIA</strong> é uma ferramenta digital de inteligência artificial feminista projetada para <strong>analisar, classificar e avaliar proposições legislativas (PLs)</strong> com foco nas questões de gênero e direitos das meninas, mulheres e pessoas LGBTQIAPN+. Ela oferece um <strong>monitoramento legislativo automatizado e qualificado</strong>, que não só identifica PLs, mas também os categoriza e avalia, permitindo uma análise mais precisa e ágil da movimentação legislativa sobre gênero. Esse é o jeito AzMina de <strong>transformar a opacidade legislativa em transparência,</strong> compartilhando análises essenciais à compreensão do campo no Brasil.</p>
+
+                            <p>Nossa <strong>ferramenta de IA</strong> utiliza <strong>Processamento de Linguagem Natural (PLN)</strong> para coletar, classificar e avaliar os projetos de lei em tramitação no Congresso Nacional, focando em temas como <strong>violência contra a mulher, direitos sexuais e reprodutivos e igualdade de gênero.</strong> O objetivo é permitir que qualquer pessoa tenha acesso a <strong>informações qualificadas</strong> e <strong>transparentes</strong>. De modo especial, auxiliar o trabalho de jornalistas, profissionais de pesquisa, organizações sociais e ativistas dos direitos humanos.</p>
+                        </div>
+                    </article>
+
+                    <article id="como-funciona">
+                        <h3 class="titulo-variavel tca mb1">
+                            <span class="w600 wdth200">Como</span>
+                            <span class="w900 wdth200">funciona?</span>
+                        </h3>
+                        <div class="t3">
+                            <p>A <strong>QuitérIA</strong> foi desenvolvida para automatizar o processo de monitoramento legislativo, com um foco específico na <strong>classificação de PLs</strong> que abordam direitos das meninas, mulheres, e pessoas LGBTQIAPN+.</p>
+                        </div>
+
+                        <img src="/assets/images/quiteria/fluxo.webp" height="480" width="424" class="mb2 mt2 block">
+
+                    </article>
+                    <article id="coleta-automatizada-de-dados">
+                        <h3 class="titulo-variavel tca mb1">
+                            <span class="w900 wdth200">Coleta</span>
+                            <span class="w400 wdth200">automatizada</span>
+                        </h3>
+                        <p class="t3">A coleta diária de dados das proposições legislativas é feita automaticamente pelo raspador <strong>Elas no Congresso</strong> usando as APIs da <strong>Câmara dos Deputados</strong> e do <strong>Senado Federal</strong>, a partir de <strong>palavras-chave</strong> relacionadas a gênero e raça. A cada 24h, o bot coleta informações como <strong>título</strong>, <strong>autor</strong>, <strong>ementa</strong> e <strong>status</strong>, armazenando-as em arquivos CSV de acesso aberto para uso posterior.</p>
+                    </article>
+
+                    <article id="modelos-utilizados">
+                        <h3 class="titulo-variavel tca mb1">
+                            <span class="w900 wdth200">Modelos</span>
+                            <span class="w600 wdth150">utilizados</span>
+                        </h3>
+                        <p class="t3">A <strong>QuitérIA</strong> é baseada em um <strong>Large Language Model (LLM)</strong> ajustado para o contexto legislativo brasileiro e os temas de gênero. O processo de treinamento da IA foi realizado com base em <strong>dados rotulados manualmente</strong> com a colaboração de organizações da sociedade civil ligadas aos direitos de gênero, provenientes de mais de 1.600 projetos de lei, com abordagem feminista interseccional.
+                        </p>
+
+                        <p class="t3">Confira aqui todas as organizações que participaram da anotação de dados.</p>
+
+                        <Participantes />
+
+                        <p class="t3">Os principais modelos utilizados na QuitérIA são:</p>
+
+                        <ul class="t3">
+                            <li><strong>Modelo Congretimbau</strong> – Baseado na arquitetura <strong>BERT</strong> e adaptado para o português, é o modelo de maior desempenho da <strong>QuitérIA</strong>, alcançando um <strong>F1-score de 0.79</strong>. Este modelo foi ajustado para classificar PLs com alta precisão em relação a temas como <strong>gênero</strong>, <strong>violência contra a mulher</strong>, <strong>direitos sexuais e reprodutivos</strong> e <strong>maternidade</strong>.</li>
+                            <li><strong>Modelos baseados em BERT e Transformer</strong> – A <strong>QuitérIA</strong> também utiliza modelos como o <strong>BERTimbau</strong> e o <strong>DeBERTina</strong>, ambos adaptados para a língua portuguesa, para garantir a precisão na análise de ementas e textos de PLs.</li>
+                        </ul>
+                    </article>
+
+                    <article id="categorizacao-e-avaliacao">
+                        <h3 class="titulo-variavel tca mb1">
+                            <span class="w900 wdth200">Categorização</span>
+                            <span class="w600 wdth150"> e </span>
+                            <span class="w900 wdth350">Avaliação</span>
+                        </h3>
+                        <div class="t3">
+                            <p>A <strong>QuitérIA</strong> classifica PLs em <strong>temas</strong> e, em seguida, avalia a <strong>desfavorabilidade</strong> de cada um, atribuindo uma pontuação de <strong>0 a 1</strong>, onde <strong>0</strong> significa <strong>totalmente favorável</strong> e <strong>1</strong> significa <strong>totalmente desfavorável</strong> aos direitos das meninas, mulheres e pessoas LGBTQIAPN+.</p>
+                            <p>A metodologia para avaliar a desfavorabilidade é baseada nos seguintes critérios:</p>
+
+                            <ol>
+                                <li><strong>Análise de ementas e inteiro teor, quando disponível</strong>: A IA lê as ementas e o texto completo de cada proposição para identificar os pontos que promovem ou prejudicam os direitos dos grupos envolvidos.</li>
+                                <li><strong>Avaliação de impacto</strong>: como foi treinado a partir do trabalho humano, o modelo também usa a compreensão do impacto de cada proposição nos direitos de gênero, considerando a diversidade de experiências das mulheres, como raça, classe social, identidade de gênero, orientação sexual, entre outras.</li>
+                            </ol>
+                        </div>
+                    </article>
+
+                    <article id="validacao-humana">
+                        <h3 class="titulo-variavel tca mb1">
+                            <span class="w900 wdth200">Validação</span>
+                            <span class="w900 wdth350"> humana </span>
+                        </h3>
+                        <div class="t3">
+                            <p>
+                                Embora a classificação e avaliação dos PLs sejam feitas pela QuitérIA, é crucial que os resultados passem por validação humana, como previsto na política de uso de IA d'AzMina, para garantir que a IA esteja alinhada à nossa missão. A equipe do Instituto AzMina, ao lado de XX organizações parceiras, revisa os resultados e ajusta os parâmetros da IA, garantindo que a ferramenta evolua em consonância com os desafios contemporâneos.
+                            </p>
+                            <p>
+                                Além disso, o processo de aprendizado contínuo da QuitérIA prevê retreinamentos periódicos. A cada ciclo de análise, novas proposições são avaliadas, e a IA é atualizada com as correções e ajustes feitos pela equipe humana.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article id="desempenho">
+                        <h3 class="titulo-variavel tca mb1">
+                            <span class="w900 wdth200">Desempenho</span>
+                        </h3>
+                        <div class="t3">
+                            <p>A QuitérIA tem alcançado resultados significativos de precisão e acuracidade. A tabela abaixo mostra as métricas de desempenho do modelo de avaliação de desfavorabilidade:</p>
+
+                            <table class="mb2">
+                                <colgroup>
+                                    <col style="width: 40%;">
+                                    <col style="width: 15%;">
+                                    <col style="width: 15%;">
+                                    <col style="width: 15%;">
+                                    <col style="width: 15%;">
+                                </colgroup>
+
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th class="tr">Precisão</th>
+                                        <th class="tr">Sensibilidade</th>
+                                        <th class="tr">Índice F1</th>
+                                        <th class="tr">Amostra</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Dignidade Sexual</th>
+                                        <td class="tr">0,94</td>
+                                        <td class="tr">0,88</td>
+                                        <td class="tr">0,91</td>
+                                        <td class="tr">17</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Direitos Sexuais e Reprodutivos</th>
+                                        <td class="tr">0,89</td>
+                                        <td class="tr">0,84</td>
+                                        <td class="tr">0,86</td>
+                                        <td class="tr">19</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Direitos Sociais</th>
+                                        <td class="tr">0,61</td>
+                                        <td class="tr">0,58</td>
+                                        <td class="tr">0,59</td>
+                                        <td class="tr">19</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Economia</th>
+                                        <td class="tr">0,78</td>
+                                        <td class="tr">0,50</td>
+                                        <td class="tr">0,61</td>
+                                        <td class="tr">14</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Feminicídio</th>
+                                        <td class="tr">0,67</td>
+                                        <td class="tr">0,80</td>
+                                        <td class="tr">0,73</td>
+                                        <td class="tr">5</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Gênero</th>
+                                        <td class="tr">0,81</td>
+                                        <td class="tr">1,00</td>
+                                        <td class="tr">0,90</td>
+                                        <td class="tr">13</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Maternidade</th>
+                                        <td class="tr">0,70</td>
+                                        <td class="tr">0,74</td>
+                                        <td class="tr">0,72</td>
+                                        <td class="tr">19</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Politica</th>
+                                        <td class="tr">1,00</td>
+                                        <td class="tr">0,88</td>
+                                        <td class="tr">0,93</td>
+                                        <td class="tr">8</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Violência Contra a Mulher</th>
+                                        <td class="tr">0,86</td>
+                                        <td class="tr">0,93</td>
+                                        <td class="tr">0,89</td>
+                                        <td class="tr">54</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Acurácia</th>
+                                        <td class="tr"></td>
+                                        <td class="tr"></td>
+                                        <td class="tr">0,82</td>
+                                        <td class="tr">168</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Média macro</th>
+                                        <td class="tr">0,81</td>
+                                        <td class="tr">0,79</td>
+                                        <td class="tr">0,79</td>
+                                        <td class="tr">168</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Média ponderada</th>
+                                        <td class="tr">0,82</td>
+                                        <td class="tr">0,82</td>
+                                        <td class="tr">0,81</td>
+                                        <td class="tr">168</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+
+                    <article id="codigo-fonte-da-quiteria">
+                        <h3 class="titulo-variavel tca mb1">
+                            <span class="w900 wdth200">Código-<span class="wdth150">fonte</span></span>
+                            <span class="w600 wdth100">da</span>
+                            <span class="w900 wdth350 linha">QuitérIA</span>
+                        </h3>
+                        <ul>
+                            <li>
+                                <b>Explore a ferramenta</b>: Acesse o <a href="https://drive.google.com/drive/u/0/folders/1UIki2K7NVX4yBSNm6uBHTqgkbqnjvnw9">painel da QuitérIA</a> para visualizar os dados dos projetos de lei e obter análises automatizadas.
+                            </li>
+                            <li>
+                                <b>Contribua com o código</b>: O código-fonte da QuitérIA está <a href="https://github.com/institutoazmina/ia-feminista-elas-no-congresso">disponível no GitHub</a>, permitindo que você participe do aprimoramento da ferramenta.
+                            </li>
+                        </ul>
+                    </article>
+                </section>
+                <section class="col-xs-12 col-md-3 col-md-offset-1 visible-md pt3-md">
+                    <nav class="nav-quiteria">
+                        <ul>
+                            <li>
+                                <a href="#sobre-o-projeto">
+                                    <p class="titulo-variavel tca t3 mb0">
+                                        <span class="w600 wdth200">Sobre o </span>
+                                        <span class="w900 wdth350">Projeto</span>
+                                    </p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#como-funciona">
+                                    <p class="titulo-variavel tca t3 mb0">
+                                        <span class="w600 wdth200">Como</span>
+                                        <span class="w900 wdth200">funciona?</span>
+                                    </p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#coleta-automatizada-de-dados">
+                                    <p class="titulo-variavel tca t3 mb0">
+                                        <span class="w900 wdth200">Coleta</span>
+                                        <span class="w400 wdth200">automatizada</span>
+                                    </p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#categorizacao-e-avaliacao">
+                                    <p class="titulo-variavel tca t3 mb0">
+                                        <span class="w900 wdth200">Categorização</span>
+                                        <span class="w600 wdth150"> e </span>
+                                        <span class="w900 wdth350">Avaliação</span>
+                                    </p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#validacao-humana">
+                                    <p class="titulo-variavel tca t3 mb0">
+                                        <span class="w900 wdth200">Validação</span>
+                                        <span class="w900 wdth350"> humana </span>
+                                    </p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#desempenho">
+                                    <p class="titulo-variavel tca t3 mb0">
+                                        <span class="w900 wdth200">Desempenho</span>
+                                    </p>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#codigo-fonte-da-quiteria">
+                                    <p class="titulo-variavel tca t3 mb0">
+                                        <span class="w900 wdth200">Código-<span class="wdth150">fonte</span></span>
+                                        <span class="w600 wdth100">da</span>
+                                        <span class="w900 wdth350 linha">QuitérIA</span>
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </section>
+            </div>
+        </div>
+    </article>
+</main>
+</BaseLayout>
