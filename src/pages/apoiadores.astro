@@ -1,6 +1,14 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Share from '../components/Share.astro';
+
+const parceiros = import.meta.glob<ImageMetadata>(
+    '../assets/images/logos/apoiadores/*.png',
+    { eager: true, import: 'default' },
+);
+const P = (name: string) => parceiros[`../assets/images/logos/apoiadores/${name}`];
 ---
 <BaseLayout title="Apoiadores">
 <main>
@@ -62,18 +70,18 @@ import Share from '../components/Share.astro';
                         </h3>
 
                         <div class="flex jcsb acenter">
-                            <div class="mr2 mb1"><a href="https://linktr.ee/anisbioetica" target="_blank"><img src="/assets/images/logos/apoiadores/parceiros-01.png"></a></div>
-                            <div class="mr2 mb1"><a href="https://cafe.art.br/" target="_blank"><img src="/assets/images/logos/apoiadores/parceiros-02.png"></a></div>
-                            <div class="mr2 mb1"><a href="https://tapronto.com.br/" target="_blank"><img src="/assets/images/logos/apoiadores/parceiros-03.png"></a></div>
-                            <div class="mr2 mb1"><a href="https://elefanteeditora.com.br/" target="_blank"><img src="/assets/images/logos/apoiadores/parceiros-04.png"></a></div>
-                            <div class="mb1"><a href="https://theintercept.com/brasil/" target="_blank"><img src="/assets/images/logos/apoiadores/parceiros-05.png"></a></div>
+                            <div class="mr2 mb1"><a href="https://linktr.ee/anisbioetica" target="_blank"><Image src={P("parceiros-01.png")} alt="" loading="lazy" /></a></div>
+                            <div class="mr2 mb1"><a href="https://cafe.art.br/" target="_blank"><Image src={P("parceiros-02.png")} alt="" loading="lazy" /></a></div>
+                            <div class="mr2 mb1"><a href="https://tapronto.com.br/" target="_blank"><Image src={P("parceiros-03.png")} alt="" loading="lazy" /></a></div>
+                            <div class="mr2 mb1"><a href="https://elefanteeditora.com.br/" target="_blank"><Image src={P("parceiros-04.png")} alt="" loading="lazy" /></a></div>
+                            <div class="mb1"><a href="https://theintercept.com/brasil/" target="_blank"><Image src={P("parceiros-05.png")} alt="" loading="lazy" /></a></div>
                         </div>
 
                         <div class="flex jcsb acenter">
-                            <div class="mr2 mb1"><a href="https://ok.org.br/" target="_blank"><img src="/assets/images/logos/apoiadores/parceiros-09.png"></a></div>
-                            <div class="mr2 mb1"><a href="https://www.programaria.org/" target="_blank"><img src="/assets/images/logos/apoiadores/parceiros-07.png"></a></div>
-                            <div class="mr2 mb1"><a href="https://www.ubueditora.com.br/" target="_blank"><img src="/assets/images/logos/apoiadores/parceiros-06.png"></a></div>
-                            <div class="mb1"><a href="https://itsrio.org/pt/home/" target="_blank"><img src="/assets/images/logos/apoiadores/parceiros-08.png"></a></div>
+                            <div class="mr2 mb1"><a href="https://ok.org.br/" target="_blank"><Image src={P("parceiros-09.png")} alt="" loading="lazy" /></a></div>
+                            <div class="mr2 mb1"><a href="https://www.programaria.org/" target="_blank"><Image src={P("parceiros-07.png")} alt="" loading="lazy" /></a></div>
+                            <div class="mr2 mb1"><a href="https://www.ubueditora.com.br/" target="_blank"><Image src={P("parceiros-06.png")} alt="" loading="lazy" /></a></div>
+                            <div class="mb1"><a href="https://itsrio.org/pt/home/" target="_blank"><Image src={P("parceiros-08.png")} alt="" loading="lazy" /></a></div>
                         </div>
 
                     </article>

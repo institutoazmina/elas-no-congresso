@@ -1,4 +1,7 @@
 ---
+import { Picture } from "astro:assets";
+import splashLettering from "../../assets/images/splash-lettering.png";
+import abertura from "../../assets/images/abertura.jpg";
 ---
 <section
     class="bgae tw:text-white tw:overflow-hidden tw:relative tw:min-h-64 tw:px-4 tw:lg:px-8 tw:py-16 tw:!flex tw:flex-col tw:!items-center tw:justify-center"
@@ -22,18 +25,26 @@
     </div>
     <div class="tw:absolute tw:w-full tw:h-full tw:max-h-[600px] tw:min-h-96 tw:z-2">
         <div class="tw:relative tw:w-full tw:h-full tw:-translate-x-[5%] tw:-translate-y-[3%] tw:opacity-50">
-            <img
-                src="/assets/images/splash-lettering.png"
+            <Picture
+                src={splashLettering}
+                formats={["avif", "webp"]}
                 alt=""
+                loading="eager"
+                fetchpriority="high"
+                pictureAttributes={{ class: "tw:contents" }}
                 class="tw:w-full tw:h-full tw:object-contain tw:object-center"
             />
         </div>
     </div>
     <div class="tw:absolute tw:w-full tw:h-full tw:z-1 tw:opacity-10">
         <div class="tw:w-full tw:h-full">
-            <img
-                src="/assets/images/abertura.jpg"
+            <Picture
+                src={abertura}
+                formats={["avif", "webp"]}
                 alt=""
+                loading="eager"
+                fetchpriority="high"
+                pictureAttributes={{ class: "tw:contents" }}
                 class="tw:w-full tw:h-full tw:object-cover tw:object-center"
             />
         </div>
@@ -95,7 +106,7 @@
 <Fragment set:html={`
 <section
     id="homeNumbers"
-    class="bga tw:w-full tw:py-16 tw:pt-24 tw:bg-[url('/assets/images/papel.jpg')] tw:bg-blend-multiply tw:bg-no-repeat tw:bg-cover tw:-z-1 tcb"
+    class="bga tw:w-full tw:py-16 tw:pt-24 bg-papel tw:bg-blend-multiply tw:bg-no-repeat tw:bg-cover tw:-z-1 tcb"
 >
     <div
         class="tw:px-6 tw:grid tw:md:flex tw:gap-8 tw:lg:gap-12 tw:pb-1 tw:justify-around tw:lg:justify-center tw:order-2 tw:md:order-1 tw:text-center"

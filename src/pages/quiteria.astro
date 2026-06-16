@@ -1,7 +1,10 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Share from '../components/Share.astro';
 import Participantes from '../components/Participantes.astro';
+import quiteriaLogo from '../assets/images/quiteria/logo.webp';
+import quiteriaFluxo from '../assets/images/quiteria/fluxo.webp';
 ---
 <BaseLayout title="QuitérIA">
 <main class="pagina-quiteria">
@@ -10,7 +13,7 @@ import Participantes from '../components/Participantes.astro';
 
         <div class="container-fluid wrap abertura-quiteria__conteudo">
             <h2 class="abertura-quiteria__titulo-variavel titulo-variavel tcb t9 mb2">
-                <img src="/assets/images/quiteria/logo.webp" class="abertura-quiteria__logo" alt="QuitérIA">
+                <Image src={quiteriaLogo} class="abertura-quiteria__logo" alt="QuitérIA" loading="eager" />
             </h2>
         </div>
     </header>
@@ -41,7 +44,7 @@ import Participantes from '../components/Participantes.astro';
                             <p>A <strong>QuitérIA</strong> foi desenvolvida para automatizar o processo de monitoramento legislativo, com um foco específico na <strong>classificação de PLs</strong> que abordam direitos das meninas, mulheres, e pessoas LGBTQIAPN+.</p>
                         </div>
 
-                        <img src="/assets/images/quiteria/fluxo.webp" height="480" width="424" class="mb2 mt2 block">
+                        <Image src={quiteriaFluxo} height={480} width={424} class="mb2 mt2 block" alt="" loading="lazy" />
 
                     </article>
                     <article id="coleta-automatizada-de-dados">

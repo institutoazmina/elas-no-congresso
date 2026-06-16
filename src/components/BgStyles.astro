@@ -1,0 +1,106 @@
+---
+// CSS-in-Astro: otimiza as imagens usadas como background CSS (que ficam fora
+// do <Image>/<Picture>). Cada PNG/JPG é convertido para WebP em build via
+// getImage() e injetado com seletor de maior especificidade (`html ...`), de
+// forma que a regra original (PNG no LESS) é sobrescrita e NUNCA é baixada.
+//
+// Os arquivos originais continuam em public/ (não removidos) para os poucos
+// seletores ainda não cobertos (splash do menu) seguirem funcionando.
+import { getImage } from "astro:assets";
+import papel from "../assets/images/bg/papel.jpg";
+import abertura from "../assets/images/bg/abertura.png";
+import letteringLogo from "../assets/images/bg/lettering-logo.png";
+import congresso from "../assets/images/bg/congresso.png";
+import splashTopRight from "../assets/images/bg/splash-top-right.png";
+import splashBottomLeft from "../assets/images/bg/splash-bottom-left.png";
+import aRanking from "../assets/images/bg/abertura-ranking.png";
+import aCamaraPng from "../assets/images/bg/abertura-camara.png";
+import aCamaraJpg from "../assets/images/bg/abertura-camara.jpg";
+import aSenado from "../assets/images/bg/abertura-senado.png";
+import aSobre from "../assets/images/bg/abertura-sobre.png";
+import aAcompanhe from "../assets/images/bg/abertura-acompanhe.png";
+import aApoiadores from "../assets/images/bg/abertura-apoiadores.png";
+import splashLettering from "../assets/images/splash-lettering.png";
+
+// Qualidade baixa: são texturas/headers exibidos com bg-blend-multiply e/ou
+// opacidade, onde artefatos não aparecem — maximiza a economia.
+const w = async (img: ImageMetadata) =>
+    (await getImage({ src: img, format: "webp", quality: 55 })).src;
+
+const [
+    papelW,
+    aberturaW,
+    letteringLogoW,
+    congressoW,
+    splashTRW,
+    splashBLW,
+    rankingW,
+    camaraPngW,
+    camaraJpgW,
+    senadoW,
+    sobreW,
+    acompanheW,
+    apoiadoresW,
+    splashLetteringW,
+] = await Promise.all([
+    w(papel),
+    w(abertura),
+    w(letteringLogo),
+    w(congresso),
+    w(splashTopRight),
+    w(splashBottomLeft),
+    w(aRanking),
+    w(aCamaraPng),
+    w(aCamaraJpg),
+    w(aSenado),
+    w(aSobre),
+    w(aAcompanhe),
+    w(aApoiadores),
+    w(splashLettering),
+]);
+
+// papel.jpg é a textura do elemento, copiada (mixin LESS `.abertura;`) em cada
+// variante de header — por isso cada `.abertura-*` precisa do override.
+const papelSelectors = [
+    ".abertura",
+    ".abertura-ranking",
+    ".abertura-propostas-votacoes",
+    ".abertura-perfil",
+    ".abertura-sobre",
+    ".abertura-acompanhe",
+    ".abertura-pl",
+    ".abertura-newsletter",
+    ".abertura-apoiadores",
+    ".papel",
+    ".bg-papel",
+];
+
+// imagem do header em cada `.abertura-*::before`
+const beforeImages: Record<string, string> = {
+    ".abertura-ranking": rankingW,
+    ".abertura-propostas-votacoes": camaraPngW,
+    ".abertura-perfil": senadoW,
+    ".abertura-sobre": sobreW,
+    ".abertura-acompanhe": acompanheW,
+    ".abertura-pl": camaraJpgW,
+    ".abertura-newsletter": acompanheW,
+    ".abertura-apoiadores": apoiadoresW,
+};
+
+const rules = [
+    ...papelSelectors.map((s) => `html ${s}{background-image:url("${papelW}")}`),
+    `html .abertura-home{background-image:url("${aberturaW}")}`,
+    `html .lettering-splash{background-image:url("${splashLetteringW}")}`,
+    `html .lettering-logo{background-image:url("${letteringLogoW}")}`,
+    // footer (site-wide): splash em camadas + congresso no ::before
+    `html footer{background-image:url("${splashTRW}"),url("${splashBLW}")}`,
+    `html footer::before{background-image:url("${congressoW}")}`,
+    ...Object.entries(beforeImages).map(
+        ([s, u]) => `html ${s}::before{background-image:url("${u}")}`,
+    ),
+];
+
+const css = rules.join("\n");
+---
+
+<style is:global set:html={css}></style>

@@ -44,7 +44,7 @@ function getProposicaoById(id: string) {
                 <div class="col-xs-12 col-md-3 pt2 pb2">
                     <div class="resumo-parlamentar tcb" style="width: 100%">
                         <div class={`thumbnail bgec${parlamentar.v ?? 0} tc tr-md`} style="margin-left:auto;margin-right:auto!important">
-                          {parlamentar.foto && <img src={parlamentar.foto} alt={`Foto de ${parlamentar.nome}`} title={`${parlamentar.nome} (${parlamentar.partido}-${parlamentar.estado})`} />}
+                          {parlamentar.foto && <img src={parlamentar.foto} alt={`Foto de ${parlamentar.nome}`} title={`${parlamentar.nome} (${parlamentar.partido}-${parlamentar.estado})`} loading="lazy" decoding="async" />}
                         </div>
                     </div>
                 </div>

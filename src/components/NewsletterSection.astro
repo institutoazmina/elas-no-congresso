@@ -1,12 +1,14 @@
 ---
+import { Picture } from 'astro:assets';
 import FormSubstack from './FormSubstack.astro';
+import novidades from '../assets/images/novidades-exclusivas.png';
 ---
 <section class="redes">
     <div class="container-fluid wrap">
         <div class="row">
             <div class="col-xs-12 col-md-6">
                 <figure style="margin: 0 auto; width: fit-content">
-                    <img src="/assets/images/novidades-exclusivas.png">
+                    <Picture src={novidades} formats={["avif", "webp"]} alt="" loading="lazy" />
                 </figure>
             </div>
             <div class="col-xs-12 col-md-6" style="align-self: center">

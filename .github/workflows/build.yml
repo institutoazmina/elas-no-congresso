@@ -36,11 +36,16 @@ jobs:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
           aws-region: us-east-2
 
-      # Hashed assets (immutable) → cache 1 year
+      # Hashed/static assets (immutable) → cache 1 year.
+      # Exclude HTML, JSON and the sitemap/robots, which are not fingerprinted
+      # and must be revalidated when content changes.
       - name: Sync immutable assets
         run: |
           aws s3 sync dist/ s3://$BUCKET/ --delete \
             --exclude "*.html" \
+            --exclude "*.json" \
+            --exclude "*.xml" \
+            --exclude "robots.txt" \
             --cache-control "public,max-age=31536000,immutable"
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
@@ -51,6 +56,16 @@ jobs:
           aws s3 sync dist/ s3://$BUCKET/ \
             --exclude "*" --include "*.html" \
             --cache-control "public,max-age=0,must-revalidate"
+        env:
+          BUCKET: ${{ secrets.S3_BUCKET }}
+
+      # Data / sitemap / robots → short cache, revalidate so updates propagate
+      - name: Sync data & metadata
+        run: |
+          aws s3 sync dist/ s3://$BUCKET/ \
+            --exclude "*" \
+            --include "*.json" --include "*.xml" --include "robots.txt" \
+            --cache-control "public,max-age=3600,must-revalidate"
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
 

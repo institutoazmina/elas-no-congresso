@@ -1,35 +1,48 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+// Optimized at build time; SVG logos stay as plain <img> (Astro doesn't
+// rasterize/optimize SVGs).
+const logos = import.meta.glob<ImageMetadata>(
+    "../assets/images/logos/*.{png,jpg,jpeg}",
+    { eager: true, import: "default" },
+);
+const L = (name: string) => logos[`../assets/images/logos/${name}`];
+---
+
 <div class="flex jcsb acenter">
-    <div class="mr2"><img width="102" src="/assets/images/logos/instituto-maria-da-penha.png"></div>
-    <div class="mr2"><img width="138" src="/assets/images/logos/instituto-patricia-galvao.png"></div>
-    <div class="mr2"><img width="125" src="/assets/images/logos/themis.png"></div>
-    <div class="mr2"><img width="102" src="/assets/images/logos/article19.svg"></div>
-    <div class=""><img width="117" src="/assets/images/logos/observatorio-da-violencia-obstetricao-no-brasil.png"></div>
+    <div class="mr2"><Image src={L("instituto-maria-da-penha.png")} width={102} alt="" loading="lazy" /></div>
+    <div class="mr2"><Image src={L("instituto-patricia-galvao.png")} width={138} alt="" loading="lazy" /></div>
+    <div class="mr2"><Image src={L("themis.png")} width={125} alt="" loading="lazy" /></div>
+    <div class="mr2"><img width="102" src="/assets/images/logos/article19.svg" alt="" loading="lazy"></div>
+    <div class=""><Image src={L("observatorio-da-violencia-obstetricao-no-brasil.png")} width={117} alt="" loading="lazy" /></div>
 </div>
 
 <div class="flex jcsb acenter">
-    <div class="mr2"><img width="153" src="/assets/images/logos/deFEMde.png"></div>
-    <div class="mr2"><img width="90" src="/assets/images/logos/mana-a-mana.png"></div>
-    <div class="mr2"><img width="109" src="/assets/images/logos/anis.png"></div>
-    <div class="mr2"><img width="114" src="/assets/images/logos/ecos.png"></div>
-    <div class=""><img width="117" src="/assets/images/logos/tretaqui.png"></div>
+    <div class="mr2"><Image src={L("deFEMde.png")} width={153} alt="" loading="lazy" /></div>
+    <div class="mr2"><Image src={L("mana-a-mana.png")} width={90} alt="" loading="lazy" /></div>
+    <div class="mr2"><Image src={L("anis.png")} width={109} alt="" loading="lazy" /></div>
+    <div class="mr2"><Image src={L("ecos.png")} width={114} alt="" loading="lazy" /></div>
+    <div class=""><Image src={L("tretaqui.png")} width={117} alt="" loading="lazy" /></div>
 </div>
 
 <div class="flex jcsb acenter">
-    <div class="mr2"><img width="226" src="/assets/images/logos/empodera.png"></div>
-    <div class="mr2"><img width="127" src="/assets/images/logos/sempreviva-organizacao-feminista.png"></div>
-    <div class="mr2"><img width="119" src="/assets/images/logos/cfemea.png"></div>
-    <div class=""><img width="111" src="/assets/images/logos/grupo-de-estudos-de-genero-e-politica.png"></div>
+    <div class="mr2"><Image src={L("empodera.png")} width={226} alt="" loading="lazy" /></div>
+    <div class="mr2"><Image src={L("sempreviva-organizacao-feminista.png")} width={127} alt="" loading="lazy" /></div>
+    <div class="mr2"><Image src={L("cfemea.png")} width={119} alt="" loading="lazy" /></div>
+    <div class=""><Image src={L("grupo-de-estudos-de-genero-e-politica.png")} width={111} alt="" loading="lazy" /></div>
 </div>
 <div class="flex jcsb acenter">
-    <div class="mr2"><img width="156" src="/assets/images/logos/lab-cidade.png"></div>
-    <div class="mr2"><img width="114" src="/assets/images/logos/mulheres-negras-decidem.png"></div>
-    <div class="mr2"><img width="134" src="/assets/images/logos/cepia.png"></div>
-    <div class=""><img width="290" src="/assets/images/logos/logo_instituto-mais-diversidade_5colorido.jpg"></div>
+    <div class="mr2"><Image src={L("lab-cidade.png")} width={156} alt="" loading="lazy" /></div>
+    <div class="mr2"><Image src={L("mulheres-negras-decidem.png")} width={114} alt="" loading="lazy" /></div>
+    <div class="mr2"><Image src={L("cepia.png")} width={134} alt="" loading="lazy" /></div>
+    <div class=""><Image src={L("logo_instituto-mais-diversidade_5colorido.jpg")} width={290} alt="" loading="lazy" /></div>
 </div>
 
 <div class="flex jcsb acenter mb2">
-    <div class="mr2"><img width="120" src="/assets/images/logos/instituto-update.svg"></div>
-    <div class="mr2"><img width="120" src="/assets/images/logos/instituto-juristas-negras.png"></div>
-    <div class="mr2"><img width="230" src="/assets/images/logos/rede-liberdade.png"></div>
-    <div class=""><img width="120" src="/assets/images/logos/spw.png"></div>
+    <div class="mr2"><img width="120" src="/assets/images/logos/instituto-update.svg" alt="" loading="lazy"></div>
+    <div class="mr2"><Image src={L("instituto-juristas-negras.png")} width={120} alt="" loading="lazy" /></div>
+    <div class="mr2"><Image src={L("rede-liberdade.png")} width={230} alt="" loading="lazy" /></div>
+    <div class=""><Image src={L("spw.png")} width={120} alt="" loading="lazy" /></div>
 </div>
