@@ -1,0 +1,115 @@
+---
+import attention from "../../assets/images/redesign/hero/attention.svg";
+import thumbsDown from "../../assets/images/redesign/home-chart/thumbs-down.svg";
+import elasHorizontal from "../../assets/images/redesign/home-chart/elas-horizontal.svg";
+import papeladaFeminina from "../../assets/images/redesign/women-defense/papelada-favoravel-feminina.png";
+import papeladaMasculina from "../../assets/images/redesign/women-defense/papelada-favoravel-masculina.png";
+
+const charts = [
+    { authorship: "Feminina", favorable: "85%", unfavorable: "15%", papers: papeladaFeminina },
+    { authorship: "Masculina", favorable: "71%", unfavorable: "29%", papers: papeladaMasculina },
+];
+---
+
+<section class="women-defense" aria-labelledby="women-defense-title">
+    <div class="women-defense__container">
+        <header class="women-defense__header">
+            <img class="women-defense__attention" src={attention.src} alt="" />
+            <h2 id="women-defense-title">Mulheres na defesa</h2>
+            <p>O número de projetos protocolados por mulheres deu um salto na última legislatura, refletindo o aumento histórico de mulheres eleitas em 2022 e o seu engajamento em blindar direitos já conquistados.</p>
+        </header>
+
+        <figure class="women-defense__figure" aria-label="Comparação de autoria feminina e masculina">
+            {charts.map((chart) => (
+                <article class="women-defense__chart">
+                    <header class="women-defense__chart-heading">
+                        <span>Autoria</span>
+                        <h3>{chart.authorship}</h3>
+                    </header>
+                    <div class="women-defense__waffle">
+                        <div class="women-defense__label women-defense__label--top">
+                            <div><strong>{chart.favorable}</strong><span class="women-defense__icon women-defense__icon--up"><img src={thumbsDown.src} alt="" /></span></div>
+                            <b>Favoráveis</b>
+                        </div>
+                        <div class="women-defense__papers" aria-hidden="true">
+                            <img src={chart.papers.src} alt="" />
+                        </div>
+                        <div class="women-defense__label women-defense__label--bottom">
+                            <div><strong>{chart.unfavorable}</strong><span class="women-defense__icon"><img src={thumbsDown.src} alt="" /></span></div>
+                            <b>Desfavoráveis</b>
+                        </div>
+                    </div>
+                </article>
+            ))}
+        </figure>
+
+        <aside class="women-defense__note">A cada 100 proposições sobre gênero assinadas por mulheres, 85 são favoráveis</aside>
+
+        <footer class="women-defense__footer">
+            <span>No Congresso Nacional não há dados sobre pessoas não-binárias</span>
+            <img src={elasHorizontal.src} alt="Elas no Congresso" />
+        </footer>
+    </div>
+</section>
+
+<div class="women-defense-fact">
+    <div class="women-defense-fact__content">
+        <p>Você sabia que Partidos, Comissões, Bancadas e Frentes Suprapartidárias podem definir o rumo da sua vida em temas como violência doméstica, dignidade sexual e autonomia financeira?</p>
+    </div>
+</div>
+
+<style>
+    .women-defense {
+        position: relative;
+        min-height: 970.5px;
+        overflow: hidden;
+        color: #0b0f5e;
+        background: #fff;
+        font-family: "Plus Jakarta Sans", sans-serif;
+    }
+    .women-defense *, .women-defense *::before, .women-defense *::after { box-sizing: border-box; }
+    .women-defense__container { position: relative; width: 816px; height: 970.5px; margin: 0 auto; padding: 48px; }
+    .women-defense__header { display: flex; width: 720px; height: 132px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .women-defense__attention { display: block; width: 96px; height: 4px; }
+    .women-defense h2, .women-defense h3, .women-defense p { margin: 0; }
+    .women-defense h2 { width: 720px; height: 24px; color: #0b0f5e; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 42px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .women-defense__header p { width: 720px; color: #0b0f5e; font-size: 18px; font-weight: 400; line-height: 24px; }
+    .women-defense__figure { display: flex; width: 720px; height: 690.5px; margin: 10px 0 0; padding: 24px 0; align-items: flex-end; justify-content: center; gap: 24px; overflow: hidden; }
+    .women-defense__chart { display: flex; width: 244.502px; height: 642.5px; flex: none; flex-direction: column; align-items: center; justify-content: flex-end; gap: 16px; padding: 16px 0; }
+    .women-defense__chart-heading { display: flex; width: 244.502px; height: 72px; flex: none; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0; }
+    .women-defense__chart-heading span { height: 24px; font-size: 16px; line-height: 24px; }
+    .women-defense__chart-heading h3 { height: 32px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 24px; font-weight: 700; line-height: 32px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .women-defense__waffle { display: flex; width: 244.502px; height: 522.5px; flex: none; flex-direction: column; align-items: center; gap: 16px; padding: 24px 0; }
+    .women-defense__label { display: flex; height: 60px; flex-direction: column; align-items: center; gap: 4px; color: #0b0f5e; }
+    .women-defense__label--top { width: 113px; }
+    .women-defense__label--bottom { width: 113px; margin-top: auto; }
+    .women-defense__label > div { display: flex; height: 32px; align-items: center; gap: 8px; }
+    .women-defense__label strong { display: block; height: 24px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 42px; font-variation-settings: "wdth" 75; }
+    .women-defense__label b { height: 24px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; white-space: nowrap; }
+    .women-defense__icon { display: grid; width: 32px; height: 32px; place-items: center; flex: none; overflow: hidden; border-radius: 999px; background: #ff5865; box-shadow: inset -.5px -.5px 0 #0b0f5e; }
+    .women-defense__icon--up { background: #def279; }
+    .women-defense__icon img { width: 24px; height: 24px; }
+    .women-defense__icon--up img { transform: rotate(180deg); }
+    .women-defense__papers { width: 244.50201416015625px; height: 322.5px; }
+    .women-defense__papers img { display: block; width: 244.8000030517578px; height: 326.8446960449219px; max-width: none; object-fit: fill; object-position: 0 0; transform: translate(-0.617431640625px, -2.47265625px); transform-origin: 0 0; }
+    .women-defense__chart:nth-child(2) .women-defense__papers img { transform: translate(-0.175537109375px, -2.12890625px); }
+    .women-defense__note { position: absolute; z-index: 1; top: 352.5px; left: -111.312px; display: flex; width: 240px; height: 180px; align-items: center; justify-content: center; padding: 48px 24px; transform: rotate(-5deg); background: #def279; box-shadow: 0 4px 0 #0b0f5e; color: #0b0f5e; font-size: 18px; font-weight: 700; line-height: 24px; text-align: center; }
+    .women-defense__footer { position: absolute; bottom: 48px; left: 48px; display: flex; width: 720px; height: 32px; align-items: flex-start; justify-content: space-between; gap: 24px; border-top: 1px solid #0b0f5e; padding-top: 8px; color: #0b0f5e; font-size: 14px; line-height: 16px; }
+    .women-defense__footer span { margin-top: 4px; }
+    .women-defense__footer img { width: 113.217px; height: 12px; margin: 6px 8px 0; }
+    .women-defense-fact { display: flex; width: 100%; height: 170.32435607910156px; margin: 0; box-sizing: border-box; flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; padding: 48px 0; background: #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
+    .women-defense-fact__content { display: flex; width: 720px; height: 74.32435607910156px; flex: none; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 16px; overflow: hidden; }
+    .women-defense-fact p { width: 720px; height: 72px; margin: 0; flex: none; color: #0b0f5e; font-size: 18px; font-weight: 400; line-height: 24px; letter-spacing: 0; text-align: left; text-transform: none; transform: matrix(0.9999947547912598, -0.003228801768273115, 0.003228801768273115, 0.9999947547912598, -0.1143484115600586, 2.324735403060913); transform-origin: 0 0; }
+    @media (max-width: 767px) {
+        .women-defense { min-height: 0; overflow: visible; }
+        .women-defense__container { width: 100%; height: auto; padding: 48px 24px; }
+        .women-defense__header, .women-defense h2, .women-defense__header p, .women-defense__figure, .women-defense__footer { width: 100%; height: auto; }
+        .women-defense h2 { font-size: 28px; line-height: 34px; }
+        .women-defense__figure { align-items: center; flex-direction: column; margin-top: 10px; overflow: visible; }
+        .women-defense__note { position: relative; top: auto; left: auto; margin: 12px auto 48px; }
+        .women-defense__footer { position: relative; bottom: auto; left: auto; }
+        .women-defense-fact { width: 100%; height: auto; min-height: 168px; padding: 48px 24px; }
+        .women-defense-fact__content { width: 100%; height: auto; }
+        .women-defense-fact p { width: 100%; height: auto; }
+    }
+</style>
