@@ -1,6 +1,7 @@
 ---
 import RedesignHeader from "../../components/redesign/RedesignHeader.astro";
 import Hero from "../../components/redesign/Hero.astro";
+import RightsUnderAttack from "../../components/redesign/RightsUnderAttack.astro";
 import { ClientRouter } from "astro:transitions";
 import "../../styles/tailwind.css";
 import "../../styles/redesign-shared-background.css";
@@ -22,7 +23,7 @@ import "../../styles/redesign-shared-background.css";
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap"
             rel="stylesheet"
         />
         <ClientRouter fallback="swap" />
@@ -31,6 +32,7 @@ import "../../styles/redesign-shared-background.css";
         <div class="redesign-home-background redesign-shared-background">
             <RedesignHeader />
             <Hero />
+            <RightsUnderAttack />
         </div>
     </body>
 </html>
