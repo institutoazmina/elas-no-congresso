@@ -1,6 +1,7 @@
 ---
 import azmLogo from "./assets/azm.svg?url";
 import HighlighterMarks from "./HighlighterMarks.astro";
+import "../../styles/redesign-shared-background.css";
 
 const links = [
     { href: "/redesign/propostas-e-votacoes", label: "Atividade legislativa" },
@@ -11,7 +12,7 @@ const links = [
 ];
 ---
 
-<header class="redesign-header" transition:persist="redesign-header">
+<header class="redesign-header redesign-shared-background" transition:persist="redesign-header">
     <nav
         class="redesign-header__content container-fluid wrap tw:!max-w-screen"
         aria-label="Navegação principal"
@@ -73,9 +74,6 @@ const links = [
 
 <style>
     .redesign-header {
-        background-color: #ffffff;
-        background-image: radial-gradient(rgba(11, 15, 94, 0.48) 0.7px, transparent 0.7px);
-        background-size: 5px 5px;
         color: #0b0f5e;
         min-height: 104px;
     }
@@ -291,8 +289,25 @@ const links = [
         mobileMenu.addEventListener("toggle", scheduleHighlighterUpdate);
     };
 
+    const bindHighlighterLayoutObserver = () => {
+        const nav = document.querySelector(".redesign-header__content");
+
+        if (!nav || nav.dataset.highlighterLayoutBound) return;
+
+        nav.dataset.highlighterLayoutBound = "true";
+
+        const observer = new ResizeObserver(scheduleHighlighterUpdate);
+        observer.observe(nav);
+        nav.querySelectorAll("[data-highlighter-target]").forEach((target) => {
+            observer.observe(target);
+        });
+
+        document.fonts?.ready.then(scheduleHighlighterUpdate);
+    };
+
     const refreshHighlighter = () => {
         bindMobileMenu();
+        bindHighlighterLayoutObserver();
         scheduleHighlighterUpdate();
     };
 

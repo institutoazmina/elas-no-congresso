@@ -1,7 +1,9 @@
 ---
 import RedesignHeader from "../../components/redesign/RedesignHeader.astro";
+import Hero from "../../components/redesign/Hero.astro";
 import { ClientRouter } from "astro:transitions";
 import "../../styles/tailwind.css";
+import "../../styles/redesign-shared-background.css";
 ---
 
 <!doctype html>
@@ -17,10 +19,19 @@ import "../../styles/tailwind.css";
             type="font/woff2"
             crossorigin
         />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700&display=swap"
+            rel="stylesheet"
+        />
         <ClientRouter fallback="swap" />
     </head>
     <body class="tw:!pt-0 tw:!bg-white">
-        <RedesignHeader />
+        <div class="redesign-home-background redesign-shared-background">
+            <RedesignHeader />
+            <Hero />
+        </div>
     </body>
 </html>
 
@@ -52,6 +63,10 @@ import "../../styles/tailwind.css";
 
     .redesign-header .ff1 {
         font-family: "ETC Anybody", sans-serif;
+    }
+
+    .redesign-home-background > .redesign-shared-background {
+        background: transparent;
     }
 
 </style>
