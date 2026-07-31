@@ -1,0 +1,71 @@
+---
+import pile136 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-136.png";
+import pile91 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-91.png";
+import pile89 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-89.png";
+import pile85 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-85.png";
+import pile81 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-81.png";
+import pile68 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-68.png";
+import pile52 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-52.png";
+import pile22 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-22.png";
+import thumbsDown from "../../assets/images/redesign/home-chart/thumbs-down.svg";
+import info from "../../assets/images/redesign/home-chart/info.svg";
+import elasHorizontal from "../../assets/images/redesign/home-chart/elas-horizontal.svg";
+import attention from "../../assets/images/redesign/hero/attention.svg";
+
+const themes = [
+    { count: 136, title: "Dignidade sexual", pile: pile136, width: 136, chartWidth: 113, chartHeight: 195, pileHeight: 127, top: 24, countSize: 36, label: true },
+    { count: 91, title: "Violência contra a mulher", pile: pile91, width: 192, chartWidth: 65, chartHeight: 140, pileHeight: 100, top: 79 },
+    { count: 89, title: "Direitos sociais", pile: pile89, width: 127, chartWidth: 66, chartHeight: 139, pileHeight: 99, top: 80 },
+    { count: 85, title: "Gênero", pile: pile85, width: 96, chartWidth: 66, chartHeight: 136.5, pileHeight: 96.5, top: 82.5 },
+    { count: 81, title: "Direitos sexuais e reprodutivos", pile: pile81, width: 192, chartWidth: 65, chartHeight: 134, pileHeight: 94, top: 85 },
+    { count: 68, title: "Lei Maria da Penha", pile: pile68, width: 147, chartWidth: 66, chartHeight: 126.5, pileHeight: 86.5, top: 92.5 },
+    { count: 52, title: "Maternidade", pile: pile52, width: 102, chartWidth: 66, chartHeight: 117, pileHeight: 77, top: 102 },
+    { count: 22, title: "Feminicídio", pile: pile22, width: 96, chartWidth: 66, chartHeight: 99, pileHeight: 59, top: 120 },
+];
+---
+
+<section class="tw:overflow-hidden tw:bg-white tw:text-[#0B0F5E] tw:lg:pt-12" aria-labelledby="legislative-setbacks-title">
+    <div class="tw:mx-auto tw:flex tw:w-full tw:max-w-[1352px] tw:flex-col tw:gap-2.5 tw:px-6 tw:py-12 tw:lg:h-[657px] tw:lg:w-[1352px] tw:lg:max-w-none tw:lg:p-12">
+        <header class="tw:mx-auto tw:flex tw:w-full tw:max-w-[720px] tw:flex-col tw:items-start tw:gap-4 tw:lg:mx-auto tw:h-[126px]">
+            <img class="tw:h-1 tw:w-24" src={attention.src} alt="" />
+            <h2 id="legislative-setbacks-title" class="tw:m-0 tw:w-full tw:font-[ETC_Anybody] tw:text-[28px] tw:font-bold tw:leading-[34px] tw:uppercase tw:[font-variation-settings:'wdth'_75] tw:sm:text-[36px] tw:sm:leading-[42px]">
+                Estes são Os temas com mais<br class="tw:hidden tw:sm:block" /> retrocesso no legislativo
+            </h2>
+            <p class="tw:m-0 tw:w-full tw:font-[Plus_Jakarta_Sans] tw:text-[18px] tw:leading-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+        </header>
+
+        <figure class="tw:m-0 tw:w-full tw:overflow-x-auto tw:py-6 tw:lg:h-[383px] tw:lg:py-6">
+            <div class="tw:relative tw:mx-auto tw:flex tw:min-w-[1256px] tw:items-end tw:gap-6 tw:lg:h-[335px]">
+                {themes.map((theme) => (
+                    <article
+                        class="tw:flex tw:shrink-0 tw:flex-col tw:items-center tw:justify-end tw:gap-4 tw:py-4"
+                        style={`width: ${theme.width}px; height: ${theme.chartHeight + 140}px;`}
+                        aria-label={`${theme.count} proposições desfavoráveis: ${theme.title}`}
+                    >
+                        <div class="tw:flex tw:flex-col tw:items-center tw:justify-end tw:gap-2" style={`width: ${theme.chartWidth}px; height: ${theme.chartHeight}px;`}>
+                            <div class={`tw:flex tw:items-center tw:justify-center tw:gap-2 ${theme.label ? "tw:flex-col tw:gap-1" : "tw:flex-row"}`}>
+                                <div class="tw:flex tw:items-center tw:justify-center tw:gap-2">
+                                    <span class={`tw:font-[ETC_Anybody] tw:font-bold tw:leading-8 tw:uppercase tw:[font-variation-settings:'wdth'_75] ${theme.countSize === 36 ? "tw:text-[36px] tw:leading-[42px]" : "tw:text-[28px]"}`}>{theme.count}</span>
+                                    <span class="tw:relative tw:block tw:size-8 tw:shrink-0 tw:rounded-full tw:bg-[#FF5865] tw:shadow-[-0.5px_-0.5px_0_#0B0F5E]">
+                                        <img class="tw:absolute tw:inset-[12.5%] tw:size-6 tw:rotate-180" src={thumbsDown.src} alt="" />
+                                    </span>
+                                </div>
+                                {theme.label && <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">Desfavoráveis</span>}
+                            </div>
+                            <img class="tw:w-[46px] tw:object-fill" style={`height: ${theme.pileHeight}px;`} src={theme.pile.src} alt="" />
+                        </div>
+                        <div class="tw:flex tw:h-[92px] tw:w-full tw:flex-col tw:items-center tw:justify-center tw:gap-1 tw:py-2">
+                            <img class="tw:size-6" src={info.src} alt="" />
+                            <h3 class="tw:m-0 tw:text-center tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">{theme.title}</h3>
+                        </div>
+                    </article>
+                ))}
+            </div>
+        </figure>
+
+        <footer class="tw:flex tw:w-full tw:items-start tw:justify-between tw:gap-6 tw:border-t tw:border-[#0B0F5E] tw:pt-2 tw:font-[Plus_Jakarta_Sans] tw:text-[14px] tw:leading-4 tw:lg:h-8">
+            <span class="tw:pt-1">Lorem ipsum dolor sit amet, consectetur adipiscing eli</span>
+            <img class="tw:mt-1 tw:h-3 tw:w-[113.217px] tw:shrink-0" src={elasHorizontal.src} alt="Elas no Congresso" />
+        </footer>
+    </div>
+</section>
