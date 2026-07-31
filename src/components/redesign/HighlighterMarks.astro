@@ -1,0 +1,122 @@
+---
+import markOne from "./assets/highlighter-mark-1.svg?url";
+import markTwo from "./assets/highlighter-mark-2.svg?url";
+import markThree from "./assets/highlighter-mark-3.svg?url";
+import markFour from "./assets/highlighter-mark-4.svg?url";
+---
+
+<span class="highlighter-marks" aria-hidden="true" hidden>
+    <span class="highlighter-marks__layer highlighter-marks__layer--one">
+        <span class="highlighter-marks__image-wrap highlighter-marks__image-wrap--one">
+            <img src={markOne} alt="" />
+        </span>
+    </span>
+    <span class="highlighter-marks__layer highlighter-marks__layer--two">
+        <span class="highlighter-marks__image-wrap highlighter-marks__image-wrap--two">
+            <img src={markTwo} alt="" />
+        </span>
+    </span>
+    <span class="highlighter-marks__layer highlighter-marks__layer--three">
+        <span class="highlighter-marks__image-wrap highlighter-marks__image-wrap--three">
+            <img src={markThree} alt="" />
+        </span>
+    </span>
+    <span class="highlighter-marks__layer highlighter-marks__layer--four">
+        <span class="highlighter-marks__image-wrap highlighter-marks__image-wrap--four">
+            <img src={markFour} alt="" />
+        </span>
+    </span>
+</span>
+
+<style>
+    .highlighter-marks {
+        display: block;
+        height: 51px;
+        left: var(--highlighter-left, 0px);
+        pointer-events: none;
+        position: absolute;
+        top: var(--highlighter-top, 50%);
+        transition: left 250ms ease, top 250ms ease, width 250ms ease;
+        transform: translateY(-50%);
+        width: var(--highlighter-width, 217px);
+        z-index: var(--highlighter-z-index, 0);
+    }
+
+    .highlighter-marks[hidden] {
+        display: none;
+    }
+
+    .highlighter-marks__layer,
+    .highlighter-marks__image-wrap,
+    .highlighter-marks img {
+        display: block;
+        position: absolute;
+    }
+
+    .highlighter-marks__layer {
+        mix-blend-mode: multiply;
+    }
+
+    .highlighter-marks__image-wrap,
+    .highlighter-marks img {
+        height: 100%;
+        inset: 0;
+        width: 100%;
+    }
+
+    .highlighter-marks__layer--one {
+        bottom: 33.33%;
+        left: 8.3%;
+        right: 0.46%;
+        top: 0;
+    }
+
+    .highlighter-marks__image-wrap--one {
+        bottom: 0;
+        left: 0.21%;
+        right: 0.29%;
+        top: 0;
+    }
+
+    .highlighter-marks__layer--two {
+        bottom: 9.8%;
+        left: 0;
+        right: 0.46%;
+        top: 0;
+    }
+
+    .highlighter-marks__image-wrap--two {
+        bottom: 0.37%;
+        left: 0.2%;
+        right: 0.28%;
+        top: 0.39%;
+    }
+
+    .highlighter-marks__layer--three {
+        bottom: 7.84%;
+        left: 0;
+        right: 0;
+        top: 27.45%;
+    }
+
+    .highlighter-marks__image-wrap--three {
+        bottom: 0;
+        left: 0.19%;
+        right: 0;
+        top: 0.17%;
+    }
+
+    .highlighter-marks__layer--four {
+        bottom: 0;
+        left: 13.36%;
+        right: 0;
+        top: 37.25%;
+    }
+
+    .highlighter-marks__image-wrap--four {
+        bottom: 0.17%;
+        left: 0.22%;
+        right: 0.22%;
+        top: 0;
+    }
+</style>

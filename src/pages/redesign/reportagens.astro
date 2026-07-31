@@ -1,0 +1,77 @@
+---
+import RedesignLayout from "../../components/redesign/RedesignLayout.astro";
+import Share from "../../components/Share.astro";
+import NewsletterSection from "../../components/NewsletterSection.astro";
+import { fetchReportagens } from "../../lib/wp";
+
+const posts = await fetchReportagens(1988, 99);
+---
+
+<RedesignLayout title="Reportagens">
+    <main>
+        <header class="abertura-acompanhe tw:min-h-[50vh]!">
+            <Share title="Reportagens" />
+
+            <div class="container-fluid wrap">
+                <div class="row">
+                    <div class="col-xs-12 col-md-7 col-md-offset-1">
+                        <h2 class="titulo-variavel tcb t9 mb2">
+                            <span class="w900 wdth350">Reportagens</span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        {
+            posts.length > 0 && (
+                <article class="conteudo-acompanhe">
+                    <div class="container-fluid wrap">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <h3 class="tw:text-2xl tw:md:text-3xl tw:font-semibold ff1 tw:mb-8! tca tw:text-center">
+                                    Veja as histórias que os dados do Congresso
+                                    nos conta.
+                                </h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            {posts.map((post) => {
+                                const img =
+                                    post._embedded?.["wp:featuredmedia"]?.[0]
+                                        ?.link ?? "/uploads/card1.png";
+                                return (
+                                    <div class="col-xs-12 col-sm-6 col-md-4">
+                                        <a
+                                            href={post.link}
+                                            class="card tw:mb-12!"
+                                        >
+                                            <figure class="tw:h-24 tw:relative">
+                                                <img
+                                                    src={img}
+                                                    alt=""
+                                                    loading="lazy"
+                                                    decoding="async"
+                                                    class="tw:object-cover! tw:object-center! tw:w-full! tw:h-full!"
+                                                />
+                                            </figure>
+                                            <h3
+                                                class="ff1 tw:font-black tw:text-2xl wdth200"
+                                                set:html={post.title.rendered}
+                                            />
+                                            <button class="btn-seta">
+                                                Ler matéria
+                                            </button>
+                                        </a>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </article>
+            )
+        }
+
+        <NewsletterSection />
+    </main>
+</RedesignLayout>

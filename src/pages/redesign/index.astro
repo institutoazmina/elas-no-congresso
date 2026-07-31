@@ -1,0 +1,57 @@
+---
+import RedesignHeader from "../../components/redesign/RedesignHeader.astro";
+import { ClientRouter } from "astro:transitions";
+import "../../styles/tailwind.css";
+---
+
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Redesign | Elas no Congresso</title>
+        <link
+            rel="preload"
+            href="/assets/fonts/ETCAnybodyVariable.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <ClientRouter fallback="swap" />
+    </head>
+    <body class="tw:!pt-0 tw:!bg-white">
+        <RedesignHeader />
+    </body>
+</html>
+
+<style is:global>
+    @font-face {
+        font-family: "ETC Anybody";
+        font-style: normal;
+        font-weight: 50 1000;
+        font-display: swap;
+        src: url("/assets/fonts/ETCAnybodyVariable.woff2") format("woff2-variations");
+    }
+
+    .redesign-header,
+    .redesign-header * {
+        box-sizing: border-box;
+    }
+
+    body:has(.redesign-header) {
+        margin: 0;
+    }
+
+    .redesign-header .container-fluid {
+        width: 100%;
+    }
+
+    .redesign-header .wrap {
+        max-width: 1310px;
+    }
+
+    .redesign-header .ff1 {
+        font-family: "ETC Anybody", sans-serif;
+    }
+
+</style>
