@@ -1,0 +1,179 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="200" height="200" fill="#363636"/>
+<g id="Components">
+<g id="bg-pattern-cutting-mat" filter="url(#filter0_n_437_153)">
+<rect width="200" height="200" fill="#0B0F5E"/>
+<g id="cell" opacity="0.5">
+<mask id="path-1-inside-1_437_153" fill="white">
+<path d="M0 0H40V40H0V0Z"/>
+</mask>
+<path d="M0 0V-2H-2V0H0ZM0 0V2H40V0V-2H0V0ZM0 40H2V0H0H-2V40H0Z" fill="#4242F6" mask="url(#path-1-inside-1_437_153)"/>
+</g>
+<g id="cell_2" opacity="0.5">
+<mask id="path-3-inside-2_437_153" fill="white">
+<path d="M40 0H80V40H40V0Z"/>
+</mask>
+<path d="M40 0V-2H39V0H40ZM40 0V2H80V0V-2H40V0ZM40 40H41V0H40H39V40H40Z" fill="#4242F6" mask="url(#path-3-inside-2_437_153)"/>
+</g>
+<g id="cell_3" opacity="0.5">
+<mask id="path-5-inside-3_437_153" fill="white">
+<path d="M80 0H120V40H80V0Z"/>
+</mask>
+<path d="M80 0V-2H79V0H80ZM80 0V2H120V0V-2H80V0ZM80 40H81V0H80H79V40H80Z" fill="#4242F6" mask="url(#path-5-inside-3_437_153)"/>
+</g>
+<g id="cell_4" opacity="0.5">
+<mask id="path-7-inside-4_437_153" fill="white">
+<path d="M120 0H160V40H120V0Z"/>
+</mask>
+<path d="M120 0V-2H119V0H120ZM120 0V2H160V0V-2H120V0ZM120 40H121V0H120H119V40H120Z" fill="#4242F6" mask="url(#path-7-inside-4_437_153)"/>
+</g>
+<g id="cell_5" opacity="0.5">
+<mask id="path-9-inside-5_437_153" fill="white">
+<path d="M160 0H200V40H160V0Z"/>
+</mask>
+<path d="M160 0V-2H159V0H160ZM160 0V2H200V0V-2H160V0ZM160 40H161V0H160H159V40H160Z" fill="#4242F6" mask="url(#path-9-inside-5_437_153)"/>
+</g>
+<g id="cell_6" opacity="0.5">
+<mask id="path-11-inside-6_437_153" fill="white">
+<path d="M0 40H40V80H0V40Z"/>
+</mask>
+<path d="M0 40V39H-2V40H0ZM0 40V41H40V40V39H0V40ZM0 80H2V40H0H-2V80H0Z" fill="#4242F6" mask="url(#path-11-inside-6_437_153)"/>
+</g>
+<g id="cell_7" opacity="0.5">
+<mask id="path-13-inside-7_437_153" fill="white">
+<path d="M40 40H80V80H40V40Z"/>
+</mask>
+<path d="M40 40V39H39V40H40ZM40 40V41H80V40V39H40V40ZM40 80H41V40H40H39V80H40Z" fill="#4242F6" mask="url(#path-13-inside-7_437_153)"/>
+</g>
+<g id="cell_8" opacity="0.5">
+<mask id="path-15-inside-8_437_153" fill="white">
+<path d="M80 40H120V80H80V40Z"/>
+</mask>
+<path d="M80 40V39H79V40H80ZM80 40V41H120V40V39H80V40ZM80 80H81V40H80H79V80H80Z" fill="#4242F6" mask="url(#path-15-inside-8_437_153)"/>
+</g>
+<g id="cell_9" opacity="0.5">
+<mask id="path-17-inside-9_437_153" fill="white">
+<path d="M120 40H160V80H120V40Z"/>
+</mask>
+<path d="M120 40V39H119V40H120ZM120 40V41H160V40V39H120V40ZM120 80H121V40H120H119V80H120Z" fill="#4242F6" mask="url(#path-17-inside-9_437_153)"/>
+</g>
+<g id="cell_10" opacity="0.5">
+<mask id="path-19-inside-10_437_153" fill="white">
+<path d="M160 40H200V80H160V40Z"/>
+</mask>
+<path d="M160 40V39H159V40H160ZM160 40V41H200V40V39H160V40ZM160 80H161V40H160H159V80H160Z" fill="#4242F6" mask="url(#path-19-inside-10_437_153)"/>
+</g>
+<g id="cell_11" opacity="0.5">
+<mask id="path-21-inside-11_437_153" fill="white">
+<path d="M0 80H40V120H0V80Z"/>
+</mask>
+<path d="M0 80V79H-2V80H0ZM0 80V81H40V80V79H0V80ZM0 120H2V80H0H-2V120H0Z" fill="#4242F6" mask="url(#path-21-inside-11_437_153)"/>
+</g>
+<g id="cell_12" opacity="0.5">
+<mask id="path-23-inside-12_437_153" fill="white">
+<path d="M40 80H80V120H40V80Z"/>
+</mask>
+<path d="M40 80V79H39V80H40ZM40 80V81H80V80V79H40V80ZM40 120H41V80H40H39V120H40Z" fill="#4242F6" mask="url(#path-23-inside-12_437_153)"/>
+</g>
+<g id="cell_13" opacity="0.5">
+<mask id="path-25-inside-13_437_153" fill="white">
+<path d="M80 80H120V120H80V80Z"/>
+</mask>
+<path d="M80 80V79H79V80H80ZM80 80V81H120V80V79H80V80ZM80 120H81V80H80H79V120H80Z" fill="#4242F6" mask="url(#path-25-inside-13_437_153)"/>
+</g>
+<g id="cell_14" opacity="0.5">
+<mask id="path-27-inside-14_437_153" fill="white">
+<path d="M120 80H160V120H120V80Z"/>
+</mask>
+<path d="M120 80V79H119V80H120ZM120 80V81H160V80V79H120V80ZM120 120H121V80H120H119V120H120Z" fill="#4242F6" mask="url(#path-27-inside-14_437_153)"/>
+</g>
+<g id="cell_15" opacity="0.5">
+<mask id="path-29-inside-15_437_153" fill="white">
+<path d="M160 80H200V120H160V80Z"/>
+</mask>
+<path d="M160 80V79H159V80H160ZM160 80V81H200V80V79H160V80ZM160 120H161V80H160H159V120H160Z" fill="#4242F6" mask="url(#path-29-inside-15_437_153)"/>
+</g>
+<g id="cell_16" opacity="0.5">
+<mask id="path-31-inside-16_437_153" fill="white">
+<path d="M0 120H40V160H0V120Z"/>
+</mask>
+<path d="M0 120V119H-2V120H0ZM0 120V121H40V120V119H0V120ZM0 160H2V120H0H-2V160H0Z" fill="#4242F6" mask="url(#path-31-inside-16_437_153)"/>
+</g>
+<g id="cell_17" opacity="0.5">
+<mask id="path-33-inside-17_437_153" fill="white">
+<path d="M40 120H80V160H40V120Z"/>
+</mask>
+<path d="M40 120V119H39V120H40ZM40 120V121H80V120V119H40V120ZM40 160H41V120H40H39V160H40Z" fill="#4242F6" mask="url(#path-33-inside-17_437_153)"/>
+</g>
+<g id="cell_18" opacity="0.5">
+<mask id="path-35-inside-18_437_153" fill="white">
+<path d="M80 120H120V160H80V120Z"/>
+</mask>
+<path d="M80 120V119H79V120H80ZM80 120V121H120V120V119H80V120ZM80 160H81V120H80H79V160H80Z" fill="#4242F6" mask="url(#path-35-inside-18_437_153)"/>
+</g>
+<g id="cell_19" opacity="0.5">
+<mask id="path-37-inside-19_437_153" fill="white">
+<path d="M120 120H160V160H120V120Z"/>
+</mask>
+<path d="M120 120V119H119V120H120ZM120 120V121H160V120V119H120V120ZM120 160H121V120H120H119V160H120Z" fill="#4242F6" mask="url(#path-37-inside-19_437_153)"/>
+</g>
+<g id="cell_20" opacity="0.5">
+<mask id="path-39-inside-20_437_153" fill="white">
+<path d="M160 120H200V160H160V120Z"/>
+</mask>
+<path d="M160 120V119H159V120H160ZM160 120V121H200V120V119H160V120ZM160 160H161V120H160H159V160H160Z" fill="#4242F6" mask="url(#path-39-inside-20_437_153)"/>
+</g>
+<g id="cell_21" opacity="0.5">
+<mask id="path-41-inside-21_437_153" fill="white">
+<path d="M0 160H40V200H0V160Z"/>
+</mask>
+<path d="M0 160V159H-2V160H0ZM0 160V161H40V160V159H0V160ZM0 200H2V160H0H-2V200H0Z" fill="#4242F6" mask="url(#path-41-inside-21_437_153)"/>
+</g>
+<g id="cell_22" opacity="0.5">
+<mask id="path-43-inside-22_437_153" fill="white">
+<path d="M40 160H80V200H40V160Z"/>
+</mask>
+<path d="M40 160V159H39V160H40ZM40 160V161H80V160V159H40V160ZM40 200H41V160H40H39V200H40Z" fill="#4242F6" mask="url(#path-43-inside-22_437_153)"/>
+</g>
+<g id="cell_23" opacity="0.5">
+<mask id="path-45-inside-23_437_153" fill="white">
+<path d="M80 160H120V200H80V160Z"/>
+</mask>
+<path d="M80 160V159H79V160H80ZM80 160V161H120V160V159H80V160ZM80 200H81V160H80H79V200H80Z" fill="#4242F6" mask="url(#path-45-inside-23_437_153)"/>
+</g>
+<g id="cell_24" opacity="0.5">
+<mask id="path-47-inside-24_437_153" fill="white">
+<path d="M120 160H160V200H120V160Z"/>
+</mask>
+<path d="M120 160V159H119V160H120ZM120 160V161H160V160V159H120V160ZM120 200H121V160H120H119V200H120Z" fill="#4242F6" mask="url(#path-47-inside-24_437_153)"/>
+</g>
+<g id="cell_25" opacity="0.5">
+<mask id="path-49-inside-25_437_153" fill="white">
+<path d="M160 160H200V200H160V160Z"/>
+</mask>
+<path d="M160 160V159H159V160H160ZM160 160V161H200V160V159H160V160ZM160 200H161V160H160H159V200H160Z" fill="#4242F6" mask="url(#path-49-inside-25_437_153)"/>
+</g>
+</g>
+</g>
+<defs>
+<filter id="filter0_n_437_153" x="0" y="0" width="200" height="200" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feTurbulence type="fractalNoise" baseFrequency="1 1" stitchTiles="stitch" numOctaves="3" result="noise" seed="9521" />
+<feComponentTransfer in="noise" result="coloredNoise1">
+<feFuncR type="linear" slope="2" intercept="-0.5" />
+<feFuncG type="linear" slope="2" intercept="-0.5" />
+<feFuncB type="linear" slope="2" intercept="-0.5" />
+<feFuncA type="discrete" tableValues="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 "/>
+</feComponentTransfer>
+<feComposite operator="in" in2="shape" in="coloredNoise1" result="noise1Clipped" />
+<feComponentTransfer in="noise1Clipped" result="color1">
+<feFuncA type="table" tableValues="0 0.2" />
+</feComponentTransfer>
+<feMerge result="effect1_noise_437_153">
+<feMergeNode in="shape" />
+<feMergeNode in="color1" />
+</feMerge>
+</filter>
+</defs>
+</svg>
