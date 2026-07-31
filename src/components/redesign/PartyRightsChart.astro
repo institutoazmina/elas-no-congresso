@@ -1,0 +1,106 @@
+---
+import attention from "../../assets/images/redesign/party-chart/attention.svg";
+import chevron from "../../assets/images/redesign/party-chart/chevron.svg";
+import elasHorizontal from "../../assets/images/redesign/party-chart/elas-horizontal.svg";
+import thumbBase from "../../assets/images/redesign/party-chart/thumbs-down-base.svg";
+import thumb from "../../assets/images/redesign/party-chart/thumbs-down.svg";
+import unfavourable16 from "../../assets/images/redesign/party-chart/papelada-desfavoravel-16.png";
+import favourable7 from "../../assets/images/redesign/party-chart/papelada-favoravel-7.png";
+import unfavourable206 from "../../assets/images/redesign/party-chart/papelada-desfavoravel-206.png";
+import favourable161 from "../../assets/images/redesign/party-chart/papelada-favoravel-161.png";
+import unfavourable18 from "../../assets/images/redesign/party-chart/papelada-desfavoravel-18.png";
+import favourable17 from "../../assets/images/redesign/party-chart/papelada-favoravel-17.png";
+import unfavourable25 from "../../assets/images/redesign/party-chart/papelada-desfavoravel-25.png";
+import favourable25 from "../../assets/images/redesign/party-chart/papelada-favoravel-25.png";
+import favourable12 from "../../assets/images/redesign/party-chart/papelada-favoravel-12.png";
+import unfavourable6 from "../../assets/images/redesign/party-chart/papelada-desfavoravel-6.png";
+
+const parties = [
+    { name: "Novo", percentage: "70% das proposições\nsão desfavoráveis", width: 167, negative: "16", positive: "7", negativeImage: unfavourable16, positiveImage: favourable7, negativeHeight: 55, positiveHeight: 50 },
+    { name: "PL", percentage: "56%", width: 108, negative: "206", positive: "161", negativeImage: unfavourable206, positiveImage: favourable161, negativeHeight: 169, positiveHeight: 142 },
+    { name: "Avante", percentage: "51%", width: 108, negative: "18", positive: "17", negativeImage: unfavourable18, positiveImage: favourable17, negativeHeight: 56.5, positiveHeight: 56 },
+    { name: "PSL", percentage: "50%", width: 108, negative: "25", positive: "25", negativeImage: unfavourable25, positiveImage: favourable25, negativeHeight: 60.5, positiveHeight: 60.5 },
+    { name: "PSC", percentage: "33%", width: 108, negative: "6", positive: "12", negativeImage: unfavourable6, positiveImage: favourable12, negativeHeight: 49, positiveHeight: 53 },
+];
+---
+
+<section class="party-rights-chart" aria-labelledby="party-rights-chart-title">
+    <div class="party-rights-chart__container">
+        <header class="party-rights-chart__header">
+            <img class="party-rights-chart__attention" src={attention.src} alt="" />
+            <h2 id="party-rights-chart-title">
+                <span>Estes são os partidos que mais têm</span>
+                <button class="party-rights-chart__select" type="button" aria-haspopup="listbox" aria-label="Filtro: Atacado">
+                    <span class="party-rights-chart__thumb"><img src={thumbBase.src} alt="" /><img src={thumb.src} alt="" /></span>
+                    <span>Atacado</span><img class="party-rights-chart__chevron" src={chevron.src} alt="" />
+                </button>
+                <span>Nossos direitos</span>
+            </h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+        </header>
+
+        <figure class="party-rights-chart__figure" aria-label="Partidos com mais proposições que atacam direitos">
+            {parties.map((party) => (
+                <article class="party-rights-chart__party" style={`width: ${party.width}px`}>
+                    <div class="party-rights-chart__piles">
+                        <div class="party-rights-chart__pile">
+                            <div class="party-rights-chart__value"><strong>{party.negative}</strong><span class="party-rights-chart__thumb"><img src={thumbBase.src} alt="" /><img src={thumb.src} alt="" /></span></div>
+                            <img class="party-rights-chart__paper" style={`height: ${party.negativeHeight}px`} src={party.negativeImage.src} alt={`${party.negative} proposições desfavoráveis`} />
+                        </div>
+                        <div class="party-rights-chart__pile">
+                            <div class="party-rights-chart__value"><strong>{party.positive}</strong><span class="party-rights-chart__thumb party-rights-chart__thumb--up"><img src={thumbBase.src} alt="" /><img src={thumb.src} alt="" /></span></div>
+                            <img class="party-rights-chart__paper" style={`height: ${party.positiveHeight}px`} src={party.positiveImage.src} alt={`${party.positive} proposições favoráveis`} />
+                        </div>
+                    </div>
+                    <div class="party-rights-chart__description"><strong>{party.name}</strong><span>{party.percentage.split("\n").map((line) => <>{line}<br /></>)}</span></div>
+                </article>
+            ))}
+        </figure>
+
+        <footer class="party-rights-chart__footer"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit</span><img src={elasHorizontal.src} alt="Elas no Congresso" /></footer>
+    </div>
+</section>
+
+<style>
+    .party-rights-chart { height: 729px; margin-bottom: 48px; overflow: hidden; background: #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
+    .party-rights-chart *, .party-rights-chart *::before, .party-rights-chart *::after { box-sizing: border-box; }
+    .party-rights-chart__container { position: relative; display: flex; width: 983px; height: 729px; margin: 0 auto; padding: 48px; flex-direction: column; align-items: center; gap: 10px; }
+    .party-rights-chart__header { display: flex; width: 720px; height: 156px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .party-rights-chart__attention { width: 96px; height: 4px; }
+    .party-rights-chart h2, .party-rights-chart p, .party-rights-chart figure { margin: 0; }
+    .party-rights-chart h2 { display: flex; width: 648px; height: 96px; flex-wrap: wrap; align-items: center; gap: 16px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 42px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .party-rights-chart h2 > span { height: 24px; white-space: nowrap; }
+    .party-rights-chart__select { display: flex; width: 230px; height: 56px; align-items: center; justify-content: center; gap: 8px; border: 2px solid #4242f6; padding: 12px 16px; background: #fff; color: #4242f6; font: inherit; line-height: 42px; text-transform: uppercase; cursor: pointer; }
+    .party-rights-chart__thumb { position: relative; display: block; width: 32px; height: 32px; flex: none; overflow: hidden; border-radius: 999px; }
+    .party-rights-chart__thumb > img:first-child { position: absolute; inset: 0; width: 32px; height: 32px; }
+    .party-rights-chart__thumb > img:last-child { position: absolute; inset: 4.44px 4px 3.56px; width: 24px; height: 24px; transform: rotate(180deg); }
+    .party-rights-chart__thumb--up > img:last-child { transform: none; }
+    .party-rights-chart__chevron { width: 16px; height: 8px; margin-left: 8px; }
+    .party-rights-chart__header > p { width: 720px; height: 24px; font-size: 18px; line-height: 24px; }
+    .party-rights-chart__figure { display: flex; width: 887px; height: 425px; padding: 24px 0; align-items: end; justify-content: center; gap: 72px; overflow: hidden; }
+    .party-rights-chart__party { display: flex; flex: none; flex-direction: column; align-items: center; justify-content: end; gap: 16px; padding: 16px 0; }
+    .party-rights-chart__piles { display: flex; min-width: 48px; min-height: 48px; align-items: end; justify-content: center; gap: 16px; overflow: hidden; }
+    .party-rights-chart__pile { display: flex; flex-direction: column; align-items: center; justify-content: end; gap: 8px; }
+    .party-rights-chart__value { display: flex; flex-direction: column; align-items: center; }
+    .party-rights-chart__value strong { height: 32px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 28px; font-weight: 700; line-height: 32px; font-variation-settings: "wdth" 75; }
+    .party-rights-chart__paper { display: block; width: 46px; object-fit: cover; }
+    .party-rights-chart__description { display: flex; width: 100%; height: 88px; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0; text-align: center; line-height: 24px; }
+    .party-rights-chart__description strong { max-width: 192px; min-width: 96px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .party-rights-chart__description span { font-size: 16px; line-height: 24px; white-space: nowrap; }
+    .party-rights-chart__footer { position: absolute; right: 48px; bottom: 48px; left: 48px; display: flex; width: 887px; height: 32px; align-items: flex-start; justify-content: space-between; border-top: 1px solid #0b0f5e; padding-top: 8px; font-size: 14px; line-height: 16px; }
+    .party-rights-chart__footer span { margin-top: 4px; }
+    .party-rights-chart__footer img { width: 113.217px; height: 12px; margin: 6px 8px 0; }
+    @media (max-width: 767px) {
+        .party-rights-chart { height: auto; overflow: hidden; }
+        .party-rights-chart__container { width: 100%; height: auto; padding: 48px 24px; }
+        .party-rights-chart__header { width: 100%; height: auto; margin: 0; }
+        .party-rights-chart h2 { width: 100%; height: auto; font-size: 28px; line-height: 34px; }
+        .party-rights-chart h2 > span { height: auto; white-space: normal; }
+        .party-rights-chart__select { height: 52px; font-size: 28px; line-height: 34px; }
+        .party-rights-chart__header > p { width: 100%; height: auto; }
+        .party-rights-chart__figure { width: 100%; height: auto; margin-top: 10px; flex-wrap: wrap; gap: 20px; overflow: visible; }
+        .party-rights-chart__party { width: calc(50% - 10px) !important; }
+        .party-rights-chart__footer { position: relative; right: auto; bottom: auto; left: auto; width: 100%; height: auto; min-height: 32px; margin-top: 10px; gap: 16px; }
+        .party-rights-chart__footer img { flex: none; }
+    }
+</style>
