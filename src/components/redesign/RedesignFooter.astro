@@ -1,0 +1,67 @@
+---
+import pattern from "../../assets/images/redesign/explore/bg-pattern-cutting-mat.svg";
+import elasLogo from "../../assets/images/redesign/footer/elas-no-congresso.svg";
+import creativeCommons from "../../assets/images/redesign/footer/creative-commons.svg";
+import instagram from "../../assets/images/redesign/footer/instagram.svg";
+import tiktok from "../../assets/images/redesign/footer/tiktok.svg";
+import substack from "../../assets/images/redesign/footer/substack.svg";
+import youtube from "../../assets/images/redesign/footer/youtube.svg";
+import github from "../../assets/images/redesign/footer/github.svg";
+import bluesky from "../../assets/images/redesign/footer/bluesky.svg";
+import azminaLogo from "../../assets/images/redesign/footer/azmina-footer.svg";
+---
+
+<footer class="redesign-footer" style={`--footer-pattern: url(${pattern.src})`}>
+    <div class="redesign-footer__main">
+        <section class="redesign-footer__alerts" aria-labelledby="footer-alerts-title">
+            <h2 id="footer-alerts-title">Receba nossos alertas</h2>
+            <p>Quer saber quando uma nova proposta sobre gênero é apresentada, ou quando algo de muita importância avança? A gente te avisa!</p>
+            <a class="redesign-footer__button" href="https://elasnocongresso.substack.com/" target="_blank" rel="noopener noreferrer">Saiba mais</a>
+        </section>
+
+        <section class="redesign-footer__identity" aria-labelledby="footer-social-title">
+            <a href="/redesign/" aria-label="Elas no Congresso">
+                <img src={elasLogo.src} alt="Elas no Congresso" />
+            </a>
+            <div class="redesign-footer__social">
+                <h2 id="footer-social-title">Siga AzMina</h2>
+                <nav aria-label="Redes sociais da AzMina">
+                    <a href="https://instagram.com/revistaazmina" target="_blank" rel="noopener noreferrer" aria-label="Instagram da AzMina"><img src={instagram.src} alt="" /></a>
+                    <a href="https://www.tiktok.com/@revistaazmina" target="_blank" rel="noopener noreferrer" aria-label="TikTok da AzMina"><img src={tiktok.src} alt="" /></a>
+                    <a href="https://substack.com/@institutoazmina" target="_blank" rel="noopener noreferrer" aria-label="Substack da AzMina"><img src={substack.src} alt="" /></a>
+                    <a href="https://www.youtube.com/channel/UCoyYnOCs_pr0oaXSitYi35g" target="_blank" rel="noopener noreferrer" aria-label="YouTube da AzMina"><img src={youtube.src} alt="" /></a>
+                    <a href="https://github.com/revistaazmina/" target="_blank" rel="noopener noreferrer" aria-label="GitHub da AzMina"><img src={github.src} alt="" /></a>
+                    <a href="https://bsky.app/profile/revistaazmina.bsky.social" target="_blank" rel="noopener noreferrer" aria-label="Bluesky da AzMina"><img src={bluesky.src} alt="" /></a>
+                </nav>
+            </div>
+        </section>
+    </div>
+
+    <div class="redesign-footer__banner">
+        <img class="redesign-footer__azmina" src={azminaLogo.src} alt="AzMina" />
+        <p>Uma proposta da revista azmina, <a href="https://creativecommons.org/licenses/by-nc-nd/2.0/deed.pt_BR" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 2.0</a></p>
+        <img src={creativeCommons.src} alt="Licença Creative Commons BY-NC-ND 2.0" />
+    </div>
+</footer>
+
+<style>
+    .redesign-footer, .redesign-footer * { box-sizing: border-box; }
+    .redesign-footer { width: 100%; color: #fff; }
+    .redesign-footer__main { display: flex; width: 100%; height: 408px; padding: 48px; align-items: flex-start; justify-content: space-between; background-color: #0b0f5e; background-image: var(--footer-pattern); background-repeat: repeat; background-position: center top; background-size: 200px 200px; }
+    .redesign-footer__alerts { display: flex; width: 420px; padding: 32px; flex-direction: column; align-items: flex-start; gap: 30px; overflow: clip; }
+    .redesign-footer h2, .redesign-footer p { margin: 0; }
+    .redesign-footer__alerts h2, .redesign-footer__social h2 { color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 24px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 32px; text-transform: uppercase; white-space: nowrap; }
+    .redesign-footer__alerts p { width: 356px; color: #fff; font-family: "Plus Jakarta Sans", sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; }
+    .redesign-footer__button { display: flex; height: 56px; padding: 18px 24px 14px; align-items: center; justify-content: center; border: 0; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 20px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-decoration: none; text-transform: uppercase; white-space: nowrap; }
+    .redesign-footer__identity { display: flex; width: 268px; padding: 32px; flex-direction: column; align-items: flex-start; gap: 64px; }
+    .redesign-footer__identity > a, .redesign-footer__identity > a img { display: block; width: 204px; height: 96px; }
+    .redesign-footer__social { display: flex; flex-direction: column; align-items: flex-start; gap: 32px; }
+    .redesign-footer__social nav { display: flex; align-items: center; gap: 16px; }
+    .redesign-footer__social nav a, .redesign-footer__social nav img { display: block; width: 24px; height: 24px; }
+    .redesign-footer__banner { display: flex; width: 100%; height: 82.55845642089844px; padding: 24px 48px; align-items: center; justify-content: center; gap: 16px; overflow: clip; background: #def279; color: #0b0f5e; }
+    .redesign-footer__azmina { display: block; width: 64px; height: 34.55845642089844px; flex: none; }
+    .redesign-footer__banner p { color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; font-size: 18px; font-weight: 700; line-height: 24px; white-space: nowrap; }
+    .redesign-footer__banner p a { color: inherit; text-decoration: underline; text-underline-position: from-font; }
+    .redesign-footer__banner > img { display: block; width: 75.4px; height: 23.2px; flex: none; }
+    .redesign-footer a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+</style>
