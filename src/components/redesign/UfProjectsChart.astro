@@ -1,0 +1,85 @@
+---
+import attention from "../../assets/images/redesign/party-chart/attention.svg";
+import chevronDown from "../../assets/images/redesign/party-chart/chevron.svg";
+import buttonChevron from "../../assets/images/redesign/home-reportagens/chevron-right.svg";
+import elasHorizontal from "../../assets/images/redesign/party-chart/elas-horizontal.svg";
+import thumbBase from "../../assets/images/redesign/party-chart/thumbs-down-base.svg";
+import thumb from "../../assets/images/redesign/party-chart/thumbs-down.svg";
+import mapImage from "../../assets/images/redesign/uf-projects/mapa-brasil-top-5-desfavoraveis.png";
+---
+
+<section class="uf-projects-chart" aria-labelledby="uf-projects-chart-title">
+    <div class="uf-projects-chart__container">
+        <header class="uf-projects-chart__header">
+            <img class="uf-projects-chart__attention" src={attention.src} alt="" />
+            <div class="uf-projects-chart__heading">
+                <h2 id="uf-projects-chart-title">Estas são as UFs dos parlamentares<br />que apresentam mais projetos</h2>
+                <div class="uf-projects-chart__select" aria-hidden="true">
+                    <span class="uf-projects-chart__thumb"><img src={thumbBase.src} alt="" /><img src={thumb.src} alt="" /></span>
+                    <span>Desfavoráveis</span>
+                    <img class="uf-projects-chart__select-chevron" src={chevronDown.src} alt="" />
+                </div>
+            </div>
+            <p>Boa parte das bancadas dos estados do Centro-Oeste, além das de Rondônia,<br />Espírito Santo e Santa Catarina, lidera a apresentação de propostas que restringem<br />direitos de mulheres, meninas e da população LGBTQIAPN+</p>
+        </header>
+
+        <figure class="uf-projects-chart__figure" aria-label="Mapa do Brasil com estados que apresentam mais projetos desfavoráveis">
+            <div class="uf-projects-chart__map-table">
+                <div class="uf-projects-chart__tabs" aria-hidden="true">
+                    <span class="uf-projects-chart__tab uf-projects-chart__tab--active">Mapa</span>
+                    <span class="uf-projects-chart__tab">Tabela</span>
+                </div>
+                <img class="uf-projects-chart__map" src={mapImage.src} alt="" />
+            </div>
+        </figure>
+
+        <footer class="uf-projects-chart__footer">
+            <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit</span>
+            <img src={elasHorizontal.src} alt="Elas no Congresso" />
+        </footer>
+    </div>
+    <button class="uf-projects-chart__button" type="button">Veja como está o seu estado <img src={buttonChevron.src} alt="" /></button>
+</section>
+
+<style>
+    .uf-projects-chart { position: relative; min-height: 1266px; overflow: hidden; background: #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
+    .uf-projects-chart *, .uf-projects-chart *::before, .uf-projects-chart *::after { box-sizing: border-box; }
+    .uf-projects-chart__container { position: relative; width: 816px; height: 1210px; margin: 0 auto; padding: 48px; }
+    .uf-projects-chart__header { display: flex; width: 720px; height: 246px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .uf-projects-chart__attention { display: block; width: 96px; height: 4px; }
+    .uf-projects-chart h2, .uf-projects-chart p, .uf-projects-chart figure { margin: 0; }
+    .uf-projects-chart__heading { display: flex; width: 720px; height: 138px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .uf-projects-chart h2 { width: 525px; height: 66px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 32px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .uf-projects-chart__select { display: flex; width: 315px; height: 56px; align-items: center; padding: 12px 16px; gap: 8px; border: 2px solid #4242f6; background: #fff; color: #4242f6; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 28px; font-weight: 700; line-height: 32px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .uf-projects-chart__thumb { position: relative; display: block; width: 32px; height: 32px; flex: none; overflow: hidden; border-radius: 50%; }
+    .uf-projects-chart__thumb > img:first-child { position: absolute; inset: 0; width: 32px; height: 32px; }
+    .uf-projects-chart__thumb > img:last-child { position: absolute; inset: 4.44px 4px 3.56px; width: 24px; height: 24px; transform: rotate(180deg); }
+    .uf-projects-chart__select-chevron { width: 16px; height: 8px; margin-left: auto; }
+    .uf-projects-chart__header > p { width: 720px; height: 72px; font-size: 18px; font-weight: 400; line-height: 24px; }
+    .uf-projects-chart__figure { width: 720px; height: 816px; margin-top: 10px; padding: 24px 0; }
+    .uf-projects-chart__map-table { width: 720px; height: 768px; }
+    .uf-projects-chart__tabs { display: flex; width: 720px; height: 48px; align-items: flex-end; justify-content: flex-end; gap: 0; border-bottom: 4px solid #4242f6; }
+    .uf-projects-chart__tab { display: grid; width: 104px; height: 48px; place-items: center; color: #4242f6; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .uf-projects-chart__tab--active { border-radius: 16px 16px 0 0; background: #4242f6; color: #fff; }
+    .uf-projects-chart__map { display: block; width: 720px; height: 720px; object-fit: contain; }
+    .uf-projects-chart__footer { position: absolute; right: 48px; bottom: 48px; left: 48px; display: flex; width: 720px; height: 32px; align-items: flex-start; justify-content: space-between; border-top: 1px solid #0b0f5e; padding-top: 8px; font-size: 14px; line-height: 16px; }
+    .uf-projects-chart__footer span { margin-top: 4px; }
+    .uf-projects-chart__footer img { width: 113.217px; height: 12px; margin: 6px 8px 0; }
+    .uf-projects-chart__button { position: absolute; bottom: 0; left: 50%; display: flex; width: 294px; height: 56px; align-items: center; justify-content: center; gap: 16px; border: 0; padding: 16px 24px; transform: translateX(-50%); background: #4242f6; color: #fff; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .uf-projects-chart__button img { width: 13.4142px; height: 8.12132px; transform: rotate(-90deg); }
+    @media (max-width: 767px) {
+        .uf-projects-chart { min-height: 0; overflow: visible; padding: 48px 24px; }
+        .uf-projects-chart__container { width: 100%; height: auto; padding: 0; }
+        .uf-projects-chart__header, .uf-projects-chart__heading, .uf-projects-chart h2, .uf-projects-chart__header > p, .uf-projects-chart__figure, .uf-projects-chart__map-table, .uf-projects-chart__tabs, .uf-projects-chart__map, .uf-projects-chart__footer { width: 100%; height: auto; }
+        .uf-projects-chart__header { gap: 16px; }
+        .uf-projects-chart__heading { gap: 16px; }
+        .uf-projects-chart h2 { font-size: 28px; line-height: 34px; }
+        .uf-projects-chart__header > p { height: auto; }
+        .uf-projects-chart__figure { margin-top: 10px; padding: 24px 0; }
+        .uf-projects-chart__tabs { height: 48px; }
+        .uf-projects-chart__map { aspect-ratio: 1; }
+        .uf-projects-chart__footer { position: relative; right: auto; bottom: auto; left: auto; min-height: 32px; margin-bottom: 48px; gap: 16px; }
+        .uf-projects-chart__footer img { flex: none; }
+        .uf-projects-chart__button { position: relative; bottom: auto; left: 50%; }
+    }
+</style>
