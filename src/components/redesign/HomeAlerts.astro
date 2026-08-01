@@ -1,0 +1,37 @@
+---
+import siren from "../../assets/images/redesign/home-alerts/alert-siren.png";
+import chevron from "../../assets/images/redesign/home-reportagens/chevron-right.svg";
+---
+
+<section class="home-alerts" aria-labelledby="home-alerts-title">
+    <img class="home-alerts__siren" src={siren.src} alt="" />
+    <div class="home-alerts__content">
+        <h2 id="home-alerts-title">A gente te avisa</h2>
+        <p class="home-alerts__intro">Pra evitar retrocessos, é essencial saber o que<br />está acontecendo no Congresso e agir!</p>
+        <p class="home-alerts__detail">Por isso, temos uma IA que faz esse <strong>monitoramento</strong> pra você</p>
+        <button class="home-alerts__button" type="button">Receba alertas <img src={chevron.src} alt="" /></button>
+    </div>
+</section>
+
+<style>
+    .home-alerts { position: relative; width: 100%; height: 605.4716796875px; margin-top: 48px; overflow: hidden; background-color: #0b0f5e; background-image: url("../../assets/images/redesign/home-reportagens/bg-pattern-cutting-mat.svg"); background-repeat: repeat; background-position: left top; background-size: 200px 200px; color: #fff; font-family: "Plus Jakarta Sans", sans-serif; }
+    .home-alerts *, .home-alerts *::before, .home-alerts *::after { box-sizing: border-box; }
+    .home-alerts__siren { position: absolute; top: 108px; left: calc(50% - 60px); display: block; width: 120px; height: 128px; }
+    .home-alerts__content { position: relative; width: 720px; height: 100%; margin: 0 auto; text-align: center; }
+    .home-alerts h2, .home-alerts p { margin: 0; }
+    .home-alerts h2 { position: absolute; top: 274px; left: 0; width: 720px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 28px; font-weight: 700; line-height: 32px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .home-alerts__intro { position: absolute; top: 318px; left: 0; width: 720px; font-size: 18px; font-weight: 400; line-height: 24px; }
+    .home-alerts__detail { position: absolute; top: 390px; left: 0; width: 720px; font-size: 18px; font-weight: 400; line-height: 24px; }
+    .home-alerts__detail strong { font-weight: 700; }
+    .home-alerts__button { position: absolute; top: 453px; left: 50%; display: flex; width: 190px; height: 56px; align-items: center; justify-content: center; gap: 16px; border: 0; padding: 16px 24px; transform: translateX(-50%); background: #4242f6; color: #fff; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .home-alerts__button img { width: 13.4142px; height: 8.12132px; transform: rotate(-90deg); }
+    @media (max-width: 767px) {
+        .home-alerts { height: 605.4716796875px; }
+        .home-alerts__content, .home-alerts h2, .home-alerts__intro, .home-alerts__detail { width: 100%; }
+        .home-alerts__content { padding: 0 24px; }
+        .home-alerts h2 { left: 0; font-size: 28px; line-height: 32px; }
+        .home-alerts__intro { left: 0; padding: 0 24px; }
+        .home-alerts__detail { left: 0; padding: 0 24px; }
+        .home-alerts__intro br { display: none; }
+    }
+</style>
