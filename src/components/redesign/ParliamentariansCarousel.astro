@@ -1,5 +1,4 @@
 ---
-import pattern from "../../assets/images/redesign/parliamentarians/bg-pattern.svg";
 import card from "../../assets/images/redesign/parliamentarians/samia-bomfim-card.png";
 import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
 import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
@@ -15,7 +14,7 @@ const items = Array.from({ length: 15 }, (_, index) => index);
     </header>
 
     <div class="parliamentarians__figure" aria-label="Carrossel de parlamentares">
-        <div class="parliamentarians__carousel" style={`--parliamentarians-pattern: url(${pattern.src})`}>
+        <div class="parliamentarians__carousel">
             <div class="parliamentarians__controls">
                 <button type="button" aria-label="Parlamentar anterior" data-previous><img src={arrowBack.src} alt="" /></button>
                 <button type="button" aria-label="Próximo parlamentar" data-next><img src={arrowForward.src} alt="" /></button>
@@ -87,7 +86,7 @@ const items = Array.from({ length: 15 }, (_, index) => index);
     .parliamentarians h2 { height: 24px; font-family: "ETC Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 42px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
     .parliamentarians__header p { height: 24px; font-size: 18px; line-height: 24px; }
     .parliamentarians__figure { height: 803.8869018554688px; padding: 24px 0; overflow: hidden; }
-    .parliamentarians__carousel { position: relative; height: 755.8869018554688px; padding: 48px; overflow: hidden; background-color: #0b0f5e; background-image: var(--parliamentarians-pattern); background-repeat: repeat; background-position: center top; }
+    .parliamentarians__carousel { position: relative; height: 755.8869018554688px; padding: 48px; overflow: hidden; }
     .parliamentarians__controls { position: absolute; z-index: 2; top: 48px; left: calc(50% - 58px); display: flex; gap: 4px; }
     .parliamentarians__controls button { display: grid; width: 56px; height: 40px; padding: 8px 16px; place-items: center; border: 2px solid #4242f6; border-radius: 0; background: #fff; cursor: pointer; }
     .parliamentarians__controls img { display: block; width: 24px; height: 24px; }
