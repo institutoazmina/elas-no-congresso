@@ -1,0 +1,51 @@
+---
+import attention from "../../assets/images/redesign/party-chart/attention.svg";
+import documentImage from "../../assets/images/redesign/hero/proposicao-9.png";
+import roughPaper from "../../assets/images/redesign/background/bg-pattern-rough-paper.png";
+import favorableThumb from "../../assets/images/redesign/slow-moving-proposals/thumbs-up-hand.svg";
+
+const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 }));
+---
+
+<section class="slow-moving-proposals" aria-labelledby="slow-moving-proposals-title">
+    <header class="slow-moving-proposals__header"><img src={attention.src} alt="" /><h2 id="slow-moving-proposals-title">E o que é bom pra gente, mas<br />tá indo beeeem devagar:</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></header>
+    <div class="slow-moving-proposals__carousel" data-slow-carousel>
+        <div class="slow-moving-proposals__controls"><button type="button" aria-label="Proposição anterior" data-previous>‹</button><button type="button" aria-label="Próxima proposição" data-next>›</button></div>
+        <div class="slow-moving-proposals__viewport"><div class="slow-moving-proposals__track" data-track>
+            {cards.map((card) => <article class:list={["slow-moving-proposals__card", { "slow-moving-proposals__card--featured": card.featured }]} aria-hidden={card.id === 7 ? undefined : "true"}>
+                <header class="slow-moving-proposals__card-header"><strong>PDL 176/2021</strong><span class="slow-moving-proposals__status"><img class="slow-moving-proposals__document" src={documentImage.src} alt="" /><span class="slow-moving-proposals__thumbs"><img class="slow-moving-proposals__thumb" src={favorableThumb.src} alt="" /><b>Favorável</b></span></span></header>
+                <div class="slow-moving-proposals__content"><div class="slow-moving-proposals__authors"><p>Jandira Feghali <strong>PCdoB/RJ</strong></p><p>Erika Kokay <strong>PT/DF</strong></p><p>Alice Portugal <strong>PCdoB/BA</strong></p><p class="slow-moving-proposals__more">+7 parlamentares</p></div><span class="slow-moving-proposals__badge">Saúde</span><p class="slow-moving-proposals__description">Susta a Portaria nº 13, de 19 de abril de 2021, que torna pública a decisão de incorporar o implante subdérmico de etonogestrel, condicionada à criação de programa específico, na prevenção da gravidez não planejada para mulheres em idade fértil: em situação de rua; com HIV/AIDS em uso de dolutegravir; em uso de talidomida; privadas de liberdade; trabalhadoras do sexo; e em tratamento de tuberculose em uso de aminoglicosídeos, no âmbito do Sistema Único de Saúde - SUS..</p></div>
+                <footer>Teve <strong>1 movimentação</strong> em <b>14 meses</b></footer>
+            </article>)}
+        </div></div>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll<HTMLElement>("[data-slow-carousel]").forEach((carousel) => {
+        const track = carousel.querySelector<HTMLElement>("[data-track]"); const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]"); const next = carousel.querySelector<HTMLButtonElement>("[data-next]"); if (!track || !previous || !next) return;
+        const cards = Array.from(track.querySelectorAll<HTMLElement>(".slow-moving-proposals__card")); let physical = 7; let resetting = false;
+        const update = () => { track.style.transform = `translateX(${528 - physical * 432}px)`; cards.forEach((card, index) => { const active=index===physical; card.classList.toggle("slow-moving-proposals__card--featured",active); card.setAttribute("aria-hidden",String(!active)); }); };
+        const move=(direction:number)=>{ if(!resetting){ physical+=direction; update(); } };
+        track.addEventListener("transitionend",(event)=>{ if(event.propertyName!=="transform" || physical>4&&physical<10)return; resetting=true; physical+=physical<5?5:-5; track.style.transition="none"; update(); requestAnimationFrame(()=>requestAnimationFrame(()=>{track.style.transition="";resetting=false;})); });
+        previous.addEventListener("click",()=>move(-1)); next.addEventListener("click",()=>move(1));
+    });
+</script>
+
+<style>
+    .slow-moving-proposals{height:923.9435424804688px;overflow:hidden;background:#fff;color:#0b0f5e;font-family:"Plus Jakarta Sans",sans-serif}.slow-moving-proposals *{box-sizing:border-box}.slow-moving-proposals__header{display:flex;width:816px;height:174px;margin:auto;padding:48px;flex-direction:column;gap:16px}.slow-moving-proposals__header>img{width:96px;height:4px}.slow-moving-proposals h2,.slow-moving-proposals p{margin:0}.slow-moving-proposals h2{width:720px;height:66px;font-family:"ETC Anybody",sans-serif;font-size:36px;font-weight:700;line-height:32px;text-transform:uppercase;font-variation-settings:"wdth" 75}.slow-moving-proposals__header p{font-size:18px;line-height:24px}.slow-moving-proposals__carousel{position:relative;height:643.9435424804688px;margin-top:34px;overflow:hidden;background:#fff url("../../assets/images/redesign/background/bg-pattern-rough-paper.png") repeat left top/400px 400px}.slow-moving-proposals__controls{position:absolute;z-index:2;top:48px;left:calc(50% - 58px);display:flex;gap:4px}.slow-moving-proposals__controls button{width:56px;height:40px;border:2px solid #4242f6;background:#fff;color:#4242f6;font:32px/1 Arial}.slow-moving-proposals__viewport{position:absolute;top:112px;width:100%;overflow:hidden}.slow-moving-proposals__track{display:flex;width:max-content;gap:48px;transform:translateX(-2496px);transition:transform .2s ease}.slow-moving-proposals__card{display:flex;width:384px;height:483.94354248046875px;flex:none;flex-direction:column;overflow:visible;border:1px solid #998d96;background:#fff}.slow-moving-proposals__card--featured{border-color:#0b0f5e;box-shadow:-4px 4px 0 #0b0f5e}.slow-moving-proposals__card-header{position:relative;display:flex;height:69.94354248046875px;align-items:center;border-bottom:1px solid #998d96;padding:8px 16px}.slow-moving-proposals__card-header>strong{font-family:"ETC Anybody",sans-serif;font-size:20px;line-height:24px;font-variation-settings:"wdth" 75}.slow-moving-proposals__status{position:absolute;top:8px;right:16px;width:143.30795288085938px;height:53.94354248046875px}.slow-moving-proposals__document{position:absolute;top:0;left:4.444942951202393px;width:36px;height:51px;transform:rotate(-5deg);object-fit:fill}.slow-moving-proposals__thumb{position:absolute;top:10.971768379211426px;left:32.307952880859375px;width:32px;height:32px;overflow:hidden;border-radius:50%}.slow-moving-proposals__thumb>img:first-child{position:absolute;inset:0;width:32px;height:32px;filter:hue-rotate(53deg) saturate(.65) brightness(1.25)}.slow-moving-proposals__thumb>img:last-child{position:absolute;inset:4px;width:24px;height:24px}.slow-moving-proposals__status b{position:absolute;top:14.971768379211426px;left:72.30795288085938px;font-family:"ETC Anybody",sans-serif;font-size:16px;line-height:24px;text-transform:uppercase;font-variation-settings:"wdth" 75}.slow-moving-proposals__content{height:358px;padding:24px 16px}.slow-moving-proposals__authors p{display:flex;justify-content:space-between;height:24px;font-size:18px;line-height:24px}.slow-moving-proposals__authors strong{font-weight:700}.slow-moving-proposals__authors .slow-moving-proposals__more{display:block;color:#4242f6}.slow-moving-proposals__badge{display:inline-block;margin-top:16px;padding:4px 8px;background:#4242f6;color:#fff;font-family:"ETC Anybody",sans-serif;font-size:16px;font-weight:700;line-height:24px;text-transform:uppercase;font-variation-settings:"wdth" 75}.slow-moving-proposals__description{margin-top:16px!important;font-size:16px;line-height:24px}.slow-moving-proposals__card footer{height:56px;border-top:1px solid #998d96;padding:16px;font-size:18px;line-height:24px}.slow-moving-proposals__card footer strong{margin:0 4px;color:#4242f6}.slow-moving-proposals__card footer b{margin-left:4px}@media(max-width:767px){.slow-moving-proposals__header{width:100%;padding:48px 24px}.slow-moving-proposals h2{width:100%;font-size:28px}.slow-moving-proposals__header p{width:100%}.slow-moving-proposals__card{width:336px}}
+</style>
+
+<style>
+    .slow-moving-proposals__content { overflow: hidden; }
+    .slow-moving-proposals__thumbs { position: absolute; top: 10.971768379211426px; left: 32.307952880859375px; width: 111px; height: 32px; }
+    .slow-moving-proposals__thumb { top: 0; left: 0; }
+    .slow-moving-proposals__thumbs b { top: 4px; left: 40px; }
+    .slow-moving-proposals__authors { display: flex; height: 126px; flex-direction: column; gap: 10px; }
+    .slow-moving-proposals__authors p { min-width: 0; }
+    .slow-moving-proposals__authors p > * { min-width: 0; }
+    .slow-moving-proposals__description { height: 120px; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; text-overflow: ellipsis; }
+    .slow-moving-proposals__card footer { color: #0b0f5e; }
+    .slow-moving-proposals__card footer strong,
+    .slow-moving-proposals__card footer b { margin: 0; color: inherit; font-weight: 700; }
+</style>
