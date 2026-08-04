@@ -4,6 +4,7 @@ import circleBottom from "../../assets/images/redesign/hero/circle-bottom.svg";
 import circleTop from "../../assets/images/redesign/hero/circle-top.svg";
 import highlighterOne from "../../assets/images/redesign/hero/highlighter-desfavoraveis-1.svg";
 import highlighterTwo from "../../assets/images/redesign/hero/highlighter-desfavoraveis-2.svg";
+import halftoneShadow from "../../assets/images/redesign/hero/halftone-shadow.png";
 import proposicaoFive from "../../assets/images/redesign/hero/proposicao-5.png";
 import proposicaoNine from "../../assets/images/redesign/hero/proposicao-9.png";
 import stroke from "../../assets/images/redesign/hero/stroke.svg";
@@ -12,6 +13,7 @@ import stroke from "../../assets/images/redesign/hero/stroke.svg";
 <section
     class="hero redesign-shared-background"
     aria-labelledby="hero-title"
+    style={`--hero-halftone-shadow: url(${halftoneShadow.src})`}
 >
     <div class="hero__top-row">
         <div class="hero__content">
@@ -44,6 +46,7 @@ import stroke from "../../assets/images/redesign/hero/stroke.svg";
         </div>
     </div>
 
+    <div class="hero__halftone-shadow" aria-hidden="true"></div>
     <a class="hero__cta" href="#conteudo-principal">O que descobrimos?</a>
 </section>
 
@@ -61,6 +64,24 @@ import stroke from "../../assets/images/redesign/hero/stroke.svg";
         height: 476px;
         justify-content: space-between;
         padding: 48px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero__halftone-shadow {
+        background-image: var(--hero-halftone-shadow);
+        background-position: left bottom;
+        background-repeat: repeat-x;
+        background-size: 1440px 24px;
+        bottom: 0;
+        display: block;
+        height: 24px;
+        left: 0;
+        mix-blend-mode: multiply;
+        pointer-events: none;
+        position: absolute;
+        width: 100%;
+        z-index: 1;
     }
 
     .hero__content {
@@ -303,6 +324,7 @@ import stroke from "../../assets/images/redesign/hero/stroke.svg";
         background: #4242f6;
         bottom: 0.12px;
         color: #fff;
+        cursor: pointer;
         display: flex;
         font-family: "ETC Anybody", sans-serif;
         font-size: 20px;
@@ -317,7 +339,25 @@ import stroke from "../../assets/images/redesign/hero/stroke.svg";
         text-decoration: none;
         text-transform: uppercase;
         transform: translateX(-50%);
+        transition: background-color 220ms ease-out;
         white-space: nowrap;
+        z-index: 3;
+    }
+
+    .hero__cta:hover {
+        background-color: #3a3ad8;
+    }
+
+    .hero__cta:focus-visible {
+        outline: 2px solid #0b0f5e;
+        outline-offset: 4px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .hero__cta {
+            transition: none;
+        }
+
     }
 
     @media (max-width: 1100px) {
