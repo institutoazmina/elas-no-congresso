@@ -13,14 +13,14 @@ import elasHorizontal from "../../assets/images/redesign/home-chart/elas-horizon
 import attention from "../../assets/images/redesign/hero/attention.svg";
 
 const themes = [
-    { count: 136, title: "Dignidade sexual", pile: pile136, width: 136, chartWidth: 113, chartHeight: 195, pileHeight: 127, top: 24, countSize: 36, label: true },
-    { count: 91, title: "Violência contra a mulher", pile: pile91, width: 192, chartWidth: 65, chartHeight: 140, pileHeight: 100, top: 79 },
-    { count: 89, title: "Direitos sociais", pile: pile89, width: 127, chartWidth: 66, chartHeight: 139, pileHeight: 99, top: 80 },
-    { count: 85, title: "Gênero", pile: pile85, width: 96, chartWidth: 66, chartHeight: 136.5, pileHeight: 96.5, top: 82.5 },
-    { count: 81, title: "Direitos sexuais e reprodutivos", pile: pile81, width: 192, chartWidth: 65, chartHeight: 134, pileHeight: 94, top: 85 },
-    { count: 68, title: "Lei Maria da Penha", pile: pile68, width: 147, chartWidth: 66, chartHeight: 126.5, pileHeight: 86.5, top: 92.5 },
-    { count: 52, title: "Maternidade", pile: pile52, width: 102, chartWidth: 66, chartHeight: 117, pileHeight: 77, top: 102 },
-    { count: 22, title: "Feminicídio", pile: pile22, width: 96, chartWidth: 66, chartHeight: 99, pileHeight: 59, top: 120 },
+    { count: 136, title: "Dignidade sexual", pile: pile136, width: 136, chartWidth: 113, chartHeight: 195, columnHeight: 335, pileHeight: 127, top: 24, countSize: 36, label: true },
+    { count: 91, title: "Violência contra a mulher", pile: pile91, width: 192, chartWidth: 65, chartHeight: 140, columnHeight: 280, pileHeight: 100, top: 79 },
+    { count: 89, title: "Direitos sociais", pile: pile89, width: 127, chartWidth: 66, chartHeight: 139, columnHeight: 279, pileHeight: 99, top: 80 },
+    { count: 85, title: "Gênero", pile: pile85, width: 96, chartWidth: 66, chartHeight: 136.5, columnHeight: 276.5, pileHeight: 96.5, top: 82.5 },
+    { count: 81, title: "Direitos sexuais e reprodutivos", pile: pile81, width: 192, chartWidth: 65, chartHeight: 134, columnHeight: 274, pileHeight: 94, top: 85 },
+    { count: 68, title: "Lei Maria da Penha", pile: pile68, width: 147, chartWidth: 66, chartHeight: 126.5, columnHeight: 266.5, pileHeight: 86.5, top: 92.5 },
+    { count: 52, title: "Maternidade", pile: pile52, width: 102, chartWidth: 66, chartHeight: 117, columnHeight: 257, pileHeight: 77, top: 102 },
+    { count: 22, title: "Feminicídio", pile: pile22, width: 96, chartWidth: 66, chartHeight: 99, columnHeight: 239, pileHeight: 59, top: 120 },
 ];
 ---
 
@@ -34,15 +34,15 @@ const themes = [
             <p class="tw:m-0 tw:w-full tw:font-[Plus_Jakarta_Sans] tw:text-[18px] tw:leading-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
         </header>
 
-        <figure class="tw:m-0 tw:w-full tw:overflow-x-auto tw:py-6 tw:lg:h-[383px] tw:lg:py-6">
-            <div class="tw:relative tw:mx-auto tw:flex tw:min-w-[1256px] tw:items-end tw:gap-6 tw:lg:h-[335px]">
+        <figure class="tw:m-0 tw:h-[383px] tw:w-full tw:overflow-x-auto tw:py-6">
+            <div class="tw:relative tw:mx-auto tw:flex tw:h-[335px] tw:min-w-[1256px] tw:items-end tw:gap-6">
                 {themes.map((theme) => (
                     <article
-                        class="tw:flex tw:shrink-0 tw:flex-col tw:items-center tw:justify-end tw:gap-4 tw:py-4"
-                        style={`width: ${theme.width}px; height: ${theme.chartHeight + 140}px;`}
+                        class="tw:relative tw:flex tw:h-full tw:shrink-0 tw:flex-col tw:items-center tw:justify-end tw:gap-4 tw:py-4"
+                        style={`width: ${theme.width}px;`}
                         aria-label={`${theme.count} proposições desfavoráveis: ${theme.title}`}
                     >
-                        <div class="tw:flex tw:flex-col tw:items-center tw:justify-end tw:gap-2" style={`width: ${theme.chartWidth}px; height: ${theme.chartHeight}px;`}>
+                        <div class="tw:absolute tw:bottom-[124px] tw:left-1/2 tw:flex tw:-translate-x-1/2 tw:flex-col tw:items-center tw:justify-end tw:gap-2" style={`width: ${theme.chartWidth}px; height: ${theme.chartHeight}px;`}>
                             <div class={`tw:flex tw:items-center tw:justify-center tw:gap-2 ${theme.label ? "tw:flex-col tw:gap-1" : "tw:flex-row"}`}>
                                 <div class="tw:flex tw:items-center tw:justify-center tw:gap-2">
                                     <span class={`tw:font-[ETC_Anybody] tw:font-bold tw:leading-8 tw:uppercase tw:[font-variation-settings:'wdth'_75] ${theme.countSize === 36 ? "tw:text-[36px] tw:leading-[42px]" : "tw:text-[28px]"}`}>{theme.count}</span>
@@ -54,7 +54,7 @@ const themes = [
                             </div>
                             <img class="tw:w-[46px] tw:object-fill" style={`height: ${theme.pileHeight}px;`} src={theme.pile.src} alt="" />
                         </div>
-                        <div class="tw:flex tw:h-[92px] tw:w-full tw:flex-col tw:items-center tw:justify-center tw:gap-1 tw:py-2">
+                        <div class="tw:absolute tw:top-[227px] tw:flex tw:h-[92px] tw:w-full tw:flex-col tw:items-center tw:justify-center tw:gap-1 tw:py-2">
                             <img class="tw:size-6" src={info.src} alt="" />
                             <h3 class="tw:m-0 tw:text-center tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">{theme.title}</h3>
                         </div>
