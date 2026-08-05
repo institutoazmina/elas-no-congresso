@@ -9,6 +9,10 @@ import youtube from "../../assets/images/redesign/footer/youtube.svg";
 import github from "../../assets/images/redesign/footer/github.svg";
 import bluesky from "../../assets/images/redesign/footer/bluesky.svg";
 import azminaLogo from "../../assets/images/redesign/footer/azmina-footer.svg";
+import codesInfo from "../../assets/images/redesign/funders/codesinfo.png";
+import iaFeminista from "../../assets/images/redesign/funders/ia-feminista.png";
+import franceAfd from "../../assets/images/redesign/funders/france-afd.png";
+import elasFunder from "../../assets/images/redesign/funders/elas.png";
 ---
 
 <footer class="redesign-footer" style={`--footer-pattern: url(${pattern.src})`}>
@@ -37,6 +41,16 @@ import azminaLogo from "../../assets/images/redesign/footer/azmina-footer.svg";
         </section>
     </div>
 
+    <section class="redesign-footer__funders" aria-labelledby="footer-funders-title">
+        <h2 id="footer-funders-title">Organizações financiadoras</h2>
+        <div class="redesign-footer__funder-logos">
+            <img class="redesign-footer__ia" src={iaFeminista.src} alt="IA Feminista" />
+            <img class="redesign-footer__codesinfo" src={codesInfo.src} alt="Codesinfo" />
+            <img class="redesign-footer__afd" src={franceAfd.src} alt="Agence Française de Développement" />
+            <img class="redesign-footer__elas-funder" src={elasFunder.src} alt="Elas" />
+        </div>
+    </section>
+
     <div class="redesign-footer__banner">
         <img class="redesign-footer__azmina" src={azminaLogo.src} alt="AzMina" />
         <p>Uma proposta da revista azmina, <a href="https://creativecommons.org/licenses/by-nc-nd/2.0/deed.pt_BR" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 2.0</a></p>
@@ -47,7 +61,7 @@ import azminaLogo from "../../assets/images/redesign/footer/azmina-footer.svg";
 <style>
     .redesign-footer, .redesign-footer * { box-sizing: border-box; }
     .redesign-footer { width: 100%; color: #fff; }
-    .redesign-footer__main { display: flex; width: 100%; height: 408px; padding: 48px; align-items: flex-start; justify-content: space-between; background-color: #0b0f5e; background-image: var(--footer-pattern); background-repeat: repeat; background-position: center top; background-size: 200px 200px; }
+    .redesign-footer__main { display: flex; width: 100%; height: 360px; padding: 24px 48px; align-items: flex-start; justify-content: space-between; background-color: #0b0f5e; background-image: var(--footer-pattern); background-repeat: repeat; background-position: center top; background-size: 200px 200px; }
     .redesign-footer__alerts { display: flex; width: 420px; padding: 32px; flex-direction: column; align-items: flex-start; gap: 30px; overflow: clip; }
     .redesign-footer h2, .redesign-footer p { margin: 0; }
     .redesign-footer__alerts h2, .redesign-footer__social h2 { color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 24px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 32px; text-transform: uppercase; white-space: nowrap; }
@@ -58,10 +72,32 @@ import azminaLogo from "../../assets/images/redesign/footer/azmina-footer.svg";
     .redesign-footer__social { display: flex; flex-direction: column; align-items: flex-start; gap: 32px; }
     .redesign-footer__social nav { display: flex; align-items: center; gap: 16px; }
     .redesign-footer__social nav a, .redesign-footer__social nav img { display: block; width: 24px; height: 24px; }
+    .redesign-footer__funders { display: flex; width: 100%; height: 129px; padding: 24px 80px; align-items: center; justify-content: space-between; overflow: hidden; background: #fff; }
+    .redesign-footer__funders h2 { margin: 0 -24px 0 0; color: #0b0f5e; font-family: "ETC Anybody", sans-serif; font-size: 24px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 32px; text-transform: uppercase; white-space: nowrap; }
+    .redesign-footer__funder-logos { display: flex; align-items: center; gap: 32px; }
+    .redesign-footer__funder-logos img { display: block; object-fit: cover; flex: none; }
+    .redesign-footer__ia { width: 121px; height: 59px; }
+    .redesign-footer__codesinfo { width: 138px; height: 38px; }
+    .redesign-footer__afd { width: 89px; height: 53px; }
+    .redesign-footer__elas-funder { width: 57px; height: 81px; }
     .redesign-footer__banner { display: flex; width: 100%; height: 82.55845642089844px; padding: 24px 48px; align-items: center; justify-content: center; gap: 16px; overflow: clip; background: #def279; color: #0b0f5e; }
     .redesign-footer__azmina { display: block; width: 64px; height: 34.55845642089844px; flex: none; }
     .redesign-footer__banner p { color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; font-size: 18px; font-weight: 700; line-height: 24px; white-space: nowrap; }
     .redesign-footer__banner p a { color: inherit; text-decoration: underline; text-underline-position: from-font; }
     .redesign-footer__banner > img { display: block; width: 75.4px; height: 23.2px; flex: none; }
     .redesign-footer a:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+    .redesign-footer__button:hover { background: #0b0f5e; outline: 1px solid #fff; }
+    .redesign-footer__social nav a:hover { opacity: .72; }
+
+    @media (max-width: 700px) {
+        .redesign-footer__main { height: auto; padding: 24px; flex-direction: column; gap: 24px; }
+        .redesign-footer__alerts, .redesign-footer__identity { width: 100%; padding: 24px; }
+        .redesign-footer__alerts p { width: 100%; }
+        .redesign-footer__identity { gap: 40px; }
+        .redesign-footer__funders { height: auto; padding: 32px 24px; align-items: flex-start; flex-direction: column; gap: 24px; }
+        .redesign-footer__funders h2 { margin-right: 0; white-space: normal; }
+        .redesign-footer__funder-logos { width: 100%; flex-wrap: wrap; gap: 24px; }
+        .redesign-footer__banner { height: auto; padding: 24px; flex-wrap: wrap; }
+        .redesign-footer__banner p { white-space: normal; text-align: center; }
+    }
 </style>

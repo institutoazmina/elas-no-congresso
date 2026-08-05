@@ -1,13 +1,9 @@
 ---
 import quiteria from "../../assets/images/redesign/quiteria/quiteria.png";
 import chevron from "../../assets/images/redesign/quiteria/chevron-right.svg";
-import iaFeminista from "../../assets/images/redesign/funders/ia-feminista-figma-original.png";
-import codesinfo from "../../assets/images/redesign/funders/codesinfo.png";
-import franceAfd from "../../assets/images/redesign/funders/france-afd.png";
-import elas from "../../assets/images/redesign/funders/elas.png";
 ---
 
-<section class="quiteria-funders" aria-label="QuitérIA e organizações financiadoras">
+<section class="quiteria-funders" aria-label="QuitérIA">
     <div class="quiteria-funders__quiteria">
         <img class="quiteria-funders__image" src={quiteria.src} alt="QuitérIA, inteligência artificial feminista" />
         <div class="quiteria-funders__explanation-frame">
@@ -20,21 +16,12 @@ import elas from "../../assets/images/redesign/funders/elas.png";
         <button class="quiteria-funders__button" type="button">Entenda a metodologia <img src={chevron.src} alt="" /></button>
     </div>
 
-    <section class="quiteria-funders__funders" aria-labelledby="funders-title">
-        <h2 id="funders-title">Organizações financiadoras</h2>
-        <div class="quiteria-funders__logos">
-            <img src={iaFeminista.src} alt="IA Feminista" />
-            <img src={codesinfo.src} alt="Codesinfo" />
-            <img src={franceAfd.src} alt="France AFD" />
-            <img src={elas.src} alt="Elas no Congresso" />
-        </div>
-    </section>
 </section>
 
 <style>
     .quiteria-funders { color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
     .quiteria-funders *, .quiteria-funders *::before, .quiteria-funders *::after { box-sizing: border-box; }
-    .quiteria-funders__quiteria { display: flex; width: 720px; height: 650.3243408203125px; margin: 48px auto 0; padding-bottom: 96px; flex-direction: column; align-items: center; gap: 32px; overflow: hidden; }
+    .quiteria-funders__quiteria { display: flex; width: 720px; height: 554.3243408203125px; margin: 24px auto 48px; flex-direction: column; align-items: center; gap: 32px; overflow: hidden; }
     .quiteria-funders__image { display: block; width: 720px; height: 360px; flex: none; object-fit: cover; }
     .quiteria-funders__explanation-frame { display: flex; width: 720px; height: 74.3243408203125px; min-width: 720px; flex: none; align-items: center; justify-content: center; }
     .quiteria-funders__explanation-rotation { width: 100%; flex: none; transform: rotate(-0.18deg); }
@@ -46,12 +33,4 @@ import elas from "../../assets/images/redesign/funders/elas.png";
     .quiteria-funders__button { display: flex; width: 255px; height: 56px; padding: 18px 24px 14px; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 0; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; cursor: pointer; }
     .quiteria-funders__button img { display: block; width: 13.4142px; height: 8.12132px; transform: rotate(-90deg); }
     .quiteria-funders__button:focus-visible { outline: 2px solid #0b0f5e; outline-offset: 3px; }
-    .quiteria-funders__funders { display: flex; width: 100%; height: 282px; padding: 32px 48px; flex-direction: column; align-items: flex-start; gap: 32px; border-top: 1px solid rgba(153, 141, 150, .4); background: #fff; }
-    .quiteria-funders__funders h2 { height: 32px; margin: 0; color: #0b0f5e; font-family: "ETC Anybody", sans-serif; font-size: 24px; font-weight: 700; line-height: 32px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
-    .quiteria-funders__logos { display: flex; width: 809px; height: 154px; align-items: center; justify-content: space-between; }
-    .quiteria-funders__logos img { display: block; flex: none; object-fit: cover; }
-    .quiteria-funders__logos img:nth-child(1) { width: 188px; height: 92px; }
-    .quiteria-funders__logos img:nth-child(2) { width: 229px; height: 63px; }
-    .quiteria-funders__logos img:nth-child(3) { width: 188px; height: 112px; }
-    .quiteria-funders__logos img:nth-child(4) { width: 108px; height: 154px; }
 </style>
