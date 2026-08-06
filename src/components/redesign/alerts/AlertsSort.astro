@@ -1,0 +1,14 @@
+<button class="alerts-sort" type="button" aria-haspopup="listbox" aria-label="Ordenar alertas: mais recentes">
+    <span>Mais recentes</span>
+    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m2 5 6 6 6-6" /></svg>
+</button>
+
+<style>
+    .alerts-sort { align-items: center; background: #fff; border: 2px solid #1b2548; box-sizing: border-box; color: #1b2548; cursor: pointer; display: flex; font: 700 18px/24px "ETC Anybody", sans-serif; font-variation-settings: "wdth" 75; gap: 8px; height: 55px; justify-content: center; padding: 14px 22px; text-transform: uppercase; transition: background-color 160ms ease-out, color 160ms ease-out; width: 175px; }
+    .alerts-sort span { align-items: center; display: flex; height: 15px; justify-content: center; width: 109px; }
+    .alerts-sort:hover { background: #def279; }
+    .alerts-sort:focus-visible { outline: 2px solid #4242f6; outline-offset: 3px; }
+    .alerts-sort svg { fill: none; height: 14px; stroke: currentColor; stroke-linecap: square; stroke-width: 2px; width: 14px; }
+    @media (prefers-reduced-motion: reduce) { .alerts-sort { transition: none; } }
+    @media (max-width: 700px) { .alerts-sort { align-self: flex-end; } }
+</style>

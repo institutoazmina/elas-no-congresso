@@ -1,0 +1,29 @@
+---
+const { alert, featured = false } = Astro.props;
+---
+
+<article class:list={["alert-card", { "alert-card--featured": featured }]}>
+    <div class="alert-card__meta">
+        <span class="alert-card__tag">{alert.category}</span>
+        <time datetime={alert.dateIso}>{alert.date}</time>
+    </div>
+    <h2>{alert.title}</h2>
+    <p>{alert.description}</p>
+    <a href={alert.href}>Ver página da proposta</a>
+</article>
+
+<style>
+    .alert-card { background: #fff; border: 2px solid #1e2546; box-sizing: border-box; color: #1e2546; height: 230px; padding: 17px 23px 0; position: relative; width: 816px; }
+    .alert-card--featured::before { background: #c8f53e; content: ""; height: 230px; left: 0; position: absolute; top: -2px; width: 4px; }
+    .alert-card__meta { align-items: flex-start; display: flex; height: 32px; justify-content: space-between; }
+    .alert-card__tag { align-items: center; background: #4242f6; box-sizing: border-box; color: #fff; display: inline-flex; font: 700 20px/24px "ETC Anybody", sans-serif; font-variation-settings: "wdth" 75; height: 32px; padding: 5px 8px 3px; text-transform: uppercase; }
+    .alert-card time { font: 700 20px/24px "ETC Anybody", sans-serif; font-variation-settings: "wdth" 75; margin: 3px 0 0; text-transform: uppercase; }
+    .alert-card h2 { font: 700 20px/24px "ETC Anybody", sans-serif; font-variation-settings: "wdth" 75; margin: 16px 0 8px; text-transform: uppercase; }
+    .alert-card p { color: #998d96; font: 400 16px/24px "Plus Jakarta Sans", sans-serif; height: 48px; margin: 0; overflow: hidden; }
+    .alert-card a { color: #4242f6; font: 700 18px/24px "ETC Anybody", sans-serif; font-variation-settings: "wdth" 75; left: 25px; position: absolute; text-decoration: underline; text-underline-offset: 2px; text-transform: uppercase; top: 166.71px; transition: color 160ms ease-out; }
+    .alert-card a:hover { color: #0b0f5e; }
+    .alert-card a:focus-visible { outline: 2px solid #4242f6; outline-offset: 3px; }
+    @media (prefers-reduced-motion: reduce) { .alert-card a { transition: none; } }
+    @media (max-width: 940px) { .alert-card { width: 100%; } }
+    @media (max-width: 700px) { .alert-card { height: auto; min-height: 230px; padding: 17px 22px 68px; } .alert-card--featured::before { height: 100%; } .alert-card h2 { margin-top: 16px; } .alert-card p { height: auto; } .alert-card time { font-size: 18px; } }
+</style>

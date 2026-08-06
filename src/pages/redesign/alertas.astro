@@ -2,6 +2,8 @@
 import { ClientRouter } from "astro:transitions";
 import RedesignHeader from "../../components/redesign/RedesignHeader.astro";
 import AlertsHero from "../../components/redesign/alerts/AlertsHero.astro";
+import AlertsToolbar from "../../components/redesign/alerts/AlertsToolbar.astro";
+import AlertsList from "../../components/redesign/alerts/AlertsList.astro";
 import RedesignFooter from "../../components/redesign/RedesignFooter.astro";
 import "../../styles/tailwind.css";
 import "../../styles/redesign-shared-background.css";
@@ -20,10 +22,16 @@ import "../../styles/redesign-shared-background.css";
         <ClientRouter fallback="swap" />
     </head>
     <body class="tw:!pt-0 tw:!bg-white">
-        <div class="redesign-alerts-page redesign-shared-background">
-            <RedesignHeader />
-            <main>
+        <div class="redesign-alerts-page">
+            <div class="redesign-alerts-header-background redesign-shared-background">
+                <RedesignHeader />
+            </div>
+            <main class="redesign-alerts-main">
                 <AlertsHero />
+                <section class="alerts-content" aria-label="Alertas recentes">
+                    <AlertsToolbar />
+                    <AlertsList />
+                </section>
             </main>
             <RedesignFooter />
         </div>
@@ -36,5 +44,8 @@ import "../../styles/redesign-shared-background.css";
     .redesign-header .container-fluid { width: 100%; }
     .redesign-header .wrap { max-width: 1310px; }
     .redesign-header .ff1 { font-family: "ETC Anybody", sans-serif; }
-    .redesign-alerts-page > .redesign-shared-background { background: transparent; }
+    .redesign-alerts-main { background: #fff; }
+    .alerts-content { box-sizing: border-box; display: flex; flex-direction: column; gap: 32px; margin: 0 auto; padding: 100px 40px 56px; width: 896px; }
+    @media (max-width: 940px) { .alerts-content { padding: 64px 32px; width: 100%; } }
+    @media (max-width: 700px) { .alerts-content { gap: 32px; padding: 48px 24px; } }
 </style>

@@ -1,0 +1,22 @@
+---
+import AlertCard from "./AlertCard.astro";
+
+const alerts = [
+    { category: "Saúde", date: "17/7", dateIso: "2025-07-17", title: "Câmara aprova ampliação das medidas protetivas da Lei Maria da Penha", description: "O plenário da Câmara dos Deputados aprovou nesta terça-feira o projeto que amplia as medidas protetivas previstas na Lei Maria da Penha, incluindo novas formas de violência psicológica e patrimonial.", href: "#" },
+    { category: "Saúde", date: "15/7", dateIso: "2025-07-15", title: "Câmara aprova ampliação das medidas protetivas da Lei Maria da Penha", description: "O plenário da Câmara dos Deputados aprovou nesta terça-feira o projeto que amplia as medidas protetivas previstas na Lei Maria da Penha, incluindo novas formas de violência psicológica e patrimonial.", href: "#" },
+    { category: "Saúde", date: "13/7", dateIso: "2025-07-13", title: "Câmara aprova ampliação das medidas protetivas da Lei Maria da Penha", description: "O plenário da Câmara dos Deputados aprovou nesta terça-feira o projeto que amplia as medidas protetivas previstas na Lei Maria da Penha, incluindo novas formas de violência psicológica e patrimonial.", href: "#" },
+    { category: "Saúde", date: "13/7", dateIso: "2025-07-13", title: "Câmara aprova ampliação das medidas protetivas da Lei Maria da Penha", description: "O plenário da Câmara dos Deputados aprovou nesta terça-feira o projeto que amplia as medidas protetivas previstas na Lei Maria da Penha, incluindo novas formas de violência psicológica e patrimonial.", href: "#" },
+    { category: "Saúde", date: "13/7", dateIso: "2025-07-13", title: "Câmara aprova ampliação das medidas protetivas da Lei Maria da Penha", description: "O plenário da Câmara dos Deputados aprovou nesta terça-feira o projeto que amplia as medidas protetivas previstas na Lei Maria da Penha, incluindo novas formas de violência psicológica e patrimonial.", href: "#" },
+];
+---
+
+<section class="alerts-list" aria-label="Alertas recentes">
+    {alerts.map((alert, index) => <AlertCard alert={alert} featured={index === 0} />)}
+</section>
+
+<style>
+    .alerts-list { display: flex; flex-direction: column; width: 816px; }
+    .alerts-list > :global(.alert-card) + :global(.alert-card) { margin-top: -2px; }
+    @media (max-width: 940px) { .alerts-list { width: 100%; } }
+    @media (max-width: 700px) { .alerts-list > :global(.alert-card) + :global(.alert-card) { margin-top: -2px; } }
+</style>
