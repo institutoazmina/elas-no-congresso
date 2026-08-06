@@ -1,0 +1,288 @@
+---
+import chevron from "../../../assets/images/redesign/home-reportagens/chevron-right.svg";
+---
+
+<dialog class="alerts-email-modal" aria-labelledby="alerts-email-modal-title">
+    <div class="alerts-email-modal__shell">
+        <div class="alerts-email-modal__close-row">
+            <button class="alerts-email-modal__close" type="button" aria-label="Fechar alertas por e-mail" autofocus>×</button>
+        </div>
+
+        <div class="alerts-email-modal__content">
+            <header class="alerts-email-modal__intro">
+                <h2 id="alerts-email-modal-title">Receba alertas do que acontece no Congresso Nacional!</h2>
+                <p>Quer saber quando uma nova proposta sobre gênero é apresentada,<br />ou quando algo de muita importância avança? A gente te avisa!<br />Escolha como e quando quer receber os e-mails.</p>
+            </header>
+
+            <form class="alerts-email-modal__form">
+                <div class="alerts-email-modal__email-field">
+                    <label for="alerts-email">E-mail</label>
+                    <input id="alerts-email" type="email" placeholder="seu@email.com" autocomplete="email" />
+                </div>
+
+                <fieldset class="alerts-email-modal__section">
+                    <legend>Temas</legend>
+                    <p>Selecione os temas sobre os quais quer receber alertas.<br />Valem para alertas semanais e diários.</p>
+                    <div class="alerts-email-modal__topics">
+                        <label><input type="checkbox" name="tema" value="violencia-de-genero" /><span>Violência de Gênero</span></label>
+                        <label><input type="checkbox" name="tema" value="saude-e-cuidado" /><span>Saúde e Cuidado</span></label>
+                        <label><input type="checkbox" name="tema" value="educacao" /><span>Educação</span></label>
+                        <label><input type="checkbox" name="tema" value="direitos-politicos" /><span>Direitos Políticos</span></label>
+                        <label><input type="checkbox" name="tema" value="trabalho-e-renda" /><span>Trabalho e Renda</span></label>
+                        <label><input type="checkbox" name="tema" value="meio-ambiente" /><span>Meio Ambiente</span></label>
+                    </div>
+                </fieldset>
+
+                <fieldset class="alerts-email-modal__section alerts-email-modal__frequency-section">
+                    <legend>Frequência</legend>
+                    <p>Você pode escolher uma ou as duas opções.<br />Cada frequência tem regras diferentes — leia antes de selecionar.</p>
+                    <div class="alerts-email-modal__frequencies">
+                        <label class="alerts-email-modal__frequency-card">
+                            <span class="alerts-email-modal__frequency-heading"><strong>Semanal</strong><input type="checkbox" name="frequencia" value="semanal" /></span>
+                            <span>Um resumo semanal dos temas selecionados que acompanha a newsletter do Elas no Congresso.</span>
+                        </label>
+                        <label class="alerts-email-modal__frequency-card alerts-email-modal__daily-card">
+                            <span class="alerts-email-modal__frequency-heading"><strong>Diário</strong><input type="checkbox" name="frequencia" value="diario" /></span>
+                            <span>Alertas enviados assim que uma movimentação acontecer.</span>
+                        </label>
+                    </div>
+                    <aside class="alerts-email-modal__weekly-note" hidden aria-label="Informação sobre a newsletter">
+                        <p>A newsletter do Elas no Congresso reúne, contextualiza e analisa os impactos políticos das tramitações.</p>
+                    </aside>
+                    <section class="alerts-email-modal__daily-options" hidden aria-label="Filtros para alertas diários">
+                        <p class="alerts-email-modal__daily-intro">Escolha casa, comissão ou proposição para filtrar seus alertas diários.<br />Selecionar uma casa filtra as comissões disponíveis.</p>
+                        <section class="alerts-email-modal__daily-house" aria-label="Casa">
+                            <h3>Casa</h3>
+                            <div class="alerts-email-modal__daily-house-options">
+                                <button class="alerts-email-modal__daily-house-option alerts-email-modal__daily-house-option--selected" type="button" data-alerts-house="camara" aria-pressed="true"><i aria-hidden="true"></i><b>Câmara</b></button>
+                                <button class="alerts-email-modal__daily-house-option" type="button" data-alerts-house="senado" aria-pressed="false"><i aria-hidden="true"></i><b>Senado</b></button>
+                            </div>
+                        </section>
+                        <section class="alerts-email-modal__daily-control" aria-label="Comissão">
+                            <h3>Comissão</h3>
+                            <div class="alerts-email-modal__daily-select-wrap">
+                                <button class="alerts-email-modal__daily-select" type="button" aria-expanded="false" aria-controls="alerts-commission-options" disabled><span data-alerts-commission-label></span><i aria-hidden="true"></i></button>
+                                <div class="alerts-email-modal__daily-select-options" id="alerts-commission-options" hidden>
+                                    <button type="button" data-alerts-commission="saude-csa">Saúde (CSA)</button>
+                                    <button type="button" data-alerts-commission="ccj">Constituição e Justiça (CCJ)</button>
+                                    <button type="button" data-alerts-commission="cdhm">Direitos Humanos (CDHM)</button>
+                                    <button type="button" data-alerts-commission="ce">Educação (CE)</button>
+                                    <button type="button" data-alerts-commission="csp">Segurança Pública (CSP)</button>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="alerts-email-modal__daily-control" aria-label="Proposição">
+                            <h3>Proposição</h3>
+                            <div class="alerts-email-modal__daily-select-wrap">
+                                <button class="alerts-email-modal__daily-search" type="button" aria-expanded="false" aria-controls="alerts-proposal-options" disabled><span data-alerts-proposal-label>Buscar por número ou assunto…</span><i aria-hidden="true"></i></button>
+                                <div class="alerts-email-modal__proposal-options" id="alerts-proposal-options" hidden aria-label="Proposições disponíveis">
+                                    <button type="button" data-alerts-proposal="pl-1234-2025">PL 1234/2025</button>
+                                    <button type="button" data-alerts-proposal="pl-891-2024">PL 891/2024</button>
+                                    <button type="button" data-alerts-proposal="pec-17-2025">PEC 17/2025</button>
+                                    <button type="button" data-alerts-proposal="pl-2201-2023">PL 2201/2023</button>
+                                    <button type="button" data-alerts-proposal="pdl-45-2024">PDL 45/2024</button>
+                                </div>
+                            </div>
+                            <p class="alerts-email-modal__daily-helper">Opcional. Deixe em branco para receber alertas de todas as proposições dos filtros acima.</p>
+                        </section>
+                    </section>
+                </fieldset>
+
+                <label class="alerts-email-modal__terms"><input type="checkbox" name="termos" /><span>Li e aceito os <a href="/termos-de-uso">Termos de Uso</a> e a <a href="/politica-de-privacidade">Política de Privacidade</a> do Elas no Congresso.</span></label>
+                <button class="alerts-email-modal__submit" type="submit" disabled>Quero me inscrever <img src={chevron.src} alt="" /></button>
+            </form>
+        </div>
+    </div>
+</dialog>
+
+<script>
+    const dialog = document.querySelector<HTMLDialogElement>(".alerts-email-modal");
+    const opener = document.querySelector<HTMLButtonElement>(".alerts-hero__button");
+    const close = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__close");
+    const email = dialog?.querySelector<HTMLInputElement>("#alerts-email");
+    const topics = Array.from(dialog?.querySelectorAll<HTMLInputElement>('input[name="tema"]') ?? []);
+    const weekly = dialog?.querySelector<HTMLInputElement>('input[name="frequencia"][value="semanal"]');
+    const terms = dialog?.querySelector<HTMLInputElement>('input[name="termos"]');
+    const submit = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__submit");
+    const weeklyNote = dialog?.querySelector<HTMLElement>(".alerts-email-modal__weekly-note");
+    const daily = dialog?.querySelector<HTMLInputElement>('input[name="frequencia"][value="diario"]');
+    const dailyOptions = dialog?.querySelector<HTMLElement>(".alerts-email-modal__daily-options");
+    const camera = dialog?.querySelector<HTMLButtonElement>('[data-alerts-house="camara"]');
+    const senate = dialog?.querySelector<HTMLButtonElement>('[data-alerts-house="senado"]');
+    const commission = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__daily-select");
+    const commissionOptions = dialog?.querySelector<HTMLElement>(".alerts-email-modal__daily-select-options");
+    const commissionOption = Array.from(dialog?.querySelectorAll<HTMLButtonElement>("[data-alerts-commission]") ?? []);
+    const commissionLabel = dialog?.querySelector<HTMLElement>("[data-alerts-commission-label]");
+    const proposal = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__daily-search");
+    const proposalOptions = dialog?.querySelector<HTMLElement>(".alerts-email-modal__proposal-options");
+    const proposalOption = Array.from(dialog?.querySelectorAll<HTMLButtonElement>("[data-alerts-proposal]") ?? []);
+    const proposalLabel = dialog?.querySelector<HTMLElement>("[data-alerts-proposal-label]");
+
+    const resetDailyFilters = () => {
+        commission?.setAttribute("aria-expanded", "false");
+        if (commission) commission.disabled = true;
+        if (commissionLabel) commissionLabel.textContent = "";
+        if (commissionOptions) commissionOptions.hidden = true;
+        commissionOption.forEach((option) => option.classList.remove("is-selected"));
+        proposal?.setAttribute("aria-expanded", "false");
+        if (proposal) proposal.disabled = true;
+        if (proposalLabel) proposalLabel.textContent = "Buscar por número ou assunto…";
+        if (proposalOptions) proposalOptions.hidden = true;
+        proposalOption.forEach((option) => option.classList.remove("is-selected"));
+    };
+
+    opener?.addEventListener("click", () => {
+        dialog?.showModal();
+        if (dialog) dialog.scrollTop = 0;
+    });
+    close?.addEventListener("click", () => dialog?.close());
+    const updateTopicsSelectedState = () => {
+        if (!submit || !email || !weekly || !terms) return;
+        submit.disabled = !(email.validity.valid && topics.some((topic) => topic.checked) && weekly.checked && terms.checked);
+    };
+    email?.addEventListener("input", updateTopicsSelectedState);
+    topics.forEach((topic) => topic.addEventListener("change", updateTopicsSelectedState));
+    weekly?.addEventListener("change", () => {
+        if (weekly.checked && daily) {
+            daily.checked = false;
+            if (dailyOptions) dailyOptions.hidden = true;
+            resetDailyFilters();
+        }
+        updateTopicsSelectedState();
+        if (weeklyNote) weeklyNote.hidden = !weekly.checked;
+    });
+    terms?.addEventListener("change", updateTopicsSelectedState);
+    daily?.addEventListener("change", () => {
+        if (daily.checked) {
+            if (weekly) weekly.checked = false;
+            if (terms) terms.checked = false;
+            if (weeklyNote) weeklyNote.hidden = true;
+        }
+        if (dailyOptions) dailyOptions.hidden = !daily.checked;
+        if (!daily.checked) resetDailyFilters();
+        updateTopicsSelectedState();
+    });
+    camera?.addEventListener("click", () => {
+        if (!daily?.checked) return;
+        camera.setAttribute("aria-pressed", "true");
+        senate?.setAttribute("aria-pressed", "false");
+        camera.classList.add("alerts-email-modal__daily-house-option--selected");
+        senate?.classList.remove("alerts-email-modal__daily-house-option--selected");
+        if (commission) commission.disabled = false;
+    });
+    senate?.addEventListener("click", () => {
+        if (!daily?.checked) return;
+        senate.setAttribute("aria-pressed", "true");
+        camera?.setAttribute("aria-pressed", "false");
+        senate.classList.add("alerts-email-modal__daily-house-option--selected");
+        camera?.classList.remove("alerts-email-modal__daily-house-option--selected");
+        resetDailyFilters();
+    });
+    commission?.addEventListener("click", () => {
+        if (commission.disabled) return;
+        const opening = commission.getAttribute("aria-expanded") !== "true";
+        commission.setAttribute("aria-expanded", String(opening));
+        if (commissionOptions) commissionOptions.hidden = !opening;
+    });
+    commissionOption.forEach((option) => option.addEventListener("click", () => {
+        commission?.setAttribute("aria-expanded", "false");
+        if (commissionLabel) commissionLabel.textContent = option.textContent ?? "";
+        if (commissionOptions) commissionOptions.hidden = true;
+        commissionOption.forEach((item) => item.classList.toggle("is-selected", item === option));
+        if (proposal) proposal.disabled = false;
+    }));
+    proposal?.addEventListener("click", () => {
+        if (proposal.disabled) return;
+        const opening = proposal.getAttribute("aria-expanded") !== "true";
+        proposal.setAttribute("aria-expanded", String(opening));
+        if (proposalOptions) proposalOptions.hidden = !opening;
+    });
+    proposalOption.forEach((option) => option.addEventListener("click", () => {
+        proposal?.setAttribute("aria-expanded", "false");
+        if (proposalLabel) proposalLabel.textContent = option.textContent ?? "";
+        if (proposalOptions) proposalOptions.hidden = true;
+        proposalOption.forEach((item) => item.classList.toggle("is-selected", item === option));
+    }));
+    dialog?.querySelector("form")?.addEventListener("submit", (event) => event.preventDefault());
+</script>
+
+<style>
+    .alerts-email-modal, .alerts-email-modal * { box-sizing: border-box; }
+    .alerts-email-modal { width: min(672px, calc(100vw - 48px)); max-height: calc(100dvh - 48px); margin: auto; padding: 0; overflow: auto; border: 0; background: #fff; color: #1e2546; }
+    .alerts-email-modal::backdrop { background: rgba(255, 255, 255, .92); }
+    .alerts-email-modal__shell { min-height: 100%; }
+    .alerts-email-modal__close-row { display: flex; width: 624px; max-width: calc(100% - 48px); height: 92px; margin: 0 auto; padding-top: 50px; justify-content: flex-end; }
+    .alerts-email-modal__close { display: grid; width: 42px; height: 42px; place-items: center; padding: 0 0 4px; border: 2.222px solid #1e2546; background: #fff; color: #1e2546; font-family: Arial, sans-serif; font-size: 37px; font-weight: 400; line-height: 1; cursor: pointer; }
+    .alerts-email-modal__content { display: flex; width: 100%; padding: 80px 24px 40px; flex-direction: column; align-items: flex-start; gap: 24px; }
+    .alerts-email-modal__intro { width: 624px; max-width: 100%; }
+    .alerts-email-modal h2, .alerts-email-modal p { margin: 0; }
+    .alerts-email-modal h2 { color: #1e2546; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 33px; font-weight: 800; font-variation-settings: "wdth" 75; line-height: 45px; }
+    .alerts-email-modal__intro p, .alerts-email-modal__section > p { color: #998d96; font-family: "Plus Jakarta Sans", sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; }
+    .alerts-email-modal__intro p { padding-top: 16px; }
+    .alerts-email-modal__form { display: flex; width: 624px; max-width: 100%; padding-top: 40px; flex-direction: column; align-items: flex-start; }
+    .alerts-email-modal__email-field { display: flex; width: 100%; flex-direction: column; gap: 5px; }
+    .alerts-email-modal__email-field label, .alerts-email-modal fieldset > legend, .alerts-email-modal__daily-options legend, .alerts-email-modal__select-label { padding: 0; color: #1e2546; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
+    .alerts-email-modal input, .alerts-email-modal select { accent-color: #def279; }
+    .alerts-email-modal__email-field input { width: 100%; height: 50px; padding: 12px 16px; border: 1px solid #998d96; border-radius: 0; color: #1e2546; font: 400 18px/24px "Plus Jakarta Sans", sans-serif; }
+    .alerts-email-modal__email-field input:not(:placeholder-shown) { border: 2px solid #0b0f5e; }
+    .alerts-email-modal__email-field input::placeholder, .alerts-email-modal__select-label input::placeholder { color: #998d96; opacity: 1; }
+    .alerts-email-modal__section { width: 100%; min-width: 0; margin: 0; padding: 0; border: 0; }
+    .alerts-email-modal__section > legend { margin-top: 36px; }
+    .alerts-email-modal__section > p { padding-top: 5px; }
+    .alerts-email-modal__topics { display: grid; grid-template-columns: repeat(2, 300px); gap: 12px 24px; padding-top: 16px; }
+    .alerts-email-modal__topics label, .alerts-email-modal__terms, .alerts-email-modal__daily-options label, .alerts-email-modal__daily-options fieldset label { display: flex; align-items: center; gap: 10px; color: #998d96; font: 400 16px/24px "Plus Jakarta Sans", sans-serif; }
+    .alerts-email-modal input[type="checkbox"] { position: relative; width: 16px; height: 16px; margin: 0; appearance: none; border: 1px solid #998d96; border-radius: 0; background: #fff; flex: 0 0 16px; }
+    .alerts-email-modal input[type="checkbox"]:checked { border: 2px solid #0b0f5e; background: #def279; }
+    .alerts-email-modal input[type="checkbox"]:checked::after { position: absolute; top: 2px; left: 2px; width: 8px; height: 5px; border-bottom: 2px solid #0b0f5e; border-left: 2px solid #0b0f5e; content: ""; transform: rotate(-45deg); }
+    .alerts-email-modal__topics input:checked + span { padding: 3.195px 5px; background: #def279; color: #0b0f5e; }
+    .alerts-email-modal__frequencies { display: grid; grid-template-columns: repeat(2, 304px); gap: 16px; padding-top: 25px; }
+    .alerts-email-modal__frequency-card { display: flex; min-height: 146.25px; padding: 21px; flex-direction: column; border: 1px solid #998d96; background: #fff; color: #998d96; font: 400 14px/16px "Plus Jakarta Sans", sans-serif; cursor: pointer; }
+    .alerts-email-modal__frequency-card:has(input:checked) { padding: 22px; border: 2px solid #0b0f5e; }
+    .alerts-email-modal__frequency-card input[type="checkbox"] { width: 20px; height: 20px; flex-basis: 20px; }
+    .alerts-email-modal__frequency-card input[type="checkbox"]:checked::after { top: 3px; left: 3px; width: 10px; height: 7px; }
+    .alerts-email-modal__frequency-heading { display: flex; align-items: center; justify-content: space-between; color: #1e2546; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
+    .alerts-email-modal__frequency-card > span:last-child { padding-top: 12px; }
+    .alerts-email-modal__frequency-section { position: relative; }
+    .alerts-email-modal__weekly-note { position: absolute; z-index: 1; top: 261.549px; left: 132.82px; display: flex; width: 180.232px; height: 110.229px; align-items: center; justify-content: center; padding: 12.614px 18.716px; background: #def279; box-shadow: 0 3.119px 0 #0b0f5e; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; font-size: 12px; font-weight: 500; line-height: 17px; text-align: center; transform: rotate(-3.215deg); }
+    .alerts-email-modal__weekly-note p { width: 142.801px; height: 85px; }
+    .alerts-email-modal__daily-options { position: relative; width: 624px; height: 432.391px; margin-top: 8px; padding: 21px; border: 1px solid rgba(30, 37, 70, .12); background: #0b0f5e; color: #fff; }
+    .alerts-email-modal__daily-options::before { position: absolute; top: -8px; left: 458px; width: 12px; height: 12px; background: #0b0f5e; content: ""; transform: rotate(45deg); }
+    .alerts-email-modal__daily-options h3, .alerts-email-modal__daily-options p { margin: 0; }
+    .alerts-email-modal__daily-intro { display: flex; width: 496px; height: 62px; align-items: center; padding: 15px 17px; background: #2b65d9; color: #fff; font: 400 12px/16px "Plus Jakarta Sans", sans-serif; }
+    .alerts-email-modal__daily-house { width: 582px; height: 82.391px; padding-top: 20px; }
+    .alerts-email-modal__daily-house h3, .alerts-email-modal__daily-control h3 { color: #fff; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
+    .alerts-email-modal__daily-house-options { display: flex; height: 42.391px; align-items: flex-end; gap: 20px; }
+    .alerts-email-modal__daily-house-option { display: flex; height: 30.391px; align-items: center; gap: 12px; padding: 0; border: 0; background: transparent; color: #fff; font: 500 16px/24px "Plus Jakarta Sans", sans-serif; cursor: pointer; }
+    .alerts-email-modal__daily-house-option i { display: block; width: 16px; height: 16px; border: 2px solid #fff; }
+    .alerts-email-modal__daily-house-option--selected i { position: relative; border-color: #def279; background: #def279; }
+    .alerts-email-modal__daily-house-option--selected i::after { position: absolute; top: 2px; left: 2px; width: 10px; height: 7px; border-bottom: 2px solid #0b0f5e; border-left: 2px solid #0b0f5e; content: ""; transform: rotate(-45deg); }
+    .alerts-email-modal__daily-house-option b { padding: 3.2px 5.144px; font: inherit; font-weight: 500; }
+    .alerts-email-modal__daily-house-option--selected b { background: #def279; color: #0b0f5e; }
+    .alerts-email-modal__daily-control { width: 582px; padding-top: 20px; }
+    .alerts-email-modal__daily-house + .alerts-email-modal__daily-control { height: 94px; }
+    .alerts-email-modal__daily-select-wrap { position: relative; margin-top: 8px; }
+    .alerts-email-modal__daily-select { position: relative; display: flex; width: 582px; height: 46px; padding: 0 16px; align-items: center; justify-content: space-between; border: 1px solid rgba(30, 37, 70, .15); background: #fff; color: #0b0f5e; font: 400 16px/normal "Plus Jakarta Sans", sans-serif; text-align: left; cursor: pointer; }
+    .alerts-email-modal__daily-select:disabled { cursor: default; }
+    .alerts-email-modal__daily-select:focus-visible, .alerts-email-modal__daily-search:focus-visible, .alerts-email-modal__daily-house-option:focus-visible, .alerts-email-modal__daily-select-options button:focus-visible, .alerts-email-modal__proposal-options button:focus-visible { outline: 2px solid #def279; outline-offset: 2px; }
+    .alerts-email-modal__daily-select i { position: absolute; top: 15.5px; right: 11.25px; width: 7.5px; height: 3.75px; border-bottom: 1.25px solid #0b0f5e; border-left: 1.25px solid #0b0f5e; transform: rotate(-45deg); }
+    .alerts-email-modal__daily-select-options { position: absolute; z-index: 3; top: 46px; width: 582px; border: 1px solid rgba(30, 37, 70, .15); background: #fff; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -4px rgba(0, 0, 0, .1); }
+    .alerts-email-modal__daily-select-options button { display: block; width: 100%; padding: 12px 16px; border: 0; background: #fff; color: #0b0f5e; font: 400 16px/22px "Plus Jakarta Sans", sans-serif; text-align: left; cursor: pointer; }
+    .alerts-email-modal__daily-select-options button:hover { background: #def279; }
+    .alerts-email-modal__daily-select-options button.is-selected, .alerts-email-modal__proposal-options button.is-selected { background: #def279; }
+    .alerts-email-modal__daily-search { position: relative; display: flex; width: 582px; height: 50px; align-items: center; justify-content: space-between; margin-top: 8px; padding: 12px 16px; border: 1px solid rgba(30, 37, 70, .15); background: #fff; color: #998d96; font: 400 16px/20px "Plus Jakarta Sans", sans-serif; text-align: left; cursor: pointer; }
+    .alerts-email-modal__daily-search:disabled { cursor: default; }
+    .alerts-email-modal__daily-search:not(:disabled) { color: #0b0f5e; }
+    .alerts-email-modal__daily-search i { width: 7.5px; height: 3.75px; margin-right: -4px; border-bottom: 1.25px solid #0b0f5e; border-left: 1.25px solid #0b0f5e; transform: rotate(-45deg); }
+    .alerts-email-modal__daily-helper { width: 582px; padding-top: 6px; color: rgba(30, 37, 70, .35); font: 400 14px/20px "Plus Jakarta Sans", sans-serif; }
+    .alerts-email-modal__proposal-options { position: absolute; z-index: 3; top: 58px; width: 582px; max-height: 210px; overflow: auto; border: 1px solid rgba(30, 37, 70, .15); background: #fff; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -4px rgba(0, 0, 0, .1); }
+    .alerts-email-modal__proposal-options button { display: block; width: 100%; padding: 12px 16px; border: 0; background: #fff; color: #0b0f5e; font: 400 16px/22px "Plus Jakarta Sans", sans-serif; text-align: left; cursor: pointer; }
+    .alerts-email-modal__proposal-options button:hover { background: #def279; }
+    .alerts-email-modal__terms { padding-top: 28px; color: #998d96; font-size: 14px; line-height: 20px; }
+    .alerts-email-modal__terms a { color: #1e2546; font-weight: 700; }
+    .alerts-email-modal__submit { display: flex; height: 56px; margin: 32px 0 0 auto; padding: 18px 20px 14px 24px; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 0; background: #4242f6; color: #fff; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; cursor: pointer; }
+    .alerts-email-modal__submit:disabled { background: #c3c5ff; cursor: default; }
+    .alerts-email-modal__submit:not(:disabled) { padding-right: 24px; }
+    .alerts-email-modal__submit:not(:disabled) img { display: none; }
+    .alerts-email-modal__submit img { width: 13.414px; height: 8.121px; transform: rotate(-90deg); filter: brightness(0) invert(1); }
+    @media (max-width: 680px) { .alerts-email-modal { width: min(100%, calc(100vw - 24px)); max-height: calc(100dvh - 24px); } .alerts-email-modal__close-row { max-width: calc(100% - 32px); height: 72px; padding-top: 24px; } .alerts-email-modal__content { padding: 48px 16px 32px; } .alerts-email-modal h2 { font-size: 26px; line-height: 34px; } .alerts-email-modal__intro p br, .alerts-email-modal__section > p br { display: none; } .alerts-email-modal__topics, .alerts-email-modal__frequencies { grid-template-columns: 1fr; } .alerts-email-modal__topics { gap: 12px; } .alerts-email-modal__submit { margin-top: 28px; } }
+</style>
