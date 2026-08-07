@@ -8,9 +8,14 @@ import mapLabels from "./assets/map/map-br-labels@2.5x.png";
 import StanceToggle from "./StanceToggle.astro";
 import { getStanceByState, type GroupStat, type Stance } from "../../service/api/stats";
 
+// A tabela lista as 27 UFs; o mapa destaca só o topo do mesmo ranking, então
+// uma busca por stance serve os dois — a ordem já vem da API.
+const UF_COUNT = 27;
+const MAP_HIGHLIGHTS = 5;
+
 const [unfavourableRanking, favourableRanking] = await Promise.all([
-    getStanceByState({ stance: "unfavorable" }),
-    getStanceByState({ stance: "favorable" }),
+    getStanceByState({ stance: "unfavorable", limit: UF_COUNT }),
+    getStanceByState({ stance: "favorable", limit: UF_COUNT }),
 ]);
 
 const toRows = (ranking: GroupStat[], stance: Stance) =>
@@ -37,14 +42,17 @@ const ufLayers = import.meta.glob<{ default: ImageMetadata }>("./assets/map/map-
 });
 const layerSlug: Record<Stance, string> = { unfavorable: "desfavoravel", favorable: "favoravel" };
 
-const highlights = views.map((view) => ({
-    ...view,
-    layers: view.rows.flatMap((row) => {
-        const uf = row.uf.trim().toUpperCase();
-        const layer = ufLayers[`./assets/map/map-br-ufs-${layerSlug[view.stance]}-${uf}@2.5x.png`];
-        return layer ? [{ uf, image: layer.default }] : [];
-    }),
-}));
+const highlights = views.map((view) => {
+    const top = view.rows.slice(0, MAP_HIGHLIGHTS).map((row) => row.uf.trim().toUpperCase());
+    return {
+        stance: view.stance,
+        ufs: top,
+        layers: top.flatMap((uf) => {
+            const layer = ufLayers[`./assets/map/map-br-ufs-${layerSlug[view.stance]}-${uf}@2.5x.png`];
+            return layer ? [{ uf, image: layer.default }] : [];
+        }),
+    };
+});
 ---
 
 <section class="uf-projects-chart" data-stance="unfavorable" data-panel="map" aria-labelledby="uf-projects-chart-title">
@@ -69,7 +77,7 @@ const highlights = views.map((view) => ({
                     <div class="uf-projects-chart__map">
                         <Image src={mapBase} alt="" width={720} height={720} densities={[1, 2]} loading="lazy" draggable={false} />
                         {highlights.map((view) => (
-                            <div data-stance-view={view.stance} role="img" aria-label={`Mapa do Brasil com destaque para ${view.rows.map((r) => r.uf).join(", ")}`}>
+                            <div data-stance-view={view.stance} role="img" aria-label={`Mapa do Brasil com destaque para ${view.ufs.join(", ")}`}>
                                 {view.layers.map((layer) => (
                                     <Image src={layer.image} alt="" width={720} height={720} densities={[1, 2]} loading="lazy" draggable={false} />
                                 ))}
@@ -82,7 +90,7 @@ const highlights = views.map((view) => ({
                 <div class="uf-projects-chart__panel" id="uf-panel-table" role="tabpanel" data-panel-view="table">
                     {views.map((view) => (
                         <table class="uf-projects-chart__table" data-stance-view={view.stance}>
-                            <caption>Top {view.rows.length} UFs por proposições {view.heading.toLowerCase()}</caption>
+                            <caption>As {view.rows.length} UFs por proposições {view.heading.toLowerCase()}</caption>
                             <thead>
                                 <tr><th scope="col">UF</th><th scope="col">Desfavoráveis</th><th scope="col">Favoráveis</th><th scope="col">Total</th><th scope="col">% {view.heading.toLowerCase()}</th></tr>
                             </thead>
@@ -148,7 +156,10 @@ const highlights = views.map((view) => ({
     .uf-projects-chart[data-panel="table"] [data-panel-view="map"],
     .uf-projects-chart[data-stance="unfavorable"] [data-stance-view="favorable"],
     .uf-projects-chart[data-stance="favorable"] [data-stance-view="unfavorable"] { display: none; }
+    /* 27 linhas não cabem nos 720px do mapa: rola por dentro e o cabeçalho fica. */
+    .uf-projects-chart__panel[data-panel-view="table"] { max-height: 720px; overflow-y: auto; }
     .uf-projects-chart__table { width: 720px; border-collapse: collapse; font-size: 16px; line-height: 24px; }
+    .uf-projects-chart__table thead th { position: sticky; top: 0; background: #fff; }
     .uf-projects-chart__table caption { padding: 16px 0; text-align: left; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; text-transform: uppercase; font-variation-settings: "wdth" 75; }
     .uf-projects-chart__table th, .uf-projects-chart__table td { padding: 12px 8px; border-bottom: 1px solid #0b0f5e; text-align: right; }
     .uf-projects-chart__table th[scope="col"] { font-family: "ETC Anybody", "Anybody", sans-serif; font-weight: 700; text-transform: uppercase; font-variation-settings: "wdth" 75; }
