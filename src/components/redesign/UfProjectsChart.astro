@@ -2,7 +2,7 @@
 import attention from "../../assets/images/redesign/party-chart/attention.svg";
 import buttonChevron from "../../assets/images/redesign/home-reportagens/chevron-right.svg";
 import elasHorizontal from "../../assets/images/redesign/party-chart/elas-horizontal.svg";
-import mapImage from "../../assets/images/redesign/uf-projects/mapa-brasil-top-5-desfavoraveis.png";
+import mapSvg from "../../assets/images/redesign/uf-projects/brasil-uf.svg?raw";
 import StanceToggle from "./StanceToggle.astro";
 import { getStanceByState, type GroupStat, type Stance } from "../../service/api/stats";
 
@@ -27,6 +27,32 @@ const views = [
     { stance: "unfavorable" as const, heading: "Desfavoráveis", rows: toRows(unfavourableRanking, "unfavorable") },
     { stance: "favorable" as const, heading: "Favoráveis", rows: toRows(favourableRanking, "favorable") },
 ];
+
+// O SVG do IBGE traz um <path id="UF"> por estado; aqui só marcamos quem está
+// em cada top 5. Qual dos dois pinta é o CSS que decide, pelo data-stance.
+const byUf = new Map(
+    [...unfavourableRanking, ...favourableRanking].map((s) => [s.label.trim().toUpperCase(), s]),
+);
+const tops = Object.fromEntries(
+    views.map((v) => [v.stance, new Set(v.rows.map((r) => r.uf.trim().toUpperCase()))]),
+) as Record<Stance, Set<string>>;
+
+const topFlags = (uf: string) =>
+    (["unfavorable", "favorable"] as const)
+        .filter((stance) => tops[stance].has(uf))
+        .map((stance) => ` data-top-${stance}`)
+        .join("");
+
+const mapHtml = mapSvg
+    .replace(/<path id="([A-Z]{2})" d="([^"]*)" \/>/g, (_, uf: string, d: string) => {
+        const flags = topFlags(uf);
+        if (!flags) return `<path id="${uf}" d="${d}" />`;
+        const stat = byUf.get(uf);
+        const title = `${uf}: ${stat?.unfavorable ?? 0} desfavoráveis, ${stat?.favorable ?? 0} favoráveis`;
+        return `<path id="${uf}"${flags} d="${d}"><title>${title}</title></path>`;
+    })
+    // A camada de textura é <use> dos mesmos paths, então repete a marcação.
+    .replace(/<use href="#([A-Z]{2})" \/>/g, (m, uf: string) => `<use href="#${uf}"${topFlags(uf)} />`);
 ---
 
 <section class="uf-projects-chart" data-stance="unfavorable" data-panel="map" aria-labelledby="uf-projects-chart-title">
@@ -48,7 +74,7 @@ const views = [
                 </div>
 
                 <div class="uf-projects-chart__panel" id="uf-panel-map" role="tabpanel" data-panel-view="map">
-                    <img class="uf-projects-chart__map" src={mapImage.src} alt="Mapa do Brasil com os estados que mais apresentam projetos desfavoráveis: ES, SC, MS, MT e RO" />
+                    <div class="uf-projects-chart__map" role="img" aria-label={`Mapa do Brasil com destaque para ${views[0].rows.map((r) => r.uf).join(", ")}`} set:html={mapHtml} />
                 </div>
 
                 <div class="uf-projects-chart__panel" id="uf-panel-table" role="tabpanel" data-panel-view="table">
@@ -111,7 +137,21 @@ const views = [
     .uf-projects-chart__tabs { display: flex; width: 720px; height: 48px; align-items: flex-end; justify-content: flex-end; gap: 0; border-bottom: 4px solid #4242f6; }
     .uf-projects-chart__tab { display: grid; width: 104px; height: 48px; place-items: center; border: 0; background: none; color: #4242f6; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; cursor: pointer; }
     .uf-projects-chart__tab[aria-selected="true"] { border-radius: 16px 16px 0 0; background: #4242f6; color: #fff; }
-    .uf-projects-chart__map { display: block; width: 720px; height: 720px; object-fit: contain; }
+    .uf-projects-chart__map { width: 720px; height: 720px; }
+    /* :global porque o SVG entra por set:html e não recebe o scope do Astro.
+       O viewBox está em graus, então stroke usa non-scaling-stroke. */
+    .uf-projects-chart__map :global(svg) { display: block; width: 100%; height: 100%; }
+    .uf-projects-chart__map :global(.uf-bg) { fill: url(#uf-grid); }
+    .uf-projects-chart__map :global(.uf-frame) { fill: none; stroke: #4242f6; stroke-width: 2; vector-effect: non-scaling-stroke; }
+    .uf-projects-chart__map :global(.uf-grid-lines line) { stroke: #8f97e8; stroke-width: 1; stroke-dasharray: 2 5; vector-effect: non-scaling-stroke; }
+    /* `> path` evita casar os clones dentro dos <use> da camada de textura. */
+    .uf-projects-chart__map :global(#BRUF > path) { fill: #fff; stroke: #4242f6; stroke-width: 1; vector-effect: non-scaling-stroke; }
+    .uf-projects-chart__map :global(.uf-noise use) { fill: none; pointer-events: none; }
+    .uf-projects-chart[data-stance="unfavorable"] .uf-projects-chart__map :global(#BRUF > path[data-top-unfavorable]),
+    .uf-projects-chart[data-stance="favorable"] .uf-projects-chart__map :global(#BRUF > path[data-top-favorable]) { fill: url(#uf-heat); }
+    .uf-projects-chart[data-stance="unfavorable"] .uf-projects-chart__map :global(.uf-noise use[data-top-unfavorable]),
+    .uf-projects-chart[data-stance="favorable"] .uf-projects-chart__map :global(.uf-noise use[data-top-favorable]) { fill: url(#uf-noise); }
+    .uf-projects-chart__map :global(.uf-labels) { fill: #0b0f5e; font-size: 0.85px; font-weight: 500; text-anchor: middle; pointer-events: none; }
     /* Um painel e uma visão de cada vez; o resto sai do fluxo. */
     .uf-projects-chart[data-panel="map"] [data-panel-view="table"],
     .uf-projects-chart[data-panel="table"] [data-panel-view="map"],
