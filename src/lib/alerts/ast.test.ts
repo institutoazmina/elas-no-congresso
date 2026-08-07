@@ -1,0 +1,36 @@
+import assert from "node:assert/strict";
+import { buildAst } from "./ast.ts";
+
+// As "Categorias 2026" viram um único leaf `in` — o compilador da API já traduz
+// isso para (categoria_a | categoria_b), sem precisar de um nó OR à mão.
+assert.deepEqual(buildAst({ categorias: ["violencias_de_genero", "saude"] }), {
+    field: "categoria",
+    op: "in",
+    value: ["violencias_de_genero", "saude"],
+});
+
+// Os filtros do alerta diário entram como AND ao lado das categorias.
+assert.deepEqual(buildAst({ categorias: ["saude"], casa: "camara", comissao: "CCJ" }), {
+    op: "AND",
+    children: [
+        { field: "categoria", op: "in", value: ["saude"] },
+        { field: "casa", op: "eq", value: "camara" },
+        { field: "comissao", op: "eq", value: "CCJ" },
+    ],
+});
+
+// Proposição é opcional; quando vem, é o id numérico que a API tokeniza.
+assert.deepEqual(buildAst({ categorias: ["saude"], casa: "senado", proposicao: 4242 }), {
+    op: "AND",
+    children: [
+        { field: "categoria", op: "in", value: ["saude"] },
+        { field: "casa", op: "eq", value: "senado" },
+        { field: "proposicao", op: "eq", value: 4242 },
+    ],
+});
+
+// Sem nada marcado a inscrição casaria com o Congresso inteiro — barra antes
+// de chegar na rede.
+assert.throws(() => buildAst({ categorias: [] }), /ao menos um tema/);
+
+console.log("ok");
