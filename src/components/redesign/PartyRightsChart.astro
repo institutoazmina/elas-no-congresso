@@ -4,6 +4,7 @@ import elasHorizontal from "../../assets/images/redesign/party-chart/elas-horizo
 import StanceToggle from "./StanceToggle.astro";
 import thumbBase from "../../assets/images/redesign/party-chart/thumbs-down-base.svg";
 import thumb from "../../assets/images/redesign/party-chart/thumbs-down.svg";
+import thumbsUp from "./assets/thumbs-up.svg";
 import Papelada from "./Papelada.astro";
 import { pileGap } from "../../lib/papelada";
 import { getStanceByParty, type GroupStat, type Stance } from "../../service/api/stats";
@@ -66,7 +67,7 @@ const views = [
                             <Papelada class="party-rights-chart__paper" arrangement="pile" category="desfavoravel" size="a4" gap={gap} amount={party.negative} alt={`${party.negative} proposições desfavoráveis`} />
                         </div>
                         <div class="party-rights-chart__pile">
-                            <div class="party-rights-chart__value"><strong>{party.positive}</strong><span class="party-rights-chart__thumb party-rights-chart__thumb--up"><img src={thumbBase.src} alt="" /><img src={thumb.src} alt="" /></span></div>
+                            <div class="party-rights-chart__value"><strong>{party.positive}</strong><img class="party-rights-chart__thumb" src={thumbsUp.src} alt="" /></div>
                             <Papelada class="party-rights-chart__paper" arrangement="pile" category="favoravel" size="a4" gap={gap} amount={party.positive} alt={`${party.positive} proposições favoráveis`} />
                         </div>
                     </div>
@@ -97,7 +98,6 @@ const views = [
     .party-rights-chart__thumb { position: relative; display: block; width: 32px; height: 32px; flex: none; overflow: hidden; border-radius: 999px; }
     .party-rights-chart__thumb > img:first-child { position: absolute; inset: 0; width: 32px; height: 32px; }
     .party-rights-chart__thumb > img:last-child { position: absolute; inset: 4.44px 4px 3.56px; width: 24px; height: 24px; transform: rotate(180deg); }
-    .party-rights-chart__thumb--up > img:last-child { transform: none; }
     .party-rights-chart__header > p { width: 720px; height: 24px; font-size: 18px; line-height: 24px; }
     .party-rights-chart__figure { display: flex; width: 887px; height: 425px; padding: 24px 0; align-items: end; justify-content: center; gap: 72px; overflow: hidden; }
     .party-rights-chart__party { display: flex; flex: none; flex-direction: column; align-items: center; justify-content: end; gap: 16px; padding: 16px 0; }

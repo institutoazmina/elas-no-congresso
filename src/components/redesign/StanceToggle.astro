@@ -10,6 +10,7 @@
  */
 import thumbBase from "../../assets/images/redesign/party-chart/thumbs-down-base.svg";
 import thumb from "../../assets/images/redesign/party-chart/thumbs-down.svg";
+import thumbsUp from "./assets/thumbs-up.svg";
 import chevron from "../../assets/images/redesign/party-chart/chevron.svg";
 import type { Stance } from "../../service/api/stats";
 
@@ -30,11 +31,11 @@ const stances: Stance[] = ["unfavorable", "favorable"];
     data-label-favorable={labels.favorable}
     aria-label={`Filtro: ${labels.unfavorable}. Trocar para ${labels.favorable}`}
 >
-    {stances.map((stance) => (
-        <span class:list={["stance-toggle__thumb", stance === "favorable" && "stance-toggle__thumb--up"]} data-stance-view={stance}>
-            <img src={thumbBase.src} alt="" /><img src={thumb.src} alt="" />
-        </span>
-    ))}
+    {/* O favorável já vem pronto num único SVG; o desfavorável ainda é composto. */}
+    <span class="stance-toggle__thumb" data-stance-view="unfavorable">
+        <img src={thumbBase.src} alt="" /><img src={thumb.src} alt="" />
+    </span>
+    <img class="stance-toggle__thumb" src={thumbsUp.src} alt="" data-stance-view="favorable" />
     {stances.map((stance) => <span data-stance-view={stance}>{labels[stance]}</span>)}
     <img class="stance-toggle__chevron" src={chevron.src} alt="" />
 </button>
@@ -44,7 +45,6 @@ const stances: Stance[] = ["unfavorable", "favorable"];
     .stance-toggle__thumb { position: relative; display: block; width: 32px; height: 32px; flex: none; overflow: hidden; border-radius: 999px; }
     .stance-toggle__thumb > img:first-child { position: absolute; inset: 0; width: 32px; height: 32px; }
     .stance-toggle__thumb > img:last-child { position: absolute; inset: 4.44px 4px 3.56px; width: 24px; height: 24px; transform: rotate(180deg); }
-    .stance-toggle__thumb--up > img:last-child { transform: none; }
     .stance-toggle__chevron { width: 16px; height: 8px; margin-left: 8px; }
     /* O ancestral que carrega o estado fica fora deste componente, daí o :global. */
     :global([data-stance="unfavorable"]) [data-stance-view="favorable"],
