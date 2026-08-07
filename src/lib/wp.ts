@@ -2,6 +2,7 @@ type WpFeaturedMedia = { link: string };
 type WpEmbedded = { 'wp:featuredmedia'?: [WpFeaturedMedia] };
 
 export type WpPost = {
+  modified?: string;
   link: string;
   title: { rendered: string };
   _embedded?: WpEmbedded;
@@ -10,7 +11,7 @@ export type WpPost = {
 export async function fetchReportagens(tagId: number | undefined, perPage: number, orderByDate = false): Promise<WpPost[]> {
   const tag = tagId === undefined ? "" : `tags[]=${tagId}&`;
   const ordering = orderByDate ? "&orderby=date&order=desc" : "";
-  const url = `https://azmina.com.br/wp-json/wp/v2/az_reportagem?${tag}_embed&_fields=title,link,_links.wp:featuredmedia&per_page=${perPage}${ordering}`;
+  const url = `https://azmina.com.br/wp-json/wp/v2/az_reportagem?${tag}_embed&_fields=title,link,modified,_links.wp:featuredmedia&per_page=${perPage}${ordering}`;
   try {
     const res = await fetch(url);
     if (!res.ok) return [];

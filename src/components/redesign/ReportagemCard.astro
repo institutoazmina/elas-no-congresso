@@ -1,21 +1,15 @@
 ---
 import type { WpPost } from "../../lib/wp";
+import chevronRight from "../../assets/images/redesign/reportagens/chevron-right.svg";
 
-interface Props {
-    post: WpPost;
-    dark?: boolean;
-}
-
+interface Props { post: WpPost; dark?: boolean; }
 const { post, dark = false } = Astro.props;
 const image = post._embedded?.["wp:featuredmedia"]?.[0]?.link;
+const updatedAt = post.modified ? new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "long", year: "numeric", timeZone: "America/Sao_Paulo" }).format(new Date(post.modified)) : undefined;
 ---
-
 <article class:list={["reportagem-card", { "reportagem-card--dark": dark }]}>
-    <a href={post.link} class="reportagem-card__image" aria-label={`Ler: ${post.title.rendered}`}>
-        {image && <img src={image} alt="" loading="lazy" decoding="async" />}
-    </a>
+    <a href={post.link} class="reportagem-card__image" aria-label={`Ler: ${post.title.rendered}`}>{image && <img src={image} alt="" loading="lazy" decoding="async" />}</a>
     <h3 set:html={post.title.rendered} />
-    <a href={post.link} class="reportagem-card__link">
-        Ler reportagem <span aria-hidden="true">⌄</span>
-    </a>
+    <a href={post.link} class="reportagem-card__link"><span>Ler reportagem</span><span aria-hidden="true"><img src={chevronRight.src} alt="" /></span></a>
+    {dark && updatedAt && <time class="reportagem-card__date" datetime={post.modified}>Atualizada em {updatedAt}</time>}
 </article>
