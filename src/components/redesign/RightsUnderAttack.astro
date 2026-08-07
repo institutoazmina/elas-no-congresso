@@ -1,6 +1,5 @@
 ---
-import pile242 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-242.png";
-import pile460 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-460.png";
+import Papelada from "./Papelada.astro";
 import thumbsDown from "../../assets/images/redesign/home-chart/thumbs-down.svg";
 import attention from "../../assets/images/redesign/hero/attention.svg";
 ---
@@ -35,7 +34,7 @@ import attention from "../../assets/images/redesign/hero/attention.svg";
                         </div>
                         <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">Desfavoráveis</span>
                     </div>
-                    <img class="tw:h-[382px] tw:w-[92.5px] tw:object-cover" src={pile242.src} alt="242 proposições desfavoráveis" />
+                    <Papelada class="tw:w-[92.5px]" arrangement="pile" category="desfavoravel" size="a4" amount={242} alt="242 proposições desfavoráveis" />
                 </div>
                 <div class="tw:flex tw:h-16 tw:w-[113px] tw:flex-col tw:items-center tw:justify-center tw:py-2">
                     <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">2019 a 2022</span>
@@ -54,7 +53,7 @@ import attention from "../../assets/images/redesign/hero/attention.svg";
                         </div>
                         <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">Desfavoráveis</span>
                     </div>
-                    <img class="tw:h-[643.5px] tw:w-[92.5px] tw:object-cover" src={pile460.src} alt="460 proposições desfavoráveis" />
+                    <Papelada class="tw:w-[92.5px]" arrangement="pile" category="desfavoravel" size="a4" amount={460} alt="460 proposições desfavoráveis" />
                 </div>
                 <div class="tw:flex tw:h-16 tw:w-[113px] tw:flex-col tw:items-center tw:justify-center tw:py-2">
                     <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">2023 a 2026*</span>

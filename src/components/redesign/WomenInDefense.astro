@@ -2,8 +2,7 @@
 import attention from "../../assets/images/redesign/hero/attention.svg";
 import thumbsDown from "../../assets/images/redesign/home-chart/thumbs-down.svg";
 import elasHorizontal from "../../assets/images/redesign/home-chart/elas-horizontal.svg";
-import papeladaFeminina from "../../assets/images/redesign/women-defense/papelada-favoravel-feminina.png";
-import papeladaMasculina from "../../assets/images/redesign/women-defense/papelada-favoravel-masculina.png";
+import Papelada from "./Papelada.astro";
 import { getStanceByGender, type StanceRatio } from "../../service/api/stats";
 
 // As duas fatias somam 1.0 na API. Arredonda uma e deriva a outra — arredondar
@@ -17,8 +16,8 @@ const gender = await getStanceByGender();
 const women = toPercent(gender.women);
 
 const charts = [
-    { authorship: "Feminina", ...women, papers: papeladaFeminina },
-    { authorship: "Masculina", ...toPercent(gender.men), papers: papeladaMasculina },
+    { authorship: "Feminina", ...women },
+    { authorship: "Masculina", ...toPercent(gender.men) },
 ];
 ---
 
@@ -42,8 +41,13 @@ const charts = [
                             <div><strong>{chart.favorable}%</strong><span class="women-defense__icon women-defense__icon--up"><img src={thumbsDown.src} alt="" /></span></div>
                             <b>Favoráveis</b>
                         </div>
-                        <div class="women-defense__papers" aria-hidden="true">
-                            <img src={chart.papers.src} alt="" />
+                        <div class="women-defense__papers">
+                            <Papelada
+                                arrangement="waffle"
+                                size="a8"
+                                amounts={[["favoravel", chart.favorable], ["desfavoravel", chart.unfavorable]]}
+                                alt={`${chart.favorable} de cada 100 proposições de autoria ${chart.authorship.toLowerCase()} são favoráveis`}
+                            />
                         </div>
                         <div class="women-defense__label women-defense__label--bottom">
                             <div><strong>{chart.unfavorable}%</strong><span class="women-defense__icon"><img src={thumbsDown.src} alt="" /></span></div>
@@ -101,9 +105,10 @@ const charts = [
     .women-defense__icon--up { background: #def279; }
     .women-defense__icon img { width: 24px; height: 24px; }
     .women-defense__icon--up img { transform: rotate(180deg); }
-    .women-defense__papers { width: 244.50201416015625px; height: 322.5px; }
-    .women-defense__papers img { display: block; width: 244.8000030517578px; height: 326.8446960449219px; max-width: none; object-fit: fill; object-position: 0 0; transform: translate(-0.617431640625px, -2.47265625px); transform-origin: 0 0; }
-    .women-defense__chart:nth-child(2) .women-defense__papers img { transform: translate(-0.175537109375px, -2.12890625px); }
+    /* O canvas do waffle já sai com a proporção certa (10 colunas + o intervalo
+       entre as duas categorias); a altura vem sozinha. */
+    .women-defense__papers { width: 100%; }
+    .women-defense__papers :global(canvas) { display: block; width: 100%; height: auto; }
     .women-defense__note { position: absolute; z-index: 1; top: 352.5px; left: -111.312px; display: flex; width: 240px; height: 180px; align-items: center; justify-content: center; padding: 48px 24px; transform: rotate(-5deg); background: #def279; box-shadow: 0 4px 0 #0b0f5e; color: #0b0f5e; font-size: 18px; font-weight: 700; line-height: 24px; text-align: center; }
     .women-defense__footer { position: absolute; bottom: 48px; left: 48px; display: flex; width: 720px; height: 32px; align-items: flex-start; justify-content: space-between; gap: 24px; border-top: 1px solid #0b0f5e; padding-top: 8px; color: #0b0f5e; font-size: 14px; line-height: 16px; }
     .women-defense__footer span { margin-top: 4px; }

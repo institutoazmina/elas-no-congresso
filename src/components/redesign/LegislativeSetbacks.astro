@@ -1,49 +1,34 @@
 ---
-import pile136 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-136.png";
-import pile91 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-91.png";
-import pile89 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-89.png";
-import pile85 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-85.png";
-import pile81 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-81.png";
-import pile68 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-68.png";
-import pile52 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-52.png";
-import pile22 from "../../assets/images/redesign/home-chart/papelada-desfavoravel-22.png";
+import Papelada from "./Papelada.astro";
+import { pileGap } from "../../lib/papelada";
 import thumbsDown from "../../assets/images/redesign/home-chart/thumbs-down.svg";
 import info from "../../assets/images/redesign/home-chart/info.svg";
 import elasHorizontal from "../../assets/images/redesign/home-chart/elas-horizontal.svg";
 import attention from "../../assets/images/redesign/hero/attention.svg";
 import { getUnfavorableByCategory } from "../../service/api/stats";
 
-// Uma pilha por coluna, da mais alta para a mais baixa. São 8 assets, então o
-// gráfico mostra as 8 categorias com mais desfavoráveis (a API devolve 10).
-const piles = [pile136, pile91, pile89, pile85, pile81, pile68, pile52, pile22];
+// A API devolve 10 categorias; o gráfico do design tem 8 colunas.
+const COLUMNS = 8;
+// Escala do design: pilhas de 46px de largura, a mais alta com 127px.
+const PILE_WIDTH = 46;
+const PILE_PEAK = 127;
 
-// Alturas de pilha do design original (22 proposições → 59px, 136 → 127px). A
-// escala interpola entre a menor e a maior categoria em vez de partir do zero:
-// com base zerada a menor pilha viraria um traço. Exagera diferenças — é o que
-// o desenho original já fazia.
-const PILE_MIN = 59;
-const PILE_MAX = 127;
-
-const categories = (await getUnfavorableByCategory()).slice(0, piles.length);
-const counts = categories.map((category) => category.unfavorable);
-const min = Math.min(...counts);
-const span = Math.max(...counts) - min || 1; // || 1: todas empatadas → pilha mínima
+const categories = (await getUnfavorableByCategory()).slice(0, COLUMNS);
+const gap = pileGap({
+    width: PILE_WIDTH,
+    height: PILE_PEAK,
+    peak: Math.max(...categories.map((category) => category.unfavorable), 1),
+});
 
 const themes = categories.map((category, index) => {
-    const pileHeight = Math.round(PILE_MIN + ((category.unfavorable - min) / span) * (PILE_MAX - PILE_MIN));
     const isFirst = index === 0;
     return {
         count: category.unfavorable,
         title: category.label,
-        pile: piles[index],
         // ponytail: largura pelo tamanho do rótulo. Se algum título novo quebrar
         // feio, vira um mapa de largura por categoria.
         width: category.label.length > 24 ? 192 : category.label.length > 14 ? 147 : 110,
         chartWidth: isFirst ? 113 : 66,
-        // +40 de respiro entre o número e a pilha; a 1ª coluna ainda carrega o
-        // rótulo "Desfavoráveis" (+28).
-        chartHeight: pileHeight + 40 + (isFirst ? 28 : 0),
-        pileHeight,
         countSize: isFirst ? 36 : 28,
         label: isFirst,
     };
@@ -68,7 +53,7 @@ const themes = categories.map((category, index) => {
                         style={`width: ${theme.width}px;`}
                         aria-label={`${theme.count} proposições desfavoráveis: ${theme.title}`}
                     >
-                        <div class="tw:absolute tw:bottom-[124px] tw:left-1/2 tw:flex tw:-translate-x-1/2 tw:flex-col tw:items-center tw:justify-end tw:gap-2" style={`width: ${theme.chartWidth}px; height: ${theme.chartHeight}px;`}>
+                        <div class="tw:absolute tw:bottom-[124px] tw:left-1/2 tw:flex tw:-translate-x-1/2 tw:flex-col tw:items-center tw:justify-end tw:gap-2" style={`width: ${theme.chartWidth}px;`}>
                             <div class={`tw:flex tw:items-center tw:justify-center tw:gap-2 ${theme.label ? "tw:flex-col tw:gap-1" : "tw:flex-row"}`}>
                                 <div class="tw:flex tw:items-center tw:justify-center tw:gap-2">
                                     <span class={`tw:font-[ETC_Anybody] tw:font-bold tw:leading-8 tw:uppercase tw:[font-variation-settings:'wdth'_75] ${theme.countSize === 36 ? "tw:text-[36px] tw:leading-[42px]" : "tw:text-[28px]"}`}>{theme.count}</span>
@@ -78,7 +63,7 @@ const themes = categories.map((category, index) => {
                                 </div>
                                 {theme.label && <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">Desfavoráveis</span>}
                             </div>
-                            <img class="tw:w-[46px] tw:object-fill" style={`height: ${theme.pileHeight}px;`} src={theme.pile.src} alt="" />
+                            <Papelada class="tw:w-[46px]" arrangement="pile" category="desfavoravel" size="a4" gap={gap} amount={theme.count} />
                         </div>
                         <div class="tw:absolute tw:top-[227px] tw:flex tw:h-[92px] tw:w-full tw:flex-col tw:items-center tw:justify-center tw:gap-1 tw:py-2">
                             <img class="tw:size-6" src={info.src} alt="" />

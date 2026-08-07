@@ -4,16 +4,12 @@ import elasHorizontal from "../../assets/images/redesign/party-chart/elas-horizo
 import StanceToggle from "./StanceToggle.astro";
 import thumbBase from "../../assets/images/redesign/party-chart/thumbs-down-base.svg";
 import thumb from "../../assets/images/redesign/party-chart/thumbs-down.svg";
-// As pilhas são esticadas por altura, então basta a arte mais alta de cada tipo:
-// as outras oito (papelada-*-6/7/12/16/17/18/25) eram uma por contagem fixa e
-// não têm equivalente nas contagens reais.
-import unfavourablePile from "../../assets/images/redesign/party-chart/papelada-desfavoravel-206.png";
-import favourablePile from "../../assets/images/redesign/party-chart/papelada-favoravel-161.png";
+import Papelada from "./Papelada.astro";
+import { pileGap } from "../../lib/papelada";
 import { getStanceByParty, type GroupStat, type Stance } from "../../service/api/stats";
 
-// Escala do design: pilha de 46px na base, ~200px no topo. Um único pico serve
-// os dois filtros — sem isso, alternar mudaria a escala e o gráfico mentiria.
-const PILE_BASE = 46;
+// Escala do design: pilha de 46px de largura, ~200px de altura no topo.
+const PILE_WIDTH = 46;
 const PILE_PEAK = 200;
 
 const [unfavourableRanking, favourableRanking] = await Promise.all([
@@ -22,8 +18,9 @@ const [unfavourableRanking, favourableRanking] = await Promise.all([
 ]);
 
 const counts = [...unfavourableRanking, ...favourableRanking].flatMap((party) => [party.favorable, party.unfavorable]);
-const peak = Math.max(...counts) || 1;
-const pileHeight = (count: number) => Math.round(PILE_BASE + (count / peak) * (PILE_PEAK - PILE_BASE));
+// Um único gap para os dois filtros: sem isso, alternar mudaria a escala e o
+// gráfico mentiria.
+const gap = pileGap({ width: PILE_WIDTH, height: PILE_PEAK, peak: Math.max(...counts) || 1 });
 
 const toView = (ranking: GroupStat[], stance: Stance) =>
     ranking.map((party, index) => {
@@ -38,8 +35,6 @@ const toView = (ranking: GroupStat[], stance: Stance) =>
             width: index === 0 ? 167 : 108,
             negative: party.unfavorable,
             positive: party.favorable,
-            negativeHeight: pileHeight(party.unfavorable),
-            positiveHeight: pileHeight(party.favorable),
         };
     });
 
@@ -68,11 +63,11 @@ const views = [
                     <div class="party-rights-chart__piles">
                         <div class="party-rights-chart__pile">
                             <div class="party-rights-chart__value"><strong>{party.negative}</strong><span class="party-rights-chart__thumb"><img src={thumbBase.src} alt="" /><img src={thumb.src} alt="" /></span></div>
-                            <img class="party-rights-chart__paper" style={`height: ${party.negativeHeight}px`} src={unfavourablePile.src} alt={`${party.negative} proposições desfavoráveis`} />
+                            <Papelada class="party-rights-chart__paper" arrangement="pile" category="desfavoravel" size="a4" gap={gap} amount={party.negative} alt={`${party.negative} proposições desfavoráveis`} />
                         </div>
                         <div class="party-rights-chart__pile">
                             <div class="party-rights-chart__value"><strong>{party.positive}</strong><span class="party-rights-chart__thumb party-rights-chart__thumb--up"><img src={thumbBase.src} alt="" /><img src={thumb.src} alt="" /></span></div>
-                            <img class="party-rights-chart__paper" style={`height: ${party.positiveHeight}px`} src={favourablePile.src} alt={`${party.positive} proposições favoráveis`} />
+                            <Papelada class="party-rights-chart__paper" arrangement="pile" category="favoravel" size="a4" gap={gap} amount={party.positive} alt={`${party.positive} proposições favoráveis`} />
                         </div>
                     </div>
                     <div class="party-rights-chart__description"><strong>{party.name}</strong><span>{party.percentage.split("\n").map((line) => <>{line}<br /></>)}</span></div>
@@ -110,7 +105,8 @@ const views = [
     .party-rights-chart__pile { display: flex; flex-direction: column; align-items: center; justify-content: end; gap: 8px; }
     .party-rights-chart__value { display: flex; flex-direction: column; align-items: center; }
     .party-rights-chart__value strong { height: 32px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 28px; font-weight: 700; line-height: 32px; font-variation-settings: "wdth" 75; }
-    .party-rights-chart__paper { display: block; width: 46px; object-fit: cover; }
+    /* A altura vem da proporção do canvas — quanto maior a contagem, mais alta a pilha. */
+    :global(.party-rights-chart__paper) { display: block; width: 46px; height: auto; }
     .party-rights-chart__description { display: flex; width: 100%; height: 88px; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0; text-align: center; line-height: 24px; }
     .party-rights-chart__description strong { max-width: 192px; min-width: 96px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
     .party-rights-chart__description span { font-size: 16px; line-height: 24px; white-space: nowrap; }

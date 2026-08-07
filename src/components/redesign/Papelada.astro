@@ -1,0 +1,35 @@
+---
+// Wrapper Astro da lib em src/lib/papelada. O canvas sai do servidor já com as
+// dimensões naturais do gráfico, então o CSS só precisa definir a largura — a
+// altura vem da proporção e não há layout shift quando o desenho chega.
+import { papeladaSize, type PapeladaOptions } from "../../lib/papelada";
+
+interface Props extends PapeladaOptions {
+    class?: string;
+    /** Descrição do gráfico. Sem ela o canvas fica decorativo. */
+    alt?: string;
+}
+
+// Monta as opções campo a campo: um rest spread arrastaria junto o
+// `data-astro-cid-*` que o Astro injeta para escopar CSS, e ele acabaria dentro
+// do JSON serializado.
+const { class: className, alt, arrangement, size, category, gap, assetsPath, amount, amounts } = Astro.props;
+const options: PapeladaOptions = { arrangement, size, category, gap, assetsPath, amount, amounts };
+const { width, height } = papeladaSize(options);
+---
+
+<canvas
+    class={className}
+    width={width}
+    height={height}
+    role={alt ? "img" : "presentation"}
+    aria-label={alt}
+    data-papelada={JSON.stringify(options)}></canvas>
+
+<script>
+    import { papelada } from "../../lib/papelada";
+
+    for (const canvas of document.querySelectorAll<HTMLCanvasElement>("canvas[data-papelada]")) {
+        papelada(canvas, JSON.parse(canvas.dataset.papelada!)).catch(console.error);
+    }
+</script>
