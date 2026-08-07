@@ -1,0 +1,62 @@
+---
+/**
+ * Página de aterrissagem dos links de e-mail (confirmar / cancelar).
+ *
+ * A API redireciona para cá com `?status=ok|invalido`, então a mensagem é
+ * escolhida no browser — a página em si é estática.
+ */
+import { ClientRouter } from "astro:transitions";
+import RedesignHeader from "../RedesignHeader.astro";
+import RedesignFooter from "../RedesignFooter.astro";
+import "../../../styles/tailwind.css";
+import "../../../styles/redesign-shared-background.css";
+
+interface Props {
+    title: string;
+    ok: { heading: string; body: string };
+    invalido: { heading: string; body: string };
+}
+
+const { title, ok, invalido } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{title} | Elas no Congresso</title>
+        <meta name="robots" content="noindex" />
+        <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet" />
+        <ClientRouter fallback="swap" />
+    </head>
+    <body class="tw:!pt-0 tw:!bg-white">
+        <div class="redesign-alerts-header-background redesign-shared-background">
+            <RedesignHeader />
+        </div>
+        <main class="alerts-result">
+            <h1 data-alerts-result-heading>{ok.heading}</h1>
+            <p data-alerts-result-body>{ok.body}</p>
+            <a class="alerts-result__link" href="/alertas">Voltar para os alertas</a>
+        </main>
+        <RedesignFooter />
+
+        <script is:inline define:vars={{ ok, invalido }}>
+            const invalido_ = new URLSearchParams(location.search).get("status") === "invalido";
+            const copy = invalido_ ? invalido : ok;
+            document.querySelector("[data-alerts-result-heading]").textContent = copy.heading;
+            document.querySelector("[data-alerts-result-body]").textContent = copy.body;
+        </script>
+
+        <style>
+            .alerts-result { width: 624px; max-width: calc(100% - 48px); margin: 0 auto; padding: 96px 0 120px; color: #1e2546; }
+            .alerts-result h1 { margin: 0; color: #1e2546; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 33px; font-weight: 800; font-variation-settings: "wdth" 75; line-height: 45px; }
+            .alerts-result p { margin: 16px 0 0; color: #998d96; font: 400 18px/28px "Plus Jakarta Sans", sans-serif; }
+            .alerts-result__link { display: inline-block; margin-top: 32px; padding: 18px 24px 14px; background: #4242f6; color: #fff; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-decoration: none; text-transform: uppercase; }
+            @media (max-width: 680px) { .alerts-result { max-width: calc(100% - 32px); padding: 56px 0 80px; } .alerts-result h1 { font-size: 26px; line-height: 34px; } }
+        </style>
+    </body>
+</html>

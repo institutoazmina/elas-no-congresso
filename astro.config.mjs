@@ -18,6 +18,14 @@ export default defineConfig({
         default: 'https://api.elasnocongresso.com.br/api/v1',
         url: true,
       }),
+      // O modal de alertas faz POST no browser, então esta precisa chegar ao
+      // bundle do cliente — a de cima só existe no build.
+      PUBLIC_API_BASE_URL: envField.string({
+        context: 'client',
+        access: 'public',
+        default: 'https://api.elasnocongresso.com.br/api/v1',
+        url: true,
+      }),
     },
   },
   vite: {

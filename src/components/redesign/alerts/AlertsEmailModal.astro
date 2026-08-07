@@ -1,5 +1,10 @@
 ---
 import chevron from "../../../assets/images/redesign/home-reportagens/chevron-right.svg";
+import { getCategoryOptions, getCommitteeOptions } from "../../../service/api/alerts";
+
+// Categorias e comissões saem da API no build: os valores viram tokens no
+// matcher, então lista escrita à mão vira inscrição que nunca dispara.
+const [categories, committees] = await Promise.all([getCategoryOptions(), getCommitteeOptions()]);
 ---
 
 <dialog class="alerts-email-modal" aria-labelledby="alerts-email-modal-title">
@@ -24,12 +29,9 @@ import chevron from "../../../assets/images/redesign/home-reportagens/chevron-ri
                     <legend>Temas</legend>
                     <p>Selecione os temas sobre os quais quer receber alertas.<br />Valem para alertas semanais e diários.</p>
                     <div class="alerts-email-modal__topics">
-                        <label><input type="checkbox" name="tema" value="violencia-de-genero" /><span>Violência de Gênero</span></label>
-                        <label><input type="checkbox" name="tema" value="saude-e-cuidado" /><span>Saúde e Cuidado</span></label>
-                        <label><input type="checkbox" name="tema" value="educacao" /><span>Educação</span></label>
-                        <label><input type="checkbox" name="tema" value="direitos-politicos" /><span>Direitos Políticos</span></label>
-                        <label><input type="checkbox" name="tema" value="trabalho-e-renda" /><span>Trabalho e Renda</span></label>
-                        <label><input type="checkbox" name="tema" value="meio-ambiente" /><span>Meio Ambiente</span></label>
+                        {categories.map((category) => (
+                            <label><input type="checkbox" name="tema" value={category.value} /><span>{category.label}</span></label>
+                        ))}
                     </div>
                 </fieldset>
 
@@ -63,32 +65,25 @@ import chevron from "../../../assets/images/redesign/home-reportagens/chevron-ri
                             <div class="alerts-email-modal__daily-select-wrap">
                                 <button class="alerts-email-modal__daily-select" type="button" aria-expanded="false" aria-controls="alerts-commission-options" disabled><span data-alerts-commission-label></span><i aria-hidden="true"></i></button>
                                 <div class="alerts-email-modal__daily-select-options" id="alerts-commission-options" hidden>
-                                    <button type="button" data-alerts-commission="saude-csa">Saúde (CSA)</button>
-                                    <button type="button" data-alerts-commission="ccj">Constituição e Justiça (CCJ)</button>
-                                    <button type="button" data-alerts-commission="cdhm">Direitos Humanos (CDHM)</button>
-                                    <button type="button" data-alerts-commission="ce">Educação (CE)</button>
-                                    <button type="button" data-alerts-commission="csp">Segurança Pública (CSP)</button>
+                                    {committees.map((committee) => (
+                                        <button type="button" data-alerts-commission={committee.acronym} data-alerts-committee-house={committee.house}>{committee.name} ({committee.acronym})</button>
+                                    ))}
                                 </div>
                             </div>
                         </section>
                         <section class="alerts-email-modal__daily-control" aria-label="Proposição">
                             <h3>Proposição</h3>
                             <div class="alerts-email-modal__daily-select-wrap">
-                                <button class="alerts-email-modal__daily-search" type="button" aria-expanded="false" aria-controls="alerts-proposal-options" disabled><span data-alerts-proposal-label>Buscar por número ou assunto…</span><i aria-hidden="true"></i></button>
-                                <div class="alerts-email-modal__proposal-options" id="alerts-proposal-options" hidden aria-label="Proposições disponíveis">
-                                    <button type="button" data-alerts-proposal="pl-1234-2025">PL 1234/2025</button>
-                                    <button type="button" data-alerts-proposal="pl-891-2024">PL 891/2024</button>
-                                    <button type="button" data-alerts-proposal="pec-17-2025">PEC 17/2025</button>
-                                    <button type="button" data-alerts-proposal="pl-2201-2023">PL 2201/2023</button>
-                                    <button type="button" data-alerts-proposal="pdl-45-2024">PDL 45/2024</button>
-                                </div>
+                                <input class="alerts-email-modal__daily-search" id="alerts-proposal-search" type="search" placeholder="Buscar por número ou assunto…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="alerts-proposal-options" aria-autocomplete="list" disabled />
+                                <div class="alerts-email-modal__proposal-options" id="alerts-proposal-options" role="listbox" hidden aria-label="Proposições encontradas"></div>
                             </div>
-                            <p class="alerts-email-modal__daily-helper">Opcional. Deixe em branco para receber alertas de todas as proposições dos filtros acima.</p>
+                            <p class="alerts-email-modal__daily-helper" data-alerts-proposal-helper>Opcional. Deixe em branco para receber alertas de todas as proposições dos filtros acima.</p>
                         </section>
                     </section>
                 </fieldset>
 
                 <label class="alerts-email-modal__terms"><input type="checkbox" name="termos" /><span>Li e aceito os <a href="/termos-de-uso">Termos de Uso</a> e a <a href="/politica-de-privacidade">Política de Privacidade</a> do Elas no Congresso.</span></label>
+                <p class="alerts-email-modal__status" data-alerts-status role="status" aria-live="polite" hidden></p>
                 <button class="alerts-email-modal__submit" type="submit" disabled>Quero me inscrever <img src={chevron.src} alt="" /></button>
             </form>
         </div>
@@ -96,39 +91,96 @@ import chevron from "../../../assets/images/redesign/home-reportagens/chevron-ri
 </dialog>
 
 <script>
+    import { PUBLIC_API_BASE_URL } from "astro:env/client";
+    import { buildAst } from "../../../lib/alerts/ast.ts";
+
     const dialog = document.querySelector<HTMLDialogElement>(".alerts-email-modal");
     const opener = document.querySelector<HTMLButtonElement>(".alerts-hero__button");
     const close = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__close");
+    const form = dialog?.querySelector<HTMLFormElement>(".alerts-email-modal__form");
     const email = dialog?.querySelector<HTMLInputElement>("#alerts-email");
     const topics = Array.from(dialog?.querySelectorAll<HTMLInputElement>('input[name="tema"]') ?? []);
     const weekly = dialog?.querySelector<HTMLInputElement>('input[name="frequencia"][value="semanal"]');
     const terms = dialog?.querySelector<HTMLInputElement>('input[name="termos"]');
     const submit = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__submit");
+    const status = dialog?.querySelector<HTMLElement>("[data-alerts-status]");
     const weeklyNote = dialog?.querySelector<HTMLElement>(".alerts-email-modal__weekly-note");
     const daily = dialog?.querySelector<HTMLInputElement>('input[name="frequencia"][value="diario"]');
     const dailyOptions = dialog?.querySelector<HTMLElement>(".alerts-email-modal__daily-options");
-    const camera = dialog?.querySelector<HTMLButtonElement>('[data-alerts-house="camara"]');
-    const senate = dialog?.querySelector<HTMLButtonElement>('[data-alerts-house="senado"]');
+    const houses = Array.from(dialog?.querySelectorAll<HTMLButtonElement>("[data-alerts-house]") ?? []);
     const commission = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__daily-select");
     const commissionOptions = dialog?.querySelector<HTMLElement>(".alerts-email-modal__daily-select-options");
     const commissionOption = Array.from(dialog?.querySelectorAll<HTMLButtonElement>("[data-alerts-commission]") ?? []);
     const commissionLabel = dialog?.querySelector<HTMLElement>("[data-alerts-commission-label]");
-    const proposal = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__daily-search");
+    const proposal = dialog?.querySelector<HTMLInputElement>(".alerts-email-modal__daily-search");
     const proposalOptions = dialog?.querySelector<HTMLElement>(".alerts-email-modal__proposal-options");
-    const proposalOption = Array.from(dialog?.querySelectorAll<HTMLButtonElement>("[data-alerts-proposal]") ?? []);
-    const proposalLabel = dialog?.querySelector<HTMLElement>("[data-alerts-proposal-label]");
+    const proposalHelper = dialog?.querySelector<HTMLElement>("[data-alerts-proposal-helper]");
 
-    const resetDailyFilters = () => {
+    /** Proposição escolhida: guardada como id porque é isso que a API tokeniza. */
+    let proposalId: number | null = null;
+
+    const selectedHouse = () =>
+        houses.find((house) => house.getAttribute("aria-pressed") === "true")?.dataset.alertsHouse ?? "";
+    const selectedCommission = () =>
+        commissionOption.find((option) => option.classList.contains("is-selected"))?.dataset.alertsCommission ?? "";
+
+    const say = (message: string, kind: "erro" | "ok" | "" = "") => {
+        if (!status) return;
+        status.textContent = message;
+        status.hidden = !message;
+        status.dataset.kind = kind;
+    };
+
+    const clearProposal = () => {
+        proposalId = null;
+        if (proposal) {
+            proposal.value = "";
+            proposal.disabled = true;
+            proposal.setAttribute("aria-expanded", "false");
+        }
+        if (proposalOptions) {
+            proposalOptions.hidden = true;
+            proposalOptions.replaceChildren();
+        }
+    };
+
+    const clearCommission = () => {
         commission?.setAttribute("aria-expanded", "false");
         if (commission) commission.disabled = true;
         if (commissionLabel) commissionLabel.textContent = "";
         if (commissionOptions) commissionOptions.hidden = true;
         commissionOption.forEach((option) => option.classList.remove("is-selected"));
-        proposal?.setAttribute("aria-expanded", "false");
-        if (proposal) proposal.disabled = true;
-        if (proposalLabel) proposalLabel.textContent = "Buscar por número ou assunto…";
-        if (proposalOptions) proposalOptions.hidden = true;
-        proposalOption.forEach((option) => option.classList.remove("is-selected"));
+        clearProposal();
+    };
+
+    /** Uma casa por vez, e a lista de comissões acompanha — CCJ da Câmara não é a do Senado. */
+    const applyHouse = (chosen: HTMLButtonElement) => {
+        houses.forEach((house) => {
+            const isChosen = house === chosen;
+            house.setAttribute("aria-pressed", String(isChosen));
+            house.classList.toggle("alerts-email-modal__daily-house-option--selected", isChosen);
+        });
+        clearCommission();
+        let disponiveis = 0;
+        commissionOption.forEach((option) => {
+            const cabe = option.dataset.alertsCommitteeHouse === chosen.dataset.alertsHouse;
+            option.hidden = !cabe;
+            if (cabe) disponiveis += 1;
+        });
+        if (commission) commission.disabled = disponiveis === 0;
+        if (commissionLabel) {
+            commissionLabel.textContent = disponiveis ? "" : "Nenhuma comissão disponível";
+        }
+    };
+
+    const updateSubmitState = () => {
+        if (!submit || !email || !weekly || !daily || !terms) return;
+        const temTema = topics.some((topic) => topic.checked);
+        const temFrequencia = weekly.checked || daily.checked;
+        const diarioCompleto = !daily.checked || Boolean(selectedHouse());
+        submit.disabled = !(
+            email.validity.valid && email.value && temTema && temFrequencia && diarioCompleto && terms.checked
+        );
     };
 
     opener?.addEventListener("click", () => {
@@ -136,74 +188,148 @@ import chevron from "../../../assets/images/redesign/home-reportagens/chevron-ri
         if (dialog) dialog.scrollTop = 0;
     });
     close?.addEventListener("click", () => dialog?.close());
-    const updateTopicsSelectedState = () => {
-        if (!submit || !email || !weekly || !terms) return;
-        submit.disabled = !(email.validity.valid && topics.some((topic) => topic.checked) && weekly.checked && terms.checked);
-    };
-    email?.addEventListener("input", updateTopicsSelectedState);
-    topics.forEach((topic) => topic.addEventListener("change", updateTopicsSelectedState));
+
+    email?.addEventListener("input", updateSubmitState);
+    topics.forEach((topic) => topic.addEventListener("change", updateSubmitState));
+    terms?.addEventListener("change", updateSubmitState);
+
+    // Semanal e diário são independentes: o texto do modal promete "uma ou as duas".
     weekly?.addEventListener("change", () => {
-        if (weekly.checked && daily) {
-            daily.checked = false;
-            if (dailyOptions) dailyOptions.hidden = true;
-            resetDailyFilters();
-        }
-        updateTopicsSelectedState();
         if (weeklyNote) weeklyNote.hidden = !weekly.checked;
+        updateSubmitState();
     });
-    terms?.addEventListener("change", updateTopicsSelectedState);
     daily?.addEventListener("change", () => {
-        if (daily.checked) {
-            if (weekly) weekly.checked = false;
-            if (terms) terms.checked = false;
-            if (weeklyNote) weeklyNote.hidden = true;
-        }
         if (dailyOptions) dailyOptions.hidden = !daily.checked;
-        if (!daily.checked) resetDailyFilters();
-        updateTopicsSelectedState();
+        if (daily.checked) {
+            const atual = houses.find((house) => house.getAttribute("aria-pressed") === "true") ?? houses[0];
+            if (atual) applyHouse(atual);
+        } else {
+            clearCommission();
+        }
+        updateSubmitState();
     });
-    camera?.addEventListener("click", () => {
-        if (!daily?.checked) return;
-        camera.setAttribute("aria-pressed", "true");
-        senate?.setAttribute("aria-pressed", "false");
-        camera.classList.add("alerts-email-modal__daily-house-option--selected");
-        senate?.classList.remove("alerts-email-modal__daily-house-option--selected");
-        if (commission) commission.disabled = false;
-    });
-    senate?.addEventListener("click", () => {
-        if (!daily?.checked) return;
-        senate.setAttribute("aria-pressed", "true");
-        camera?.setAttribute("aria-pressed", "false");
-        senate.classList.add("alerts-email-modal__daily-house-option--selected");
-        camera?.classList.remove("alerts-email-modal__daily-house-option--selected");
-        resetDailyFilters();
-    });
+
+    houses.forEach((house) =>
+        house.addEventListener("click", () => {
+            applyHouse(house);
+            updateSubmitState();
+        }),
+    );
+
     commission?.addEventListener("click", () => {
         if (commission.disabled) return;
-        const opening = commission.getAttribute("aria-expanded") !== "true";
-        commission.setAttribute("aria-expanded", String(opening));
-        if (commissionOptions) commissionOptions.hidden = !opening;
+        const abrindo = commission.getAttribute("aria-expanded") !== "true";
+        commission.setAttribute("aria-expanded", String(abrindo));
+        if (commissionOptions) commissionOptions.hidden = !abrindo;
     });
-    commissionOption.forEach((option) => option.addEventListener("click", () => {
-        commission?.setAttribute("aria-expanded", "false");
-        if (commissionLabel) commissionLabel.textContent = option.textContent ?? "";
-        if (commissionOptions) commissionOptions.hidden = true;
-        commissionOption.forEach((item) => item.classList.toggle("is-selected", item === option));
-        if (proposal) proposal.disabled = false;
-    }));
-    proposal?.addEventListener("click", () => {
-        if (proposal.disabled) return;
-        const opening = proposal.getAttribute("aria-expanded") !== "true";
-        proposal.setAttribute("aria-expanded", String(opening));
-        if (proposalOptions) proposalOptions.hidden = !opening;
+    commissionOption.forEach((option) =>
+        option.addEventListener("click", () => {
+            commission?.setAttribute("aria-expanded", "false");
+            if (commissionLabel) commissionLabel.textContent = option.textContent ?? "";
+            if (commissionOptions) commissionOptions.hidden = true;
+            commissionOption.forEach((item) => item.classList.toggle("is-selected", item === option));
+            clearProposal();
+            if (proposal) proposal.disabled = false;
+        }),
+    );
+
+    // Busca de proposição: a lista real vive na API e muda todo dia.
+    let buscaEmVoo: AbortController | null = null;
+    let debounce: ReturnType<typeof setTimeout> | undefined;
+
+    const renderProposals = (items: { id: number; number_label: string; ementa: string }[]) => {
+        if (!proposalOptions || !proposal) return;
+        proposalOptions.replaceChildren(
+            ...items.map((item) => {
+                const botao = document.createElement("button");
+                botao.type = "button";
+                botao.role = "option";
+                botao.textContent = `${item.number_label} — ${item.ementa.slice(0, 80)}`;
+                botao.addEventListener("click", () => {
+                    proposalId = item.id;
+                    proposal.value = item.number_label;
+                    proposal.setAttribute("aria-expanded", "false");
+                    proposalOptions.hidden = true;
+                });
+                return botao;
+            }),
+        );
+        proposalOptions.hidden = items.length === 0;
+        proposal.setAttribute("aria-expanded", String(items.length > 0));
+    };
+
+    proposal?.addEventListener("input", () => {
+        proposalId = null;
+        const termo = proposal.value.trim();
+        clearTimeout(debounce);
+        if (termo.length < 3) {
+            renderProposals([]);
+            return;
+        }
+        debounce = setTimeout(async () => {
+            buscaEmVoo?.abort();
+            buscaEmVoo = new AbortController();
+            const url = new URL(`${PUBLIC_API_BASE_URL}/propositions/`);
+            url.searchParams.set("q", termo);
+            url.searchParams.set("house", selectedHouse());
+            url.searchParams.set("limit", "8");
+            try {
+                const resposta = await fetch(url, { signal: buscaEmVoo.signal });
+                if (!resposta.ok) throw new Error(String(resposta.status));
+                const { items } = await resposta.json();
+                renderProposals(items);
+                if (proposalHelper && items.length === 0) {
+                    proposalHelper.textContent = "Nenhuma proposição encontrada para essa busca.";
+                }
+            } catch (erro) {
+                if ((erro as Error).name === "AbortError") return;
+                if (proposalHelper) proposalHelper.textContent = "Não foi possível buscar agora. Você pode deixar em branco.";
+            }
+        }, 300);
     });
-    proposalOption.forEach((option) => option.addEventListener("click", () => {
-        proposal?.setAttribute("aria-expanded", "false");
-        if (proposalLabel) proposalLabel.textContent = option.textContent ?? "";
-        if (proposalOptions) proposalOptions.hidden = true;
-        proposalOption.forEach((item) => item.classList.toggle("is-selected", item === option));
-    }));
-    dialog?.querySelector("form")?.addEventListener("submit", (event) => event.preventDefault());
+
+    form?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!submit || !email || !weekly || !daily || !terms) return;
+
+        const categorias = topics.filter((topic) => topic.checked).map((topic) => topic.value);
+        const alerts: { frequency: string; ast: unknown }[] = [];
+        if (weekly.checked) alerts.push({ frequency: "weekly", ast: buildAst({ categorias }) });
+        if (daily.checked) {
+            alerts.push({
+                frequency: "daily",
+                ast: buildAst({
+                    categorias,
+                    casa: selectedHouse(),
+                    comissao: selectedCommission(),
+                    proposicao: proposalId ?? undefined,
+                }),
+            });
+        }
+
+        submit.disabled = true;
+        say("Enviando…");
+        try {
+            const resposta = await fetch(`${PUBLIC_API_BASE_URL}/subscriptions/`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email.value, accepted_terms: terms.checked, alerts }),
+            });
+            if (resposta.status === 429) {
+                say("Muitas tentativas deste dispositivo. Tente de novo daqui a pouco.", "erro");
+                return;
+            }
+            if (!resposta.ok) throw new Error(String(resposta.status));
+            form.hidden = true;
+            say(`Quase lá! Enviamos um e-mail para ${email.value} — confirme para começar a receber os alertas.`, "ok");
+        } catch {
+            say("Não conseguimos concluir a inscrição. Tente novamente em alguns minutos.", "erro");
+        } finally {
+            updateSubmitState();
+        }
+    });
+
+    updateSubmitState();
 </script>
 
 <style>
@@ -269,15 +395,18 @@ import chevron from "../../../assets/images/redesign/home-reportagens/chevron-ri
     .alerts-email-modal__daily-select-options button { display: block; width: 100%; padding: 12px 16px; border: 0; background: #fff; color: #0b0f5e; font: 400 16px/22px "Plus Jakarta Sans", sans-serif; text-align: left; cursor: pointer; }
     .alerts-email-modal__daily-select-options button:hover { background: #def279; }
     .alerts-email-modal__daily-select-options button.is-selected, .alerts-email-modal__proposal-options button.is-selected { background: #def279; }
-    .alerts-email-modal__daily-search { position: relative; display: flex; width: 582px; height: 50px; align-items: center; justify-content: space-between; margin-top: 8px; padding: 12px 16px; border: 1px solid rgba(30, 37, 70, .15); background: #fff; color: #998d96; font: 400 16px/20px "Plus Jakarta Sans", sans-serif; text-align: left; cursor: pointer; }
-    .alerts-email-modal__daily-search:disabled { cursor: default; }
-    .alerts-email-modal__daily-search:not(:disabled) { color: #0b0f5e; }
-    .alerts-email-modal__daily-search i { width: 7.5px; height: 3.75px; margin-right: -4px; border-bottom: 1.25px solid #0b0f5e; border-left: 1.25px solid #0b0f5e; transform: rotate(-45deg); }
+    .alerts-email-modal__daily-search { position: relative; display: block; width: 582px; max-width: 100%; height: 50px; margin-top: 8px; padding: 12px 16px; border: 1px solid rgba(30, 37, 70, .15); border-radius: 0; background: #fff; color: #0b0f5e; font: 400 16px/20px "Plus Jakarta Sans", sans-serif; }
+    .alerts-email-modal__daily-search:disabled { background: rgba(255, 255, 255, .6); cursor: default; }
+    .alerts-email-modal__daily-search::placeholder { color: #998d96; opacity: 1; }
+    .alerts-email-modal__daily-select-options button[hidden] { display: none; }
     .alerts-email-modal__daily-helper { width: 582px; padding-top: 6px; color: rgba(30, 37, 70, .35); font: 400 14px/20px "Plus Jakarta Sans", sans-serif; }
     .alerts-email-modal__proposal-options { position: absolute; z-index: 3; top: 58px; width: 582px; max-height: 210px; overflow: auto; border: 1px solid rgba(30, 37, 70, .15); background: #fff; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .1), 0 4px 6px -4px rgba(0, 0, 0, .1); }
     .alerts-email-modal__proposal-options button { display: block; width: 100%; padding: 12px 16px; border: 0; background: #fff; color: #0b0f5e; font: 400 16px/22px "Plus Jakarta Sans", sans-serif; text-align: left; cursor: pointer; }
     .alerts-email-modal__proposal-options button:hover { background: #def279; }
     .alerts-email-modal__terms { padding-top: 28px; color: #998d96; font-size: 14px; line-height: 20px; }
+    .alerts-email-modal__status { width: 100%; margin-top: 20px; padding: 12px 16px; background: #f4f2f4; color: #1e2546; font: 400 15px/22px "Plus Jakarta Sans", sans-serif; }
+    .alerts-email-modal__status[data-kind="ok"] { background: #def279; color: #0b0f5e; }
+    .alerts-email-modal__status[data-kind="erro"] { background: #ffe3e3; color: #8a1f1f; }
     .alerts-email-modal__terms a { color: #1e2546; font-weight: 700; }
     .alerts-email-modal__submit { display: flex; height: 56px; margin: 32px 0 0 auto; padding: 18px 20px 14px 24px; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 0; background: #4242f6; color: #fff; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; cursor: pointer; }
     .alerts-email-modal__submit:disabled { background: #c3c5ff; cursor: default; }
