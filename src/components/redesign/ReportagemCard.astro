@@ -1,0 +1,21 @@
+---
+import type { WpPost } from "../../lib/wp";
+
+interface Props {
+    post: WpPost;
+    dark?: boolean;
+}
+
+const { post, dark = false } = Astro.props;
+const image = post._embedded?.["wp:featuredmedia"]?.[0]?.link;
+---
+
+<article class:list={["reportagem-card", { "reportagem-card--dark": dark }]}>
+    <a href={post.link} class="reportagem-card__image" aria-label={`Ler: ${post.title.rendered}`}>
+        {image && <img src={image} alt="" loading="lazy" decoding="async" />}
+    </a>
+    <h3 set:html={post.title.rendered} />
+    <a href={post.link} class="reportagem-card__link">
+        Ler reportagem <span aria-hidden="true">⌄</span>
+    </a>
+</article>
