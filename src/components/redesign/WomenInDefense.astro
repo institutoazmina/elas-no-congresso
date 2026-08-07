@@ -4,10 +4,21 @@ import thumbsDown from "../../assets/images/redesign/home-chart/thumbs-down.svg"
 import elasHorizontal from "../../assets/images/redesign/home-chart/elas-horizontal.svg";
 import papeladaFeminina from "../../assets/images/redesign/women-defense/papelada-favoravel-feminina.png";
 import papeladaMasculina from "../../assets/images/redesign/women-defense/papelada-favoravel-masculina.png";
+import { getStanceByGender, type StanceRatio } from "../../service/api/stats";
+
+// As duas fatias somam 1.0 na API. Arredonda uma e deriva a outra — arredondar
+// as duas em separado pode fechar em 101%.
+const toPercent = (ratio: StanceRatio) => {
+    const favorable = Math.round(ratio.favorable * 100);
+    return { favorable, unfavorable: 100 - favorable };
+};
+
+const gender = await getStanceByGender();
+const women = toPercent(gender.women);
 
 const charts = [
-    { authorship: "Feminina", favorable: "85%", unfavorable: "15%", papers: papeladaFeminina },
-    { authorship: "Masculina", favorable: "71%", unfavorable: "29%", papers: papeladaMasculina },
+    { authorship: "Feminina", ...women, papers: papeladaFeminina },
+    { authorship: "Masculina", ...toPercent(gender.men), papers: papeladaMasculina },
 ];
 ---
 
@@ -28,14 +39,14 @@ const charts = [
                     </header>
                     <div class="women-defense__waffle">
                         <div class="women-defense__label women-defense__label--top">
-                            <div><strong>{chart.favorable}</strong><span class="women-defense__icon women-defense__icon--up"><img src={thumbsDown.src} alt="" /></span></div>
+                            <div><strong>{chart.favorable}%</strong><span class="women-defense__icon women-defense__icon--up"><img src={thumbsDown.src} alt="" /></span></div>
                             <b>Favoráveis</b>
                         </div>
                         <div class="women-defense__papers" aria-hidden="true">
                             <img src={chart.papers.src} alt="" />
                         </div>
                         <div class="women-defense__label women-defense__label--bottom">
-                            <div><strong>{chart.unfavorable}</strong><span class="women-defense__icon"><img src={thumbsDown.src} alt="" /></span></div>
+                            <div><strong>{chart.unfavorable}%</strong><span class="women-defense__icon"><img src={thumbsDown.src} alt="" /></span></div>
                             <b>Desfavoráveis</b>
                         </div>
                     </div>
@@ -43,7 +54,7 @@ const charts = [
             ))}
         </figure>
 
-        <aside class="women-defense__note">A cada 100 proposições sobre gênero assinadas por mulheres, 85 são favoráveis</aside>
+        <aside class="women-defense__note">A cada 100 proposições sobre gênero assinadas por mulheres, {women.favorable} são favoráveis</aside>
 
         <footer class="women-defense__footer">
             <span>No Congresso Nacional não há dados sobre pessoas não-binárias</span>

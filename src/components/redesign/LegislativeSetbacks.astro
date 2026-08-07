@@ -11,17 +11,43 @@ import thumbsDown from "../../assets/images/redesign/home-chart/thumbs-down.svg"
 import info from "../../assets/images/redesign/home-chart/info.svg";
 import elasHorizontal from "../../assets/images/redesign/home-chart/elas-horizontal.svg";
 import attention from "../../assets/images/redesign/hero/attention.svg";
+import { getUnfavorableByCategory } from "../../service/api/stats";
 
-const themes = [
-    { count: 136, title: "Dignidade sexual", pile: pile136, width: 136, chartWidth: 113, chartHeight: 195, columnHeight: 335, pileHeight: 127, top: 24, countSize: 36, label: true },
-    { count: 91, title: "Violência contra a mulher", pile: pile91, width: 192, chartWidth: 65, chartHeight: 140, columnHeight: 280, pileHeight: 100, top: 79 },
-    { count: 89, title: "Direitos sociais", pile: pile89, width: 127, chartWidth: 66, chartHeight: 139, columnHeight: 279, pileHeight: 99, top: 80 },
-    { count: 85, title: "Gênero", pile: pile85, width: 96, chartWidth: 66, chartHeight: 136.5, columnHeight: 276.5, pileHeight: 96.5, top: 82.5 },
-    { count: 81, title: "Direitos sexuais e reprodutivos", pile: pile81, width: 192, chartWidth: 65, chartHeight: 134, columnHeight: 274, pileHeight: 94, top: 85 },
-    { count: 68, title: "Lei Maria da Penha", pile: pile68, width: 147, chartWidth: 66, chartHeight: 126.5, columnHeight: 266.5, pileHeight: 86.5, top: 92.5 },
-    { count: 52, title: "Maternidade", pile: pile52, width: 102, chartWidth: 66, chartHeight: 117, columnHeight: 257, pileHeight: 77, top: 102 },
-    { count: 22, title: "Feminicídio", pile: pile22, width: 96, chartWidth: 66, chartHeight: 99, columnHeight: 239, pileHeight: 59, top: 120 },
-];
+// Uma pilha por coluna, da mais alta para a mais baixa. São 8 assets, então o
+// gráfico mostra as 8 categorias com mais desfavoráveis (a API devolve 10).
+const piles = [pile136, pile91, pile89, pile85, pile81, pile68, pile52, pile22];
+
+// Alturas de pilha do design original (22 proposições → 59px, 136 → 127px). A
+// escala interpola entre a menor e a maior categoria em vez de partir do zero:
+// com base zerada a menor pilha viraria um traço. Exagera diferenças — é o que
+// o desenho original já fazia.
+const PILE_MIN = 59;
+const PILE_MAX = 127;
+
+const categories = (await getUnfavorableByCategory()).slice(0, piles.length);
+const counts = categories.map((category) => category.unfavorable);
+const min = Math.min(...counts);
+const span = Math.max(...counts) - min || 1; // || 1: todas empatadas → pilha mínima
+
+const themes = categories.map((category, index) => {
+    const pileHeight = Math.round(PILE_MIN + ((category.unfavorable - min) / span) * (PILE_MAX - PILE_MIN));
+    const isFirst = index === 0;
+    return {
+        count: category.unfavorable,
+        title: category.label,
+        pile: piles[index],
+        // ponytail: largura pelo tamanho do rótulo. Se algum título novo quebrar
+        // feio, vira um mapa de largura por categoria.
+        width: category.label.length > 24 ? 192 : category.label.length > 14 ? 147 : 110,
+        chartWidth: isFirst ? 113 : 66,
+        // +40 de respiro entre o número e a pilha; a 1ª coluna ainda carrega o
+        // rótulo "Desfavoráveis" (+28).
+        chartHeight: pileHeight + 40 + (isFirst ? 28 : 0),
+        pileHeight,
+        countSize: isFirst ? 36 : 28,
+        label: isFirst,
+    };
+});
 ---
 
 <section class="tw:overflow-hidden tw:bg-white tw:text-[#0B0F5E] tw:lg:pt-12" aria-labelledby="legislative-setbacks-title">
