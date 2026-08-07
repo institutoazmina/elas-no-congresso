@@ -2,7 +2,9 @@
 import attention from "../../assets/images/redesign/party-chart/attention.svg";
 import buttonChevron from "../../assets/images/redesign/home-reportagens/chevron-right.svg";
 import elasHorizontal from "../../assets/images/redesign/party-chart/elas-horizontal.svg";
-import mapSvg from "../../assets/images/redesign/uf-projects/brasil-uf.svg?raw";
+import { Image } from "astro:assets";
+import mapBase from "./assets/map/map-br-base@2.5x.png";
+import mapLabels from "./assets/map/map-br-labels@2.5x.png";
 import StanceToggle from "./StanceToggle.astro";
 import { getStanceByState, type GroupStat, type Stance } from "../../service/api/stats";
 
@@ -28,31 +30,21 @@ const views = [
     { stance: "favorable" as const, heading: "Favoráveis", rows: toRows(favourableRanking, "favorable") },
 ];
 
-// O SVG do IBGE traz um <path id="UF"> por estado; aqui só marcamos quem está
-// em cada top 5. Qual dos dois pinta é o CSS que decide, pelo data-stance.
-const byUf = new Map(
-    [...unfavourableRanking, ...favourableRanking].map((s) => [s.label.trim().toUpperCase(), s]),
-);
-const tops = Object.fromEntries(
-    views.map((v) => [v.stance, new Set(v.rows.map((r) => r.uf.trim().toUpperCase()))]),
-) as Record<Stance, Set<string>>;
+// O design entrega um PNG por UF/stance, todos no mesmo canvas 1800x1800 do
+// mapa base — destacar um estado é só empilhar o recorte dele sobre a base.
+const ufLayers = import.meta.glob<{ default: ImageMetadata }>("./assets/map/map-br-ufs-*@2.5x.png", {
+    eager: true,
+});
+const layerSlug: Record<Stance, string> = { unfavorable: "desfavoravel", favorable: "favoravel" };
 
-const topFlags = (uf: string) =>
-    (["unfavorable", "favorable"] as const)
-        .filter((stance) => tops[stance].has(uf))
-        .map((stance) => ` data-top-${stance}`)
-        .join("");
-
-const mapHtml = mapSvg
-    .replace(/<path id="([A-Z]{2})" d="([^"]*)" \/>/g, (_, uf: string, d: string) => {
-        const flags = topFlags(uf);
-        if (!flags) return `<path id="${uf}" d="${d}" />`;
-        const stat = byUf.get(uf);
-        const title = `${uf}: ${stat?.unfavorable ?? 0} desfavoráveis, ${stat?.favorable ?? 0} favoráveis`;
-        return `<path id="${uf}"${flags} d="${d}"><title>${title}</title></path>`;
-    })
-    // A camada de textura é <use> dos mesmos paths, então repete a marcação.
-    .replace(/<use href="#([A-Z]{2})" \/>/g, (m, uf: string) => `<use href="#${uf}"${topFlags(uf)} />`);
+const highlights = views.map((view) => ({
+    ...view,
+    layers: view.rows.flatMap((row) => {
+        const uf = row.uf.trim().toUpperCase();
+        const layer = ufLayers[`./assets/map/map-br-ufs-${layerSlug[view.stance]}-${uf}@2.5x.png`];
+        return layer ? [{ uf, image: layer.default }] : [];
+    }),
+}));
 ---
 
 <section class="uf-projects-chart" data-stance="unfavorable" data-panel="map" aria-labelledby="uf-projects-chart-title">
@@ -74,7 +66,17 @@ const mapHtml = mapSvg
                 </div>
 
                 <div class="uf-projects-chart__panel" id="uf-panel-map" role="tabpanel" data-panel-view="map">
-                    <div class="uf-projects-chart__map" role="img" aria-label={`Mapa do Brasil com destaque para ${views[0].rows.map((r) => r.uf).join(", ")}`} set:html={mapHtml} />
+                    <div class="uf-projects-chart__map">
+                        <Image src={mapBase} alt="" width={720} height={720} densities={[1, 2]} loading="lazy" draggable={false} />
+                        {highlights.map((view) => (
+                            <div data-stance-view={view.stance} role="img" aria-label={`Mapa do Brasil com destaque para ${view.rows.map((r) => r.uf).join(", ")}`}>
+                                {view.layers.map((layer) => (
+                                    <Image src={layer.image} alt="" width={720} height={720} densities={[1, 2]} loading="lazy" draggable={false} />
+                                ))}
+                            </div>
+                        ))}
+                        <Image src={mapLabels} alt="" width={720} height={720} densities={[1, 2]} loading="lazy" draggable={false} />
+                    </div>
                 </div>
 
                 <div class="uf-projects-chart__panel" id="uf-panel-table" role="tabpanel" data-panel-view="table">
@@ -137,21 +139,10 @@ const mapHtml = mapSvg
     .uf-projects-chart__tabs { display: flex; width: 720px; height: 48px; align-items: flex-end; justify-content: flex-end; gap: 0; border-bottom: 4px solid #4242f6; }
     .uf-projects-chart__tab { display: grid; width: 104px; height: 48px; place-items: center; border: 0; background: none; color: #4242f6; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; cursor: pointer; }
     .uf-projects-chart__tab[aria-selected="true"] { border-radius: 16px 16px 0 0; background: #4242f6; color: #fff; }
-    .uf-projects-chart__map { width: 720px; height: 720px; }
-    /* :global porque o SVG entra por set:html e não recebe o scope do Astro.
-       O viewBox está em graus, então stroke usa non-scaling-stroke. */
-    .uf-projects-chart__map :global(svg) { display: block; width: 100%; height: 100%; }
-    .uf-projects-chart__map :global(.uf-bg) { fill: url(#uf-grid); }
-    .uf-projects-chart__map :global(.uf-frame) { fill: none; stroke: #4242f6; stroke-width: 2; vector-effect: non-scaling-stroke; }
-    .uf-projects-chart__map :global(.uf-grid-lines line) { stroke: #8f97e8; stroke-width: 1; stroke-dasharray: 2 5; vector-effect: non-scaling-stroke; }
-    /* `> path` evita casar os clones dentro dos <use> da camada de textura. */
-    .uf-projects-chart__map :global(#BRUF > path) { fill: #fff; stroke: #4242f6; stroke-width: 1; vector-effect: non-scaling-stroke; }
-    .uf-projects-chart__map :global(.uf-noise use) { fill: none; pointer-events: none; }
-    .uf-projects-chart[data-stance="unfavorable"] .uf-projects-chart__map :global(#BRUF > path[data-top-unfavorable]),
-    .uf-projects-chart[data-stance="favorable"] .uf-projects-chart__map :global(#BRUF > path[data-top-favorable]) { fill: url(#uf-heat); }
-    .uf-projects-chart[data-stance="unfavorable"] .uf-projects-chart__map :global(.uf-noise use[data-top-unfavorable]),
-    .uf-projects-chart[data-stance="favorable"] .uf-projects-chart__map :global(.uf-noise use[data-top-favorable]) { fill: url(#uf-noise); }
-    .uf-projects-chart__map :global(.uf-labels) { fill: #0b0f5e; font-size: 0.85px; font-weight: 500; text-anchor: middle; pointer-events: none; }
+    /* Base, destaques e rótulos são recortes do mesmo canvas: empilhar basta. */
+    .uf-projects-chart__map { position: relative; width: 720px; aspect-ratio: 1; }
+    .uf-projects-chart__map img { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .uf-projects-chart__map > img:first-child { position: relative; }
     /* Um painel e uma visão de cada vez; o resto sai do fluxo. */
     .uf-projects-chart[data-panel="map"] [data-panel-view="table"],
     .uf-projects-chart[data-panel="table"] [data-panel-view="map"],
