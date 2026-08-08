@@ -29,19 +29,21 @@ const posts = await fetchReportagens(undefined, 99, true);
         <ClientRouter fallback="swap" />
     </head>
     <body class="tw:!pt-0 tw:!bg-white">
-        <div class="reportagens-page" style={`--reportagens-pattern: url(${cuttingMatPattern.src}); --reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}>
+        <div class="reportagens-page" style={`--reportagens-pattern: url(${cuttingMatPattern.src})`}>
             <RedesignHeader />
             <main>
-                <section class="reportagens-hero redesign-shared-background" aria-labelledby="reportagens-hero-title">
-                    <div class="reportagens-hero__copy">
-                        <img class="reportagens-attention" src={attention.src} alt="" />
-                        <h1 id="reportagens-hero-title">Reportagens</h1>
-                        <p>Veja as histórias que os dados do Congresso nos contam.</p>
-                    </div>
-                    <div class="reportagens-hero__art">
-                        <div class="reportagens-hero__illustration" aria-hidden="true">
-                            <div class="reportagens-hero__illustration-inner">
-                                <img src={heroIllustration.src} alt="" />
+                <section class="reportagens-hero redesign-shared-background" aria-labelledby="reportagens-hero-title" style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}>
+                    <div class="reportagens-hero__top-row">
+                        <div class="reportagens-hero__copy">
+                            <img class="reportagens-attention" src={attention.src} alt="" />
+                            <h1 id="reportagens-hero-title">Reportagens</h1>
+                            <p>Veja as histórias que os dados do Congresso nos contam.</p>
+                        </div>
+                        <div class="reportagens-hero__art">
+                            <div class="reportagens-hero__illustration" aria-hidden="true">
+                                <div class="reportagens-hero__illustration-inner">
+                                    <img src={heroIllustration.src} alt="" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -98,8 +100,9 @@ const posts = await fetchReportagens(undefined, 99, true);
     body:has(.reportagens-page) { margin: 0; }
     .reportagens-page, .reportagens-page * { box-sizing: border-box; }
     .reportagens-page { color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
-    .reportagens-hero { align-items: center; color: #0b0f5e; display: flex; height: 452px; justify-content: space-between; overflow: hidden; padding: 24px 48px; position: relative; }
-    .reportagens-hero__copy { display: flex; flex-direction: column; gap: 24px; justify-content: center; max-width: 960px; width: 681px; }
+    .reportagens-hero { color: #0b0f5e; height: 500px; overflow: hidden; position: relative; }
+    .reportagens-hero__top-row { align-items: center; display: flex; height: 476px; justify-content: space-between; padding: 48px; position: relative; z-index: 2; }
+    .reportagens-hero__copy { align-items: flex-start; display: flex; flex: 1 0 0; flex-direction: column; gap: 24px; justify-content: center; max-width: 960px; min-width: 0; }
     .reportagens-attention { display: block; height: 8px; width: 96px; }
     .reportagens-hero h1, .reportagens-hero p { mix-blend-mode: multiply; }
     .reportagens-hero h1, .reportagens-recent h2, .reportagem-card h3, .reportagem-card__link { font-family: "ETC Anybody", sans-serif; font-weight: 700; font-variation-settings: "wdth" 75; text-transform: uppercase; }
@@ -109,7 +112,7 @@ const posts = await fetchReportagens(undefined, 99, true);
     .reportagens-hero__illustration { flex: none; height: 487px; overflow: hidden; position: relative; width: 506px; }
     .reportagens-hero__illustration-inner { height: 414.045px; left: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); width: 461.738px; }
     .reportagens-hero__illustration-inner img { height: 125.9%; left: 4.84%; max-width: none; position: absolute; top: -12.95%; width: 90.32%; }
-    .reportagens-hero__shadow { background-image: var(--reportagens-hero-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; bottom: 0; height: 24px; left: 0; mix-blend-mode: multiply; pointer-events: none; position: absolute; width: 100%; }
+    .reportagens-hero__shadow { background-image: var(--reportagens-hero-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; bottom: 0; display: block; height: 24px; left: 0; mix-blend-mode: multiply; pointer-events: none; position: absolute; width: 100%; z-index: 1; }
     .reportagens-recent { background: #0b0f5e var(--reportagens-pattern) center top / 200px 200px repeat; color: #fff; min-height: 647px; padding: 96px 0 106px; position: relative; }
     .reportagens-recent::before { background: linear-gradient(to bottom, rgba(66, 66, 246, .25), transparent); content: ""; height: 12px; left: 0; position: absolute; right: 0; top: 0; }
     .reportagens-recent h2 { font-size: 32px; line-height: 32px; margin: 0 auto; text-align: center; width: 720px; }
@@ -136,6 +139,6 @@ const posts = await fetchReportagens(undefined, 99, true);
     .reportagens-pagination__button:focus-visible { outline: 2px solid #0b0f5e; outline-offset: 2px; }
     .reportagens-pagination__button:disabled { cursor: default; opacity: .4; }
     .reportagens-pagination__status { height: 1px; margin: -1px; overflow: hidden; position: absolute; width: 1px; clip: rect(0 0 0 0); }
-    @media (max-width: 900px) { .reportagens-hero { align-items: flex-start; flex-direction: column; height: auto; min-height: 452px; padding: 48px 24px; } .reportagens-hero__copy, .reportagens-hero p { width: 100%; } .reportagens-hero__art { margin-top: 24px; width: 100%; } .reportagens-recent { padding: 64px 0; } .reportagens-recent h2 { width: auto; } .reportagens-recent__scroll { padding-left: 24px; padding-right: 24px; } .reportagens-all { padding: 64px 24px; } .reportagens-all h2 { margin-bottom: 40px; } .reportagens-all__grid { gap: 64px 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); } .reportagens-all__grid .reportagem-card, .reportagens-all__grid .reportagem-card__image { width: 100%; } .reportagens-pagination { margin-top: 96px; } }
+    @media (max-width: 900px) { .reportagens-hero { height: 610px; } .reportagens-hero__top-row { align-items: flex-start; height: 586px; padding: 48px 24px; } .reportagens-hero__copy { gap: 20px; max-width: 100%; } .reportagens-hero p { width: 100%; } .reportagens-hero__art { bottom: 16px; margin: 0; position: absolute; right: -88px; transform: scale(.54); transform-origin: bottom right; } .reportagens-recent { padding: 64px 0; } .reportagens-recent h2 { width: auto; } .reportagens-recent__scroll { padding-left: 24px; padding-right: 24px; } .reportagens-all { padding: 64px 24px; } .reportagens-all h2 { margin-bottom: 40px; } .reportagens-all__grid { gap: 64px 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); } .reportagens-all__grid .reportagem-card, .reportagens-all__grid .reportagem-card__image { width: 100%; } .reportagens-pagination { margin-top: 96px; } }
     @media (max-width: 560px) { .reportagens-hero h1 { font-size: 48px; line-height: 52px; } .reportagens-hero__art { height: 300px; } .reportagens-hero__illustration { transform: scale(.62); transform-origin: center; } .reportagem-card { flex-basis: min(384px, calc(100vw - 48px)); } .reportagem-card__image { height: auto; aspect-ratio: 384 / 216; width: 100%; } .reportagens-all__grid { grid-template-columns: 1fr; } }
 </style>
