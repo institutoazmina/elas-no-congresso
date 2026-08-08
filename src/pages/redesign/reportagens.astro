@@ -53,7 +53,7 @@ const posts = await fetchReportagens(undefined, 99, true);
                     <h2 id="reportagens-recentes-title">Reportagens mais recentes</h2>
                     {posts.length > 0 && <div class="reportagens-recent__scroll" aria-label="Lista de reportagens mais recentes">{posts.slice(0, 3).map((post) => <ReportagemCard post={post} dark />)}</div>}
                 </section>
-                {posts.length > 0 && <section class="reportagens-all" aria-labelledby="todas-reportagens-title" data-reportagens-pagination><h2 id="todas-reportagens-title">Todas as reportagens</h2><div class="reportagens-all__grid">{posts.map((post, index) => <div data-reportagem-pagination-card hidden={index >= 9}><ReportagemCard post={post} /></div>)}</div>{posts.length > 9 && <nav class="reportagens-pagination" aria-label="Paginação das reportagens"><button class="reportagens-pagination__button" type="button" data-pagination-previous aria-label="Página anterior"><span><img src={paginationPrevious.src} alt="" /></span></button><button class="reportagens-pagination__button" type="button" data-pagination-next aria-label="Próxima página"><span><img src={paginationNext.src} alt="" /></span></button><span class="reportagens-pagination__status" aria-live="polite" data-pagination-status></span></nav>}</section>}
+                {posts.length > 0 && <section class="reportagens-all" aria-labelledby="todas-reportagens-title" data-reportagens-pagination><div class="reportagens-all__content"><h2 id="todas-reportagens-title"><span>Todas as reportagens</span></h2><div class="reportagens-all__grid">{posts.map((post, index) => <div data-reportagem-pagination-card hidden={index >= 9}><ReportagemCard post={post} /></div>)}</div></div>{posts.length > 9 && <nav class="reportagens-pagination" aria-label="Paginação das reportagens"><button class="reportagens-pagination__button" type="button" data-pagination-previous aria-label="Página anterior"><span><img src={paginationPrevious.src} alt="" /></span></button><button class="reportagens-pagination__button" type="button" data-pagination-next aria-label="Próxima página"><span><img src={paginationNext.src} alt="" /></span></button><span class="reportagens-pagination__status" aria-live="polite" data-pagination-status></span></nav>}</section>}
             </main>
             <RedesignFooter />
         </div>
@@ -122,12 +122,16 @@ const posts = await fetchReportagens(undefined, 99, true);
     .reportagem-card__image img { height: 100%; object-fit: cover; width: 100%; }
     .reportagem-card h3 { color: #0b0f5e; font-size: 24px; line-height: 32px; margin: 0; min-height: 64px; }
     .reportagem-card--dark h3 { color: #fff; min-height: 96px; }
+    .reportagem-card__details { align-items: flex-start; display: flex; flex-direction: column; gap: 16px; justify-content: center; overflow: hidden; }
     .reportagem-card__link { align-items: center; align-self: flex-start; background: #4242f6; color: #fff; display: flex; font-size: 18px; gap: 8px; height: 38px; justify-content: center; line-height: 24px; padding: 8px 12px 6px 14px; text-decoration: none; }
     .reportagem-card__link > span:last-child { align-items: center; display: flex; height: 24px; justify-content: flex-end; width: 12px; }
     .reportagem-card__link img { display: block; height: 6px; transform: rotate(-90deg); width: 12px; }
-    .reportagem-card__date { color: #fff; font-size: 14px; font-weight: 400; line-height: 16px; margin: 0; }
+    .reportagem-card__date { color: #1e2546; font-size: 14px; font-weight: 400; letter-spacing: 0; line-height: 16px; margin: 0; }
+    .reportagem-card--dark .reportagem-card__date { color: #fff; }
     .reportagens-all { padding: 72px 48px 96px; }
-    .reportagens-all h2 { font-family: "ETC Anybody", sans-serif; font-size: 32px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 42px; margin: 0 auto 48px; max-width: 820px; text-transform: uppercase; }
+    .reportagens-all__content { margin: 0 auto; max-width: 1344px; width: 100%; }
+    .reportagens-all h2 { align-items: flex-start; display: flex; font-family: "ETC Anybody", sans-serif; font-size: 32px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 42px; margin: 0 0 48px; max-width: 100%; text-transform: uppercase; width: 820px; }
+    .reportagens-all h2 > span { flex: 0 0 292px; text-align: center; }
     .reportagens-all__grid { display: grid; gap: 96px; grid-template-columns: repeat(3, 384px); justify-content: space-between; margin: 0 auto; max-width: 1344px; }
     .reportagens-all__grid > [hidden] { display: none; }
     .reportagens-pagination { align-items: flex-start; display: flex; gap: 4px; justify-content: center; margin: 218px auto 0; width: 100%; }

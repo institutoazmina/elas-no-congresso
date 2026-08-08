@@ -10,6 +10,8 @@ const updatedAt = post.modified ? new Intl.DateTimeFormat("pt-BR", { day: "2-dig
 <article class:list={["reportagem-card", { "reportagem-card--dark": dark }]}>
     <a href={post.link} class="reportagem-card__image" aria-label={`Ler: ${post.title.rendered}`}>{image && <img src={image} alt="" loading="lazy" decoding="async" />}</a>
     <h3 set:html={post.title.rendered} />
-    <a href={post.link} class="reportagem-card__link"><span>Ler reportagem</span><span aria-hidden="true"><img src={chevronRight.src} alt="" /></span></a>
-    {dark && updatedAt && <time class="reportagem-card__date" datetime={post.modified}>Atualizada em {updatedAt}</time>}
+    <div class="reportagem-card__details">
+        <a href={post.link} class="reportagem-card__link"><span>Ler reportagem</span><span aria-hidden="true"><img src={chevronRight.src} alt="" /></span></a>
+        {updatedAt && <time class="reportagem-card__date" datetime={post.modified}>Atualizada em {updatedAt}</time>}
+    </div>
 </article>
