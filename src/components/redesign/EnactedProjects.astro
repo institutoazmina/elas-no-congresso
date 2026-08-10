@@ -100,7 +100,7 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
     .enacted-projects__carousel::before { top: 0; left: 0; transform: scaleY(-1); }
     .enacted-projects__carousel::after { bottom: 0; left: 0; }
     .enacted-projects__controls { z-index: 3; }
-    .enacted-projects__viewport { z-index: 2; }
+    .enacted-projects__viewport { z-index: 2; overflow-x: clip; overflow-y: visible; }
     .enacted-projects__controls button { display: grid; width: 56px; height: 40px; padding: 8px 16px; place-items: center; border: 2px solid #4242f6; border-radius: 0; background: #fff; }
     .enacted-projects__controls img { display: block; width: 24px; height: 24px; }
     .enacted-projects__track { position: relative; left: 50%; transform: translateX(-3216px); }

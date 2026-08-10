@@ -52,7 +52,7 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
     .slow-moving-proposals__carousel::before { top: 0; left: 0; transform: scaleY(-1); }
     .slow-moving-proposals__carousel::after { right: 0; bottom: 0; }
     .slow-moving-proposals__controls { z-index: 3; }
-    .slow-moving-proposals__viewport { z-index: 2; }
+    .slow-moving-proposals__viewport { z-index: 2; overflow-x: clip; overflow-y: visible; }
     .slow-moving-proposals__controls button { display: grid; width: 56px; height: 40px; padding: 8px 16px; place-items: center; border: 2px solid #4242f6; border-radius: 0; background: #fff; }
     .slow-moving-proposals__controls img { display: block; width: 24px; height: 24px; }
     .slow-moving-proposals__track { position: relative; left: 50%; transform: translateX(-3216px); }
