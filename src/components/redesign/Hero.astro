@@ -1,13 +1,9 @@
 ---
 import attentionMark from "../../assets/images/redesign/hero/attention.svg";
-import circleBottom from "../../assets/images/redesign/hero/circle-bottom.svg";
-import circleTop from "../../assets/images/redesign/hero/circle-top.svg";
 import highlighterOne from "../../assets/images/redesign/hero/highlighter-desfavoraveis-1.svg";
 import highlighterTwo from "../../assets/images/redesign/hero/highlighter-desfavoraveis-2.svg";
 import halftoneShadow from "../../assets/images/redesign/hero/halftone-shadow.png";
-import proposicaoFive from "../../assets/images/redesign/hero/proposicao-5.png";
-import proposicaoNine from "../../assets/images/redesign/hero/proposicao-9.png";
-import stroke from "../../assets/images/redesign/hero/stroke.svg";
+import heroIllustration from "../../assets/images/redesign/hero/ilustracoes-05.png";
 ---
 
 <section
@@ -37,12 +33,7 @@ import stroke from "../../assets/images/redesign/hero/stroke.svg";
         </div>
 
         <div class="hero__illustration" aria-hidden="true">
-            <span class="hero__stroke-frame"><img src={stroke.src} alt="" /></span>
-            <span class="hero__document hero__document--top"><img src={proposicaoFive.src} alt="" /></span>
-            <span class="hero__square"></span>
-            <span class="hero__circle hero__circle--top"><img src={circleTop.src} alt="" /></span>
-            <span class="hero__document hero__document--bottom"><img src={proposicaoNine.src} alt="" /></span>
-            <span class="hero__circle hero__circle--bottom"><img src={circleBottom.src} alt="" /></span>
+            <span class="hero__illustration-image"><img src={heroIllustration.src} alt="" /></span>
         </div>
     </div>
 
@@ -207,116 +198,30 @@ import stroke from "../../assets/images/redesign/hero/stroke.svg";
 
     .hero__illustration {
         flex: 0 0 auto;
-        height: 360px;
+        height: 389px;
         margin: 10px;
         overflow: hidden;
         position: relative;
-        width: 360px;
+        width: 513px;
     }
 
-    .hero__stroke-frame {
-        height: 234.809px;
-        left: 60.097px;
+    .hero__illustration-image {
+        height: 389px;
+        left: 50%;
+        overflow: hidden;
         position: absolute;
-        top: 62.445px;
-        width: 239.807px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 409.838px;
     }
 
-    .hero__stroke-frame img {
-        bottom: -1.94%;
-        left: -3.64%;
+    .hero__illustration-image img {
+        height: 153.89%;
+        left: -10.22%;
         max-width: none;
         position: absolute;
-        right: -2.13%;
-        top: -1.74%;
-        width: 105.77%;
-    }
-
-    .hero__document {
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        position: absolute;
-    }
-
-    .hero__document img {
-        display: block;
-        max-width: none;
-        object-fit: cover;
-    }
-
-    .hero__document--top {
-        height: 142.66px;
-        left: 163.94px;
-        top: 11.55px;
-        width: 106.196px;
-    }
-
-    .hero__document--top img {
-        height: 135.647px;
-        transform: rotate(4.43deg);
-        width: 96px;
-    }
-
-    .hero__document--bottom {
-        height: 146.059px;
-        left: 60px;
-        top: 154.21px;
-        width: 111.886px;
-    }
-
-    .hero__document--bottom img {
-        height: 135.295px;
-        transform: rotate(-7.05deg);
-        width: 96px;
-    }
-
-    .hero__square {
-        border: 8px solid #def279;
-        height: 96px;
-        left: 228px;
-        position: absolute;
-        top: 132.44px;
-        width: 96px;
-    }
-
-    .hero__circle {
-        position: absolute;
-    }
-
-    .hero__circle img {
-        max-width: none;
-        position: absolute;
-    }
-
-    .hero__circle--top {
-        height: 72px;
-        left: 36px;
-        top: 72px;
-        width: 72px;
-    }
-
-    .hero__circle--top img {
-        bottom: -4.76%;
-        height: 112.64%;
-        left: -5.63%;
-        top: -7.88%;
-        width: 113.3%;
-    }
-
-    .hero__circle--bottom {
-        height: 144px;
-        left: 36px;
-        top: 179.424px;
-        width: 144px;
-    }
-
-    .hero__circle--bottom img {
-        bottom: -3.23%;
-        height: 106.56%;
-        left: -0.75%;
-        top: -3.33%;
-        width: 104.22%;
+        top: -29.5%;
+        width: 116.85%;
     }
 
     .hero__cta {
