@@ -5,6 +5,7 @@ import elasHorizontal from "../../assets/images/redesign/party-chart/elas-horizo
 import { Image } from "astro:assets";
 import mapBase from "./assets/map/map-br-base@2.5x.png";
 import mapLabels from "./assets/map/map-br-labels@2.5x.png";
+import mapHitboxes from "./assets/map/map-br-ufs-vector.svg?raw";
 import StanceToggle from "./StanceToggle.astro";
 import { getStanceByState, type GroupStat, type Stance } from "../../service/api/stats";
 
@@ -53,6 +54,27 @@ const highlights = views.map((view) => {
         }),
     };
 });
+
+// Dados por UF para o tooltip do mapa. A API já devolve favorable e
+// unfavorable juntos em cada item, independente do stance usado na ordenação;
+// basta fundir os dois rankings num mapa único por sigla.
+// Quando a API passar a fornecer o total de parlamentares por UF, basta somar
+// o campo aqui (sem dados.json, sem derivação de /dataset, sem valores fixos).
+type UfData = { favorable: number; unfavorable: number };
+const ufData: Record<string, UfData> = {};
+for (const state of [...favourableRanking, ...unfavourableRanking]) {
+    const uf = state.label.trim().toUpperCase();
+    ufData[uf] = { favorable: state.favorable, unfavorable: state.unfavorable };
+}
+
+const ufLabels: Record<string, string> = {
+    AC: "Acre", AL: "Alagoas", AP: "Amapá", AM: "Amazonas", BA: "Bahia", CE: "Ceará",
+    DF: "Distrito Federal", ES: "Espírito Santo", GO: "Goiás", MA: "Maranhão",
+    MT: "Mato Grosso", MS: "Mato Grosso do Sul", MG: "Minas Gerais", PA: "Pará",
+    PB: "Paraíba", PR: "Paraná", PE: "Pernambuco", PI: "Piauí", RJ: "Rio de Janeiro",
+    RN: "Rio Grande do Norte", RS: "Rio Grande do Sul", RO: "Rondônia", RR: "Roraima",
+    SC: "Santa Catarina", SP: "São Paulo", SE: "Sergipe", TO: "Tocantins",
+};
 ---
 
 <section class="uf-projects-chart" data-stance="unfavorable" data-panel="map" aria-labelledby="uf-projects-chart-title">
@@ -84,6 +106,9 @@ const highlights = views.map((view) => {
                             </div>
                         ))}
                         <Image src={mapLabels} alt="" width={720} height={720} densities={[1, 2]} loading="lazy" draggable={false} />
+                        <div class="uf-projects-chart__map-hitbox" aria-hidden="true">
+                            <Fragment set:html={mapHitboxes} />
+                        </div>
                     </div>
                 </div>
 
@@ -117,18 +142,78 @@ const highlights = views.map((view) => {
         </footer>
     </div>
     <button class="uf-projects-chart__button" type="button">Veja como está o seu estado <img src={buttonChevron.src} alt="" /></button>
+    <div class="uf-projects-chart__tooltip" role="status" aria-live="polite" data-tooltip hidden>
+        <p class="uf-projects-chart__tooltip-uf" data-tooltip-uf></p>
+        <p>Favoráveis: <strong data-tooltip-fav></strong></p>
+        <p>Desfavoráveis: <strong data-tooltip-des></strong></p>
+    </div>
 </section>
 
-<script>
+<script define:vars={{ ufData, ufLabels }}>
     // Mapa e tabela vêm os dois no HTML; a aba só troca qual o CSS mostra.
-    const section = document.querySelector<HTMLElement>(".uf-projects-chart");
-    const tabs = section?.querySelectorAll<HTMLButtonElement>("[data-panel-tab]");
+    const section = document.querySelector(".uf-projects-chart");
+    const tabs = section?.querySelectorAll("[data-panel-tab]");
 
     tabs?.forEach((tab) => {
         tab.addEventListener("click", () => {
-            section!.dataset.panel = tab.dataset.panelTab;
+            section.dataset.panel = tab.dataset.panelTab;
             tabs.forEach((other) => other.setAttribute("aria-selected", String(other === tab)));
         });
+    });
+
+    // Hover nas UFs: o SVG do Design vira camada de hitboxes transparente sobre
+    // os PNGs. Um par de listeners delegados (pointerover/pointerout) cobre as
+    // 27 UFs; mover o mouse dentro da mesma UF não re-dispara nada (sem piscar).
+    const hitbox = section?.querySelector(".uf-projects-chart__map-hitbox");
+    const tooltip = section?.querySelector("[data-tooltip]");
+    let currentUf = null;
+
+    function positionTooltip(event) {
+        if (!tooltip) return;
+        const pad = 16;
+        const width = tooltip.offsetWidth;
+        const height = tooltip.offsetHeight;
+        let left = event.clientX + pad;
+        let top = event.clientY + pad;
+        if (left + width > window.innerWidth) left = event.clientX - width - pad;
+        if (top + height > window.innerHeight) top = event.clientY - height - pad;
+        tooltip.style.left = Math.max(pad, left) + "px";
+        tooltip.style.top = Math.max(pad, top) + "px";
+    }
+
+    function showTooltip(uf, event) {
+        if (!tooltip) return;
+        const data = ufData[uf] ?? { favorable: 0, unfavorable: 0 };
+        const ufEl = tooltip.querySelector("[data-tooltip-uf]");
+        const favEl = tooltip.querySelector("[data-tooltip-fav]");
+        const desEl = tooltip.querySelector("[data-tooltip-des]");
+        if (ufEl) ufEl.textContent = ufLabels[uf] ?? uf;
+        if (favEl) favEl.textContent = String(data.favorable);
+        if (desEl) desEl.textContent = String(data.unfavorable);
+        tooltip.hidden = false;
+        positionTooltip(event);
+    }
+
+    hitbox?.addEventListener("pointerover", (event) => {
+        const target = event.target;
+        const path = target instanceof Element ? target.closest("path") : null;
+        if (!path) return;
+        const uf = path.id;
+        if (uf === currentUf) return;
+        currentUf = uf;
+        showTooltip(uf, event);
+    });
+
+    hitbox?.addEventListener("pointerout", (event) => {
+        const related = event.relatedTarget;
+        if (!(related instanceof Element) || !related.closest("path")) {
+            currentUf = null;
+            if (tooltip) tooltip.hidden = true;
+        }
+    });
+
+    hitbox?.addEventListener("pointermove", (event) => {
+        if (currentUf) positionTooltip(event);
     });
 </script>
 
@@ -151,6 +236,16 @@ const highlights = views.map((view) => {
     .uf-projects-chart__map { position: relative; width: 720px; aspect-ratio: 1; }
     .uf-projects-chart__map img { position: absolute; inset: 0; width: 100%; height: 100%; }
     .uf-projects-chart__map > img:first-child { position: relative; }
+    /* Hitbox das UFs: SVG do Design por cima dos PNGs, transparente, só capta o pointer. */
+    .uf-projects-chart__map-hitbox { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+    .uf-projects-chart__map-hitbox :global(svg) { display: block; width: 100%; height: 100%; pointer-events: none; }
+    .uf-projects-chart__map-hitbox :global(path) { pointer-events: all; fill: transparent; }
+    /* Tooltip do mapa de UFs. */
+    .uf-projects-chart__tooltip { position: fixed; z-index: 1000; pointer-events: none; max-width: 240px; padding: 12px 16px; background: #fff; color: #0b0f5e; border: 1px solid #4242f6; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); font-family: "Plus Jakarta Sans", sans-serif; font-size: 14px; line-height: 1.5; }
+    .uf-projects-chart__tooltip[hidden] { display: none; }
+    .uf-projects-chart__tooltip p { margin: 0; }
+    .uf-projects-chart__tooltip-uf { margin-bottom: 8px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 16px; font-weight: 700; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .uf-projects-chart__tooltip strong { font-variant-numeric: tabular-nums; }
     /* Um painel e uma visão de cada vez; o resto sai do fluxo. */
     .uf-projects-chart[data-panel="map"] [data-panel-view="table"],
     .uf-projects-chart[data-panel="table"] [data-panel-view="map"],
