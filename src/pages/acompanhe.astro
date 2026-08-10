@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import RedesignLayout from "../components/redesign/RedesignLayout.astro";
 import Share from "../components/Share.astro";
 import NewsletterSection from "../components/NewsletterSection.astro";
 import { fetchReportagens } from "../lib/wp";
@@ -7,7 +7,7 @@ import { fetchReportagens } from "../lib/wp";
 const posts = await fetchReportagens(1988, 99);
 ---
 
-<BaseLayout title="Reportagens">
+<RedesignLayout title="Reportagens">
     <main>
         <header class="abertura-acompanhe tw:min-h-[50vh]!">
             <Share title="Reportagens" />
@@ -74,4 +74,4 @@ const posts = await fetchReportagens(1988, 99);
 
         <NewsletterSection />
     </main>
-</BaseLayout>
+</RedesignLayout>

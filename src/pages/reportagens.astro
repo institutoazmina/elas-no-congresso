@@ -1,8 +1,8 @@
 ---
-import RedesignLayout from "../../components/redesign/RedesignLayout.astro";
-import Share from "../../components/Share.astro";
-import NewsletterSection from "../../components/NewsletterSection.astro";
-import { fetchReportagens } from "../../lib/wp";
+import RedesignLayout from "../components/redesign/RedesignLayout.astro";
+import Share from "../components/Share.astro";
+import NewsletterSection from "../components/NewsletterSection.astro";
+import { fetchReportagens } from "../lib/wp";
 
 const posts = await fetchReportagens(1988, 99);
 ---

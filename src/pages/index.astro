@@ -1,191 +1,100 @@
 ---
-import { Picture } from "astro:assets";
-import BaseLayout from "../layouts/BaseLayout.astro";
-import NewsletterSection from "../components/NewsletterSection.astro";
-import banner1 from "../assets/images/banner1.png";
-import banner2 from "../assets/images/banner2.png";
-import banner3 from "../assets/images/banner3.png";
-import HomeCta from "../components/dataviz/HomeCta.astro";
-import HomeCharts from "../components/dataviz/HomeCharts.astro";
-import HomeQuotes from "../components/dataviz/HomeQuotes.astro";
-import HomePosts from "../components/dataviz/HomePosts.astro";
-import DatavizIncludes from "../components/dataviz/DatavizIncludes.astro";
-import { fetchReportagens, type WpPost } from "../lib/wp";
-
-const posts = await fetchReportagens(2685, 2);
+import RedesignHeader from "../components/redesign/RedesignHeader.astro";
+import Hero from "../components/redesign/Hero.astro";
+import RightsUnderAttack from "../components/redesign/RightsUnderAttack.astro";
+import LegislativeSetbacks from "../components/redesign/LegislativeSetbacks.astro";
+import WomenInDefense from "../components/redesign/WomenInDefense.astro";
+import PartyRightsChart from "../components/redesign/PartyRightsChart.astro";
+import UfProjectsChart from "../components/redesign/UfProjectsChart.astro";
+import HomeAlerts from "../components/redesign/HomeAlerts.astro";
+import FastMovingProposals from "../components/redesign/FastMovingProposals.astro";
+import SlowMovingProposals from "../components/redesign/SlowMovingProposals.astro";
+import EnactedProjects from "../components/redesign/EnactedProjects.astro";
+import ExploreCongress from "../components/redesign/ExploreCongress.astro";
+import ParliamentariansCarousel from "../components/redesign/ParliamentariansCarousel.astro";
+import QuiteriaAndFunders from "../components/redesign/QuiteriaAndFunders.astro";
+import RedesignFooter from "../components/redesign/RedesignFooter.astro";
+import HomeReportagens from "../components/redesign/HomeReportagens.astro";
+import { ClientRouter } from "astro:transitions";
+import "../styles/tailwind.css";
+import "../styles/redesign-shared-background.css";
 ---
 
-<BaseLayout title="Home">
-    <DatavizIncludes />
-    <main>
-        <HomeCta />
-        <HomeCharts />
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Redesign | Elas no Congresso</title>
+        <link
+            rel="preload"
+            href="/assets/fonts/ETCAnybodyVariable.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+        <ClientRouter fallback="swap" />
+    </head>
+    <body class="tw:!pt-0 tw:!bg-white">
+        <div class="redesign-home-background redesign-shared-background">
+            <RedesignHeader />
+            <Hero />
+            <RightsUnderAttack />
+            <LegislativeSetbacks />
+            <HomeReportagens />
+            <WomenInDefense />
+            <PartyRightsChart />
+            <UfProjectsChart />
+            <HomeAlerts />
+            <FastMovingProposals />
+            <SlowMovingProposals />
+            <EnactedProjects />
+            <ExploreCongress />
+            <ParliamentariansCarousel />
+            <QuiteriaAndFunders />
+            <RedesignFooter />
+        </div>
+    </body>
+</html>
 
-        <!-- Cards -->
-        <article class="banners tw:relative tw:mb-0! tw:text-black">
-            <div class="tw:max-w-7xl tw:mx-auto! tw:z-3 tw:relative tw:pb-12!">
-                <div
-                    class="tw:grid tw:md:grid-cols-3 tw:gap-8 tw:px-4 tw:items-end"
-                >
-                    <div class="">
-                        <a href="/quiteria" class="tw:group">
-                            <figure class="tw:z-2">
-                                <Picture src={banner3} formats={["avif", "webp"]} alt="" loading="lazy" />
-                            </figure>
-                            <div
-                                class="bga tw:bg-[#5abfc8] tw:p-6 tw:pb-4 tw:pt-10 tw:-translate-y-5 tw:-z-1 tw:relative"
-                            >
-                                <h3
-                                    class="ff1 tw:text-3xl tw:md:text-2xl tw:xl:text-3xl tw:uppercase tw:mb-3!"
-                                >
-                                    <span class="w900 wdth300"
-                                        >Inteligência</span
-                                    >
-                                    <span class="linha"
-                                        ><span class="w300 wdth400">
-                                            Artificial
-                                        </span></span
-                                    >
-                                </h3>
-                                <p class="tw:leading-snug">
-                                    Conheça a QuitérIA, ferramenta de IA
-                                    feminista treinada para monitorar o
-                                    Congresso Nacional de forma automatizada.
-                                </p>
-                                <p
-                                    class="tw:uppercase tw:font-black tw:flex tw:gap-3 tw:group-hover:gap-6 tw:duration-100 tw:items-center tw:w-fit tw:cursor-pointer tw:tracking-wide tw:lg:text-lg"
-                                >
-                                    Conheça <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="lucide lucide-move-right-icon lucide-move-right"
-                                        ><path d="M18 8L22 12L18 16"
-                                        ></path><path d="M2 12H22"></path></svg
-                                    >
-                                </p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="">
-                        <a href="/propostas-e-votacoes" class="tw:group">
-                            <figure class="tw:z-2">
-                                <Picture src={banner2} formats={["avif", "webp"]} alt="" loading="lazy" />
-                            </figure>
-                            <div
-                                class="bgvd tw:p-6 tw:pb-4 tw:pt-10 tw:-translate-y-5 tw:-z-1 tw:relative"
-                            >
-                                <h3
-                                    class="ff1 tw:text-3xl tw:md:text-2xl tw:xl:text-3xl tw:uppercase tw:mb-3!"
-                                >
-                                    <span class="w900 wdth300">Propostas</span>
-                                    <span class="linha"
-                                        ><span class="w300 wdth400"
-                                            >e
-                                        </span><span class="w900 wdth300"
-                                            >votações</span
-                                        ></span
-                                    >
-                                </h3>
-                                <p class="tw:leading-snug">
-                                    Levantamos todas as propostas feitas no
-                                    Congresso que tocam os direitos das mulheres
-                                    e avaliamos quais são favoráveis ou
-                                    desfavoráveis.
-                                </p>
-                                <p
-                                    class="tw:uppercase tw:font-black tw:flex tw:gap-3 tw:group-hover:gap-6 tw:duration-100 tw:items-center tw:w-fit tw:cursor-pointer tw:tracking-wide tw:lg:text-lg"
-                                >
-                                    Ver propostas <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="lucide lucide-move-right-icon lucide-move-right"
-                                        ><path d="M18 8L22 12L18 16"
-                                        ></path><path d="M2 12H22"></path></svg
-                                    >
-                                </p>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="">
-                        <a href="/metodologia" class="tw:group">
-                            <figure class="tw:z-2">
-                                <Picture src={banner1} formats={["avif", "webp"]} alt="" loading="lazy" />
-                            </figure>
-                            <div
-                                class="bgvm tw:p-6 tw:pb-4 tw:pt-10 tw:-translate-y-5 tw:-z-1 tw:relative"
-                            >
-                                <h3
-                                    class="ff1 tw:text-3xl tw:md:text-2xl tw:xl:text-3xl tw:uppercase tw:mb-3!"
-                                >
-                                    <span class="linha"
-                                        ><span class="w800 wdth150"
-                                            >Entenda como</span
-                                        ></span
-                                    ><span class="linha"
-                                        ><span class="w900 wdth200">
-                                            avaliamos</span
-                                        ><span class="w300 wdth200">
-                                            as
-                                        </span><span class="w300 wdth200"
-                                            >propostas</span
-                                        ></span
-                                    >
-                                </h3>
-                                <p class="tw:leading-snug">
-                                    Parceria com organizações que defendem os
-                                    direitos das mulheres unidas com cálculos
-                                    matemáticos são a base da nossa metodologia.
-                                </p>
-                                <p
-                                    class="tw:uppercase tw:font-black tw:flex tw:gap-3 tw:group-hover:gap-6 tw:duration-100 tw:items-center tw:w-fit tw:cursor-pointer tw:tracking-wide tw:lg:text-lg"
-                                >
-                                    Entenda <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="lucide lucide-move-right-icon lucide-move-right"
-                                        ><path d="M18 8L22 12L18 16"
-                                        ></path><path d="M2 12H22"></path></svg
-                                    >
-                                </p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 1440 123"
-                class="tw:absolute tw:h-auto tw:w-svw tw:bottom-0 tw:rotate-180 tw:z-2 tw:translate-y-[20%]"
-            >
-                <path
-                    d="M505.4,3.9l28.9,8.4,26,2.4h18.1l36.3,1.5,9.8-1.5q30.9-1.5,30.9,0c0,1.5,26.9,3.4,26.9,3.4l18.2-3.4,24,5.9s21.6-4.4,25-4.4h29.4L798,14.7l19.1,1.5h22.1q2.4,0,25.5-3.9l1.5-5.4h44.1c2.4,0,43.1-3,44.6-3S961.3,0,962.7,0s9.7,2.3,26,6.9h41.2l21.1-3,26.4,3,8.9-2.5L1096.5,0l30.9,6.9h54.9l42.7,3.4,56.8-6.4L1323.5,0H1440V123H0V6.9H6.4l13.2,5.4H26L40.2,8.8h9.3l14.7,1.5,10.3,4.4h6.4l9.8-2.4,13.2,3.9,7.4-1.5,13.2-4.4,12.2-1.5H150l10.8,3.5,11.7,2.4,9.3,1.5,7.9-1.5,2.4,1.5h10.3l3.5-1.5,24.5-2.4H247l5.9,2.4,4.4,1.5h14.2L300,12.3l6.8-3.5h19.7l4.9-1.9,5.8,1.9v3.5h6.4l9.3,2.4,12.8-4.4,19.1,4.4,7.3,1.5,65.7,1.9,6.9-1.9,5.4-1.5,11.7-7.8h20.1Z"
-                    fill="#fff"
-                    fill-rule="evenodd"></path>
-            </svg>
-        </article>
-        <HomeQuotes />
-        <HomePosts posts={posts} />
-        <NewsletterSection />
-    </main>
-</BaseLayout>
+<style is:global>
+    @font-face {
+        font-family: "ETC Anybody";
+        font-style: normal;
+        font-weight: 50 1000;
+        font-display: swap;
+        src: url("/assets/fonts/ETCAnybodyVariable.woff2") format("woff2-variations");
+    }
+
+    .redesign-header,
+    .redesign-header * {
+        box-sizing: border-box;
+    }
+
+    body:has(.redesign-header) {
+        margin: 0;
+    }
+
+    .redesign-header .container-fluid {
+        width: 100%;
+    }
+
+    .redesign-header .wrap {
+        max-width: 1310px;
+    }
+
+    .redesign-header .ff1 {
+        font-family: "ETC Anybody", sans-serif;
+    }
+
+    .redesign-home-background > .redesign-shared-background {
+        background: transparent;
+    }
+
+</style>
