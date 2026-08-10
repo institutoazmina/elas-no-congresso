@@ -1,0 +1,98 @@
+---
+import attention from "../../assets/images/redesign/party-chart/attention.svg";
+import documentImage from "../../assets/images/redesign/hero/proposicao-9.png";
+import favorableThumb from "../../assets/images/redesign/slow-moving-proposals/thumbs-up-hand.svg";
+import unfavorableThumb from "../../assets/images/redesign/party-chart/thumbs-down.svg";
+import bookIcon from "../../assets/images/redesign/enacted-projects/book.svg";
+import pattern from "../../assets/images/redesign/enacted-projects/carousel-pattern.png";
+
+const sourceCards = [
+    { rating: "favorável", proposal: "PDL 176/2021", authors: [["Jandira Feghali", "PCdoB/RJ"], ["Erika Kokay", "PT/DF"], ["Alice Portugal", "PCdoB/BA"]], more: "+7 parlamentares", description: "Susta a Portaria nº 13, de 19 de abril de 2021, que torna pública a decisão de incorporar o implante subdérmico de etonogestrel, condicionada à criação de programa específico, na prevenção da gravidez não planejada para mulheres em idade fértil: em situação de rua; com HIV/AIDS em uso de dolutegravir; em uso de talidomida; privadas de liberdade; trabalhadoras do sexo; e em tratamento de tuberculose em uso de aminoglicosídeos, no âmbito do Sistema Único de Saúde - SUS.." },
+    { rating: "favorável", proposal: "PDL 176/2021", authors: [["Jandira Feghali", "PCdoB/RJ"], ["Erika Kokay", "PT/DF"], ["Alice Portugal", "PCdoB/BA"]], more: "+7 parlamentares", description: "Susta a Portaria nº 13, de 19 de abril de 2021, que torna pública a decisão de incorporar o implante subdérmico de etonogestrel, condicionada à criação de programa específico, na prevenção da gravidez não planejada para mulheres em idade fértil." },
+    { rating: "desfavorável", proposal: "PL 2104/2026", authors: [["Baleia Rossi", "MDB/SP"]], description: "Estabelece diretrizes para a atenção à saúde da mulher no climatério e na menopausa, no âmbito do Sistema Único de Saúde, e institui a Semana Nacional de Conscientização sobre o Climatério e a Menopausa" },
+    { rating: "favorável", proposal: "PDL 176/2021", authors: [["Jandira Feghali", "PCdoB/RJ"], ["Erika Kokay", "PT/DF"], ["Alice Portugal", "PCdoB/BA"]], more: "+7 parlamentares", description: "Susta a Portaria nº 13, de 19 de abril de 2021, que torna pública a decisão de incorporar o implante subdérmico de etonogestrel." },
+    { rating: "desfavorável", proposal: "PL 2104/2026", authors: [["Baleia Rossi", "MDB/SP"]], description: "Estabelece diretrizes para a atenção à saúde da mulher no climatério e na menopausa, no âmbito do Sistema Único de Saúde, e institui a Semana Nacional de Conscientização sobre o Climatério e a Menopausa" },
+];
+
+const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[physical % sourceCards.length], physical }));
+---
+
+<section class="enacted-projects" aria-labelledby="enacted-projects-title">
+    <header class="enacted-projects__header">
+        <img src={attention.src} alt="" />
+        <h2 id="enacted-projects-title">Projetos que viraram lei</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </header>
+
+    <div class="enacted-projects__figure" data-enacted-carousel>
+        <div class="enacted-projects__carousel" style={`background-image:url(${pattern.src})`} aria-label="Projetos que viraram lei">
+            <div class="enacted-projects__controls">
+                <button type="button" aria-label="Projeto anterior" data-previous>‹</button>
+                <button type="button" aria-label="Próximo projeto" data-next>›</button>
+            </div>
+            <div class="enacted-projects__viewport"><div class="enacted-projects__track" data-track>
+                {cards.map((card) => <article class:list={["enacted-projects__card", `enacted-projects__card--${card.rating}`, { "enacted-projects__card--featured": card.physical === 7 }]} aria-hidden={card.physical === 7 ? undefined : "true"}>
+                    <header class="enacted-projects__card-header">
+                        <strong>{card.proposal}</strong>
+                        <span class="enacted-projects__status">
+                            <img class="enacted-projects__document" src={documentImage.src} alt="" />
+                            <span class="enacted-projects__rating">
+                                <span class="enacted-projects__rating-icon"><img src={card.rating === "favorável" ? favorableThumb.src : unfavorableThumb.src} alt="" /></span>
+                                <b>{card.rating}</b>
+                            </span>
+                        </span>
+                    </header>
+                    <div class="enacted-projects__details">
+                        <div class="enacted-projects__authors">
+                            {card.authors.map(([name, party]) => <p><span>{name}</span><strong>{party}</strong></p>)}
+                            {card.more && <p class="enacted-projects__more">{card.more}</p>}
+                        </div>
+                        <span class="enacted-projects__theme">Saúde</span>
+                        <p class="enacted-projects__description">{card.description}</p>
+                    </div>
+                    <footer>
+                        <div><p><span class="enacted-projects__law-icon"><img src={bookIcon.src} alt="" /></span><strong>Lei 11.340/2026</strong></p><small>Aprovada em 7 de agosto de 2026</small></div>
+                        <span aria-hidden="true">›</span>
+                    </footer>
+                </article>)}
+            </div></div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll<HTMLElement>("[data-enacted-carousel]").forEach((carousel) => {
+        const track = carousel.querySelector<HTMLElement>("[data-track]");
+        const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
+        const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
+        if (!track || !previous || !next) return;
+        const cards = Array.from(track.querySelectorAll<HTMLElement>(".enacted-projects__card"));
+        let physical = 7;
+        let resetting = false;
+        const update = () => {
+            track.style.transform = `translateX(${528 - physical * 432}px)`;
+            cards.forEach((card, index) => { const active = index === physical; card.classList.toggle("enacted-projects__card--featured", active); card.setAttribute("aria-hidden", String(!active)); });
+        };
+        const move = (direction: number) => { if (!resetting) { physical += direction; update(); } };
+        track.addEventListener("transitionend", (event) => { if (event.propertyName !== "transform" || (physical > 4 && physical < 10)) return; resetting = true; physical += physical < 5 ? 5 : -5; track.style.transition = "none"; update(); requestAnimationFrame(() => requestAnimationFrame(() => { track.style.transition = ""; resetting = false; })); });
+        previous.addEventListener("click", () => move(-1));
+        next.addEventListener("click", () => move(1));
+    });
+</script>
+
+<style>
+    .enacted-projects{height:907.9435424804688px;background:#fff;color:#0b0f5e;font-family:"Plus Jakarta Sans",sans-serif;overflow:hidden}.enacted-projects *{box-sizing:border-box}.enacted-projects__header{width:816px;height:84px;margin:48px auto 10px;padding:0 48px;display:flex;flex-direction:column;gap:16px}.enacted-projects__header>img{width:96px;height:4px}.enacted-projects h2,.enacted-projects p{margin:0}.enacted-projects h2{font-family:"ETC Anybody",sans-serif;font-size:36px;font-weight:700;line-height:24px;text-transform:uppercase;font-variation-settings:"wdth" 75}.enacted-projects__header p{font-size:18px;line-height:24px}.enacted-projects__figure{height:717.9435424804688px;padding:24px 0;overflow:hidden}.enacted-projects__carousel{position:relative;height:669.9435424804688px;padding:48px;overflow:hidden;background-repeat:repeat;background-position:center top;border-top:1px solid #000}.enacted-projects__controls{position:absolute;z-index:2;top:48px;left:calc(50% - 58px);display:flex;gap:4px}.enacted-projects__controls button{width:56px;height:40px;border:1px solid #4242f6;background:#fff;color:#4242f6;font:32px/1 Arial;cursor:pointer}.enacted-projects__controls button:focus-visible{outline:2px solid #0b0f5e;outline-offset:2px}.enacted-projects__viewport{position:absolute;top:112px;left:0;width:100%;overflow:hidden}.enacted-projects__track{display:flex;width:max-content;gap:48px;transform:translateX(-2496px);transition:transform .2s ease}.enacted-projects__card{display:flex;width:384px;height:509.94354248046875px;flex:none;flex-direction:column;border:1px solid #998d96;background:#fff;overflow:visible}.enacted-projects__card--desfavorável{height:407.94354248046875px}.enacted-projects__card--featured{border-color:#0b0f5e;box-shadow:-4px 4px 0 #0b0f5e}.enacted-projects__card-header{position:relative;height:69.94354248046875px;flex:none;padding:8px 16px;border-bottom:1px solid #998d96}.enacted-projects__card-header>strong{position:absolute;top:18.971769332885742px;left:16px;font-family:"ETC Anybody",sans-serif;font-size:20px;line-height:24px;font-variation-settings:"wdth" 75}.enacted-projects__status{position:absolute;top:8px;right:16px;width:168.30795288085938px;height:53.94354248046875px}.enacted-projects__document{position:absolute;top:0;left:4.444942951202393px;width:36px;height:51px;transform:rotate(-5deg)}.enacted-projects__rating{position:absolute;top:10.971768379211426px;left:32.307952880859375px;display:flex;height:32px;align-items:center;gap:8px}.enacted-projects__rating-icon{display:block;width:32px;height:32px;border-radius:50%;overflow:hidden;background:#def279}.enacted-projects__rating-icon img{display:block;width:32px;height:32px}.enacted-projects__card--desfavorável .enacted-projects__rating-icon{background:#ff5865}.enacted-projects__card--desfavorável .enacted-projects__rating-icon img{transform:rotate(180deg)}.enacted-projects__rating b{font-family:"ETC Anybody",sans-serif;font-size:16px;line-height:24px;text-transform:uppercase;font-variation-settings:"wdth" 75}.enacted-projects__details{height:358px;padding:24px 16px;overflow:hidden;display:flex;flex-direction:column;gap:16px}.enacted-projects__card--desfavorável .enacted-projects__details{height:256px}.enacted-projects__authors{display:flex;min-height:24px;flex-direction:column;gap:10px}.enacted-projects__authors p{height:24px;display:flex;justify-content:space-between;font-size:18px;line-height:24px;min-width:0}.enacted-projects__authors p span,.enacted-projects__authors p strong{min-width:0}.enacted-projects__authors p strong{font-weight:700}.enacted-projects__more{display:block!important;color:#4242f6}.enacted-projects__theme{width:64px;height:32px;padding:4px 8px;background:#4242f6;color:#fff;font-family:"ETC Anybody",sans-serif;font-size:16px;font-weight:700;line-height:24px;text-transform:uppercase;font-variation-settings:"wdth" 75}.enacted-projects__description{height:120px;color:#0b0f5e;font-size:16px;line-height:24px;opacity:.66;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;text-overflow:ellipsis}.enacted-projects__card footer{height:82px;flex:none;padding:16px;display:flex;justify-content:space-between;border-top:1px solid #998d96;background:#4242f6;color:#fff}.enacted-projects__card footer>div{display:flex;flex-direction:column;gap:10px}.enacted-projects__card footer p{height:24px;display:flex;align-items:center;gap:10px;font-size:18px;line-height:24px}.enacted-projects__card footer p img{width:24px;height:24px}.enacted-projects__card footer small{font-size:12px;line-height:16px;opacity:.66}.enacted-projects__card footer>span{align-self:center;font:32px/1 Arial}.enacted-projects__card--featured footer{background:#4242f6}@media(max-width:767px){.enacted-projects{height:auto;min-height:908px}.enacted-projects__header{width:100%;height:auto;padding:0 24px}.enacted-projects h2{font-size:28px;line-height:28px}.enacted-projects__card{width:336px}.enacted-projects__track{gap:24px}.enacted-projects__viewport{overflow:visible}}
+</style>
+
+<style>
+    .enacted-projects__card footer { background: transparent; color: #0b0f5e; }
+    .enacted-projects__card footer p { color: #4242f6; }
+    .enacted-projects__card footer > span { opacity: 0; }
+    .enacted-projects__card--desfavorável footer { background: #4242f6; color: #fff; }
+    .enacted-projects__card--desfavorável footer p { color: #fff; }
+    .enacted-projects__card--desfavorável footer p img { filter: brightness(0) invert(1); }
+    .enacted-projects__card--desfavorável footer > span { opacity: 1; }
+    .enacted-projects__law-icon { display: block; position: relative; width: 24px; height: 24px; flex: none; }
+    .enacted-projects__law-icon img { position: absolute; top: 2px; left: 4px; width: 16px !important; height: 20px !important; }
+    .enacted-projects__card--desfavorável .enacted-projects__law-icon img { filter: brightness(0) invert(1); }
+</style>

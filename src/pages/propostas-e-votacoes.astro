@@ -1,10 +1,10 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import RedesignLayout from "../components/redesign/RedesignLayout.astro";
 import Share from "../components/Share.astro";
 import { legislaturasKeys } from "../lib/dados";
 ---
 
-<BaseLayout title="Propostas">
+<RedesignLayout title="Propostas">
     <main>
         <header class="abertura-propostas-votacoes tw:min-h-[50vh]!">
             <Share />
@@ -265,4 +265,4 @@ import { legislaturasKeys } from "../lib/dados";
             </div>
         </article>
     </main>
-</BaseLayout>
+</RedesignLayout>

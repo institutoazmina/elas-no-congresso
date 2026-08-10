@@ -1,12 +1,12 @@
 ---
 import { Image } from 'astro:assets';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import RedesignLayout from '../components/redesign/RedesignLayout.astro';
 import Share from '../components/Share.astro';
 import Participantes from '../components/Participantes.astro';
 import quiteriaLogo from '../assets/images/quiteria/logo.webp';
 import quiteriaFluxo from '../assets/images/quiteria/fluxo.webp';
 ---
-<BaseLayout title="QuitérIA">
+<RedesignLayout title="QuitérIA">
 <main class="pagina-quiteria">
     <header class="abertura-quiteria">
         <Share title="QuitérIA" />
@@ -305,4 +305,4 @@ import quiteriaFluxo from '../assets/images/quiteria/fluxo.webp';
         </div>
     </article>
 </main>
-</BaseLayout>
+</RedesignLayout>

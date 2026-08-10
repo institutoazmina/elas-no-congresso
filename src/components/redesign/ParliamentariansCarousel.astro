@@ -1,0 +1,120 @@
+---
+import card from "../../assets/images/redesign/parliamentarians/samia-bomfim-card.png";
+import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
+import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
+
+const items = Array.from({ length: 15 }, (_, index) => index);
+---
+
+<section class="parliamentarians" aria-labelledby="parliamentarians-title" data-parliamentarians>
+    <header class="parliamentarians__header">
+        <span class="parliamentarians__attention" aria-hidden="true"></span>
+        <h2 id="parliamentarians-title">Lorem ipsum dolor sit</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+    </header>
+
+    <div class="parliamentarians__figure" aria-label="Carrossel de parlamentares">
+        <div class="parliamentarians__carousel">
+            <div class="parliamentarians__controls">
+                <button type="button" aria-label="Parlamentar anterior" data-previous><img src={arrowBack.src} alt="" /></button>
+                <button type="button" aria-label="Próximo parlamentar" data-next><img src={arrowForward.src} alt="" /></button>
+            </div>
+            <div class="parliamentarians__viewport">
+                <div class="parliamentarians__track" data-track>
+                    {items.map((item) => <article class:list={["parliamentarians__card", { "parliamentarians__card--active": item === 7 }]} aria-label="Perfil de Sâmia Bomfim" aria-hidden={item === 7 ? undefined : "true"}>
+                        <img src={card.src} alt="" />
+                        <span class="parliamentarians__hole" aria-hidden="true"></span>
+                        <div class="parliamentarians__text-layer">
+                            <span class="t t--tag">Câmara dos Deputados</span>
+                            <span class="t t--name">Sâmia Bomfim</span>
+                            <span class="t t--party">PSOL/SP</span>
+                            <span class="t t--label t--unfavorable">Desfavorável</span>
+                            <span class="t t--count t--unfavorable-count">1 proposição</span>
+                            <span class="t t--label t--favorable">Favorável</span>
+                            <span class="t t--count t--favorable-count">12 proposições</span>
+                            <span class="t t--detail t--birth-label">Nascimento</span><span class="t t--detail t--birth-value">22/08/1989</span>
+                            <span class="t t--detail t--profession-label">Profissões</span><span class="t t--detail t--profession-value">Servidora pública</span>
+                            <span class="t t--detail t--education-label">Escolaridade</span><span class="t t--detail t--education-value">Superior</span>
+                            <span class="t t--detail t--race-label">Cor/Raça</span><span class="t t--detail t--race-value">Branca</span>
+                            <span class="t t--detail t--religion-label">Religião</span><span class="t t--detail t--religion-value">Indisponível</span>
+                        </div>
+                    </article>)}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll<HTMLElement>("[data-parliamentarians]").forEach((carousel) => {
+        const track = carousel.querySelector<HTMLElement>("[data-track]");
+        const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
+        const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
+        if (!track || !previous || !next) return;
+
+        const cards = Array.from(track.querySelectorAll<HTMLElement>(".parliamentarians__card"));
+        let active = 7;
+        let resetting = false;
+        const update = () => {
+            track.style.transform = `translateX(${528 - active * 432}px)`;
+            cards.forEach((card, index) => {
+                const isActive = index === active;
+                card.classList.toggle("parliamentarians__card--active", isActive);
+                card.setAttribute("aria-hidden", String(!isActive));
+            });
+        };
+        const move = (direction: number) => { if (!resetting) { active += direction; update(); } };
+        track.addEventListener("transitionend", (event) => {
+            if (event.propertyName !== "transform" || (active > 4 && active < 10)) return;
+            resetting = true;
+            active += active < 5 ? 5 : -5;
+            track.style.transition = "none";
+            update();
+            requestAnimationFrame(() => requestAnimationFrame(() => { track.style.transition = ""; resetting = false; }));
+        });
+        previous.addEventListener("click", () => move(-1));
+        next.addEventListener("click", () => move(1));
+    });
+</script>
+
+<style>
+    .parliamentarians { height: 993.8869018554688px; margin-top: 48px; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; overflow: hidden; }
+    .parliamentarians *, .parliamentarians *::before, .parliamentarians *::after { box-sizing: border-box; }
+    .parliamentarians__header { width: 816px; height: 84px; margin: 48px auto 10px; padding: 0 48px; display: flex; flex-direction: column; gap: 16px; }
+    .parliamentarians__attention { display: block; width: 96px; height: 4px; flex: none; background: #0b0f5e; }
+    .parliamentarians h2, .parliamentarians p { margin: 0; }
+    .parliamentarians h2 { height: 24px; font-family: "ETC Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 42px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .parliamentarians__header p { height: 24px; font-size: 18px; line-height: 24px; }
+    .parliamentarians__figure { height: 803.8869018554688px; padding: 24px 0; overflow: hidden; }
+    .parliamentarians__carousel { position: relative; height: 755.8869018554688px; padding: 48px; overflow: hidden; }
+    .parliamentarians__controls { position: absolute; z-index: 2; top: 48px; left: calc(50% - 58px); display: flex; gap: 4px; }
+    .parliamentarians__controls button { display: grid; width: 56px; height: 40px; padding: 8px 16px; place-items: center; border: 2px solid #4242f6; border-radius: 0; background: #fff; cursor: pointer; }
+    .parliamentarians__controls img { display: block; width: 24px; height: 24px; }
+    .parliamentarians__controls button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+    .parliamentarians__viewport { position: absolute; top: 112px; left: 0; width: 100%; height: 595.8869018554688px; overflow: hidden; }
+    .parliamentarians__track { display: flex; width: max-content; gap: 48px; transform: translateX(-2496px); transition: transform .2s ease; }
+    .parliamentarians__card { position: relative; width: 384px; height: 595.8869018554688px; flex: none; border-radius: 24px; overflow: hidden; }
+    .parliamentarians__card img { display: block; width: 384px; height: 595.8869018554688px; }
+    .parliamentarians__hole { position: absolute; top: 23.20703125px; left: 143px; width: 98px; height: 18px; border: 1px solid #998d96; border-radius: 999px; background: #fff; }
+    .parliamentarians__text-layer { position: absolute; inset: 0; pointer-events: none; }
+    .parliamentarians__text-layer .t { position: absolute; display: block; margin: 0; white-space: nowrap; letter-spacing: 0; }
+    .parliamentarians__text-layer .t:not(.t--tag) { background: #fff; }
+    .t--tag { top: 69px; left: 68px; width: 184px; height: 24px; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .t--name, .t--party { left: 162px; height: 24px; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; font-size: 18px; line-height: 24px; }
+    .t--name { top: 206px; width: 190px; font-weight: 400; text-align: left; }
+    .t--party { top: 240px; width: 82px; font-weight: 700; text-align: right; }
+    .t--label, .t--count { height: 24px; color: #0b0f5e; font-family: "ETC Anybody", sans-serif; font-size: 18px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .t--label { text-align: center; }
+    .t--count { text-align: left; }
+    .t--unfavorable { top: 310.9716796875px; left: 104.3079833984375px; width: 96px; }
+    .t--unfavorable-count { top: 310.9716796875px; left: 258px; width: 94px; }
+    .t--favorable { top: 380.9150390625px; left: 104.3079833984375px; width: 71px; }
+    .t--favorable-count { top: 380.9150390625px; left: 243px; width: 109px; }
+    .t--detail { height: 16px; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; font-size: 14px; font-weight: 400; line-height: 16px; }
+    .t--birth-label { top: 443.88671875px; left: 32px; width: 241px; }.t--birth-value { top: 443.88671875px; left: 273px; width: 79px; text-align: right; }
+    .t--profession-label { top: 469.88671875px; left: 32px; width: 204px; }.t--profession-value { top: 469.88671875px; left: 236px; width: 116px; text-align: right; }
+    .t--education-label { top: 495.88671875px; left: 32px; width: 263px; }.t--education-value { top: 495.88671875px; left: 295px; width: 57px; text-align: right; }
+    .t--race-label { top: 521.88671875px; left: 32px; width: 273px; }.t--race-value { top: 521.88671875px; left: 305px; width: 47px; text-align: right; }
+    .t--religion-label { top: 547.88671875px; left: 32px; width: 240px; }.t--religion-value { top: 547.88671875px; left: 272px; width: 80px; color: #998d96; text-align: right; }
+    .parliamentarians__card--active { z-index: 1; box-shadow: -4px 4px 0 #0b0f5e; }
+</style>

@@ -1,0 +1,319 @@
+---
+import azmLogo from "./assets/azm.svg?url";
+import HighlighterMarks from "./HighlighterMarks.astro";
+import "../../styles/redesign-shared-background.css";
+
+const links = [
+    { href: "/propostas-e-votacoes", label: "Atividade legislativa" },
+    { href: "/alertas", label: "Alertas" },
+    { href: "/quiteria", label: "IA feminista" },
+    { href: "/reportagens", label: "Reportagens" },
+    { href: "/metodologia", label: "Sobre" },
+];
+---
+
+<header class="redesign-header redesign-shared-background" transition:persist="redesign-header">
+    <nav
+        class="redesign-header__content container-fluid wrap tw:!max-w-screen"
+        aria-label="Navegação principal"
+    >
+        <a
+            href="/"
+            class="redesign-header__brand logo-header"
+            data-highlighter-target
+            data-highlighter-routes="/"
+            aria-label="Elas no Congresso"
+        ></a>
+
+        <div class="redesign-header__desktop-links">
+            {
+                links.map((link) => (
+                    <a
+                        href={link.href}
+                        class="ff1"
+                        data-highlighter-target
+                        data-highlighter-routes={link.href}
+                    >
+                        {link.label}
+                    </a>
+                ))
+            }
+        </div>
+
+        <a
+            class="redesign-header__azm"
+            href="https://azmina.com.br/"
+            aria-label="Revista AzMina"
+        >
+            <img src={azmLogo} alt="" />
+        </a>
+
+        <HighlighterMarks />
+
+        <details class="redesign-header__mobile-menu">
+            <summary aria-label="Abrir menu">
+                <span></span><span></span><span></span>
+            </summary>
+            <div class="redesign-header__mobile-panel">
+                {
+                links.map((link) => (
+                    <a
+                        href={link.href}
+                        class="ff1"
+                        data-highlighter-target
+                        data-highlighter-routes={link.href}
+                    >
+                        {link.label}
+                    </a>
+                    ))
+                }
+            </div>
+        </details>
+    </nav>
+</header>
+
+<style>
+    .redesign-header {
+        color: #0b0f5e;
+        min-height: 104px;
+    }
+
+    .redesign-header__content {
+        align-items: center;
+        display: flex;
+        gap: 32px;
+        justify-content: space-between;
+        margin: 0 auto;
+        min-height: 104px;
+        padding: 0 48px;
+        position: relative;
+    }
+
+    .redesign-header__content > :not(.highlighter-marks) {
+        position: relative;
+        z-index: 1;
+    }
+
+    .redesign-header__brand {
+        background-color: #0b0f5e;
+        background-image: none;
+        flex: 0 0 auto;
+        height: 25px;
+        width: 230px;
+        -webkit-mask: url("/assets/images/logo-header.svg") center / contain no-repeat;
+        mask: url("/assets/images/logo-header.svg") center / contain no-repeat;
+    }
+
+    .redesign-header__desktop-links {
+        align-items: center;
+        display: flex;
+        gap: 40px;
+        margin-left: auto;
+    }
+
+    .redesign-header__desktop-links a,
+    .redesign-header__mobile-panel a {
+        color: inherit;
+        font-family: "ETC Anybody", sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        font-variation-settings: "wdth" 75;
+        letter-spacing: 0;
+        line-height: 24px;
+        text-decoration: none;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .redesign-header__azm {
+        flex: 0 0 auto;
+    }
+
+    .redesign-header__azm img {
+        display: block;
+        height: auto;
+        width: 64px;
+    }
+
+    .redesign-header__mobile-menu {
+        display: none;
+    }
+
+    @media (max-width: 1050px) {
+        .redesign-header__content {
+            padding: 0 24px;
+        }
+
+        .redesign-header__desktop-links {
+            gap: 22px;
+        }
+
+        .redesign-header__desktop-links a {
+            font-size: 16px;
+        }
+    }
+
+    @media (max-width: 820px) {
+        .redesign-header {
+            min-height: 72px;
+        }
+
+        .redesign-header__content {
+            min-height: 72px;
+        }
+
+        .redesign-header__brand {
+            width: 190px;
+        }
+
+        .redesign-header__desktop-links,
+        .redesign-header__azm {
+            display: none;
+        }
+
+        .redesign-header__mobile-menu {
+            display: block;
+            position: relative;
+        }
+
+        .redesign-header__mobile-menu summary {
+            cursor: pointer;
+            display: grid;
+            gap: 5px;
+            list-style: none;
+            padding: 12px 0 12px 12px;
+        }
+
+        .redesign-header__mobile-menu summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .redesign-header__mobile-menu summary span {
+            background: currentColor;
+            display: block;
+            height: 2px;
+            width: 28px;
+        }
+
+        .redesign-header__mobile-panel {
+            background: #ffffff;
+            border-top: 4px solid #def279;
+            box-shadow: 0 12px 20px rgba(11, 15, 94, 0.16);
+            display: grid;
+            gap: 20px;
+            padding: 24px;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 8px);
+            width: min(320px, calc(100vw - 48px));
+            z-index: 10;
+        }
+
+        .redesign-header__mobile-panel a {
+            position: relative;
+            z-index: 12;
+        }
+    }
+</style>
+
+<script>
+    const updateHighlighter = () => {
+        const nav = document.querySelector(".redesign-header__content");
+        const highlighter = nav?.querySelector(".highlighter-marks");
+
+        if (!nav || !highlighter) return;
+
+        const currentPath = (window.location.pathname.replace(/\/+$/, "") || "/");
+        const isMobile = window.matchMedia("(max-width: 820px)").matches;
+        const target = isMobile
+            ? nav.querySelector(".redesign-header__brand")
+            : [...nav.querySelectorAll("[data-highlighter-target]")].find(
+                (element) => {
+                    const styles = window.getComputedStyle(element);
+                    const routes = element.dataset.highlighterRoutes?.split(",") ?? [];
+                    return (
+                        routes.includes(currentPath) &&
+                        styles.display !== "none" &&
+                        element.getClientRects().length > 0
+                    );
+                },
+            );
+
+        if (!target) {
+            highlighter.hidden = true;
+            return;
+        }
+
+        const navBounds = nav.getBoundingClientRect();
+        const targetBounds = target.getBoundingClientRect();
+        const horizontalPadding = 16;
+        const isBrandTarget = target.classList.contains("redesign-header__brand");
+        const highlighterWidth = isBrandTarget
+            ? 217
+            : targetBounds.width + horizontalPadding * 2;
+        const highlighterLeft = isBrandTarget
+            ? targetBounds.left - navBounds.left + (targetBounds.width - highlighterWidth) / 2
+            : targetBounds.left - navBounds.left - horizontalPadding;
+
+        highlighter.style.setProperty(
+            "--highlighter-left",
+            `${highlighterLeft}px`,
+        );
+        highlighter.style.setProperty(
+            "--highlighter-top",
+            `${targetBounds.top - navBounds.top + targetBounds.height / 2}px`,
+        );
+        highlighter.style.setProperty(
+            "--highlighter-width",
+            `${highlighterWidth}px`,
+        );
+        highlighter.style.setProperty(
+            "--highlighter-z-index",
+            target.closest(".redesign-header__mobile-panel") ? "11" : "0",
+        );
+        highlighter.hidden = false;
+    };
+
+    const scheduleHighlighterUpdate = () => {
+        window.requestAnimationFrame(updateHighlighter);
+    };
+
+    const bindMobileMenu = () => {
+        const mobileMenu = document.querySelector(
+            ".redesign-header__mobile-menu",
+        );
+
+        if (!mobileMenu || mobileMenu.dataset.highlighterBound) return;
+
+        mobileMenu.dataset.highlighterBound = "true";
+        mobileMenu.addEventListener("toggle", scheduleHighlighterUpdate);
+    };
+
+    const bindHighlighterLayoutObserver = () => {
+        const nav = document.querySelector(".redesign-header__content");
+
+        if (!nav || nav.dataset.highlighterLayoutBound) return;
+
+        nav.dataset.highlighterLayoutBound = "true";
+
+        const observer = new ResizeObserver(scheduleHighlighterUpdate);
+        observer.observe(nav);
+        nav.querySelectorAll("[data-highlighter-target]").forEach((target) => {
+            observer.observe(target);
+        });
+
+        document.fonts?.ready.then(scheduleHighlighterUpdate);
+    };
+
+    const refreshHighlighter = () => {
+        bindMobileMenu();
+        bindHighlighterLayoutObserver();
+        scheduleHighlighterUpdate();
+    };
+
+    refreshHighlighter();
+    window.addEventListener("resize", scheduleHighlighterUpdate);
+    window.addEventListener("popstate", scheduleHighlighterUpdate);
+    document.addEventListener("astro:after-swap", refreshHighlighter);
+    document.addEventListener("astro:page-load", refreshHighlighter);
+</script>

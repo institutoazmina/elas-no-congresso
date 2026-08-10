@@ -1,0 +1,68 @@
+---
+/**
+ * Botão que alterna a visão entre proposições desfavoráveis e favoráveis.
+ *
+ * Site é estático: quem usa este botão renderiza AS DUAS visões marcadas com
+ * `data-stance-view` e deixa o CSS mostrar a ativa. O botão só troca o
+ * `data-stance` do ancestral mais próximo que tiver esse atributo.
+ *
+ * O tamanho da fonte acompanha o contexto via `--stance-toggle-font-size`.
+ */
+import thumbBase from "../../assets/images/redesign/party-chart/thumbs-down-base.svg";
+import thumb from "../../assets/images/redesign/party-chart/thumbs-down.svg";
+import thumbsUp from "./assets/thumbs-up.svg";
+import chevron from "../../assets/images/redesign/party-chart/chevron.svg";
+import type { Stance } from "../../service/api/stats";
+
+interface Props {
+    /** texto exibido em cada estado, ex.: `{ unfavorable: "Atacado", favorable: "Defendido" }` */
+    labels: Record<Stance, string>;
+}
+
+const { labels } = Astro.props;
+const stances: Stance[] = ["unfavorable", "favorable"];
+---
+
+<button
+    class="stance-toggle"
+    type="button"
+    data-stance-toggle
+    data-label-unfavorable={labels.unfavorable}
+    data-label-favorable={labels.favorable}
+    aria-label={`Filtro: ${labels.unfavorable}. Trocar para ${labels.favorable}`}
+>
+    {/* O favorável já vem pronto num único SVG; o desfavorável ainda é composto. */}
+    <span class="stance-toggle__thumb" data-stance-view="unfavorable">
+        <img src={thumbBase.src} alt="" /><img src={thumb.src} alt="" />
+    </span>
+    <img class="stance-toggle__thumb" src={thumbsUp.src} alt="" data-stance-view="favorable" />
+    {stances.map((stance) => <span data-stance-view={stance}>{labels[stance]}</span>)}
+    <img class="stance-toggle__chevron" src={chevron.src} alt="" />
+</button>
+
+<style>
+    .stance-toggle { display: flex; height: 56px; align-items: center; justify-content: center; gap: 8px; border: 2px solid #4242f6; padding: 12px 16px; background: #fff; color: #4242f6; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: var(--stance-toggle-font-size, 28px); font-weight: 700; line-height: 32px; text-transform: uppercase; font-variation-settings: "wdth" 75; cursor: pointer; }
+    .stance-toggle__thumb { position: relative; display: block; width: 32px; height: 32px; flex: none; overflow: hidden; border-radius: 999px; }
+    .stance-toggle__thumb > img:first-child { position: absolute; inset: 0; width: 32px; height: 32px; }
+    .stance-toggle__thumb > img:last-child { position: absolute; inset: 4.44px 4px 3.56px; width: 24px; height: 24px; transform: rotate(180deg); }
+    .stance-toggle__chevron { width: 16px; height: 8px; margin-left: 8px; }
+    /* O ancestral que carrega o estado fica fora deste componente, daí o :global. */
+    :global([data-stance="unfavorable"]) [data-stance-view="favorable"],
+    :global([data-stance="favorable"]) [data-stance-view="unfavorable"] { display: none; }
+</style>
+
+<script>
+    // Um listener por botão: a página pode ter mais de um gráfico com filtro.
+    document.querySelectorAll<HTMLButtonElement>("[data-stance-toggle]").forEach((toggle) => {
+        const scope = toggle.closest<HTMLElement>("[data-stance]");
+        if (!scope) return;
+
+        toggle.addEventListener("click", () => {
+            const next = scope.dataset.stance === "unfavorable" ? "favorable" : "unfavorable";
+            const current = toggle.dataset[next === "unfavorable" ? "labelUnfavorable" : "labelFavorable"];
+            const other = toggle.dataset[next === "unfavorable" ? "labelFavorable" : "labelUnfavorable"];
+            scope.dataset.stance = next;
+            toggle.setAttribute("aria-label", `Filtro: ${current}. Trocar para ${other}`);
+        });
+    });
+</script>

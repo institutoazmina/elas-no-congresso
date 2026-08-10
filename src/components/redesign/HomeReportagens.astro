@@ -1,0 +1,59 @@
+---
+import feminicidiosThumbnail from "../../assets/images/redesign/home-reportagens/miniatura-feminicidios.png";
+import racaThumbnail from "../../assets/images/redesign/home-reportagens/miniatura-raca.png";
+import chevronRight from "../../assets/images/redesign/home-reportagens/chevron-right.svg";
+import cuttingMatPattern from "../../assets/images/redesign/home-reportagens/bg-pattern-cutting-mat.svg";
+
+const reports = [
+    {
+        title: "Brasil é 5º em feminicídios enquanto antifeminismo cresce no Congresso",
+        image: feminicidiosThumbnail,
+        alt: "Ilustração da reportagem sobre feminicídios e antifeminismo no Congresso",
+    },
+    {
+        title: "Raça é tema escanteado em proposições sobre gênero",
+        image: racaThumbnail,
+        alt: "Ilustração da reportagem sobre raça e proposições de gênero",
+    },
+    {
+        title: "Brasil é 5º em feminicídios enquanto antifeminismo cresce no Congresso",
+        image: feminicidiosThumbnail,
+        alt: "Ilustração da reportagem sobre feminicídios e antifeminismo no Congresso",
+    },
+];
+---
+
+<section class="tw:overflow-hidden tw:bg-[#0B0F5E] tw:py-12 tw:text-white tw:lg:h-[694px] tw:lg:py-24" style={`background-image: url('${cuttingMatPattern.src}'); background-position: center top; background-repeat: repeat; background-size: 200px 200px;`} aria-labelledby="home-reportagens-title">
+    <header class="tw:mx-auto tw:flex tw:w-full tw:max-w-[720px] tw:flex-col tw:items-center tw:px-6 tw:text-center tw:lg:h-[62px] tw:lg:px-0">
+        <h2 id="home-reportagens-title" class="tw:m-0 tw:font-[ETC_Anybody] tw:text-[32px] tw:font-bold tw:leading-8 tw:uppercase tw:[font-variation-settings:'wdth'_75]">
+            Reportagens
+        </h2>
+        <p class="tw:m-0 tw:mt-[6px] tw:font-[Plus_Jakarta_Sans] tw:text-[18px] tw:font-normal tw:leading-6">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit
+        </p>
+    </header>
+
+    <div class="tw:mt-10 tw:overflow-hidden tw:px-6 tw:lg:mt-2.5 tw:lg:h-[430px] tw:lg:px-12 tw:lg:pt-12" aria-label="Lista de reportagens em destaque">
+        <div class="tw:flex tw:w-full tw:justify-center-safe tw:gap-12 tw:pb-2 tw:lg:pb-0">
+            {reports.map((report) => (
+                <article class="tw:flex tw:w-[min(384px,calc(100vw-48px))] tw:shrink-0 tw:flex-col tw:gap-4 tw:lg:h-[382px] tw:lg:w-96">
+                    <figure class="tw:m-0 tw:w-full tw:border-2 tw:border-[#4242F6]">
+                        <img class="tw:block tw:aspect-[384/216] tw:w-full tw:object-cover" src={report.image.src} alt={report.alt} loading="lazy" decoding="async" />
+                    </figure>
+                    <h3 class="tw:m-0 tw:h-16 tw:font-[ETC_Anybody] tw:text-[24px] tw:font-bold tw:leading-8 tw:uppercase tw:[font-variation-settings:'wdth'_75]">
+                        {report.title}
+                    </h3>
+                    <div class="tw:flex tw:h-[70px] tw:flex-col tw:items-start tw:gap-4">
+                        <a class="tw:flex tw:h-[38px] tw:items-center tw:gap-2 tw:bg-[#4242F6] tw:pb-1.5 tw:pl-[14px] tw:pr-3 tw:pt-2 tw:font-[ETC_Anybody] tw:text-[18px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]" href="/reportagens">
+                            <span>Ler reportagem</span>
+                            <span class="tw:flex tw:h-6 tw:w-3 tw:items-center tw:justify-end" aria-hidden="true">
+                                <img class="tw:h-[6px] tw:w-3 tw:rotate-[-90deg]" src={chevronRight.src} alt="" />
+                            </span>
+                        </a>
+                        <time class="tw:font-[Plus_Jakarta_Sans] tw:text-[14px] tw:font-normal tw:leading-4">Atualizada em 20 de julho de 2026</time>
+                    </div>
+                </article>
+            ))}
+        </div>
+    </div>
+</section>
