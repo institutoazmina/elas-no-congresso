@@ -1,16 +1,19 @@
 ---
 import attention from "../../assets/images/redesign/party-chart/attention.svg";
 import documentImage from "../../assets/images/redesign/hero/proposicao-9.png";
-import roughPaper from "../../assets/images/redesign/background/bg-pattern-rough-paper.png";
+import backgroundPattern from "../../assets/images/redesign/parliamentarians/bg-pattern.svg";
+import halftoneShadow from "../../assets/images/redesign/hero/halftone-shadow.png";
 import favorableThumb from "../../assets/images/redesign/slow-moving-proposals/thumbs-up-hand.svg";
+import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
+import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
 
 const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 }));
 ---
 
-<section class="slow-moving-proposals" aria-labelledby="slow-moving-proposals-title">
+<section class="slow-moving-proposals" aria-labelledby="slow-moving-proposals-title" style={`--slow-moving-proposals-background: url(${backgroundPattern.src}); --slow-moving-proposals-halftone-shadow: url(${halftoneShadow.src})`}>
     <header class="slow-moving-proposals__header"><img src={attention.src} alt="" /><h2 id="slow-moving-proposals-title">E o que é bom pra gente, mas<br />tá indo beeeem devagar:</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></header>
     <div class="slow-moving-proposals__carousel" data-slow-carousel>
-        <div class="slow-moving-proposals__controls"><button type="button" aria-label="Proposição anterior" data-previous>‹</button><button type="button" aria-label="Próxima proposição" data-next>›</button></div>
+        <div class="slow-moving-proposals__controls"><button type="button" aria-label="Proposição anterior" data-previous><img src={arrowBack.src} alt="" /></button><button type="button" aria-label="Próxima proposição" data-next><img src={arrowForward.src} alt="" /></button></div>
         <div class="slow-moving-proposals__viewport"><div class="slow-moving-proposals__track" data-track>
             {cards.map((card) => <article class:list={["slow-moving-proposals__card", { "slow-moving-proposals__card--featured": card.featured }]} aria-hidden={card.id === 7 ? undefined : "true"}>
                 <header class="slow-moving-proposals__card-header"><strong>PDL 176/2021</strong><span class="slow-moving-proposals__status"><img class="slow-moving-proposals__document" src={documentImage.src} alt="" /><span class="slow-moving-proposals__thumbs"><img class="slow-moving-proposals__thumb" src={favorableThumb.src} alt="" /><b>Favorável</b></span></span></header>
@@ -28,7 +31,7 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
         carousel.dataset.slowCarouselInitialized = "true";
         const track = carousel.querySelector<HTMLElement>("[data-track]"); const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]"); const next = carousel.querySelector<HTMLButtonElement>("[data-next]"); if (!track || !previous || !next) return;
         const cards = Array.from(track.querySelectorAll<HTMLElement>(".slow-moving-proposals__card")); let physical = 7; let resetting = false;
-        const update = () => { track.style.transform = `translateX(${528 - physical * 432}px)`; cards.forEach((card, index) => { const active=index===physical; card.classList.toggle("slow-moving-proposals__card--featured",active); card.setAttribute("aria-hidden",String(!active)); }); };
+        const update = () => { track.style.transform = `translateX(${-192 - physical * 432}px)`; cards.forEach((card, index) => { const active=index===physical; card.classList.toggle("slow-moving-proposals__card--featured",active); card.setAttribute("aria-hidden",String(!active)); }); };
         const move=(direction:number)=>{ if(!resetting){ physical+=direction; update(); } };
         track.addEventListener("transitionend",(event)=>{ if(event.propertyName!=="transform" || physical>4&&physical<10)return; resetting=true; physical+=physical<5?5:-5; track.style.transition="none"; update(); requestAnimationFrame(()=>requestAnimationFrame(()=>{track.style.transition="";resetting=false;})); });
         previous.addEventListener("click",()=>move(-1)); next.addEventListener("click",()=>move(1));
@@ -44,7 +47,15 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
 </style>
 
 <style>
-    .slow-moving-proposals__carousel { background-image: none; }
+    .slow-moving-proposals__carousel { background-color: #fff; background-image: var(--slow-moving-proposals-background); background-position: left top; background-repeat: repeat; background-size: 400px 400px; }
+    .slow-moving-proposals__carousel::before, .slow-moving-proposals__carousel::after { position: absolute; z-index: 1; display: block; width: 100%; height: 24px; background-image: var(--slow-moving-proposals-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; content: ""; pointer-events: none; mix-blend-mode: multiply; }
+    .slow-moving-proposals__carousel::before { top: 0; left: 0; transform: scaleY(-1); }
+    .slow-moving-proposals__carousel::after { right: 0; bottom: 0; }
+    .slow-moving-proposals__controls { z-index: 3; }
+    .slow-moving-proposals__viewport { z-index: 2; }
+    .slow-moving-proposals__controls button { display: grid; width: 56px; height: 40px; padding: 8px 16px; place-items: center; border: 2px solid #4242f6; border-radius: 0; background: #fff; }
+    .slow-moving-proposals__controls img { display: block; width: 24px; height: 24px; }
+    .slow-moving-proposals__track { position: relative; left: 50%; transform: translateX(-3216px); }
     .slow-moving-proposals__content { overflow: hidden; }
     .slow-moving-proposals__thumbs { position: absolute; top: 10.971768379211426px; left: 32.307952880859375px; width: 111px; height: 32px; }
     .slow-moving-proposals__thumb { top: 0; left: 0; }

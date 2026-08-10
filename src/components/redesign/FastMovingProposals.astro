@@ -1,14 +1,17 @@
 ---
 import attention from "../../assets/images/redesign/party-chart/attention.svg";
 import documentImage from "../../assets/images/redesign/hero/proposicao-9.png";
-import roughPaper from "../../assets/images/redesign/background/bg-pattern-rough-paper.png";
+import backgroundPattern from "../../assets/images/redesign/parliamentarians/bg-pattern.svg";
+import halftoneShadow from "../../assets/images/redesign/hero/halftone-shadow.png";
 import thumbBase from "../../assets/images/redesign/party-chart/thumbs-down-base.svg";
 import thumb from "../../assets/images/redesign/party-chart/thumbs-down.svg";
+import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
+import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
 
 const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, featured: index === 7 }));
 ---
 
-<section class="fast-moving-proposals" aria-labelledby="fast-moving-proposals-title">
+<section class="fast-moving-proposals" aria-labelledby="fast-moving-proposals-title" style={`--fast-moving-proposals-background: url(${backgroundPattern.src}); --fast-moving-proposals-halftone-shadow: url(${halftoneShadow.src})`}>
     <header class="fast-moving-proposals__header">
         <img src={attention.src} alt="" />
         <h2 id="fast-moving-proposals-title">Veja o que restringe nossos direitos<br />e tá tramitando rapidinho</h2>
@@ -16,8 +19,8 @@ const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, fea
     </header>
     <div class="fast-moving-proposals__carousel" data-carousel>
         <div class="fast-moving-proposals__controls">
-            <button type="button" aria-label="Proposição anterior" data-previous>‹</button>
-            <button type="button" aria-label="Próxima proposição" data-next>›</button>
+            <button type="button" aria-label="Proposição anterior" data-previous><img src={arrowBack.src} alt="" /></button>
+            <button type="button" aria-label="Próxima proposição" data-next><img src={arrowForward.src} alt="" /></button>
         </div>
         <div class="fast-moving-proposals__viewport">
             <div class="fast-moving-proposals__track" data-track>
@@ -53,7 +56,7 @@ const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, fea
         let isResetting = false;
         const cards = Array.from(track.querySelectorAll<HTMLElement>(".fast-moving-proposals__card"));
         const update = () => {
-            track.style.transform = `translateX(${528 - physicalIndex * 432}px)`;
+            track.style.transform = `translateX(${-192 - physicalIndex * 432}px)`;
             cards.forEach((card, cardIndex) => {
                 const isActive = cardIndex === physicalIndex;
                 card.classList.toggle("fast-moving-proposals__card--featured", isActive);
@@ -93,11 +96,15 @@ const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, fea
     .fast-moving-proposals h2, .fast-moving-proposals p { margin: 0; }
     .fast-moving-proposals h2 { width: 720px; height: 66px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 32px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
     .fast-moving-proposals__header p { width: 720px; font-size: 18px; line-height: 24px; }
-    .fast-moving-proposals__carousel { position: relative; width: 100%; height: 541.9435424804688px; margin-top: 34px; overflow: hidden; background-color: #fff; background-image: none; background-position: left top; background-repeat: repeat; background-size: 400px 400px; }
-    .fast-moving-proposals__controls { position: absolute; z-index: 2; top: 48px; left: calc(50% - 58px); display: flex; width: 116px; height: 40px; gap: 4px; }
-    .fast-moving-proposals__controls button { display: grid; width: 56px; height: 40px; place-items: center; border: 2px solid #4242f6; background: #fff; color: #4242f6; font-family: Arial, sans-serif; font-size: 32px; font-weight: 400; line-height: 1; }
-    .fast-moving-proposals__viewport { position: absolute; top: 112px; width: 100%; overflow: hidden; }
-    .fast-moving-proposals__track { display: flex; width: max-content; gap: 48px; transform: translateX(-2496px); transition: transform .2s ease; }
+    .fast-moving-proposals__carousel { position: relative; width: 100%; height: 541.9435424804688px; margin-top: 34px; overflow: hidden; background-color: #fff; background-image: var(--fast-moving-proposals-background); background-position: left top; background-repeat: repeat; background-size: 400px 400px; }
+    .fast-moving-proposals__carousel::before, .fast-moving-proposals__carousel::after { position: absolute; z-index: 1; display: block; width: 100%; height: 24px; background-image: var(--fast-moving-proposals-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; content: ""; pointer-events: none; mix-blend-mode: multiply; }
+    .fast-moving-proposals__carousel::before { top: 0; left: 0; transform: scaleY(-1); }
+    .fast-moving-proposals__carousel::after { bottom: 0; left: 0; }
+    .fast-moving-proposals__controls { position: absolute; z-index: 3; top: 48px; left: calc(50% - 58px); display: flex; width: 116px; height: 40px; gap: 4px; }
+    .fast-moving-proposals__controls button { display: grid; width: 56px; height: 40px; padding: 8px 16px; place-items: center; border: 2px solid #4242f6; border-radius: 0; background: #fff; }
+    .fast-moving-proposals__controls img { display: block; width: 24px; height: 24px; }
+    .fast-moving-proposals__viewport { position: absolute; z-index: 2; top: 112px; width: 100%; overflow: hidden; }
+    .fast-moving-proposals__track { position: relative; left: 50%; display: flex; width: max-content; gap: 48px; transform: translateX(-3216px); transition: transform .2s ease; }
     .fast-moving-proposals__card { display: flex; width: 384px; height: 381.94354248046875px; flex: none; flex-direction: column; overflow: hidden; border: 1px solid #a3a3a3; background: #fff; }
     .fast-moving-proposals__card--featured { border: 1px solid #0b0f5e; box-shadow: -4px 4px 0 #0b0f5e; }
     .fast-moving-proposals__card-header { position: relative; display: flex; height: 69px; align-items: center; justify-content: space-between; border-bottom: 1px solid #a3a3a3; padding: 8px 16px; }
@@ -121,7 +128,7 @@ const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, fea
         .fast-moving-proposals__header { width: 100%; height: 174px; padding: 48px 24px; }
         .fast-moving-proposals h2, .fast-moving-proposals__header p { width: 100%; }
         .fast-moving-proposals h2 { font-size: 28px; line-height: 32px; }
-        .fast-moving-proposals__track { transform: translateX(-2496px); }
+        .fast-moving-proposals__track { transform: translateX(-3216px); }
         .fast-moving-proposals__card { width: 336px; }
     }
 </style>

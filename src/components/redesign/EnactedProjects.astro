@@ -4,7 +4,10 @@ import documentImage from "../../assets/images/redesign/hero/proposicao-9.png";
 import favorableThumb from "../../assets/images/redesign/slow-moving-proposals/thumbs-up-hand.svg";
 import unfavorableThumb from "../../assets/images/redesign/party-chart/thumbs-down.svg";
 import bookIcon from "../../assets/images/redesign/enacted-projects/book.svg";
-import pattern from "../../assets/images/redesign/enacted-projects/carousel-pattern.png";
+import backgroundPattern from "../../assets/images/redesign/parliamentarians/bg-pattern.svg";
+import halftoneShadow from "../../assets/images/redesign/hero/halftone-shadow.png";
+import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
+import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
 
 const sourceCards = [
     { rating: "favorável", proposal: "PDL 176/2021", authors: [["Jandira Feghali", "PCdoB/RJ"], ["Erika Kokay", "PT/DF"], ["Alice Portugal", "PCdoB/BA"]], more: "+7 parlamentares", description: "Susta a Portaria nº 13, de 19 de abril de 2021, que torna pública a decisão de incorporar o implante subdérmico de etonogestrel, condicionada à criação de programa específico, na prevenção da gravidez não planejada para mulheres em idade fértil: em situação de rua; com HIV/AIDS em uso de dolutegravir; em uso de talidomida; privadas de liberdade; trabalhadoras do sexo; e em tratamento de tuberculose em uso de aminoglicosídeos, no âmbito do Sistema Único de Saúde - SUS.." },
@@ -25,10 +28,10 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
     </header>
 
     <div class="enacted-projects__figure" data-enacted-carousel>
-        <div class="enacted-projects__carousel" style="background-image:none" aria-label="Projetos que viraram lei">
+        <div class="enacted-projects__carousel" style={`--enacted-projects-background: url(${backgroundPattern.src}); --enacted-projects-halftone-shadow: url(${halftoneShadow.src}); background-image: url(${backgroundPattern.src})`} aria-label="Projetos que viraram lei">
             <div class="enacted-projects__controls">
-                <button type="button" aria-label="Projeto anterior" data-previous>‹</button>
-                <button type="button" aria-label="Próximo projeto" data-next>›</button>
+                <button type="button" aria-label="Projeto anterior" data-previous><img src={arrowBack.src} alt="" /></button>
+                <button type="button" aria-label="Próximo projeto" data-next><img src={arrowForward.src} alt="" /></button>
             </div>
             <div class="enacted-projects__viewport"><div class="enacted-projects__track" data-track>
                 {cards.map((card) => <article class:list={["enacted-projects__card", `enacted-projects__card--${card.rating}`, { "enacted-projects__card--featured": card.physical === 7 }]} aria-hidden={card.physical === 7 ? undefined : "true"}>
@@ -73,7 +76,7 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
         let physical = 7;
         let resetting = false;
         const update = () => {
-            track.style.transform = `translateX(${528 - physical * 432}px)`;
+            track.style.transform = `translateX(${-192 - physical * 432}px)`;
             cards.forEach((card, index) => { const active = index === physical; card.classList.toggle("enacted-projects__card--featured", active); card.setAttribute("aria-hidden", String(!active)); });
         };
         const move = (direction: number) => { if (!resetting) { physical += direction; update(); } };
@@ -92,6 +95,15 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
 </style>
 
 <style>
+    .enacted-projects__carousel { background-color: #fff; background-image: var(--enacted-projects-background); background-position: left top; background-repeat: repeat; background-size: 400px 400px; }
+    .enacted-projects__carousel::before, .enacted-projects__carousel::after { position: absolute; z-index: 1; display: block; width: 100%; height: 24px; background-image: var(--enacted-projects-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; content: ""; pointer-events: none; mix-blend-mode: multiply; }
+    .enacted-projects__carousel::before { top: 0; left: 0; transform: scaleY(-1); }
+    .enacted-projects__carousel::after { bottom: 0; left: 0; }
+    .enacted-projects__controls { z-index: 3; }
+    .enacted-projects__viewport { z-index: 2; }
+    .enacted-projects__controls button { display: grid; width: 56px; height: 40px; padding: 8px 16px; place-items: center; border: 2px solid #4242f6; border-radius: 0; background: #fff; }
+    .enacted-projects__controls img { display: block; width: 24px; height: 24px; }
+    .enacted-projects__track { position: relative; left: 50%; transform: translateX(-3216px); }
     .enacted-projects__card footer { background: transparent; color: #0b0f5e; }
     .enacted-projects__card footer p { color: #4242f6; }
     .enacted-projects__card footer > span { opacity: 0; }
