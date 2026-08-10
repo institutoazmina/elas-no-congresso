@@ -46,7 +46,10 @@ const items = Array.from({ length: 15 }, (_, index) => index);
 </section>
 
 <script>
+    const initializeParliamentariansCarousel = () => {
     document.querySelectorAll<HTMLElement>("[data-parliamentarians]").forEach((carousel) => {
+        if (carousel.dataset.parliamentariansCarouselInitialized) return;
+        carousel.dataset.parliamentariansCarouselInitialized = "true";
         const track = carousel.querySelector<HTMLElement>("[data-track]");
         const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
         const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
@@ -75,6 +78,10 @@ const items = Array.from({ length: 15 }, (_, index) => index);
         previous.addEventListener("click", () => move(-1));
         next.addEventListener("click", () => move(1));
     });
+    };
+
+    initializeParliamentariansCarousel();
+    document.addEventListener("astro:page-load", initializeParliamentariansCarousel);
 </script>
 
 <style>

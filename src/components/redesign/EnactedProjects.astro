@@ -61,7 +61,10 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
 </section>
 
 <script>
+    const initializeEnactedProjects = () => {
     document.querySelectorAll<HTMLElement>("[data-enacted-carousel]").forEach((carousel) => {
+        if (carousel.dataset.enactedCarouselInitialized) return;
+        carousel.dataset.enactedCarouselInitialized = "true";
         const track = carousel.querySelector<HTMLElement>("[data-track]");
         const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
         const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
@@ -78,6 +81,10 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
         previous.addEventListener("click", () => move(-1));
         next.addEventListener("click", () => move(1));
     });
+    };
+
+    initializeEnactedProjects();
+    document.addEventListener("astro:page-load", initializeEnactedProjects);
 </script>
 
 <style>

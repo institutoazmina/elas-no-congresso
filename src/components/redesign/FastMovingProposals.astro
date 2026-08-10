@@ -41,7 +41,10 @@ const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, fea
 </section>
 
 <script>
+    const initializeFastMovingProposals = () => {
     document.querySelectorAll<HTMLElement>("[data-carousel]").forEach((carousel) => {
+        if (carousel.dataset.carouselInitialized) return;
+        carousel.dataset.carouselInitialized = "true";
         const track = carousel.querySelector<HTMLElement>("[data-track]");
         const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
         const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
@@ -76,6 +79,10 @@ const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, fea
         previous.addEventListener("click", () => move(-1));
         next.addEventListener("click", () => move(1));
     });
+    };
+
+    initializeFastMovingProposals();
+    document.addEventListener("astro:page-load", initializeFastMovingProposals);
 </script>
 
 <style>

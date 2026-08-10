@@ -29,7 +29,14 @@ const { width, height } = papeladaSize(options);
 <script>
     import { papelada } from "../../lib/papelada";
 
+    const initializePapelada = () => {
     for (const canvas of document.querySelectorAll<HTMLCanvasElement>("canvas[data-papelada]")) {
+        if (canvas.dataset.papeladaInitialized) continue;
+        canvas.dataset.papeladaInitialized = "true";
         papelada(canvas, JSON.parse(canvas.dataset.papelada!)).catch(console.error);
     }
+    };
+
+    initializePapelada();
+    document.addEventListener("astro:page-load", initializePapelada);
 </script>

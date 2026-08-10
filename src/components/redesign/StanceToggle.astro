@@ -53,7 +53,10 @@ const stances: Stance[] = ["unfavorable", "favorable"];
 
 <script>
     // Um listener por botão: a página pode ter mais de um gráfico com filtro.
+    const initializeStanceToggles = () => {
     document.querySelectorAll<HTMLButtonElement>("[data-stance-toggle]").forEach((toggle) => {
+        if (toggle.dataset.stanceToggleInitialized) return;
+        toggle.dataset.stanceToggleInitialized = "true";
         const scope = toggle.closest<HTMLElement>("[data-stance]");
         if (!scope) return;
 
@@ -65,4 +68,8 @@ const stances: Stance[] = ["unfavorable", "favorable"];
             toggle.setAttribute("aria-label", `Filtro: ${current}. Trocar para ${other}`);
         });
     });
+    };
+
+    initializeStanceToggles();
+    document.addEventListener("astro:page-load", initializeStanceToggles);
 </script>

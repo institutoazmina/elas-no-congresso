@@ -94,7 +94,10 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     import { PUBLIC_API_BASE_URL } from "astro:env/client";
     import { buildAst } from "../../../lib/alerts/ast.ts";
 
+    const initializeAlertsEmailModal = () => {
     const dialog = document.querySelector<HTMLDialogElement>(".alerts-email-modal");
+    if (!dialog || dialog.dataset.alertsEmailModalInitialized) return;
+    dialog.dataset.alertsEmailModalInitialized = "true";
     const opener = document.querySelector<HTMLButtonElement>(".alerts-hero__button");
     const close = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__close");
     const form = dialog?.querySelector<HTMLFormElement>(".alerts-email-modal__form");
@@ -330,6 +333,10 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     });
 
     updateSubmitState();
+    };
+
+    initializeAlertsEmailModal();
+    document.addEventListener("astro:page-load", initializeAlertsEmailModal);
 </script>
 
 <style>

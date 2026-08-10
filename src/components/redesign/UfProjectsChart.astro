@@ -150,8 +150,11 @@ const ufLabels: Record<string, string> = {
 </section>
 
 <script define:vars={{ ufData, ufLabels }}>
+    const initializeUfProjectsChart = () => {
     // Mapa e tabela vêm os dois no HTML; a aba só troca qual o CSS mostra.
     const section = document.querySelector(".uf-projects-chart");
+    if (!section || section.dataset.ufProjectsChartInitialized) return;
+    section.dataset.ufProjectsChartInitialized = "true";
     const tabs = section?.querySelectorAll("[data-panel-tab]");
 
     tabs?.forEach((tab) => {
@@ -215,6 +218,10 @@ const ufLabels: Record<string, string> = {
     hitbox?.addEventListener("pointermove", (event) => {
         if (currentUf) positionTooltip(event);
     });
+    };
+
+    initializeUfProjectsChart();
+    document.addEventListener("astro:page-load", initializeUfProjectsChart);
 </script>
 
 <style>
