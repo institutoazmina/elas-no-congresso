@@ -2,11 +2,13 @@
 import card from "../../assets/images/redesign/parliamentarians/samia-bomfim-card.png";
 import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
 import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
+import backgroundPattern from "../../assets/images/redesign/parliamentarians/bg-pattern.svg";
+import halftoneShadow from "../../assets/images/redesign/hero/halftone-shadow.png";
 
 const items = Array.from({ length: 15 }, (_, index) => index);
 ---
 
-<section class="parliamentarians" aria-labelledby="parliamentarians-title" data-parliamentarians>
+<section class="parliamentarians" aria-labelledby="parliamentarians-title" data-parliamentarians style={`--parliamentarians-background: url(${backgroundPattern.src}); --parliamentarians-halftone-shadow: url(${halftoneShadow.src})`}>
     <header class="parliamentarians__header">
         <span class="parliamentarians__attention" aria-hidden="true"></span>
         <h2 id="parliamentarians-title">Lorem ipsum dolor sit</h2>
@@ -59,7 +61,7 @@ const items = Array.from({ length: 15 }, (_, index) => index);
         let active = 7;
         let resetting = false;
         const update = () => {
-            track.style.transform = `translateX(${528 - active * 432}px)`;
+            track.style.transform = `translateX(${-192 - active * 432}px)`;
             cards.forEach((card, index) => {
                 const isActive = index === active;
                 card.classList.toggle("parliamentarians__card--active", isActive);
@@ -93,16 +95,21 @@ const items = Array.from({ length: 15 }, (_, index) => index);
     .parliamentarians h2 { height: 24px; font-family: "ETC Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 42px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
     .parliamentarians__header p { height: 24px; font-size: 18px; line-height: 24px; }
     .parliamentarians__figure { height: 803.8869018554688px; padding: 24px 0; overflow: hidden; }
-    .parliamentarians__carousel { position: relative; height: 755.8869018554688px; padding: 48px; overflow: hidden; }
-    .parliamentarians__controls { position: absolute; z-index: 2; top: 48px; left: calc(50% - 58px); display: flex; gap: 4px; }
+    .parliamentarians__carousel { position: relative; height: 755.8869018554688px; padding: 48px; overflow: hidden; background-color: #fff; background-image: var(--parliamentarians-background); background-position: left top; background-repeat: repeat; background-size: 400px 400px; }
+    .parliamentarians__carousel::before, .parliamentarians__carousel::after { position: absolute; z-index: 1; display: block; width: 100%; height: 24px; background-image: var(--parliamentarians-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; content: ""; pointer-events: none; mix-blend-mode: multiply; }
+    .parliamentarians__carousel::before { top: 0; left: 0; transform: scaleY(-1); }
+    .parliamentarians__carousel::after { bottom: 0; left: 0; }
+    .parliamentarians__controls { position: absolute; z-index: 3; top: 48px; left: calc(50% - 58px); display: flex; gap: 4px; }
     .parliamentarians__controls button { display: grid; width: 56px; height: 40px; padding: 8px 16px; place-items: center; border: 2px solid #4242f6; border-radius: 0; background: #fff; cursor: pointer; }
     .parliamentarians__controls img { display: block; width: 24px; height: 24px; }
     .parliamentarians__controls button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-    .parliamentarians__viewport { position: absolute; top: 112px; left: 0; width: 100%; height: 595.8869018554688px; overflow: hidden; }
-    .parliamentarians__track { display: flex; width: max-content; gap: 48px; transform: translateX(-2496px); transition: transform .2s ease; }
+    .parliamentarians__viewport { position: absolute; z-index: 2; top: 112px; left: 0; width: 100%; height: 595.8869018554688px; }
+    .parliamentarians__track { position: relative; left: 50%; display: flex; width: max-content; gap: 48px; transform: translateX(-3216px); transition: transform .2s ease; }
     .parliamentarians__card { position: relative; width: 384px; height: 595.8869018554688px; flex: none; border-radius: 24px; overflow: hidden; }
     .parliamentarians__card img { display: block; width: 384px; height: 595.8869018554688px; }
     .parliamentarians__hole { position: absolute; top: 23.20703125px; left: 143px; width: 98px; height: 18px; border: 1px solid #998d96; border-radius: 999px; background: #fff; }
+    .parliamentarians__card--active .parliamentarians__hole { overflow: hidden; background: #0b0f5e; }
+    .parliamentarians__card--active .parliamentarians__hole::before { position: absolute; inset: 0; border-radius: inherit; background: #fff; content: ""; transform: translate(-4px, 4px); }
     .parliamentarians__text-layer { position: absolute; inset: 0; pointer-events: none; }
     .parliamentarians__text-layer .t { position: absolute; display: block; margin: 0; white-space: nowrap; letter-spacing: 0; }
     .parliamentarians__text-layer .t:not(.t--tag) { background: #fff; }
