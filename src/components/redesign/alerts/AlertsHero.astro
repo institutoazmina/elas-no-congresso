@@ -1,11 +1,7 @@
 ---
 import attention from "../../../assets/images/redesign/hero/attention.svg";
-import circleBottom from "../../../assets/images/redesign/hero/circle-bottom.svg";
-import circleTop from "../../../assets/images/redesign/hero/circle-top.svg";
 import halftoneShadow from "../../../assets/images/redesign/hero/halftone-shadow.png";
-import proposicaoFive from "../../../assets/images/redesign/hero/proposicao-5.png";
-import proposicaoNine from "../../../assets/images/redesign/hero/proposicao-9.png";
-import stroke from "../../../assets/images/redesign/hero/stroke.svg";
+import ilustracoesSixteen from "../../../assets/images/redesign/hero/ilustracoes-16.png";
 import chevron from "../../../assets/images/redesign/home-reportagens/chevron-right.svg";
 ---
 
@@ -22,12 +18,7 @@ import chevron from "../../../assets/images/redesign/home-reportagens/chevron-ri
         </div>
 
         <div class="alerts-hero__illustration" aria-hidden="true">
-            <span class="alerts-hero__stroke"><img src={stroke.src} alt="" /></span>
-            <span class="alerts-hero__document alerts-hero__document--top"><img src={proposicaoFive.src} alt="" /></span>
-            <span class="alerts-hero__square"></span>
-            <span class="alerts-hero__circle alerts-hero__circle--top"><img src={circleTop.src} alt="" /></span>
-            <span class="alerts-hero__document alerts-hero__document--bottom"><img src={proposicaoNine.src} alt="" /></span>
-            <span class="alerts-hero__circle alerts-hero__circle--bottom"><img src={circleBottom.src} alt="" /></span>
+            <span class="alerts-hero__illustration-image"><img src={ilustracoesSixteen.src} alt="" /></span>
         </div>
     </div>
     <div class="alerts-hero__shadow" aria-hidden="true"></div>
@@ -46,23 +37,10 @@ import chevron from "../../../assets/images/redesign/home-reportagens/chevron-ri
     .alerts-hero__button span { font-family: "ETC Anybody", sans-serif; font-size: 20px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; white-space: nowrap; }
     .alerts-hero__button-icon { align-items: center; display: flex; height: 24px; justify-content: center; width: 12px; }
     .alerts-hero__button-icon img { display: block; height: 8.12132px; transform: rotate(-90deg); width: 13.4142px; }
-    .alerts-hero__illustration { flex: none; height: 360px; margin: 10px; overflow: hidden; position: relative; width: 360px; }
-    .alerts-hero__stroke { height: 234.809px; left: 60.097px; position: absolute; top: 62.445px; width: 239.807px; }
-    .alerts-hero__stroke img { bottom: -1.94%; left: -3.64%; max-width: none; position: absolute; right: -2.13%; top: -1.74%; width: 105.77%; }
-    .alerts-hero__document { align-items: center; display: flex; justify-content: center; position: absolute; }
-    .alerts-hero__document img { display: block; max-width: none; object-fit: cover; }
-    .alerts-hero__document--top { height: 142.66px; left: 163.94px; top: 11.55px; width: 106.196px; }
-    .alerts-hero__document--top img { height: 135.647px; transform: rotate(4.43deg); width: 96px; }
-    .alerts-hero__document--bottom { height: 146.059px; left: 60px; top: 154.21px; width: 111.886px; }
-    .alerts-hero__document--bottom img { height: 135.295px; transform: rotate(-7.05deg); width: 96px; }
-    .alerts-hero__square { border: 8px solid #def279; height: 96px; left: 228px; position: absolute; top: 132.44px; width: 96px; }
-    .alerts-hero__circle { position: absolute; }
-    .alerts-hero__circle img { max-width: none; position: absolute; }
-    .alerts-hero__circle--top { height: 72px; left: 36px; top: 72px; width: 72px; }
-    .alerts-hero__circle--top img { bottom: -4.76%; height: 112.64%; left: -5.63%; top: -7.88%; width: 113.3%; }
-    .alerts-hero__circle--bottom { height: 144px; left: 36px; top: 179.424px; width: 144px; }
-    .alerts-hero__circle--bottom img { bottom: -3.23%; height: 106.56%; left: -.75%; top: -3.33%; width: 104.22%; }
-    .alerts-hero__shadow { background-image: var(--alerts-hero-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; bottom: 0; display: block; height: 24px; left: 0; mix-blend-mode: multiply; pointer-events: none; position: absolute; width: 100%; z-index: 1; }
+    .alerts-hero__illustration { flex: none; height: 487px; margin: 0 37px; overflow: hidden; position: relative; top: 18.5px; width: 506px; }
+    .alerts-hero__illustration-image { height: 576.881px; left: calc(50% - 15.56px); position: absolute; top: calc(50% - 38.44px); transform: translate(-50%, -50%); width: 351.877px; }
+    .alerts-hero__illustration-image img { height: 104.39%; left: -16.01%; max-width: none; position: absolute; top: -1.63%; width: 136.91%; }
+    .alerts-hero__shadow { background-image: var(--alerts-hero-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; bottom: 0; display: block; height: 24px; left: 0; mix-blend-mode: multiply; pointer-events: none; position: absolute; width: 100%; z-index: 3; }
 
     @media (max-width: 1100px) {
         .alerts-hero h1 { font-size: 58px; line-height: 60px; }
