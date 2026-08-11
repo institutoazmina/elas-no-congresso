@@ -44,9 +44,8 @@ const links = [
             class="redesign-header__azm"
             href="https://azmina.com.br/"
             aria-label="Revista AzMina"
-        >
-            <img src={azmLogo} alt="" />
-        </a>
+            style={`--redesign-header-azm-logo: url("${azmLogo}")`}
+        ></a>
 
         <HighlighterMarks />
 
@@ -102,6 +101,11 @@ const links = [
         width: 230px;
         -webkit-mask: url("/assets/images/logo-header.svg") center / contain no-repeat;
         mask: url("/assets/images/logo-header.svg") center / contain no-repeat;
+        transition: background-color 0.4s ease;
+    }
+
+    .redesign-header__brand:hover {
+        background-color: #4745e8;
     }
 
     .redesign-header__desktop-links {
@@ -125,14 +129,26 @@ const links = [
         white-space: nowrap;
     }
 
-    .redesign-header__azm {
-        flex: 0 0 auto;
+    .redesign-header__desktop-links a {
+        transition: color 0.4s ease;
     }
 
-    .redesign-header__azm img {
-        display: block;
-        height: auto;
+    .redesign-header__desktop-links a:hover {
+        color: #6075ce;
+    }
+
+    .redesign-header__azm {
+        background-color: #0b0f5e;
+        flex: 0 0 auto;
+        height: 35px;
         width: 64px;
+        -webkit-mask: var(--redesign-header-azm-logo) center / contain no-repeat;
+        mask: var(--redesign-header-azm-logo) center / contain no-repeat;
+        transition: background-color 0.4s ease;
+    }
+
+    .redesign-header__azm:hover {
+        background-color: #4745e8;
     }
 
     .redesign-header__mobile-menu {
