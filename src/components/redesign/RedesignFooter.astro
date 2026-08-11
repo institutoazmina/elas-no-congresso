@@ -24,9 +24,11 @@ import elasFunder from "../../assets/images/redesign/funders/elas.png";
         </section>
 
         <section class="redesign-footer__identity" aria-labelledby="footer-social-title">
-            <a href="/" aria-label="Elas no Congresso">
-                <img src={elasLogo.src} alt="Elas no Congresso" />
-            </a>
+            <a
+                href="/"
+                aria-label="Elas no Congresso"
+                style={`--redesign-footer-elas-logo: url("${elasLogo.src}")`}
+            ></a>
             <div class="redesign-footer__social">
                 <h2 id="footer-social-title">Siga AzMina</h2>
                 <nav aria-label="Redes sociais da AzMina">
@@ -69,6 +71,13 @@ import elasFunder from "../../assets/images/redesign/funders/elas.png";
     .redesign-footer__button { display: flex; height: 56px; padding: 18px 24px 14px; align-items: center; justify-content: center; border: 0; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 20px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-decoration: none; text-transform: uppercase; white-space: nowrap; }
     .redesign-footer__identity { display: flex; width: 268px; padding: 32px; flex-direction: column; align-items: flex-start; gap: 64px; }
     .redesign-footer__identity > a, .redesign-footer__identity > a img { display: block; width: 204px; height: 96px; }
+    .redesign-footer__identity > a {
+        background-color: #fff;
+        -webkit-mask: var(--redesign-footer-elas-logo) center / contain no-repeat;
+        mask: var(--redesign-footer-elas-logo) center / contain no-repeat;
+        transition: background-color 0.4s ease;
+    }
+    .redesign-footer__identity > a:hover { background-color: #4745e8; }
     .redesign-footer__social { display: flex; flex-direction: column; align-items: flex-start; gap: 32px; }
     .redesign-footer__social nav { display: flex; align-items: center; gap: 16px; }
     .redesign-footer__social nav a, .redesign-footer__social nav img { display: block; width: 24px; height: 24px; }
