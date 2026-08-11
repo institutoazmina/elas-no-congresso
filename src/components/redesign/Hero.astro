@@ -1,9 +1,10 @@
 ---
+import { Image } from "astro:assets";
 import attentionMark from "../../assets/images/redesign/hero/attention.svg";
 import highlighterOne from "../../assets/images/redesign/hero/highlighter-desfavoraveis-1.svg";
 import highlighterTwo from "../../assets/images/redesign/hero/highlighter-desfavoraveis-2.svg";
 import halftoneShadow from "../../assets/images/redesign/hero/halftone-shadow.png";
-import heroIllustration from "../../assets/images/redesign/hero/ilustracoes-05.png";
+import heroIllustration from "../../assets/images/redesign/hero/hero-congresso-ilustracao.png";
 ---
 
 <section
@@ -33,7 +34,7 @@ import heroIllustration from "../../assets/images/redesign/hero/ilustracoes-05.p
         </div>
 
         <div class="hero__illustration" aria-hidden="true">
-            <span class="hero__illustration-image"><img src={heroIllustration.src} alt="" /></span>
+            <span class="hero__illustration-image"><Image src={heroIllustration} alt="" loading="eager" /></span>
         </div>
     </div>
 
@@ -200,28 +201,20 @@ import heroIllustration from "../../assets/images/redesign/hero/ilustracoes-05.p
         flex: 0 0 auto;
         height: 389px;
         margin: 10px;
-        overflow: hidden;
         position: relative;
         width: 513px;
     }
 
     .hero__illustration-image {
-        height: 389px;
-        left: 50%;
-        overflow: hidden;
+        inset: 0;
         position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 409.838px;
     }
 
     .hero__illustration-image img {
-        height: 153.89%;
-        left: -10.22%;
-        max-width: none;
-        position: absolute;
-        top: -29.5%;
-        width: 116.85%;
+        display: block;
+        height: auto;
+        max-width: 100%;
+        width: 100%;
     }
 
     .hero__cta {
