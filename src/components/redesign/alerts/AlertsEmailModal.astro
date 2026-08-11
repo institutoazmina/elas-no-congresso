@@ -7,6 +7,8 @@ import { getCategoryOptions, getCommitteeOptions } from "../../../service/api/al
 const [categories, committees] = await Promise.all([getCategoryOptions(), getCommitteeOptions()]);
 ---
 
+<div class="alerts-email-backdrop" hidden aria-hidden="true"></div>
+
 <dialog class="alerts-email-modal" aria-labelledby="alerts-email-modal-title">
     <div class="alerts-email-modal__shell">
         <div class="alerts-email-modal__close-row">
@@ -39,18 +41,20 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
                     <legend>Frequência</legend>
                     <p>Você pode escolher uma ou as duas opções.<br />Cada frequência tem regras diferentes — leia antes de selecionar.</p>
                     <div class="alerts-email-modal__frequencies">
-                        <label class="alerts-email-modal__frequency-card">
-                            <span class="alerts-email-modal__frequency-heading"><strong>Semanal</strong><input type="checkbox" name="frequencia" value="semanal" /></span>
-                            <span>Um resumo semanal dos temas selecionados que acompanha a newsletter do Elas no Congresso.</span>
-                        </label>
+                        <div class="alerts-email-modal__weekly-card">
+                            <label class="alerts-email-modal__frequency-card">
+                                <span class="alerts-email-modal__frequency-heading"><strong>Semanal</strong><input type="checkbox" name="frequencia" value="semanal" /></span>
+                                <span>Um resumo semanal dos temas selecionados que acompanha a newsletter do Elas no Congresso.</span>
+                            </label>
+                            <aside class="alerts-email-modal__weekly-note" hidden aria-label="Informação sobre a newsletter">
+                                <p>A newsletter do Elas no Congresso reúne, contextualiza e analisa os impactos políticos das tramitações.</p>
+                            </aside>
+                        </div>
                         <label class="alerts-email-modal__frequency-card alerts-email-modal__daily-card">
                             <span class="alerts-email-modal__frequency-heading"><strong>Diário</strong><input type="checkbox" name="frequencia" value="diario" /></span>
                             <span>Alertas enviados assim que uma movimentação acontecer.</span>
                         </label>
                     </div>
-                    <aside class="alerts-email-modal__weekly-note" hidden aria-label="Informação sobre a newsletter">
-                        <p>A newsletter do Elas no Congresso reúne, contextualiza e analisa os impactos políticos das tramitações.</p>
-                    </aside>
                     <section class="alerts-email-modal__daily-options" hidden aria-label="Filtros para alertas diários">
                         <p class="alerts-email-modal__daily-intro">Escolha casa, comissão ou proposição para filtrar seus alertas diários.<br />Selecionar uma casa filtra as comissões disponíveis.</p>
                         <section class="alerts-email-modal__daily-house" aria-label="Casa">
@@ -98,6 +102,8 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     const dialog = document.querySelector<HTMLDialogElement>(".alerts-email-modal");
     if (!dialog || dialog.dataset.alertsEmailModalInitialized) return;
     dialog.dataset.alertsEmailModalInitialized = "true";
+    const backdrop = document.querySelector<HTMLElement>(".alerts-email-backdrop");
+    const siteHeader = document.querySelector<HTMLElement>(".redesign-header");
     const opener = document.querySelector<HTMLButtonElement>(".alerts-hero__button");
     const close = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__close");
     const form = dialog?.querySelector<HTMLFormElement>(".alerts-email-modal__form");
@@ -186,11 +192,27 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
         );
     };
 
+    const syncHeaderHeight = () => {
+        if (!siteHeader) return;
+        document.documentElement.style.setProperty("--alerts-header-height", `${siteHeader.getBoundingClientRect().height}px`);
+    };
+
     opener?.addEventListener("click", () => {
-        dialog?.showModal();
+        syncHeaderHeight();
+        if (backdrop) backdrop.hidden = false;
+        document.body.classList.add("alerts-email-modal-open");
+        dialog?.show();
         if (dialog) dialog.scrollTop = 0;
     });
     close?.addEventListener("click", () => dialog?.close());
+    dialog.addEventListener("close", () => {
+        if (backdrop) backdrop.hidden = true;
+        document.body.classList.remove("alerts-email-modal-open");
+    });
+    window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && dialog.open) dialog.close();
+    });
+    window.addEventListener("resize", syncHeaderHeight);
 
     email?.addEventListener("input", updateSubmitState);
     topics.forEach((topic) => topic.addEventListener("change", updateSubmitState));
@@ -199,10 +221,12 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     // Semanal e diário são independentes: o texto do modal promete "uma ou as duas".
     weekly?.addEventListener("change", () => {
         if (weeklyNote) weeklyNote.hidden = !weekly.checked;
+        dialog?.classList.toggle("alerts-email-modal--weekly-open", weekly.checked);
         updateSubmitState();
     });
     daily?.addEventListener("change", () => {
         if (dailyOptions) dailyOptions.hidden = !daily.checked;
+        dialog?.classList.toggle("alerts-email-modal--daily-open", daily.checked);
         if (daily.checked) {
             const atual = houses.find((house) => house.getAttribute("aria-pressed") === "true") ?? houses[0];
             if (atual) applyHouse(atual);
@@ -340,9 +364,10 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
 </script>
 
 <style>
+    :global(body.alerts-email-modal-open) { overflow: hidden; }
+    .alerts-email-backdrop { position: fixed; z-index: 10; inset: var(--alerts-header-height, 104px) 0 0; background: rgba(255, 255, 255, .92); }
     .alerts-email-modal, .alerts-email-modal * { box-sizing: border-box; }
-    .alerts-email-modal { width: min(672px, calc(100vw - 48px)); max-height: calc(100dvh - 48px); margin: auto; padding: 0; overflow: auto; border: 0; background: #fff; color: #1e2546; }
-    .alerts-email-modal::backdrop { background: rgba(255, 255, 255, .92); }
+    .alerts-email-modal { position: fixed; z-index: 11; top: calc(var(--alerts-header-height, 104px) + 24px); right: 0; left: 0; width: min(672px, calc(100vw - 48px)); max-height: calc(100dvh - var(--alerts-header-height, 104px) - 48px); margin: 0 auto; padding: 0; overflow: auto; border: 0; background: #fff; color: #1e2546; }
     .alerts-email-modal__shell { min-height: 100%; }
     .alerts-email-modal__close-row { display: flex; width: 624px; max-width: calc(100% - 48px); height: 92px; margin: 0 auto; padding-top: 50px; justify-content: flex-end; }
     .alerts-email-modal__close { display: grid; width: 42px; height: 42px; place-items: center; padding: 0 0 4px; border: 2.222px solid #1e2546; background: #fff; color: #1e2546; font-family: Arial, sans-serif; font-size: 37px; font-weight: 400; line-height: 1; cursor: pointer; }
@@ -369,6 +394,8 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     .alerts-email-modal input[type="checkbox"]:checked::after { position: absolute; top: 2px; left: 2px; width: 8px; height: 5px; border-bottom: 2px solid #0b0f5e; border-left: 2px solid #0b0f5e; content: ""; transform: rotate(-45deg); }
     .alerts-email-modal__topics input:checked + span { padding: 3.195px 5px; background: #def279; color: #0b0f5e; }
     .alerts-email-modal__frequencies { display: grid; grid-template-columns: repeat(2, 304px); gap: 16px; padding-top: 25px; }
+    .alerts-email-modal__weekly-card { position: relative; min-height: 146.25px; }
+    .alerts-email-modal__weekly-card .alerts-email-modal__frequency-card { height: 100%; }
     .alerts-email-modal__frequency-card { display: flex; min-height: 146.25px; padding: 21px; flex-direction: column; border: 1px solid #998d96; background: #fff; color: #998d96; font: 400 14px/16px "Plus Jakarta Sans", sans-serif; cursor: pointer; }
     .alerts-email-modal__frequency-card:has(input:checked) { padding: 22px; border: 2px solid #0b0f5e; }
     .alerts-email-modal__frequency-card input[type="checkbox"] { width: 20px; height: 20px; flex-basis: 20px; }
@@ -376,9 +403,9 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     .alerts-email-modal__frequency-heading { display: flex; align-items: center; justify-content: space-between; color: #1e2546; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
     .alerts-email-modal__frequency-card > span:last-child { padding-top: 12px; }
     .alerts-email-modal__frequency-section { position: relative; }
-    .alerts-email-modal__weekly-note { position: absolute; z-index: 1; top: 261.549px; left: 132.82px; display: flex; width: 180.232px; height: 110.229px; align-items: center; justify-content: center; padding: 12.614px 18.716px; background: #def279; box-shadow: 0 3.119px 0 #0b0f5e; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; font-size: 12px; font-weight: 500; line-height: 17px; text-align: center; transform: rotate(-3.215deg); }
+    .alerts-email-modal__weekly-note { position: absolute; z-index: 1; right: -9.052px; bottom: -76.97px; display: flex; width: 180.232px; height: 110.229px; align-items: center; justify-content: center; padding: 12.614px 18.716px; background: #def279; color: #0b0f5e; filter: drop-shadow(0 3.119px 0 #0b0f5e); font-family: "Plus Jakarta Sans", sans-serif; font-size: 12px; font-weight: 500; line-height: 17px; text-align: center; transform: rotate(-3.215deg); transform-origin: center; }
     .alerts-email-modal__weekly-note p { width: 142.801px; height: 85px; }
-    .alerts-email-modal__daily-options { position: relative; width: 624px; height: 432.391px; margin-top: 8px; padding: 21px; border: 1px solid rgba(30, 37, 70, .12); background: #0b0f5e; color: #fff; }
+    .alerts-email-modal__daily-options { position: relative; z-index: 2; width: 624px; height: 432.391px; margin-top: 8px; padding: 21px; border: 1px solid rgba(30, 37, 70, .12); background: #0b0f5e; color: #fff; }
     .alerts-email-modal__daily-options::before { position: absolute; top: -8px; left: 458px; width: 12px; height: 12px; background: #0b0f5e; content: ""; transform: rotate(45deg); }
     .alerts-email-modal__daily-options h3, .alerts-email-modal__daily-options p { margin: 0; }
     .alerts-email-modal__daily-intro { display: flex; width: 496px; height: 62px; align-items: center; padding: 15px 17px; background: #2b65d9; color: #fff; font: 400 12px/16px "Plus Jakarta Sans", sans-serif; }
@@ -411,6 +438,8 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     .alerts-email-modal__proposal-options button { display: block; width: 100%; padding: 12px 16px; border: 0; background: #fff; color: #0b0f5e; font: 400 16px/22px "Plus Jakarta Sans", sans-serif; text-align: left; cursor: pointer; }
     .alerts-email-modal__proposal-options button:hover { background: #def279; }
     .alerts-email-modal__terms { padding-top: 28px; color: #998d96; font-size: 14px; line-height: 20px; }
+    .alerts-email-modal--weekly-open .alerts-email-modal__terms { padding-top: 125px; }
+    .alerts-email-modal--daily-open .alerts-email-modal__terms { padding-top: 28px; }
     .alerts-email-modal__status { width: 100%; margin-top: 20px; padding: 12px 16px; background: #f4f2f4; color: #1e2546; font: 400 15px/22px "Plus Jakarta Sans", sans-serif; }
     .alerts-email-modal__status[data-kind="ok"] { background: #def279; color: #0b0f5e; }
     .alerts-email-modal__status[data-kind="erro"] { background: #ffe3e3; color: #8a1f1f; }
@@ -420,5 +449,5 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     .alerts-email-modal__submit:not(:disabled) { padding-right: 24px; }
     .alerts-email-modal__submit:not(:disabled) img { display: none; }
     .alerts-email-modal__submit img { width: 13.414px; height: 8.121px; transform: rotate(-90deg); filter: brightness(0) invert(1); }
-    @media (max-width: 680px) { .alerts-email-modal { width: min(100%, calc(100vw - 24px)); max-height: calc(100dvh - 24px); } .alerts-email-modal__close-row { max-width: calc(100% - 32px); height: 72px; padding-top: 24px; } .alerts-email-modal__content { padding: 48px 16px 32px; } .alerts-email-modal h2 { font-size: 26px; line-height: 34px; } .alerts-email-modal__intro p br, .alerts-email-modal__section > p br { display: none; } .alerts-email-modal__topics, .alerts-email-modal__frequencies { grid-template-columns: 1fr; } .alerts-email-modal__topics { gap: 12px; } .alerts-email-modal__submit { margin-top: 28px; } }
+    @media (max-width: 680px) { .alerts-email-modal { top: calc(var(--alerts-header-height, 72px) + 12px); width: min(100%, calc(100vw - 24px)); max-height: calc(100dvh - var(--alerts-header-height, 72px) - 24px); } .alerts-email-modal__close-row { max-width: calc(100% - 32px); height: 72px; padding-top: 24px; } .alerts-email-modal__content { padding: 48px 16px 32px; } .alerts-email-modal h2 { font-size: 26px; line-height: 34px; } .alerts-email-modal__intro p br, .alerts-email-modal__section > p br { display: none; } .alerts-email-modal__topics, .alerts-email-modal__frequencies { grid-template-columns: 1fr; } .alerts-email-modal__topics { gap: 12px; } .alerts-email-modal__submit { margin-top: 28px; } }
 </style>
