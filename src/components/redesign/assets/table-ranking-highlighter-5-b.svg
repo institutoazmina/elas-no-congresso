@@ -1,0 +1,29 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="124.398" height="22.5042" viewBox="0 0 124.398 22.5042" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Rectangle 23" filter="url(#filter0_n_0_1091)" style="mix-blend-mode:darken">
+<path d="M2.57731 6.01062C2.74385 5.08543 3.53224 4.40109 4.47165 4.3663L122.322 0.00142817C123.703 -0.0497353 124.719 1.28246 124.304 2.60094L119.066 19.227C118.808 20.0483 118.052 20.6118 117.192 20.6259L2.0332 22.5039C0.773718 22.5244 -0.190928 21.3896 0.0322254 20.1498L2.57731 6.01062Z" fill="url(#paint0_linear_0_1091)"/>
+</g>
+<defs>
+<filter id="filter0_n_0_1091" x="0" y="0" width="124.398" height="22.5042" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feTurbulence type="fractalNoise" baseFrequency="1 1" stitchTiles="stitch" numOctaves="3" result="noise" seed="1685" />
+<feColorMatrix in="noise" type="luminanceToAlpha" result="alphaNoise" />
+<feComponentTransfer in="alphaNoise" result="coloredNoise1">
+<feFuncA type="discrete" tableValues="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 "/>
+</feComponentTransfer>
+<feComposite operator="in" in2="shape" in="coloredNoise1" result="noise1Clipped" />
+<feFlood flood-color="#FFFFFF" result="color1Flood" />
+<feComposite operator="in" in2="noise1Clipped" in="color1Flood" result="color1" />
+<feMerge result="effect1_noise_0_1091">
+<feMergeNode in="shape" />
+<feMergeNode in="color1" />
+</feMerge>
+</filter>
+<linearGradient id="paint0_linear_0_1091" x1="-0.398646" y1="11.22" x2="125.156" y2="11.22" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FF5865" stop-opacity="0.5"/>
+<stop offset="0.2" stop-color="#FF5865" stop-opacity="0.25"/>
+<stop offset="0.8" stop-color="#FF5865" stop-opacity="0.25"/>
+<stop offset="1" stop-color="#FF5865" stop-opacity="0.5"/>
+</linearGradient>
+</defs>
+</svg>
