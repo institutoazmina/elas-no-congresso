@@ -201,6 +201,114 @@ const links = [
         z-index: 12;
     }
 
+    @media (max-width: 767px) {
+        :global(html:has(.redesign-header__mobile-menu[open])),
+        :global(body:has(.redesign-header__mobile-menu[open])) {
+            overflow: hidden;
+        }
+
+        .redesign-header.redesign-shared-background {
+            position: sticky;
+            z-index: 100;
+            top: 0;
+            width: 100%;
+            background-color: #fff;
+            background-image: url("../../assets/images/redesign/background/bg-pattern-rough-paper.png");
+            background-position: center top;
+            background-repeat: repeat;
+            background-size: 400px 400px;
+            transition: transform 180ms ease;
+            transform: translateY(0);
+            will-change: transform;
+        }
+
+        .redesign-header:has(.redesign-header__mobile-menu[open]) {
+            position: fixed;
+            inset: 0 0 auto;
+            transform: translateY(0);
+        }
+
+        .redesign-header.redesign-shared-background.redesign-header--hidden {
+            transform: translateY(-100%);
+        }
+
+        .redesign-header.redesign-shared-background.redesign-header--scrolled:not(:has(.redesign-header__mobile-menu[open])) {
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .redesign-header--scrolled:not(:has(.redesign-header__mobile-menu[open])) :global(.highlighter-marks) {
+            display: none;
+        }
+
+        .redesign-header__content {
+            min-height: 52px;
+            padding: 0 16px;
+        }
+
+        .redesign-header__mobile-menu {
+            position: static;
+        }
+
+        .redesign-header__mobile-menu summary {
+            position: relative;
+            display: block;
+            width: 28px;
+            height: 28px;
+        }
+
+        .redesign-header__mobile-menu summary span {
+            position: absolute;
+            left: 0;
+            transition: top 180ms ease, opacity 180ms ease, transform 180ms ease;
+        }
+
+        .redesign-header__mobile-menu summary span:nth-child(1) { top: 4px; }
+        .redesign-header__mobile-menu summary span:nth-child(2) { top: 13px; }
+        .redesign-header__mobile-menu summary span:nth-child(3) { top: 22px; }
+
+        .redesign-header__mobile-menu[open] summary span:nth-child(1) {
+            top: 13px;
+            transform: rotate(45deg);
+        }
+
+        .redesign-header__mobile-menu[open] summary span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .redesign-header__mobile-menu[open] summary span:nth-child(3) {
+            top: 13px;
+            transform: rotate(-45deg);
+        }
+
+        .redesign-header__mobile-panel {
+            position: fixed;
+            inset: 52px 0 0;
+            z-index: 99;
+            display: grid;
+            width: 100%;
+            min-height: calc(100dvh - 52px);
+            padding: 0;
+            align-content: start;
+            gap: 0;
+            overflow-y: auto;
+            border: 0;
+            background: #0b0f5e;
+            box-shadow: none;
+        }
+
+        .redesign-header__mobile-panel a {
+            display: flex;
+            width: 100%;
+            padding: 16px 24px;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            text-align: left;
+        }
+    }
+
     @media (min-width: 821px) {
         .redesign-header {
             min-height: 104px;
@@ -260,6 +368,7 @@ const links = [
 
         const currentPath = (window.location.pathname.replace(/\/+$/, "") || "/");
         const isMobile = window.matchMedia("(max-width: 820px)").matches;
+        const matchesMobileDesign = window.matchMedia("(max-width: 767px)").matches;
         const target = isMobile
             ? nav.querySelector(".redesign-header__brand")
             : [...nav.querySelectorAll("[data-highlighter-target]")].find(
@@ -283,12 +392,22 @@ const links = [
         const targetBounds = target.getBoundingClientRect();
         const horizontalPadding = 16;
         const isBrandTarget = target.classList.contains("redesign-header__brand");
+        const isMobileBrandTarget = matchesMobileDesign && isBrandTarget;
+        const mobileBrandScale = isMobileBrandTarget ? targetBounds.width / 128 : 1;
         const highlighterWidth = isBrandTarget
-            ? 217
+            ? isMobileBrandTarget
+                ? 149 * mobileBrandScale
+                : 217
             : targetBounds.width + horizontalPadding * 2;
-        const highlighterLeft = isBrandTarget
-            ? targetBounds.left - navBounds.left + (targetBounds.width - highlighterWidth) / 2
-            : targetBounds.left - navBounds.left - horizontalPadding;
+        const highlighterLeft = isMobileBrandTarget
+            ? targetBounds.left - navBounds.left - 10 * mobileBrandScale
+            : isBrandTarget
+              ? targetBounds.left - navBounds.left
+                + (targetBounds.width - highlighterWidth) / 2
+              : targetBounds.left - navBounds.left - horizontalPadding;
+        const highlighterTop =
+            targetBounds.top - navBounds.top + targetBounds.height / 2
+            - (isMobileBrandTarget ? mobileBrandScale : 0);
 
         highlighter.style.setProperty(
             "--highlighter-left",
@@ -296,12 +415,20 @@ const links = [
         );
         highlighter.style.setProperty(
             "--highlighter-top",
-            `${targetBounds.top - navBounds.top + targetBounds.height / 2}px`,
+            `${highlighterTop}px`,
         );
         highlighter.style.setProperty(
             "--highlighter-width",
             `${highlighterWidth}px`,
         );
+        if (isMobileBrandTarget) {
+            highlighter.style.setProperty(
+                "--highlighter-height",
+                `${30 * mobileBrandScale}px`,
+            );
+        } else {
+            highlighter.style.removeProperty("--highlighter-height");
+        }
         highlighter.style.setProperty(
             "--highlighter-z-index",
             target.closest(".redesign-header__mobile-panel") ? "11" : "0",
@@ -313,15 +440,123 @@ const links = [
         window.requestAnimationFrame(updateHighlighter);
     };
 
+    const prepareMobileHeaderNavigation = () => {
+        const header = document.querySelector<HTMLElement>(".redesign-header");
+        const mobileMenu = header?.querySelector<HTMLDetailsElement>(
+            ".redesign-header__mobile-menu",
+        );
+        if (!header || !mobileMenu) return;
+
+        mobileMenu.open = false;
+        header.classList.remove("redesign-header--hidden", "redesign-header--scrolled");
+        header.dataset.mobilePreviousScroll = "0";
+    };
+
     const bindMobileMenu = () => {
-        const mobileMenu = document.querySelector(
+        const mobileMenu = document.querySelector<HTMLDetailsElement>(
             ".redesign-header__mobile-menu",
         );
 
-        if (!mobileMenu || mobileMenu.dataset.highlighterBound) return;
+        if (!mobileMenu) return;
 
-        mobileMenu.dataset.highlighterBound = "true";
-        mobileMenu.addEventListener("toggle", scheduleHighlighterUpdate);
+        const summary = mobileMenu.querySelector("summary");
+        const header = mobileMenu.closest<HTMLElement>(".redesign-header");
+        const syncMenuState = () => {
+            const isOpen = mobileMenu.open;
+            summary?.setAttribute("aria-label", isOpen ? "Fechar menu" : "Abrir menu");
+            if (isOpen) header?.classList.remove("redesign-header--hidden");
+            if (header) header.dataset.mobilePreviousScroll = String(Math.max(window.scrollY, 0));
+            scheduleHighlighterUpdate();
+        };
+
+        if (!mobileMenu.dataset.highlighterBound) {
+            mobileMenu.dataset.highlighterBound = "true";
+            mobileMenu.addEventListener("toggle", syncMenuState);
+            mobileMenu.querySelectorAll("a").forEach((link) => {
+                link.addEventListener("click", prepareMobileHeaderNavigation);
+            });
+        }
+
+        const brand = header?.querySelector<HTMLElement>(".redesign-header__brand");
+        if (brand && !brand.dataset.mobileStateBound) {
+            brand.dataset.mobileStateBound = "true";
+            brand.addEventListener("click", prepareMobileHeaderNavigation);
+        }
+
+        syncMenuState();
+    };
+
+    const bindMobileHeaderScroll = () => {
+        const header = document.querySelector<HTMLElement>(".redesign-header");
+        if (!header) return;
+
+        const mobileViewport = window.matchMedia("(max-width: 767px)");
+        const threshold = 8;
+
+        const updateHeader = (forceVisible = false) => {
+            const currentScroll = Math.max(window.scrollY, 0);
+            const previousScroll = Number(header.dataset.mobilePreviousScroll ?? currentScroll);
+            const mobileMenu = header.querySelector<HTMLDetailsElement>(
+                ".redesign-header__mobile-menu",
+            );
+
+            if (!mobileViewport.matches) {
+                header.classList.remove("redesign-header--hidden");
+                header.classList.remove("redesign-header--scrolled");
+                header.dataset.mobilePreviousScroll = String(currentScroll);
+                return;
+            }
+
+            const isAtTop = currentScroll <= threshold;
+
+            header.classList.toggle("redesign-header--scrolled", !isAtTop);
+
+            if (forceVisible || mobileMenu?.open || isAtTop) {
+                header.classList.remove("redesign-header--hidden");
+                header.dataset.mobilePreviousScroll = String(currentScroll);
+                return;
+            }
+
+            const delta = currentScroll - previousScroll;
+            if (Math.abs(delta) >= threshold) {
+                header.classList.toggle("redesign-header--hidden", delta > 0);
+                header.dataset.mobilePreviousScroll = String(currentScroll);
+            }
+        };
+
+        if (!header.dataset.mobileScrollBound) {
+            header.dataset.mobileScrollBound = "true";
+            let ticking = false;
+            window.addEventListener("scroll", () => {
+                if (!ticking) {
+                    ticking = true;
+                    window.requestAnimationFrame(() => {
+                        updateHeader();
+                        ticking = false;
+                    });
+                }
+            }, { passive: true });
+
+            mobileViewport.addEventListener("change", () => { updateHeader(true); });
+        }
+
+        updateHeader(true);
+    };
+
+    const resetMobileHeaderState = () => {
+        const header = document.querySelector<HTMLElement>(".redesign-header");
+        const mobileMenu = header?.querySelector<HTMLDetailsElement>(
+            ".redesign-header__mobile-menu",
+        );
+        if (!header || !mobileMenu) return;
+
+        mobileMenu.open = false;
+        header.classList.remove("redesign-header--hidden");
+        header.classList.toggle(
+            "redesign-header--scrolled",
+            window.matchMedia("(max-width: 767px)").matches && window.scrollY > 8,
+        );
+        header.dataset.mobilePreviousScroll = String(Math.max(window.scrollY, 0));
     };
 
     const bindHighlighterLayoutObserver = () => {
@@ -340,15 +575,18 @@ const links = [
         document.fonts?.ready.then(scheduleHighlighterUpdate);
     };
 
-    const refreshHighlighter = () => {
+    const refreshHighlighter = (resetState = false) => {
+        if (resetState) resetMobileHeaderState();
         bindMobileMenu();
+        bindMobileHeaderScroll();
         bindHighlighterLayoutObserver();
         scheduleHighlighterUpdate();
     };
 
-    refreshHighlighter();
+    refreshHighlighter(true);
     window.addEventListener("resize", scheduleHighlighterUpdate);
     window.addEventListener("popstate", scheduleHighlighterUpdate);
-    document.addEventListener("astro:after-swap", refreshHighlighter);
-    document.addEventListener("astro:page-load", refreshHighlighter);
+    document.addEventListener("astro:before-swap", prepareMobileHeaderNavigation);
+    document.addEventListener("astro:after-swap", () => { refreshHighlighter(true); });
+    document.addEventListener("astro:page-load", () => { refreshHighlighter(true); });
 </script>

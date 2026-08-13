@@ -34,6 +34,33 @@ import chevron from "../../assets/images/redesign/quiteria/chevron-right.svg";
     .quiteria-funders__button img { display: block; width: 13.4142px; height: 8.12132px; transform: rotate(-90deg); }
     .quiteria-funders__button:focus-visible { outline: 2px solid #0b0f5e; outline-offset: 3px; }
 
+    @media (max-width: 767px) {
+        .quiteria-funders__quiteria {
+            margin: 0 auto;
+            padding: 30px 15px;
+        }
+
+        .quiteria-funders__image {
+            aspect-ratio: 2 / 1;
+            object-fit: cover;
+        }
+
+        .quiteria-funders__explanation-frame {
+            align-items: flex-start;
+        }
+
+        .quiteria-funders__explanation-rotation,
+        .quiteria-funders__explanation-flow,
+        .quiteria-funders__explanation-flow p {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .quiteria-funders__explanation-rotation {
+            transform: none;
+        }
+    }
+
     @media (min-width: 768px) {
         .quiteria-funders__quiteria {
             width: 720px;
