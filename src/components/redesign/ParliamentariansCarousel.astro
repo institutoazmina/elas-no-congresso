@@ -61,7 +61,9 @@ const items = Array.from({ length: 15 }, (_, index) => index);
         let active = 7;
         let resetting = false;
         const update = () => {
-            track.style.transform = `translateX(${-192 - active * 432}px)`;
+            const cardWidth = cards[0]?.getBoundingClientRect().width ?? 384;
+            const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
+            track.style.transform = `translateX(${-cardWidth / 2 - active * (cardWidth + gap)}px)`;
             cards.forEach((card, index) => {
                 const isActive = index === active;
                 card.classList.toggle("parliamentarians__card--active", isActive);
@@ -79,6 +81,8 @@ const items = Array.from({ length: 15 }, (_, index) => index);
         });
         previous.addEventListener("click", () => move(-1));
         next.addEventListener("click", () => move(1));
+        window.addEventListener("resize", update);
+        update();
     });
     };
 
@@ -131,6 +135,57 @@ const items = Array.from({ length: 15 }, (_, index) => index);
     .t--race-label { top: 521.88671875px; left: 32px; width: 273px; }.t--race-value { top: 521.88671875px; left: 305px; width: 47px; text-align: right; }
     .t--religion-label { top: 547.88671875px; left: 32px; width: 240px; }.t--religion-value { top: 547.88671875px; left: 272px; width: 80px; color: #998d96; text-align: right; }
     .parliamentarians__card--active { z-index: 1; box-shadow: -4px 4px 0 #0b0f5e; }
+
+    @media (max-width: 767px) {
+        .parliamentarians {
+            min-height: 0;
+        }
+
+        .parliamentarians__figure {
+            height: 640.949077px;
+        }
+
+        .parliamentarians__carousel {
+            height: 592.949077px;
+        }
+
+        .parliamentarians__viewport {
+            height: 432.949077px;
+        }
+
+        .parliamentarians__track {
+            gap: 25px;
+        }
+
+        .parliamentarians__card {
+            width: 279px;
+            height: 432.949077px;
+            border-radius: 17.4375px;
+        }
+
+        .parliamentarians__card > img {
+            width: 279px;
+            height: 432.949077px;
+        }
+
+        .parliamentarians__hole {
+            top: 16.855103px;
+            left: 103.921875px;
+            width: 71.203125px;
+            height: 13.078125px;
+        }
+
+        .parliamentarians__card--active .parliamentarians__hole::before {
+            transform: translate(-2.90625px, 2.90625px);
+        }
+
+        .parliamentarians__text-layer {
+            width: 384px;
+            height: 595.8869018554688px;
+            transform: scale(0.7265625);
+            transform-origin: left top;
+        }
+    }
 
     @media (min-width: 768px) {
         .parliamentarians {
