@@ -48,9 +48,40 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
 
 <style>
     @media (max-width: 767px) {
+        .slow-moving-proposals { height: auto; }
         .slow-moving-proposals__header { padding-inline: 15px; }
+        .slow-moving-proposals h2 { height: auto; }
+        .slow-moving-proposals__carousel { height: 400px; }
         .slow-moving-proposals__viewport { overflow: clip; }
-        .slow-moving-proposals__card { width: min(336px, calc(100vw - 48px)); }
+        .slow-moving-proposals__track {
+            --mobile-card-width: 180px;
+            --mobile-card-gap: 16px;
+            --mobile-active-index: 7;
+            gap: var(--mobile-card-gap);
+            transform: translateX(calc(var(--mobile-active-index) * -1 * (var(--mobile-card-width) + var(--mobile-card-gap)) - var(--mobile-card-width) / 2)) !important;
+        }
+        .slow-moving-proposals__card { width: var(--mobile-card-width); height: 230px; }
+        .slow-moving-proposals__card-header { height: 44px; padding: 6px 10px; }
+        .slow-moving-proposals__card-header > strong { font-size: 12px; line-height: 14px; }
+        .slow-moving-proposals__status { top: 5px; right: 10px; width: 104px; height: 34px; }
+        .slow-moving-proposals__document { top: 0; left: 2px; width: 24px; height: 32px; }
+        .slow-moving-proposals__thumbs { top: 7px; left: 21px; width: 83px; height: 20px; }
+        .slow-moving-proposals__thumb { width: 20px; height: 20px; }
+        .slow-moving-proposals__thumbs b { top: 4px; left: 26px; font-size: 10px; line-height: 12px; }
+        .slow-moving-proposals__content { height: 146px; padding: 10px 12px; }
+        .slow-moving-proposals__authors { height: 46px; gap: 2px; }
+        .slow-moving-proposals__authors p { height: 10px; font-size: 9px; line-height: 10px; }
+        .slow-moving-proposals__badge { margin-top: 6px; padding: 1px 4px; font-size: 10px; line-height: 14px; }
+        .slow-moving-proposals__description { height: auto; margin-top: 6px !important; font-size: 9px; line-height: 11px; -webkit-line-clamp: 4; }
+        .slow-moving-proposals__card footer { height: 36px; padding: 6px 10px; font-size: 10px; line-height: 14px; }
+        .slow-moving-proposals__card--featured { border-color: #0b0f5e; box-shadow: -4px 4px 0 #0b0f5e; }
+        .slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(5).slow-moving-proposals__card--featured) { --mobile-active-index: 4; }
+        .slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(6).slow-moving-proposals__card--featured) { --mobile-active-index: 5; }
+        .slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(7).slow-moving-proposals__card--featured) { --mobile-active-index: 6; }
+        .slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(8).slow-moving-proposals__card--featured) { --mobile-active-index: 7; }
+        .slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(9).slow-moving-proposals__card--featured) { --mobile-active-index: 8; }
+        .slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(10).slow-moving-proposals__card--featured) { --mobile-active-index: 9; }
+        .slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(11).slow-moving-proposals__card--featured) { --mobile-active-index: 10; }
     }
 </style>
 
@@ -75,4 +106,11 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
     .slow-moving-proposals__card footer { color: #0b0f5e; }
     .slow-moving-proposals__card footer strong,
     .slow-moving-proposals__card footer b { margin: 0; color: inherit; font-weight: 700; }
+    @media (max-width: 767px) {
+        .slow-moving-proposals__thumb { width: 20px; height: 20px; }
+        .slow-moving-proposals__thumbs b { top: 4px; left: 26px; font-size: 10px; line-height: 12px; }
+        .slow-moving-proposals__authors { height: 46px; gap: 2px; }
+        .slow-moving-proposals__authors p { height: 10px; font-size: 9px; line-height: 10px; }
+        .slow-moving-proposals__description { height: auto; margin-top: 6px !important; font-size: 9px; line-height: 11px; -webkit-line-clamp: 4; }
+    }
 </style>
