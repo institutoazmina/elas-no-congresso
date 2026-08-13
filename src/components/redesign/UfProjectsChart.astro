@@ -102,7 +102,7 @@ const ufLabels: Record<string, string> = {
                 <h2 id="uf-projects-chart-title">As 27 UFs por proposições desfavoráveis</h2>
                 <StanceToggle labels={{ unfavorable: "Desfavoráveis", favorable: "Favoráveis" }} />
             </div>
-            <p>Boa parte das bancadas dos estados do Centro-Oeste, além das de Rondônia,<br />Espírito Santo e Santa Catarina, lidera a apresentação de propostas que restringem<br />direitos de mulheres, meninas e da população LGBTQIAPN+</p>
+            <p>Boa parte das bancadas dos estados do Centro-Oeste, além das de Rondônia,<br /> Espírito Santo e Santa Catarina, lidera a apresentação de propostas que restringem<br /> direitos de mulheres, meninas e da população LGBTQIAPN+</p>
         </header>
 
         <figure class="uf-projects-chart__figure">
@@ -275,6 +275,9 @@ const ufLabels: Record<string, string> = {
     .uf-projects-chart__tab[aria-selected="true"] { border-radius: 16px 16px 0 0; background: #4242f6; color: #fff; }
     /* Base, destaques e rótulos são recortes do mesmo canvas: empilhar basta. */
     .uf-projects-chart__map { position: relative; width: 720px; aspect-ratio: 1; }
+    @media (min-width: 768px) {
+        .uf-projects-chart__map { border: 1px solid #4242f6; }
+    }
     .uf-projects-chart__map img { position: absolute; inset: 0; width: 100%; height: 100%; }
     .uf-projects-chart__map > img:first-child { position: relative; }
     /* Hitbox das UFs: SVG do Design por cima dos PNGs, transparente, só capta o pointer. */
@@ -331,15 +334,21 @@ const ufLabels: Record<string, string> = {
         .uf-projects-chart { min-height: 0; overflow: visible; padding: 48px 24px; }
         .uf-projects-chart__container { width: 100%; height: auto; padding: 0; }
         .uf-projects-chart__header, .uf-projects-chart__heading, .uf-projects-chart h2, .uf-projects-chart__header > p, .uf-projects-chart__figure, .uf-projects-chart__map-table, .uf-projects-chart__tabs, .uf-projects-chart__map, .uf-projects-chart__footer { width: 100%; height: auto; }
-        .uf-projects-chart__header { gap: 16px; }
-        .uf-projects-chart__heading { gap: 16px; }
+        .uf-projects-chart__header { align-items: flex-start; gap: 16px; text-align: left; }
+        .uf-projects-chart__heading { align-items: flex-start; gap: 16px; text-align: left; }
         .uf-projects-chart h2 { font-size: 28px; line-height: 34px; }
-        .uf-projects-chart__header > p { height: auto; }
+        .uf-projects-chart__heading .stance-toggle { align-self: flex-start; }
+        .uf-projects-chart__header > p { width: 100%; max-width: none; height: auto; flex-basis: auto; align-self: stretch; text-align: left; }
+        .uf-projects-chart__header > p br { display: none; }
         .uf-projects-chart__figure { margin-top: 10px; padding: 24px 0; }
-        .uf-projects-chart__tabs { height: 48px; }
-        .uf-projects-chart__map { aspect-ratio: 1; }
-        .uf-projects-chart__footer { position: relative; right: auto; bottom: auto; left: auto; min-height: 32px; margin-bottom: 48px; gap: 16px; }
-        .uf-projects-chart__footer img { flex: none; }
-        .uf-projects-chart__button { position: relative; bottom: auto; left: 50%; }
+        .uf-projects-chart__tabs { display: none; }
+        .uf-projects-chart__map-table, .uf-projects-chart__panel[data-panel-view="map"] { text-align: left; }
+        .uf-projects-chart__map { aspect-ratio: 1; border: 1px solid #4242f6; }
+        .uf-projects-chart__panel[data-panel-view="table"] { display: none !important; }
+        .uf-projects-chart__panel[data-panel-view="map"] { display: block !important; }
+        .uf-projects-chart__footer { position: relative; right: auto; bottom: auto; left: auto; width: min(251px, 100%); min-height: 80px; margin: 0 auto 48px; flex-direction: column; align-items: center; justify-content: flex-start; gap: 16px; text-align: center; }
+        .uf-projects-chart__footer span { margin-top: 4px; }
+        .uf-projects-chart__footer img { flex: none; margin: 0; }
+        .uf-projects-chart__button { position: relative; bottom: auto; left: 50%; max-width: 100%; }
     }
 </style>

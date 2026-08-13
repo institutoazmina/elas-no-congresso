@@ -16,7 +16,7 @@ function formatDate(date: string) {
 ---
 
 <section class="tw:overflow-hidden tw:bg-[#0B0F5E] tw:py-12 tw:text-white tw:lg:py-24" style={`background-image: url('${cuttingMatPattern.src}'); background-position: center top; background-repeat: repeat; background-size: 200px 200px;`} aria-labelledby="home-reportagens-title">
-    <header class="tw:mx-auto tw:flex tw:w-full tw:max-w-[720px] tw:flex-col tw:items-center tw:px-6 tw:text-center tw:lg:h-[62px] tw:lg:px-0">
+    <header class="tw:mx-auto tw:flex tw:w-full tw:max-w-[720px] tw:flex-col tw:items-center tw:px-[15px] tw:text-center tw:lg:h-[62px] tw:lg:px-0">
         <h2 id="home-reportagens-title" class="tw:m-0 tw:font-[ETC_Anybody] tw:text-[32px] tw:font-bold tw:leading-8 tw:uppercase tw:[font-variation-settings:'wdth'_75]">
             Reportagens
         </h2>
@@ -25,15 +25,15 @@ function formatDate(date: string) {
         </p>
     </header>
 
-    <div class="tw:mt-10 tw:overflow-hidden tw:px-6 tw:lg:mt-2.5 tw:lg:px-12 tw:lg:pt-12" aria-label="Lista de reportagens em destaque">
-        <div class="tw:flex tw:w-full tw:justify-center-safe tw:gap-12 tw:pb-2 tw:lg:pb-0">
+    <div class="tw:mt-10 tw:overflow-x-auto tw:overflow-y-hidden tw:px-[15px] tw:lg:mt-2.5 tw:lg:overflow-hidden tw:lg:px-12 tw:lg:pt-12" aria-label="Lista de reportagens em destaque">
+        <div class="tw:flex tw:w-max tw:justify-start tw:gap-4 tw:pb-2 tw:lg:w-full tw:lg:justify-center-safe tw:lg:gap-12 tw:lg:pb-0">
             {reports.map((report) => {
                 const image = report._embedded?.["wp:featuredmedia"]?.[0];
                 const imageUrl = image && new URL(image.source_url ?? image.link, report.link).href;
                 const date = report.modified || report.date;
 
                 return (
-                <article class="tw:flex tw:w-[min(384px,calc(100vw-48px))] tw:shrink-0 tw:flex-col tw:gap-4 tw:lg:w-96">
+                <article class="tw:flex tw:w-[min(384px,calc(100vw-72px))] tw:shrink-0 tw:flex-col tw:gap-4 tw:lg:w-96">
                     <figure class="tw:m-0 tw:w-full tw:border-2 tw:border-[#4242F6]">
                         {imageUrl && <img class="tw:block tw:aspect-[384/216] tw:w-full tw:object-cover" src={imageUrl} alt={image?.alt_text ?? ""} loading="lazy" decoding="async" />}
                     </figure>
@@ -55,3 +55,19 @@ function formatDate(date: string) {
         </div>
     </div>
 </section>
+
+<style>
+    @media (max-width: 767px) {
+        section[aria-labelledby="home-reportagens-title"] > header {
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        section[aria-labelledby="home-reportagens-title"] > header > h2,
+        section[aria-labelledby="home-reportagens-title"] > header > p {
+            margin-left: 0;
+            margin-right: 0;
+            text-align: left;
+        }
+    }
+</style>

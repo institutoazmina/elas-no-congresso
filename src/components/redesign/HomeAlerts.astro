@@ -27,11 +27,13 @@ import chevron from "../../assets/images/redesign/home-reportagens/chevron-right
     .home-alerts__button img { width: 13.4142px; height: 8.12132px; transform: rotate(-90deg); }
     @media (max-width: 767px) {
         .home-alerts { height: 605.4716796875px; }
-        .home-alerts__content, .home-alerts h2, .home-alerts__intro, .home-alerts__detail { width: 100%; }
-        .home-alerts__content { padding: 0 24px; }
-        .home-alerts h2 { left: 0; font-size: 28px; line-height: 32px; }
-        .home-alerts__intro { left: 0; padding: 0 24px; }
-        .home-alerts__detail { left: 0; padding: 0 24px; }
+        .home-alerts__siren { top: 48px; left: 24px; width: 80px; height: auto; }
+        .home-alerts__content { width: 100%; margin: 0; padding: 0 24px; text-align: left; }
+        .home-alerts h2, .home-alerts__intro, .home-alerts__detail { left: 24px; width: calc(100% - 48px); padding: 0; text-align: left; }
+        .home-alerts h2 { top: 168px; font-size: 28px; line-height: 32px; }
+        .home-alerts__intro { top: 216px; }
+        .home-alerts__detail { top: 312px; }
+        .home-alerts__button { top: 392px; left: 24px; transform: none; }
         .home-alerts__intro br { display: none; }
     }
 </style>

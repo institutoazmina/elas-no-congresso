@@ -83,15 +83,15 @@ const themes = categories.map((category, index) => {
                                 style={`width: ${theme.chartWidth}px;`}
                             >
                                 <div
-                                    class={`tw:flex tw:items-center tw:justify-center tw:gap-2 ${theme.label ? "tw:flex-col tw:gap-1" : "tw:flex-row"}`}
+                                    class={`legislative-setbacks__indicator tw:flex tw:items-center tw:justify-center tw:gap-2 ${theme.label ? "tw:flex-col tw:gap-1" : "tw:flex-row"}`}
                                 >
-                                    <div class="tw:flex tw:items-center tw:justify-center tw:gap-2">
+                                    <div class="legislative-setbacks__indicator-value tw:flex tw:items-center tw:justify-center tw:gap-2">
                                         <span
-                                            class={`tw:font-[ETC_Anybody] tw:font-bold tw:leading-8 tw:uppercase tw:[font-variation-settings:'wdth'_75] ${theme.countSize === 36 ? "tw:text-[36px] tw:leading-[42px]" : "tw:text-[28px]"}`}
+                                            class={`legislative-setbacks__indicator-number tw:font-[ETC_Anybody] tw:font-bold tw:leading-8 tw:uppercase tw:[font-variation-settings:'wdth'_75] ${theme.countSize === 36 ? "tw:text-[36px] tw:leading-[42px]" : "tw:text-[28px]"}`}
                                         >
                                             {theme.count}
                                         </span>
-                                        <span class="tw:relative tw:block tw:size-8 tw:shrink-0 tw:rounded-full tw:bg-[#FF5865] tw:shadow-[-0.5px_-0.5px_0_#0B0F5E]">
+                                        <span class="legislative-setbacks__indicator-thumb tw:relative tw:block tw:size-8 tw:shrink-0 tw:rounded-full tw:bg-[#FF5865] tw:shadow-[-0.5px_-0.5px_0_#0B0F5E]">
                                             <img
                                                 class="tw:absolute tw:inset-[12.5%] tw:size-6 tw:rotate-180"
                                                 src={thumbsDown.src}
@@ -100,9 +100,12 @@ const themes = categories.map((category, index) => {
                                         </span>
                                     </div>
                                     {theme.label && (
-                                        <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">
+                                        <span class="legislative-setbacks__desktop-unfavorable tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">
                                             Desfavoráveis
                                         </span>
+                                    )}
+                                    {theme.label && (
+                                        <span class="legislative-setbacks__mobile-unfavorable">Desfavoráveis</span>
                                     )}
                                 </div>
                                 <Papelada
@@ -140,3 +143,156 @@ const themes = categories.map((category, index) => {
         </footer>
     </div>
 </section>
+
+<style>
+    /* This extra element only participates in the mobile indicator layout. */
+    .legislative-setbacks__mobile-unfavorable { display: none; }
+
+    @media (max-width: 767px) {
+        section[aria-labelledby="legislative-setbacks-title"] > div {
+            box-sizing: border-box;
+            width: 100%; height: 1615px; padding: 24px 16px; gap: 10px;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] header {
+            width: 100%; max-width: none; height: 148px; gap: 16px;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] header h2 {
+            font-size: 28px; line-height: 32px;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] header p {
+            font-size: 14px; line-height: 24px;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] figure {
+            height: 1303px; overflow: visible; padding: 24px 0;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] figure > div {
+            display: grid; width: 100%; max-width: 343px; min-width: 0; height: 100%;
+            margin: 0 auto;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: repeat(4, minmax(0, 1fr));
+            align-items: stretch;
+            gap: 24px;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] figure article {
+            width: auto !important; min-width: 0; min-height: 0; height: auto;
+            padding: 16px 0;
+            transform: none !important;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] figure article > div:first-child {
+            display: flex;
+            width: 100% !important;
+            max-width: 288px;
+            bottom: 92px;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] figure article > div:last-child {
+            top: auto; bottom: 0;
+            height: 92px;
+            justify-content: center;
+            gap: 4px;
+            padding: 8px 0;
+            box-sizing: border-box;
+        }
+        .legislative-setbacks__indicator {
+            display: inline-flex !important;
+            max-width: 288px;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            gap: 8px !important;
+        }
+        .legislative-setbacks__indicator-value {
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 4px !important;
+        }
+        .legislative-setbacks__indicator-number {
+            color: #0B0F5E;
+            font-family: "ETC Anybody", "Anybody", sans-serif;
+            font-size: 36px !important;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 42px !important;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .legislative-setbacks__indicator-thumb {
+            width: 32px !important;
+            height: 32px !important;
+            aspect-ratio: 1 / 1;
+            border-radius: 999px;
+            box-shadow: inset -0.5px -0.5px 0 0 #0B0F5E;
+        }
+        .legislative-setbacks__indicator-thumb img {
+            inset: 12.5% !important;
+            width: auto !important;
+            height: auto !important;
+        }
+        .legislative-setbacks__desktop-unfavorable { display: none; }
+        .legislative-setbacks__mobile-unfavorable {
+            display: block;
+            color: #0B0F5E;
+            font-family: ETC Anybody, Anybody, sans-serif;
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 24px;
+            text-align: center;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] figure article > div:first-child canvas {
+            width: 46px !important;
+            height: auto !important;
+            flex: none;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] figure article > div:last-child img {
+            width: 24px !important;
+            height: 24px !important;
+            flex: none;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] figure article > div:last-child h3 {
+            width: 100%;
+            min-width: 96px;
+            max-width: 192px;
+            min-height: 48px;
+            margin: 0;
+            color: #0B0F5E;
+            font-family: "ETC Anybody", "Anybody", sans-serif;
+            font-size: 20px;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 24px;
+            text-align: center;
+            text-transform: uppercase;
+            mix-blend-mode: multiply;
+            white-space: normal;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] footer {
+            display: flex;
+            width: min(251px, 100%);
+            height: 96px;
+            margin: 0 auto;
+            padding-top: 8px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 24px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] footer span {
+            width: 100%;
+            padding: 4px 0;
+            font-size: 14px;
+            line-height: 16px;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] footer img {
+            width: 113.217px;
+            height: 12px;
+            margin: 6px 0 0;
+        }
+    }
+</style>
