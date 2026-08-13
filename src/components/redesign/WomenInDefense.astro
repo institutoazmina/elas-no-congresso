@@ -76,20 +76,20 @@ const charts = [
 <style>
     .women-defense {
         position: relative;
-        min-height: 970.5px;
-        overflow: hidden;
+        min-height: 0;
+        overflow: visible;
         color: #0b0f5e;
         background: #fff;
         font-family: "Plus Jakarta Sans", sans-serif;
     }
     .women-defense *, .women-defense *::before, .women-defense *::after { box-sizing: border-box; }
-    .women-defense__container { position: relative; width: 816px; height: 970.5px; margin: 0 auto; padding: 48px; }
-    .women-defense__header { display: flex; width: 720px; height: 132px; flex-direction: column; align-items: flex-start; gap: 16px; }
-    .women-defense__attention { display: block; width: 96px; height: 4px; }
+    .women-defense__container { position: relative; width: 100%; height: auto; margin: 0 auto; padding: 24px 16px; }
+    .women-defense__header { display: flex; width: 100%; height: auto; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .women-defense__attention { display: block; width: 32px; height: 4px; }
     .women-defense h2, .women-defense h3, .women-defense p { margin: 0; }
-    .women-defense h2 { width: 720px; height: 24px; color: #0b0f5e; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 42px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
-    .women-defense__header p { width: 720px; color: #0b0f5e; font-size: 18px; font-weight: 400; line-height: 24px; }
-    .women-defense__figure { display: flex; width: 720px; height: 690.5px; margin: 10px 0 0; padding: 24px 0; align-items: flex-end; justify-content: center; gap: 24px; overflow: hidden; }
+    .women-defense h2 { width: 100%; height: auto; color: #0b0f5e; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 28px; font-weight: 700; line-height: 34px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .women-defense__header p { width: 100%; color: #0b0f5e; font-size: 18px; font-weight: 400; line-height: 24px; }
+    .women-defense__figure { display: flex; width: 100%; height: auto; margin: 10px 0 0; padding: 24px 0; align-items: center; justify-content: center; flex-direction: column; gap: 24px; overflow: visible; }
     .women-defense__chart { display: flex; width: 244.502px; height: 642.5px; flex: none; flex-direction: column; align-items: center; justify-content: flex-end; gap: 16px; padding: 16px 0; }
     .women-defense__chart-heading { display: flex; width: 244.502px; height: 72px; flex: none; flex-direction: column; align-items: center; justify-content: center; padding: 8px 0; }
     .women-defense__chart-heading span { height: 24px; font-size: 16px; line-height: 24px; }
@@ -110,23 +110,30 @@ const charts = [
        entre as duas categorias); a altura vem sozinha. */
     .women-defense__papers { width: 100%; }
     .women-defense__papers :global(canvas) { display: block; width: 100%; height: auto; }
-    .women-defense__note { position: absolute; z-index: 1; top: 352.5px; left: -111.312px; display: flex; width: 240px; height: 180px; align-items: center; justify-content: center; padding: 48px 24px; transform: rotate(-5deg); background: #def279; box-shadow: 0 4px 0 #0b0f5e; color: #0b0f5e; font-size: 18px; font-weight: 700; line-height: 24px; text-align: center; }
-    .women-defense__footer { position: absolute; bottom: 48px; left: 48px; display: flex; width: 720px; height: 32px; align-items: flex-start; justify-content: space-between; gap: 24px; border-top: 1px solid #0b0f5e; padding-top: 8px; color: #0b0f5e; font-size: 14px; line-height: 16px; }
+    .women-defense__note { position: relative; z-index: 1; top: auto; left: auto; display: flex; width: 240px; height: 180px; margin: 12px auto 48px; align-items: center; justify-content: center; padding: 48px 24px; transform: rotate(-5deg); background: #def279; box-shadow: 0 4px 0 #0b0f5e; color: #0b0f5e; font-size: 18px; font-weight: 700; line-height: 24px; text-align: center; }
+    .women-defense__footer { position: relative; bottom: auto; left: auto; display: flex; width: 100%; height: auto; align-items: flex-start; justify-content: space-between; gap: 24px; border-top: 1px solid #0b0f5e; padding-top: 8px; color: #0b0f5e; font-size: 14px; line-height: 16px; }
     .women-defense__footer span { margin-top: 4px; }
     .women-defense__footer img { width: 113.217px; height: 12px; margin: 6px 8px 0; }
-    .women-defense-fact { display: flex; width: 100%; height: 170.32435607910156px; margin: 0; box-sizing: border-box; flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; padding: 48px 0; background: #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
-    .women-defense-fact__content { display: flex; width: 720px; height: 74.32435607910156px; flex: none; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 16px; overflow: hidden; }
-    .women-defense-fact p { width: 720px; height: 72px; margin: 0; flex: none; color: #0b0f5e; font-size: 18px; font-weight: 400; line-height: 24px; letter-spacing: 0; text-align: left; text-transform: none; transform: matrix(0.9999947547912598, -0.003228801768273115, 0.003228801768273115, 0.9999947547912598, -0.1143484115600586, 2.324735403060913); transform-origin: 0 0; }
-    @media (max-width: 767px) {
-        .women-defense { min-height: 0; overflow: visible; }
-        .women-defense__container { width: 100%; height: auto; padding: 48px 24px; }
-        .women-defense__header, .women-defense h2, .women-defense__header p, .women-defense__figure, .women-defense__footer { width: 100%; height: auto; }
-        .women-defense h2 { font-size: 28px; line-height: 34px; }
-        .women-defense__figure { align-items: center; flex-direction: column; margin-top: 10px; overflow: visible; }
-        .women-defense__note { position: relative; top: auto; left: auto; margin: 12px auto 48px; }
-        .women-defense__footer { position: relative; bottom: auto; left: auto; }
-        .women-defense-fact { width: 100%; height: auto; min-height: 168px; padding: 48px 24px; }
-        .women-defense-fact__content { width: 100%; height: auto; }
-        .women-defense-fact p { width: 100%; height: auto; }
+    .women-defense-fact { display: flex; width: 100%; height: auto; min-height: 168px; margin: 0; box-sizing: border-box; flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; padding: 48px 24px; background: #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
+    .women-defense-fact__content { display: flex; width: 100%; height: auto; flex: none; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 16px; overflow: hidden; }
+    .women-defense-fact p { width: 100%; height: auto; margin: 0; flex: none; color: #0b0f5e; font-size: 18px; font-weight: 400; line-height: 24px; letter-spacing: 0; text-align: left; text-transform: none; transform: matrix(0.9999947547912598, -0.003228801768273115, 0.003228801768273115, 0.9999947547912598, -0.1143484115600586, 2.324735403060913); transform-origin: 0 0; }
+
+    @media (min-width: 768px) {
+        .women-defense {
+            min-height: 970.5px;
+            overflow: hidden;
+        }
+
+        .women-defense__container { width: 816px; height: 970.5px; padding: 48px; }
+        .women-defense__header { width: 720px; height: 132px; }
+        .women-defense__attention { width: 96px; }
+        .women-defense h2 { width: 720px; height: 24px; font-size: 36px; line-height: 42px; }
+        .women-defense__header p { width: 720px; }
+        .women-defense__figure { width: 720px; height: 690.5px; align-items: flex-end; flex-direction: row; overflow: hidden; }
+        .women-defense__note { position: absolute; top: 352.5px; left: -111.312px; margin: 0; }
+        .women-defense__footer { position: absolute; bottom: 48px; left: 48px; width: 720px; height: 32px; }
+        .women-defense-fact { height: 170.32435607910156px; min-height: 0; padding: 48px 0; }
+        .women-defense-fact__content { width: 720px; height: 74.32435607910156px; }
+        .women-defense-fact p { width: 720px; height: 72px; }
     }
 </style>

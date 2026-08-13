@@ -47,6 +47,14 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
 </style>
 
 <style>
+    @media (max-width: 767px) {
+        .slow-moving-proposals__header { padding-inline: 15px; }
+        .slow-moving-proposals__viewport { overflow: clip; }
+        .slow-moving-proposals__card { width: min(336px, calc(100vw - 48px)); }
+    }
+</style>
+
+<style>
     .slow-moving-proposals__carousel { background-color: #fff; background-image: var(--slow-moving-proposals-background); background-position: left top; background-repeat: repeat; background-size: 400px 400px; }
     .slow-moving-proposals__carousel::before, .slow-moving-proposals__carousel::after { position: absolute; z-index: 1; display: block; width: 100%; height: 24px; background-image: var(--slow-moving-proposals-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; content: ""; pointer-events: none; mix-blend-mode: multiply; }
     .slow-moving-proposals__carousel::before { top: 0; left: 0; transform: scaleY(-1); }

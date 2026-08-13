@@ -125,10 +125,12 @@ const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, fea
     .fast-moving-proposals__card-footer b { margin-left: 4px; font-weight: 700; }
     @media (max-width: 767px) {
         .fast-moving-proposals { height: 821.9435424804688px; }
-        .fast-moving-proposals__header { width: 100%; height: 174px; padding: 48px 24px; }
+        .fast-moving-proposals__header { width: 100%; height: 180px; padding: 48px 15px 0; }
         .fast-moving-proposals h2, .fast-moving-proposals__header p { width: 100%; }
         .fast-moving-proposals h2 { font-size: 28px; line-height: 32px; }
         .fast-moving-proposals__track { transform: translateX(-3216px); }
-        .fast-moving-proposals__card { width: 336px; }
+        .fast-moving-proposals__carousel { margin-top: 10px; }
+        .fast-moving-proposals__viewport { overflow: clip; }
+        .fast-moving-proposals__card { width: min(336px, calc(100vw - 48px)); }
     }
 </style>

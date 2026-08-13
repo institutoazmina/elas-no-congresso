@@ -19,9 +19,10 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
         box-sizing: border-box;
         display: flex;
         width: 100%;
-        height: 684px;
+        min-height: 684px;
+        height: auto;
         margin-top: 48px;
-        padding: 96px 548px;
+        padding: 96px 24px;
         align-items: center;
         justify-content: center;
         overflow: clip;
@@ -39,9 +40,9 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
 
     .explore-congress__content {
         display: flex;
-        width: 720px;
-        height: 492px;
-        min-width: 720px;
+        width: 100%;
+        height: auto;
+        min-width: 0;
         flex-direction: column;
         align-items: center;
         gap: 16px;
@@ -65,8 +66,8 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
     }
 
     .explore-congress__subtitle {
-        width: 720px;
-        height: 48px;
+        width: 100%;
+        height: auto;
         color: #fff;
         font-family: "Plus Jakarta Sans", sans-serif;
         font-size: 18px;
@@ -77,16 +78,18 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
 
     .explore-congress__screen-wrap {
         display: flex;
-        width: 720px;
-        height: 318px;
+        width: 100%;
+        height: auto;
         padding: 24px 0;
         align-items: flex-start;
         justify-content: center;
     }
 
     .explore-congress__screen {
-        width: 480px;
-        height: 270px;
+        width: 100%;
+        max-width: 480px;
+        height: auto;
+        aspect-ratio: 16 / 9;
         flex: none;
         border: 2px solid #4242f6;
         border-radius: 16px;
@@ -95,7 +98,8 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
 
     .explore-congress__button {
         display: flex;
-        width: 340px;
+        width: 100%;
+        max-width: 340px;
         height: 56px;
         margin: 0;
         padding: 18px 24px 14px;
@@ -123,4 +127,40 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
         transform: rotate(-90deg);
     }
     .explore-congress__button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+    @media (min-width: 768px) {
+        .explore-congress {
+            height: 684px;
+            min-height: 0;
+            padding: 96px max(24px, calc((100vw - 720px) / 2));
+        }
+
+        .explore-congress__content {
+            width: 720px;
+            height: 492px;
+            min-width: 720px;
+        }
+
+        .explore-congress__subtitle {
+            width: 720px;
+            height: 48px;
+        }
+
+        .explore-congress__screen-wrap {
+            width: 720px;
+            height: 318px;
+        }
+
+        .explore-congress__screen {
+            width: 480px;
+            max-width: none;
+            height: 270px;
+            aspect-ratio: auto;
+        }
+
+        .explore-congress__button {
+            width: 340px;
+            max-width: none;
+        }
+    }
 </style>
