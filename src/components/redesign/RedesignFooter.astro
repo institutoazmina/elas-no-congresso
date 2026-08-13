@@ -98,15 +98,25 @@ import elasFunder from "../../assets/images/redesign/funders/elas.png";
     .redesign-footer__button:hover { background: #0b0f5e; outline: 1px solid #fff; }
     .redesign-footer__social nav a:hover { opacity: .72; }
 
-    @media (max-width: 700px) {
-        .redesign-footer__main { height: auto; padding: 32px 24px; flex-direction: column; gap: 16px; }
+    @media (max-width: 767px) {
+        .redesign-footer__main { height: auto; padding: 32px 24px; flex-direction: column; justify-content: flex-start; gap: 32px; }
         .redesign-footer__alerts, .redesign-footer__identity { width: 100%; padding: 0; }
-        .redesign-footer__alerts p { width: 100%; }
-        .redesign-footer__identity { padding-top: 17px; gap: 39px; }
-        .redesign-footer__funders { height: auto; padding: 32px 24px; align-items: flex-start; flex-direction: column; gap: 24px; }
+        .redesign-footer__alerts p { width: 316px; max-width: 100%; }
+        .redesign-footer__identity { gap: 16px; }
+        .redesign-footer__social { gap: 16px; }
+        .redesign-footer__social nav { flex-wrap: nowrap; justify-content: flex-start; }
+        .redesign-footer__funders { height: auto; padding: 24px 32px; align-items: flex-start; flex-direction: column; justify-content: flex-start; gap: 20px; }
         .redesign-footer__funders h2 { margin-right: 0; white-space: normal; }
-        .redesign-footer__funder-logos { width: 100%; flex-wrap: wrap; gap: 24px; }
-        .redesign-footer__banner { height: auto; padding: 24px; flex-wrap: wrap; }
-        .redesign-footer__banner p { white-space: normal; text-align: center; }
+        .redesign-footer__funder-logos { width: 100%; flex-wrap: nowrap; gap: 16px; }
+        .redesign-footer__funder-logos img { height: auto; object-fit: contain; }
+        .redesign-footer__ia { width: 73px; }
+        .redesign-footer__codesinfo { width: 83px; }
+        .redesign-footer__afd { width: 53px; }
+        .redesign-footer__elas-funder { width: 34px; }
+        .redesign-footer__banner { height: auto; padding: 24px; flex-direction: column; flex-wrap: nowrap; gap: 20px; }
+        .redesign-footer__banner > .redesign-footer__azmina { width: 64px; height: auto; order: 2; }
+        .redesign-footer__banner > img:last-child { display: none; }
+        .redesign-footer__banner p { width: 100%; order: 1; white-space: normal; letter-spacing: -0.125px; text-align: center; text-transform: uppercase; }
+        .redesign-footer__banner p a { display: block; }
     }
 </style>
