@@ -124,13 +124,42 @@ const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, fea
     .fast-moving-proposals__card-footer strong { margin: 0 4px; color: #ff5865; font-weight: 700; }
     .fast-moving-proposals__card-footer b { margin-left: 4px; font-weight: 700; }
     @media (max-width: 767px) {
-        .fast-moving-proposals { height: 821.9435424804688px; }
-        .fast-moving-proposals__header { width: 100%; height: 180px; padding: 48px 15px 0; }
+        .fast-moving-proposals { height: auto; }
+        .fast-moving-proposals__header { width: 100%; height: auto; padding: 48px 15px 10px; }
         .fast-moving-proposals h2, .fast-moving-proposals__header p { width: 100%; }
-        .fast-moving-proposals h2 { font-size: 28px; line-height: 32px; }
-        .fast-moving-proposals__track { transform: translateX(-3216px); }
-        .fast-moving-proposals__carousel { margin-top: 10px; }
-        .fast-moving-proposals__viewport { overflow: clip; }
-        .fast-moving-proposals__card { width: min(336px, calc(100vw - 48px)); }
+        .fast-moving-proposals h2 { height: auto; font-size: 28px; line-height: 32px; }
+        .fast-moving-proposals__header p { font-size: 14px; line-height: 24px; }
+        .fast-moving-proposals h2 br { display: none; }
+        .fast-moving-proposals__carousel { height: 400px; margin-top: 0; }
+        .fast-moving-proposals__viewport { overflow-x: clip; overflow-y: visible; }
+        .fast-moving-proposals__track {
+            --mobile-card-width: 224.345px;
+            --mobile-card-gap: 16px;
+            --mobile-active-index: 7;
+            gap: var(--mobile-card-gap);
+            transform: translateX(calc(var(--mobile-active-index) * -1 * (var(--mobile-card-width) + var(--mobile-card-gap)) - var(--mobile-card-width) / 2)) !important;
+        }
+        .fast-moving-proposals__card { width: var(--mobile-card-width); height: 226px; }
+        .fast-moving-proposals__card-header { height: 44px; padding: 6px 10px; }
+        .fast-moving-proposals__card-header > strong { font-size: 12px; line-height: 14px; }
+        .fast-moving-proposals__status { top: 5px; right: 10px; width: 106px; height: 34px; }
+        .fast-moving-proposals__document { top: 0; left: 2px; width: 24px; height: 32px; }
+        .fast-moving-proposals__thumb { top: 7px; left: 21px; width: 20px; height: 20px; }
+        .fast-moving-proposals__thumb > img:first-child { width: 20px; height: 20px; }
+        .fast-moving-proposals__thumb > img:last-child { inset: 3px; width: 14px; height: 14px; }
+        .fast-moving-proposals__status b { top: 10px; left: 47px; width: 59px; font-size: 10px; line-height: 12px; }
+        .fast-moving-proposals__card-content { height: 146px; padding: 12px 10px; }
+        .fast-moving-proposals__author { font-size: 11px; line-height: 14px; }
+        .fast-moving-proposals__badge { margin-top: 8px; padding: 2px 4px; font-size: 10px; line-height: 14px; }
+        .fast-moving-proposals__description { display: -webkit-box; margin-top: 8px !important; overflow: hidden; font-size: 10px; line-height: 14px; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
+        .fast-moving-proposals__card-footer { height: 36px; padding: 6px 10px; font-size: 10px; line-height: 14px; }
+        .fast-moving-proposals__card--featured { border: 1px solid #0b0f5e; box-shadow: -4px 4px 0 #0b0f5e; }
+        .fast-moving-proposals__track:has(> .fast-moving-proposals__card:nth-child(5).fast-moving-proposals__card--featured) { --mobile-active-index: 4; }
+        .fast-moving-proposals__track:has(> .fast-moving-proposals__card:nth-child(6).fast-moving-proposals__card--featured) { --mobile-active-index: 5; }
+        .fast-moving-proposals__track:has(> .fast-moving-proposals__card:nth-child(7).fast-moving-proposals__card--featured) { --mobile-active-index: 6; }
+        .fast-moving-proposals__track:has(> .fast-moving-proposals__card:nth-child(8).fast-moving-proposals__card--featured) { --mobile-active-index: 7; }
+        .fast-moving-proposals__track:has(> .fast-moving-proposals__card:nth-child(9).fast-moving-proposals__card--featured) { --mobile-active-index: 8; }
+        .fast-moving-proposals__track:has(> .fast-moving-proposals__card:nth-child(10).fast-moving-proposals__card--featured) { --mobile-active-index: 9; }
+        .fast-moving-proposals__track:has(> .fast-moving-proposals__card:nth-child(11).fast-moving-proposals__card--featured) { --mobile-active-index: 10; }
     }
 </style>
