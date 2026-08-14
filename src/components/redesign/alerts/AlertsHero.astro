@@ -47,13 +47,15 @@ import chevron from "../../../assets/images/redesign/home-reportagens/chevron-ri
         .alerts-hero__illustration { transform: scale(.86); transform-origin: right center; }
     }
 
-    @media (max-width: 760px) {
-        .alerts-hero { height: 610px; }
-        .alerts-hero__top-row { align-items: flex-start; height: 586px; padding: 48px 24px; }
-        .alerts-hero__content { gap: 20px; max-width: 100%; }
+    @media (max-width: 767px) {
+        .alerts-hero { height: auto; min-height: 0; padding-bottom: 24px; }
+        .alerts-hero__top-row { align-items: flex-start; height: auto; padding: 48px 24px; }
+        .alerts-hero__content { gap: 16px; max-width: 100%; }
+        .alerts-hero__attention { height: 4px; }
         .alerts-hero h1 { font-size: clamp(42px, 11vw, 58px); line-height: .98; }
-        .alerts-hero p { font-size: 16px; line-height: 22px; width: min(100%, 500px); }
+        .alerts-hero p { font-size: 18px; line-height: 24px; width: min(100%, 500px); }
+        .alerts-hero__button { max-width: 100%; }
         .alerts-hero__button span { font-size: 16px; }
-        .alerts-hero__illustration { bottom: 16px; margin: 0; position: absolute; right: -88px; transform: scale(.54); transform-origin: bottom right; }
+        .alerts-hero__illustration { display: none; }
     }
 </style>

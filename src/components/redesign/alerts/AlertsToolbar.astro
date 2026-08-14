@@ -11,5 +11,8 @@ import AlertsSort from "./AlertsSort.astro";
 <style>
     .alerts-toolbar { align-items: center; display: flex; gap: 16px; height: 55px; width: 816px; }
     @media (max-width: 940px) { .alerts-toolbar { width: 100%; } }
-    @media (max-width: 700px) { .alerts-toolbar { align-items: stretch; flex-direction: column; height: auto; } }
+    @media (max-width: 767px) {
+        .alerts-toolbar { display: block; height: 55px; }
+        .alerts-toolbar > :global(.alerts-sort) { display: none; }
+    }
 </style>

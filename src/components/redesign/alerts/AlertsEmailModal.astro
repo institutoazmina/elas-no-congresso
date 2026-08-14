@@ -18,7 +18,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
         <div class="alerts-email-modal__content">
             <header class="alerts-email-modal__intro">
                 <h2 id="alerts-email-modal-title">Receba alertas do que acontece no Congresso Nacional!</h2>
-                <p>Quer saber quando uma nova proposta sobre gênero é apresentada,<br />ou quando algo de muita importância avança? A gente te avisa!<br />Escolha como e quando quer receber os e-mails.</p>
+                <p><span>Quer saber quando uma nova proposta sobre gênero é apresentada,<br />ou quando algo de muita importância avança? A gente te avisa!</span><br /><span class="alerts-email-modal__intro-choice">Escolha como e quando quer receber os e-mails.</span></p>
             </header>
 
             <form class="alerts-email-modal__form">
@@ -67,7 +67,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
                         <section class="alerts-email-modal__daily-control" aria-label="Comissão">
                             <h3>Comissão</h3>
                             <div class="alerts-email-modal__daily-select-wrap">
-                                <button class="alerts-email-modal__daily-select" type="button" aria-expanded="false" aria-controls="alerts-commission-options" disabled><span data-alerts-commission-label></span><i aria-hidden="true"></i></button>
+                                <button class="alerts-email-modal__daily-select" type="button" aria-label="Selecionar comissão" aria-expanded="false" aria-controls="alerts-commission-options" disabled><span data-alerts-commission-label></span><i aria-hidden="true"></i></button>
                                 <div class="alerts-email-modal__daily-select-options" id="alerts-commission-options" hidden>
                                     {committees.map((committee) => (
                                         <button type="button" data-alerts-commission={committee.acronym} data-alerts-committee-house={committee.house}>{committee.name} ({committee.acronym})</button>
@@ -78,7 +78,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
                         <section class="alerts-email-modal__daily-control" aria-label="Proposição">
                             <h3>Proposição</h3>
                             <div class="alerts-email-modal__daily-select-wrap">
-                                <input class="alerts-email-modal__daily-search" id="alerts-proposal-search" type="search" placeholder="Buscar por número ou assunto…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="alerts-proposal-options" aria-autocomplete="list" disabled />
+                                <input class="alerts-email-modal__daily-search" id="alerts-proposal-search" type="search" aria-label="Buscar proposição por número ou assunto" placeholder="Buscar por número ou assunto…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="alerts-proposal-options" aria-autocomplete="list" disabled />
                                 <div class="alerts-email-modal__proposal-options" id="alerts-proposal-options" role="listbox" hidden aria-label="Proposições encontradas"></div>
                             </div>
                             <p class="alerts-email-modal__daily-helper" data-alerts-proposal-helper>Opcional. Deixe em branco para receber alertas de todas as proposições dos filtros acima.</p>
@@ -449,5 +449,31 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     .alerts-email-modal__submit:not(:disabled) { padding-right: 24px; }
     .alerts-email-modal__submit:not(:disabled) img { display: none; }
     .alerts-email-modal__submit img { width: 13.414px; height: 8.121px; transform: rotate(-90deg); filter: brightness(0) invert(1); }
-    @media (max-width: 680px) { .alerts-email-modal { top: calc(var(--alerts-header-height, 72px) + 12px); width: min(100%, calc(100vw - 24px)); max-height: calc(100dvh - var(--alerts-header-height, 72px) - 24px); } .alerts-email-modal__close-row { max-width: calc(100% - 32px); height: 72px; padding-top: 24px; } .alerts-email-modal__content { padding: 48px 16px 32px; } .alerts-email-modal h2 { font-size: 26px; line-height: 34px; } .alerts-email-modal__intro p br, .alerts-email-modal__section > p br { display: none; } .alerts-email-modal__topics, .alerts-email-modal__frequencies { grid-template-columns: 1fr; } .alerts-email-modal__topics { gap: 12px; } .alerts-email-modal__submit { margin-top: 28px; } }
+    @media (max-width: 767px) {
+        .alerts-email-modal { top: calc(var(--alerts-header-height, 72px) + 12px); width: min(100%, calc(100vw - 24px)); max-height: calc(100dvh - var(--alerts-header-height, 72px) - 24px); }
+        .alerts-email-modal__close-row { max-width: calc(100% - 32px); height: 72px; padding-top: 24px; }
+        .alerts-email-modal__content { padding: 48px 16px 32px; }
+        .alerts-email-modal h2 { font-size: 26px; line-height: 34px; overflow-wrap: anywhere; }
+        .alerts-email-modal__intro p br, .alerts-email-modal__section > p br { display: none; }
+        .alerts-email-modal__intro-choice { display: block; padding-top: 16px; }
+        .alerts-email-modal__form { padding-top: 0; }
+        .alerts-email-modal__section { padding-top: 32px; }
+        .alerts-email-modal__section > legend { margin-top: 0; }
+        .alerts-email-modal__topics, .alerts-email-modal__frequencies { grid-template-columns: minmax(0, 1fr); }
+        .alerts-email-modal__topics { gap: 12px; }
+        .alerts-email-modal__frequencies { gap: 16px; padding-top: 16px; }
+        .alerts-email-modal__weekly-note { display: none !important; }
+        .alerts-email-modal--weekly-open .alerts-email-modal__terms { padding-top: 28px; }
+        .alerts-email-modal__daily-options { width: 100%; height: auto; margin-top: 16px; padding: 21px 16px; }
+        .alerts-email-modal__daily-options::before { right: 44px; left: auto; }
+        .alerts-email-modal__daily-intro { width: 100%; height: auto; }
+        .alerts-email-modal__daily-house { width: 100%; height: auto; }
+        .alerts-email-modal__daily-house-options { height: auto; padding-top: 12px; align-items: center; flex-wrap: wrap; }
+        .alerts-email-modal__daily-control, .alerts-email-modal__daily-house + .alerts-email-modal__daily-control { width: 100%; height: auto; }
+        .alerts-email-modal__daily-select-wrap { width: 100%; }
+        .alerts-email-modal__daily-select, .alerts-email-modal__daily-select-options, .alerts-email-modal__daily-search, .alerts-email-modal__daily-helper, .alerts-email-modal__proposal-options { width: 100%; }
+        .alerts-email-modal__daily-select span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .alerts-email-modal__daily-helper { color: rgba(255, 255, 255, .72); }
+        .alerts-email-modal__submit { width: 100%; margin-top: 28px; }
+    }
 </style>

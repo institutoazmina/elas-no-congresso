@@ -50,5 +50,14 @@ import "../styles/redesign-shared-background.css";
     .redesign-alerts-main { background: #fff; }
     .alerts-content { box-sizing: border-box; display: flex; flex-direction: column; gap: 32px; margin: 0 auto; padding: 100px 40px 56px; width: 896px; }
     @media (max-width: 940px) { .alerts-content { padding: 64px 32px; width: 100%; } }
-    @media (max-width: 700px) { .alerts-content { gap: 32px; padding: 48px 24px; } }
+    @media (max-width: 767px) {
+        .alerts-content { gap: 32px; padding: 48px 24px; }
+        .redesign-alerts-page .redesign-header__mobile-panel a[href="/alertas"] {
+            background: #def279;
+            color: #0b0f5e;
+            text-decoration: underline;
+            text-decoration-thickness: 2px;
+            text-underline-offset: 4px;
+        }
+    }
 </style>
