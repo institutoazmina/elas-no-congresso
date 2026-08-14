@@ -98,9 +98,18 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     import { PUBLIC_API_BASE_URL } from "astro:env/client";
     import { buildAst } from "../../../lib/alerts/ast.ts";
 
+    let activeWindowListeners: AbortController | null = null;
+
     const initializeAlertsEmailModal = () => {
     const dialog = document.querySelector<HTMLDialogElement>(".alerts-email-modal");
-    if (!dialog || dialog.dataset.alertsEmailModalInitialized) return;
+    if (!dialog) {
+        activeWindowListeners?.abort();
+        activeWindowListeners = null;
+        return;
+    }
+    if (dialog.dataset.alertsEmailModalInitialized) return;
+    activeWindowListeners?.abort();
+    activeWindowListeners = new AbortController();
     dialog.dataset.alertsEmailModalInitialized = "true";
     const backdrop = document.querySelector<HTMLElement>(".alerts-email-backdrop");
     const siteHeader = document.querySelector<HTMLElement>(".redesign-header");
@@ -198,6 +207,10 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     };
 
     opener?.addEventListener("click", () => {
+        if (window.matchMedia("(max-width: 767px)").matches) {
+            window.scrollTo(0, 0);
+            if (weeklyNote) weeklyNote.hidden = false;
+        }
         syncHeaderHeight();
         if (backdrop) backdrop.hidden = false;
         document.body.classList.add("alerts-email-modal-open");
@@ -211,8 +224,8 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     });
     window.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && dialog.open) dialog.close();
-    });
-    window.addEventListener("resize", syncHeaderHeight);
+    }, { signal: activeWindowListeners.signal });
+    window.addEventListener("resize", syncHeaderHeight, { signal: activeWindowListeners.signal });
 
     email?.addEventListener("input", updateSubmitState);
     topics.forEach((topic) => topic.addEventListener("change", updateSubmitState));
@@ -220,7 +233,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
 
     // Semanal e diário são independentes: o texto do modal promete "uma ou as duas".
     weekly?.addEventListener("change", () => {
-        if (weeklyNote) weeklyNote.hidden = !weekly.checked;
+        if (weeklyNote && !window.matchMedia("(max-width: 767px)").matches) weeklyNote.hidden = !weekly.checked;
         dialog?.classList.toggle("alerts-email-modal--weekly-open", weekly.checked);
         updateSubmitState();
     });
@@ -360,6 +373,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     };
 
     initializeAlertsEmailModal();
+    document.addEventListener("astro:after-swap", initializeAlertsEmailModal);
     document.addEventListener("astro:page-load", initializeAlertsEmailModal);
 </script>
 
@@ -450,20 +464,78 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     .alerts-email-modal__submit:not(:disabled) img { display: none; }
     .alerts-email-modal__submit img { width: 13.414px; height: 8.121px; transform: rotate(-90deg); filter: brightness(0) invert(1); }
     @media (max-width: 767px) {
-        .alerts-email-modal { top: calc(var(--alerts-header-height, 72px) + 12px); width: min(100%, calc(100vw - 24px)); max-height: calc(100dvh - var(--alerts-header-height, 72px) - 24px); }
-        .alerts-email-modal__close-row { max-width: calc(100% - 32px); height: 72px; padding-top: 24px; }
-        .alerts-email-modal__content { padding: 48px 16px 32px; }
-        .alerts-email-modal h2 { font-size: 26px; line-height: 34px; overflow-wrap: anywhere; }
-        .alerts-email-modal__intro p br, .alerts-email-modal__section > p br { display: none; }
-        .alerts-email-modal__intro-choice { display: block; padding-top: 16px; }
-        .alerts-email-modal__form { padding-top: 0; }
-        .alerts-email-modal__section { padding-top: 32px; }
+        :global(body.alerts-email-modal-open) { overflow: auto; }
+        .alerts-email-backdrop { display: none !important; }
+        .alerts-email-modal { position: static; width: 100%; max-height: none; margin: 0; overflow: visible; }
+        .alerts-email-modal__close-row { width: 100%; max-width: none; height: 75px; margin: 0; padding: 25px 20px 25px 15px; }
+        .alerts-email-modal__close { width: 19px; height: 19px; padding: 0 0 2px; border-width: 2px; font-size: 17px; }
+        .alerts-email-modal__content { padding: 0 16px; gap: 0; }
+        .alerts-email-modal__intro { width: 100%; padding-bottom: 36px; }
+        .alerts-email-modal h2 { font-size: 28px; line-height: 32px; overflow-wrap: normal; text-transform: uppercase; }
+        .alerts-email-modal__intro p, .alerts-email-modal__section > p { color: #0b0f5e; }
+        .alerts-email-modal__intro p { width: 100%; padding-top: 16px; }
+        .alerts-email-modal__intro p br { display: none; }
+        .alerts-email-modal__intro-choice { display: block; padding-top: 24px; }
+        .alerts-email-modal__form { padding: 0 0 48px; }
+        .alerts-email-modal__email-field { gap: 5px; }
+        .alerts-email-modal__email-field label { min-height: 28px; }
+        .alerts-email-modal__email-field input { padding: 13px 17px; }
+        .alerts-email-modal__email-field input::placeholder { opacity: .7; }
+        .alerts-email-modal__section { margin-top: 36px; padding-top: 0; }
         .alerts-email-modal__section > legend { margin-top: 0; }
         .alerts-email-modal__topics, .alerts-email-modal__frequencies { grid-template-columns: minmax(0, 1fr); }
-        .alerts-email-modal__topics { gap: 12px; }
-        .alerts-email-modal__frequencies { gap: 16px; padding-top: 16px; }
-        .alerts-email-modal__weekly-note { display: none !important; }
-        .alerts-email-modal--weekly-open .alerts-email-modal__terms { padding-top: 28px; }
+        .alerts-email-modal__topics { gap: 15px; padding-top: 16px; }
+        .alerts-email-modal__topics label { min-height: 30.391px; color: #0b0f5e; }
+        .alerts-email-modal__topics input[type="checkbox"] { width: 18px; height: 18px; border-color: #0b0f5e; flex-basis: 18px; }
+        .alerts-email-modal__frequencies { gap: 20px; padding-top: 25px; }
+        .alerts-email-modal__weekly-card {
+            --alerts-weekly-note-reserved-width: 163px;
+            width: 100%;
+            height: 184px;
+            min-height: 184px;
+            margin: 0;
+        }
+        .alerts-email-modal__frequency-card,
+        .alerts-email-modal__frequency-card:has(input:checked),
+        .alerts-email-modal__weekly-card .alerts-email-modal__frequency-card,
+        .alerts-email-modal__weekly-card .alerts-email-modal__frequency-card:has(input:checked) {
+            padding: 20px;
+            border-color: #998d96;
+            border-width: 1px;
+        }
+        .alerts-email-modal__weekly-card .alerts-email-modal__frequency-card { min-height: 184px; }
+        .alerts-email-modal__daily-card { height: 143px; min-height: 143px; }
+        .alerts-email-modal__frequency-card input[type="checkbox"] { width: 22px; height: 22px; flex-basis: 22px; }
+        .alerts-email-modal__frequency-card input[type="checkbox"]:checked::after { top: 4px; left: 4px; }
+        .alerts-email-modal__weekly-card .alerts-email-modal__frequency-card > span:last-child {
+            width: min(133px, calc(100% - var(--alerts-weekly-note-reserved-width)));
+            min-height: 119px;
+            flex: none;
+        }
+        .alerts-email-modal__daily-card > span:last-child { width: min(262px, 100%); }
+        .alerts-email-modal__weekly-note {
+            top: 75px;
+            right: 14px;
+            bottom: auto;
+            width: 158.897px;
+            height: 104.604px;
+            padding: 9.802px 8px;
+        }
+        .alerts-email-modal__weekly-note p { width: auto; height: auto; }
+        @media (max-width: 339px) {
+            .alerts-email-modal__weekly-card {
+                --alerts-weekly-note-reserved-width: 170px;
+                height: auto;
+            }
+            .alerts-email-modal__weekly-card .alerts-email-modal__frequency-card,
+            .alerts-email-modal__weekly-card .alerts-email-modal__frequency-card:has(input:checked) {
+                height: auto;
+                padding: 16px;
+            }
+        }
+        .alerts-email-modal__terms,
+        .alerts-email-modal--weekly-open .alerts-email-modal__terms,
+        .alerts-email-modal--daily-open .alerts-email-modal__terms { padding-top: 20px; gap: 12px; line-height: 22.75px; }
         .alerts-email-modal__daily-options { width: 100%; height: auto; margin-top: 16px; padding: 21px 16px; }
         .alerts-email-modal__daily-options::before { right: 44px; left: auto; }
         .alerts-email-modal__daily-intro { width: 100%; height: auto; }
@@ -474,6 +546,8 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
         .alerts-email-modal__daily-select, .alerts-email-modal__daily-select-options, .alerts-email-modal__daily-search, .alerts-email-modal__daily-helper, .alerts-email-modal__proposal-options { width: 100%; }
         .alerts-email-modal__daily-select span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .alerts-email-modal__daily-helper { color: rgba(255, 255, 255, .72); }
-        .alerts-email-modal__submit { width: 100%; margin-top: 28px; }
+        .alerts-email-modal__submit,
+        .alerts-email-modal__submit:disabled { width: 205px; margin-top: 44px; padding: 18px 24px 14px; background: #4242f6; font-size: 20px; }
+        .alerts-email-modal__submit img { display: none; }
     }
 </style>

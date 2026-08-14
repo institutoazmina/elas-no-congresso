@@ -52,6 +52,34 @@ import "../styles/redesign-shared-background.css";
     @media (max-width: 940px) { .alerts-content { padding: 64px 32px; width: 100%; } }
     @media (max-width: 767px) {
         .alerts-content { gap: 32px; padding: 48px 24px; }
+        body.alerts-email-modal-open .redesign-alerts-page {
+            display: flex;
+            flex-direction: column;
+        }
+        body.alerts-email-modal-open .redesign-alerts-header-background { order: 0; }
+        body.alerts-email-modal-open .redesign-alerts-main { display: none; }
+        body.alerts-email-modal-open .alerts-email-modal { order: 1; }
+        body.alerts-email-modal-open .redesign-footer { margin-top: 30px; order: 2; }
+        body.alerts-email-modal-open .redesign-header__mobile-menu summary {
+            width: 28px;
+            height: 22px;
+        }
+        body.alerts-email-modal-open .redesign-header__mobile-menu summary span {
+            left: 4px;
+            width: 20px;
+        }
+        body.alerts-email-modal-open .redesign-header__mobile-menu summary span:nth-child(1) { top: 4px; }
+        body.alerts-email-modal-open .redesign-header__mobile-menu summary span:nth-child(2) { top: 10px; }
+        body.alerts-email-modal-open .redesign-header__mobile-menu summary span:nth-child(3) { top: 16px; }
+        body.alerts-email-modal-open .redesign-header__mobile-menu[open] summary span:nth-child(1),
+        body.alerts-email-modal-open .redesign-header__mobile-menu[open] summary span:nth-child(3) { top: 10px; }
+        body.alerts-email-modal-open .redesign-footer__alerts { padding-bottom: 32px; }
+        body.alerts-email-modal-open .redesign-footer__identity { gap: 72px; }
+        body.alerts-email-modal-open .redesign-footer__funders h2 { font-size: 18px !important; line-height: 24px !important; white-space: nowrap; }
+        body.alerts-email-modal-open .redesign-footer__funder-logos { height: 48px; }
+        body.alerts-email-modal-open .redesign-footer__elas-funder { height: 48px !important; }
+        body.alerts-email-modal-open .redesign-footer__banner p { font-size: 14px !important; line-height: 16px !important; }
+        body.alerts-email-modal-open .redesign-footer__banner > .redesign-footer__azmina { width: 50px !important; height: 34px !important; object-fit: contain; }
         .redesign-alerts-page .redesign-header.redesign-header--scrolled {
             inset: 0 0 auto;
             position: fixed;
