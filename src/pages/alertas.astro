@@ -52,7 +52,50 @@ import "../styles/redesign-shared-background.css";
     @media (max-width: 940px) { .alerts-content { padding: 64px 32px; width: 100%; } }
     @media (max-width: 767px) {
         .alerts-content { gap: 32px; padding: 48px 24px; }
+        .redesign-alerts-page .redesign-header.redesign-header--scrolled {
+            inset: 0 0 auto;
+            position: fixed;
+        }
+        .redesign-alerts-page .redesign-header .highlighter-marks {
+            display: none !important;
+        }
+        .redesign-alerts-page .redesign-header:not(.redesign-header--scrolled):has(.redesign-header__mobile-menu[open]) {
+            inset: auto;
+            position: relative;
+        }
+        .redesign-alerts-page .redesign-header__content:has(.redesign-header__mobile-menu[open]) {
+            display: block;
+            padding: 0;
+        }
+        .redesign-alerts-page .redesign-header__content:has(.redesign-header__mobile-menu[open]) > .redesign-header__brand {
+            left: 16px;
+            position: absolute;
+            top: 19px;
+            z-index: 2;
+        }
+        .redesign-alerts-page .redesign-header__mobile-menu[open] {
+            display: block;
+            padding-top: 12px;
+            width: 100%;
+        }
+        .redesign-alerts-page .redesign-header__mobile-menu[open] > summary {
+            margin-left: auto;
+            margin-right: 16px;
+        }
+        .redesign-alerts-page .redesign-header__mobile-menu[open] > .redesign-header__mobile-panel {
+            height: auto;
+            inset: auto;
+            margin-top: 12px;
+            min-height: 0;
+            overflow-y: visible;
+            position: static;
+        }
         .redesign-alerts-page .redesign-header__mobile-panel a[href="/alertas"] {
+            background: transparent;
+            color: #fff;
+            text-decoration: none;
+        }
+        .redesign-alerts-page .redesign-header__mobile-panel a[href="/alertas"] > span {
             background: #def279;
             color: #0b0f5e;
             text-decoration: underline;

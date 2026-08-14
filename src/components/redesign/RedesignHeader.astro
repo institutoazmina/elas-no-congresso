@@ -62,7 +62,7 @@ const links = [
                         data-highlighter-target
                         data-highlighter-routes={link.href}
                     >
-                        {link.label}
+                        {link.href === "/alertas" ? <span>{link.label}</span> : link.label}
                     </a>
                     ))
                 }
@@ -588,5 +588,5 @@ const links = [
     window.addEventListener("popstate", scheduleHighlighterUpdate);
     document.addEventListener("astro:before-swap", prepareMobileHeaderNavigation);
     document.addEventListener("astro:after-swap", () => { refreshHighlighter(true); });
-    document.addEventListener("astro:page-load", () => { refreshHighlighter(true); });
+    document.addEventListener("astro:page-load", () => { refreshHighlighter(); });
 </script>
