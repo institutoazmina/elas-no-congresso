@@ -139,6 +139,28 @@ const items = Array.from({ length: 15 }, (_, index) => index);
     @media (max-width: 767px) {
         .parliamentarians {
             min-height: 0;
+            margin-top: 0;
+            box-shadow: none;
+        }
+
+        .parliamentarians__header {
+            margin-top: 48px;
+            padding-inline: 15px;
+        }
+
+        .parliamentarians h2 {
+            width: 343px;
+            max-width: 100%;
+            font-size: 28px;
+            line-height: 32px;
+        }
+
+        .parliamentarians__header p {
+            width: 343px;
+            max-width: 100%;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 24px;
         }
 
         .parliamentarians__figure {
