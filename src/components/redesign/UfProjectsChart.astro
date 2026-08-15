@@ -331,12 +331,12 @@ const ufLabels: Record<string, string> = {
     .uf-projects-chart__button { position: absolute; bottom: 0; left: 50%; display: flex; width: 294px; height: 56px; align-items: center; justify-content: center; gap: 16px; border: 0; padding: 16px 24px; transform: translateX(-50%); background: #4242f6; color: #fff; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
     .uf-projects-chart__button img { width: 13.4142px; height: 8.12132px; transform: rotate(-90deg); }
     @media (max-width: 767px) {
-        .uf-projects-chart { min-height: 0; overflow: visible; padding: 48px 24px; }
+        .uf-projects-chart { min-height: 0; overflow: visible; padding: 24px 24px 48px; }
         .uf-projects-chart__container { width: 100%; height: auto; padding: 0; }
         .uf-projects-chart__header, .uf-projects-chart__heading, .uf-projects-chart h2, .uf-projects-chart__header > p, .uf-projects-chart__figure, .uf-projects-chart__map-table, .uf-projects-chart__tabs, .uf-projects-chart__map, .uf-projects-chart__footer { width: 100%; height: auto; }
-        .uf-projects-chart__header { align-items: flex-start; gap: 16px; text-align: left; }
+        .uf-projects-chart__header { width: min(343px, calc(100% + 16px)); margin-left: -8px; align-items: flex-start; gap: 16px; text-align: left; }
         .uf-projects-chart__heading { align-items: flex-start; gap: 16px; text-align: left; }
-        .uf-projects-chart h2 { font-size: 28px; line-height: 32px; max-width: 343px; }
+        .uf-projects-chart h2 { max-width: 332px; font-size: 28px; line-height: 32px; }
         .uf-projects-chart__heading :global(.stance-toggle) {
             width: 203.06956px;
             height: 40px;
@@ -374,9 +374,9 @@ const ufLabels: Record<string, string> = {
             flex: none;
             margin-left: 10.296px;
         }
-        .uf-projects-chart__header > p { width: 100%; max-width: none; height: auto; flex-basis: auto; align-self: stretch; text-align: left; }
+        .uf-projects-chart__header > p { width: 100%; max-width: none; height: auto; flex-basis: auto; align-self: stretch; font-size: 14px; font-weight: 400; line-height: 24px; text-align: left; }
         .uf-projects-chart__header > p br { display: none; }
-        .uf-projects-chart__figure { margin-top: 10px; padding: 24px 0; }
+        .uf-projects-chart .uf-projects-chart__figure { margin-top: 10px; padding: 24px 0; }
         .uf-projects-chart__tabs { display: none; }
         .uf-projects-chart__map-table, .uf-projects-chart__panel[data-panel-view="map"] { text-align: left; }
         .uf-projects-chart__map { aspect-ratio: 1; border: 1px solid #4242f6; }
