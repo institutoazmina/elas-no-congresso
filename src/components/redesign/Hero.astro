@@ -16,8 +16,8 @@ import heroIllustration from "../../assets/images/redesign/hero/hero-congresso-i
         <div class="hero__content">
             <img class="hero__attention" src={attentionMark.src} alt="" />
             <h1 id="hero-title" class="hero__title">
-                De olho <span class="hero__title-narrow">nas</span> pautas de<br class="hero__title-break-mobile" /> gênero<br class="hero__title-break-desktop" />
-                <span class="hero__title-narrow">no</span> Congresso<br class="hero__title-break-mobile" /> Nacional
+                De olho <span class="hero__title-narrow">nas</span> pautas de gênero<br class="hero__title-break-desktop" />
+                <span class="hero__title-narrow">no</span> Congresso Nacional
             </h1>
             <p class="hero__description"><span class="hero__description-text">{`Nos últimos 8 anos, mais de 700 proposições  apresentadas na Câmara dos Deputados e no Senado Federal  são    `}</span><span class="hero__highlighted-word"><span class="hero__highlighter" aria-hidden="true">
                     <span class="hero__highlighter-layer hero__highlighter-layer--one">
@@ -263,6 +263,27 @@ import heroIllustration from "../../assets/images/redesign/hero/hero-congresso-i
     .hero__cta:focus-visible {
         outline: 2px solid #0b0f5e;
         outline-offset: 4px;
+    }
+
+    @media (max-width: 760px) {
+        .hero {
+            height: auto;
+        }
+
+        .hero__top-row {
+            padding-bottom: 45px;
+        }
+
+        .hero__halftone-shadow {
+            bottom: auto;
+            position: relative;
+        }
+
+        .hero__cta {
+            height: auto;
+            min-height: 45px;
+            padding: 12px 12px 9px;
+        }
     }
 
     @media (prefers-reduced-motion: reduce) {

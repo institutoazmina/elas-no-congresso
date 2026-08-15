@@ -151,10 +151,10 @@ const themes = categories.map((category, index) => {
     @media (max-width: 767px) {
         section[aria-labelledby="legislative-setbacks-title"] > div {
             box-sizing: border-box;
-            width: 100%; height: 1615px; padding: 24px 16px; gap: 10px;
+            width: 100%; height: auto; padding: 24px 15px; gap: 10px;
         }
         section[aria-labelledby="legislative-setbacks-title"] header {
-            width: 100%; max-width: none; height: 148px; gap: 16px;
+            width: 100%; max-width: none; height: auto; gap: 16px;
         }
         section[aria-labelledby="legislative-setbacks-title"] header h2 {
             font-size: 28px; line-height: 32px;
@@ -163,13 +163,13 @@ const themes = categories.map((category, index) => {
             font-size: 14px; line-height: 24px;
         }
         section[aria-labelledby="legislative-setbacks-title"] figure {
-            height: 1303px; overflow: visible; padding: 24px 0;
+            height: auto; overflow: visible; padding: 24px 0;
         }
         section[aria-labelledby="legislative-setbacks-title"] figure > div {
-            display: grid; width: 100%; max-width: 343px; min-width: 0; height: 100%;
+            display: grid; width: 100%; max-width: 100%; min-width: 0; height: auto;
             margin: 0 auto;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            grid-template-rows: repeat(4, minmax(0, 1fr));
+            grid-template-rows: none; grid-auto-rows: auto;
             align-items: stretch;
             gap: 24px;
         }
@@ -179,21 +179,26 @@ const themes = categories.map((category, index) => {
             transform: none !important;
         }
         section[aria-labelledby="legislative-setbacks-title"] figure article > div:first-child {
-            display: flex;
+            display: flex; position: static;
             width: 100% !important;
             max-width: 288px;
-            bottom: 92px;
+            top: auto; right: auto; bottom: auto; left: auto;
             align-items: center;
             justify-content: flex-end;
             gap: 8px;
+            transform: none;
+            translate: none;
         }
         section[aria-labelledby="legislative-setbacks-title"] figure article > div:last-child {
-            top: auto; bottom: 0;
+            position: static;
+            top: auto; right: auto; bottom: auto; left: auto;
             height: 92px;
             justify-content: center;
             gap: 4px;
             padding: 8px 0;
             box-sizing: border-box;
+            transform: none;
+            translate: none;
         }
         .legislative-setbacks__indicator {
             display: inline-flex !important;

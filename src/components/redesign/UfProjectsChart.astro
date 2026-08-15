@@ -336,8 +336,44 @@ const ufLabels: Record<string, string> = {
         .uf-projects-chart__header, .uf-projects-chart__heading, .uf-projects-chart h2, .uf-projects-chart__header > p, .uf-projects-chart__figure, .uf-projects-chart__map-table, .uf-projects-chart__tabs, .uf-projects-chart__map, .uf-projects-chart__footer { width: 100%; height: auto; }
         .uf-projects-chart__header { align-items: flex-start; gap: 16px; text-align: left; }
         .uf-projects-chart__heading { align-items: flex-start; gap: 16px; text-align: left; }
-        .uf-projects-chart h2 { font-size: 28px; line-height: 34px; }
-        .uf-projects-chart__heading .stance-toggle { align-self: flex-start; }
+        .uf-projects-chart h2 { font-size: 28px; line-height: 32px; max-width: 343px; }
+        .uf-projects-chart__heading :global(.stance-toggle) {
+            width: 203.06956px;
+            height: 40px;
+            padding: 7.722px 10.296px;
+            gap: 5.148px;
+            border: 1.287px solid #4242f6;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            white-space: nowrap;
+        }
+        .uf-projects-chart__heading :global(.stance-toggle__thumb) {
+            width: 20.591px;
+            height: 20.591px;
+        }
+        .uf-projects-chart__heading :global(.stance-toggle__thumb > img:first-child) {
+            width: 20.591px;
+            height: 20.591px;
+        }
+        .uf-projects-chart__heading :global(.stance-toggle__thumb > img:last-child) {
+            inset: 2.659px;
+            width: 15.273px;
+            height: 15.273px;
+        }
+        .uf-projects-chart__heading :global(.stance-toggle > span[data-stance-view]) {
+            flex-shrink: 0;
+            font-size: 23.165px;
+            line-height: 27.026px;
+            white-space: nowrap;
+        }
+        .uf-projects-chart__heading :global(.stance-toggle__chevron) {
+            width: 10.296px;
+            height: 5.148px;
+            flex: none;
+            margin-left: 10.296px;
+        }
         .uf-projects-chart__header > p { width: 100%; max-width: none; height: auto; flex-basis: auto; align-self: stretch; text-align: left; }
         .uf-projects-chart__header > p br { display: none; }
         .uf-projects-chart__figure { margin-top: 10px; padding: 24px 0; }

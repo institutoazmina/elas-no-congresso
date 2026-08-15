@@ -52,7 +52,7 @@ const views = [
             <h2 id="party-rights-chart-title">
                 <span>Estes são os partidos que mais têm</span>
                 <StanceToggle labels={{ unfavorable: "Atacado", favorable: "Defendido" }} />
-                <span>Nossos direitos</span>
+                <span>Nossos direitos<span class="party-rights-chart__mobile-question">?</span></span>
             </h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
         </header>
@@ -113,6 +113,7 @@ const views = [
     .party-rights-chart__footer { position: absolute; right: 48px; bottom: 48px; left: 48px; display: flex; width: 887px; height: 32px; align-items: flex-start; justify-content: space-between; border-top: 1px solid #0b0f5e; padding-top: 8px; font-size: 14px; line-height: 16px; }
     .party-rights-chart__footer span { margin-top: 4px; }
     .party-rights-chart__footer img { width: 113.217px; height: 12px; margin: 6px 8px 0; }
+    .party-rights-chart__mobile-question { display: none; }
     @media (max-width: 983px) {
         .party-rights-chart { height: auto; overflow: hidden; }
         .party-rights-chart__container { width: 100%; height: auto; padding: 24px 16px; }
@@ -124,5 +125,153 @@ const views = [
         .party-rights-chart__party { width: calc(50% - 10px) !important; }
         .party-rights-chart__footer { position: relative; right: auto; bottom: auto; left: auto; width: 100%; height: auto; min-height: 32px; margin-top: 10px; gap: 16px; }
         .party-rights-chart__footer img { flex: none; }
+    }
+
+    @media (max-width: 767px) {
+        .party-rights-chart { margin-bottom: 0; box-shadow: none; }
+        .party-rights-chart__container {
+            width: min(343px, calc(100% - 32px));
+            padding: 24px 0;
+        }
+        .party-rights-chart__header { width: 100%; height: 197px; gap: 16px; }
+        .party-rights-chart h2 {
+            position: relative;
+            display: block;
+            width: min(332px, 100%);
+            height: 113px;
+            flex: none;
+            font-size: 28px;
+            line-height: 38px;
+        }
+        .party-rights-chart h2 > span:first-child {
+            position: absolute;
+            top: 9.98px;
+            left: 0;
+            width: 100%;
+            height: auto;
+            font-size: 28px;
+            line-height: 38px;
+        }
+        .party-rights-chart h2 > span:last-child {
+            position: absolute;
+            top: 88.98px;
+            left: 0;
+            height: 32px;
+            font-size: 28px;
+            line-height: 32px;
+            white-space: nowrap;
+        }
+        .party-rights-chart__mobile-question { display: inline; }
+        .party-rights-chart :global(.stance-toggle) {
+            position: absolute;
+            top: 44.6px;
+            left: 111px;
+            width: auto;
+            height: 40px;
+            gap: 5.148px;
+            border-width: 1.287px;
+            padding: 7.722px 10.296px;
+            justify-content: center;
+            font-size: 14.91px;
+            line-height: 17.391px;
+            white-space: nowrap;
+        }
+        .party-rights-chart :global(.stance-toggle__thumb) {
+            width: 20.591px;
+            height: 20.591px;
+        }
+        .party-rights-chart :global(.stance-toggle__thumb > img:first-child) {
+            width: 20.591px;
+            height: 20.591px;
+        }
+        .party-rights-chart :global(.stance-toggle__thumb > img:last-child) {
+            inset: 2.659px !important;
+            width: 15.273px;
+            height: 15.273px;
+        }
+        .party-rights-chart :global(.stance-toggle__chevron) {
+            width: 10.296px;
+            height: 5.148px;
+            margin-left: 10.296px;
+        }
+        .party-rights-chart :global(.stance-toggle > span[data-stance-view]) {
+            flex-shrink: 0;
+            font-size: 23.165px;
+            line-height: 27.026px;
+            white-space: nowrap;
+        }
+        .party-rights-chart__header > p {
+            width: 100%;
+            height: 48px;
+            font-size: 14px;
+            line-height: 24px;
+        }
+        .party-rights-chart__figure {
+            display: grid;
+            width: 100%;
+            height: auto;
+            margin: 0;
+            padding: 24px 0 0;
+            grid-template-columns: minmax(0, 167px) 108px;
+            grid-auto-rows: auto;
+            column-gap: 50px;
+            row-gap: 20px;
+            align-items: end;
+            justify-content: center;
+            overflow: visible;
+        }
+        .party-rights-chart__party {
+            width: 108px !important;
+            min-width: 0;
+            padding: 16px 0;
+        }
+        .party-rights-chart__party:nth-child(1) {
+            width: 167px !important;
+            grid-column: 1;
+            grid-row: 1;
+        }
+        .party-rights-chart__party:nth-child(2) {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        .party-rights-chart__party:nth-child(3) {
+            grid-column: 1;
+            grid-row: 2;
+            justify-self: center;
+        }
+        .party-rights-chart__party:nth-child(4) {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        .party-rights-chart__party:nth-child(5) {
+            grid-column: 1 / -1;
+            grid-row: 3;
+            justify-self: center;
+        }
+        .party-rights-chart__footer {
+            position: relative;
+            width: 251px;
+            height: 96px;
+            min-height: 96px;
+            margin: 0 auto;
+            padding-top: 8px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 24px;
+            text-align: center;
+        }
+        .party-rights-chart__footer span {
+            width: 100%;
+            margin-top: 0;
+            padding: 4px 0;
+            font-size: 14px;
+            line-height: 16px;
+        }
+        .party-rights-chart__footer img {
+            width: 113.217px;
+            height: 12px;
+            margin: 6px 0 0;
+        }
     }
 </style>
