@@ -40,6 +40,7 @@ const themes = categories.map((category, index) => {
 });
 ---
 
+<div class="legislative-setbacks-spacing">
 <section
     class="tw:overflow-hidden tw:bg-white tw:text-[#0B0F5E] tw:lg:pt-12"
     aria-labelledby="legislative-setbacks-title"
@@ -143,6 +144,7 @@ const themes = categories.map((category, index) => {
         </footer>
     </div>
 </section>
+</div>
 
 <style>
     /* This extra element only participates in the mobile indicator layout. */
@@ -298,6 +300,39 @@ const themes = categories.map((category, index) => {
             width: 113.217px;
             height: 12px;
             margin: 6px 0 0;
+        }
+    }
+
+    @media (min-width: 821px) {
+        .legislative-setbacks-spacing {
+            width: 100%;
+            padding-block: 48px;
+            background-color: #fff;
+            background-image: none;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] { margin: 0; padding-top: 0; }
+        section[aria-labelledby="legislative-setbacks-title"] h2 {
+            height: 66px;
+            line-height: 32px;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] figure > div > article > div:last-child {
+            display: grid;
+            grid-template-rows: 24px 48px;
+            row-gap: 4px;
+            align-items: start;
+            justify-items: center;
+            padding: 8px 0;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] figure > div > article > div:last-child img {
+            width: 24px;
+            height: 24px;
+        }
+        section[aria-labelledby="legislative-setbacks-title"] figure > div > article > div:last-child h3 {
+            width: 100%;
+            height: 48px;
+            min-height: 48px;
+            margin: 0;
+            line-height: 24px;
         }
     }
 </style>
