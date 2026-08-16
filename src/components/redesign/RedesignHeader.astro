@@ -310,6 +310,27 @@ const links = [
     }
 
     @media (min-width: 821px) {
+        :global(.redesign-home-background) .redesign-header.redesign-shared-background {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            transition: transform 180ms ease, background-color 180ms ease, background-image 180ms ease;
+        }
+
+        :global(.redesign-home-background) .redesign-header.redesign-shared-background.redesign-header--desktop-hidden {
+            transform: translateY(-100%);
+        }
+
+        :global(.redesign-home-background) .redesign-header.redesign-shared-background.redesign-header--desktop-scrolled {
+            background: transparent;
+            box-shadow: none;
+        }
+
+        :global(.redesign-home-background) .redesign-header.redesign-header--desktop-scrolled :global(.highlighter-marks) {
+            display: none;
+        }
+
         .redesign-header {
             min-height: 104px;
         }
@@ -543,6 +564,82 @@ const links = [
         updateHeader(true);
     };
 
+    const bindDesktopHeaderScroll = () => {
+        const header = document.querySelector<HTMLElement>(".redesign-header");
+        if (!header || !header.closest(".redesign-home-background")) return;
+
+        const desktopViewport = window.matchMedia("(min-width: 821px)");
+        const threshold = 8;
+
+        const updateHeader = (forceVisible = false) => {
+            const currentScroll = Math.max(window.scrollY, 0);
+            const previousScroll = Number(header.dataset.desktopPreviousScroll ?? currentScroll);
+
+            if (!desktopViewport.matches) {
+                header.classList.remove(
+                    "redesign-header--desktop-hidden",
+                    "redesign-header--desktop-scrolled",
+                );
+                header.dataset.desktopPreviousScroll = String(currentScroll);
+                return;
+            }
+
+            const isAtTop = currentScroll <= threshold;
+            if (isAtTop) {
+                header.classList.remove(
+                    "redesign-header--desktop-hidden",
+                    "redesign-header--desktop-scrolled",
+                );
+                header.dataset.desktopPreviousScroll = String(currentScroll);
+                return;
+            }
+
+            if (forceVisible) {
+                header.classList.remove("redesign-header--desktop-hidden");
+                header.classList.add("redesign-header--desktop-scrolled");
+                header.dataset.desktopPreviousScroll = String(currentScroll);
+                return;
+            }
+
+            const delta = currentScroll - previousScroll;
+            if (Math.abs(delta) >= threshold) {
+                const isScrollingUp = delta < 0;
+                header.classList.toggle("redesign-header--desktop-hidden", !isScrollingUp);
+                header.classList.add("redesign-header--desktop-scrolled");
+                header.dataset.desktopPreviousScroll = String(currentScroll);
+            }
+        };
+
+        if (!header.dataset.desktopScrollBound) {
+            header.dataset.desktopScrollBound = "true";
+            let ticking = false;
+            window.addEventListener("scroll", () => {
+                if (!ticking) {
+                    ticking = true;
+                    window.requestAnimationFrame(() => {
+                        updateHeader();
+                        ticking = false;
+                    });
+                }
+            }, { passive: true });
+
+            desktopViewport.addEventListener("change", () => { updateHeader(true); });
+        }
+
+        updateHeader(true);
+    };
+
+    const resetDesktopHeaderState = () => {
+        const header = document.querySelector<HTMLElement>(".redesign-header");
+        if (!header) return;
+
+        header.classList.remove(
+            "redesign-header--desktop-hidden",
+            "redesign-header--desktop-scrolled",
+        );
+        header.dataset.desktopPreviousScroll = String(Math.max(window.scrollY, 0));
+    };
+
     const resetMobileHeaderState = () => {
         const header = document.querySelector<HTMLElement>(".redesign-header");
         const mobileMenu = header?.querySelector<HTMLDetailsElement>(
@@ -577,8 +674,10 @@ const links = [
 
     const refreshHighlighter = (resetState = false) => {
         if (resetState) resetMobileHeaderState();
+        if (resetState) resetDesktopHeaderState();
         bindMobileMenu();
         bindMobileHeaderScroll();
+        bindDesktopHeaderScroll();
         bindHighlighterLayoutObserver();
         scheduleHighlighterUpdate();
     };
