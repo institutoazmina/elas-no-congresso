@@ -99,7 +99,7 @@ const ufLabels: Record<string, string> = {
         <header class="uf-projects-chart__header">
             <img class="uf-projects-chart__attention" src={attention.src} alt="" />
             <div class="uf-projects-chart__heading">
-                <h2 id="uf-projects-chart-title">As 27 UFs por proposições desfavoráveis</h2>
+                <h2 id="uf-projects-chart-title">Estas são as UFs dos parlamentares que apresentam mais projetos</h2>
                 <StanceToggle labels={{ unfavorable: "Desfavoráveis", favorable: "Favoráveis" }} />
             </div>
             <p>Boa parte das bancadas dos estados do Centro-Oeste, além das de Rondônia,<br /> Espírito Santo e Santa Catarina, lidera a apresentação de propostas que restringem<br /> direitos de mulheres, meninas e da população LGBTQIAPN+</p>
@@ -386,5 +386,56 @@ const ufLabels: Record<string, string> = {
         .uf-projects-chart__footer span { margin-top: 4px; }
         .uf-projects-chart__footer img { flex: none; margin: 0; }
         .uf-projects-chart__button { position: relative; bottom: auto; left: 50%; max-width: 100%; }
+    }
+
+    @media (min-width: 821px) {
+        .uf-projects-chart { height: 1218px; min-height: 1218px; }
+        .uf-projects-chart__container { height: 1162px; padding: 24px 48px; }
+        .uf-projects-chart__header { height: 246px; gap: 16px; }
+        .uf-projects-chart__attention { width: 96px; height: 4px; }
+        .uf-projects-chart__heading { display: flex; height: 138px; flex-direction: column; align-items: flex-start; align-content: flex-start; gap: 16px; }
+        .uf-projects-chart__heading h2,
+        .uf-projects-chart__heading :global(.stance-toggle) { margin: 0; }
+        .uf-projects-chart h2 { width: 525px; height: 66px; font-size: 36px; font-weight: 700; line-height: 42px; margin: 0; }
+        .uf-projects-chart__heading :global(.stance-toggle) {
+            width: 307px;
+            height: 56px;
+            flex: none;
+            box-sizing: border-box;
+            padding: 12px 16px;
+            gap: 8px;
+            font-size: 36px;
+            line-height: 42px;
+        }
+        .uf-projects-chart__heading :global(.stance-toggle__chevron) {
+            display: block;
+            width: 24px;
+            height: 24px;
+            flex: 0 0 24px;
+            padding: 7.41px 2.82px;
+            margin-left: 0;
+            max-width: none;
+            object-fit: contain;
+            object-position: center;
+        }
+        .uf-projects-chart__header > p { width: 720px; height: 72px; margin: 0; font-size: 18px; font-weight: 400; line-height: 24px; }
+        .uf-projects-chart figure.uf-projects-chart__figure { width: 720px; height: 816px; margin-top: 10px; padding: 24px 0; }
+        .uf-projects-chart__map-table { width: 720px; height: 768px; }
+        .uf-projects-chart__tabs { width: 720px; height: 48px; padding: 0 16px; gap: 0; }
+        .uf-projects-chart__tab {
+            width: auto;
+            height: 48px;
+            padding: 12px 24px;
+            border-radius: 16px 16px 0 0;
+            transform: translateY(4px);
+            background: rgba(66, 66, 246, 0.1);
+            color: #4242f6;
+        }
+        .uf-projects-chart__tab[aria-selected="true"] { background: #4242f6; color: #fff; }
+        .uf-projects-chart__map { width: 720px; height: 720px; }
+        .uf-projects-chart__panel[data-panel-view="table"] { width: 720px; height: 720px; }
+        .uf-projects-chart__footer { bottom: 24px; left: 48px; right: 48px; width: 720px; height: 32px; color: #0b0f5e; }
+        .uf-projects-chart__footer span { margin-top: 4px; margin-left: 12px; color: #0b0f5e; }
+        .uf-projects-chart__button { bottom: 0; width: 294px; height: 56px; }
     }
 </style>
