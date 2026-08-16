@@ -9,7 +9,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
 
 <div class="alerts-email-backdrop" hidden aria-hidden="true"></div>
 
-<dialog class="alerts-email-modal" aria-labelledby="alerts-email-modal-title">
+<dialog class="alerts-email-modal" data-state="initial" aria-labelledby="alerts-email-modal-title" aria-describedby="alerts-email-modal-description" aria-modal="true">
     <div class="alerts-email-modal__shell">
         <div class="alerts-email-modal__close-row">
             <button class="alerts-email-modal__close" type="button" aria-label="Fechar alertas por e-mail" autofocus>×</button>
@@ -18,7 +18,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
         <div class="alerts-email-modal__content">
             <header class="alerts-email-modal__intro">
                 <h2 id="alerts-email-modal-title">Receba alertas do que acontece no Congresso Nacional!</h2>
-                <p><span>Quer saber quando uma nova proposta sobre gênero é apresentada,<br />ou quando algo de muita importância avança? A gente te avisa!</span><br /><span class="alerts-email-modal__intro-choice">Escolha como e quando quer receber os e-mails.</span></p>
+                <p id="alerts-email-modal-description"><span>Quer saber quando uma nova proposta sobre gênero é apresentada,<br />ou quando algo de muita importância avança? A gente te avisa!</span><br /><span class="alerts-email-modal__intro-choice">Escolha como e quando quer receber os e-mails.</span></p>
             </header>
 
             <form class="alerts-email-modal__form">
@@ -27,7 +27,8 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
                     <input id="alerts-email" type="email" placeholder="seu@email.com" autocomplete="email" />
                 </div>
 
-                <fieldset class="alerts-email-modal__section">
+                <template data-alerts-themes-template>
+                <fieldset class="alerts-email-modal__section" data-alerts-themes>
                     <legend>Temas</legend>
                     <p>Selecione os temas sobre os quais quer receber alertas.<br />Valem para alertas semanais e diários.</p>
                     <div class="alerts-email-modal__topics">
@@ -36,6 +37,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
                         ))}
                     </div>
                 </fieldset>
+                </template>
 
                 <fieldset class="alerts-email-modal__section alerts-email-modal__frequency-section">
                     <legend>Frequência</legend>
@@ -117,7 +119,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     const close = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__close");
     const form = dialog?.querySelector<HTMLFormElement>(".alerts-email-modal__form");
     const email = dialog?.querySelector<HTMLInputElement>("#alerts-email");
-    const topics = Array.from(dialog?.querySelectorAll<HTMLInputElement>('input[name="tema"]') ?? []);
+    let topics = Array.from(dialog?.querySelectorAll<HTMLInputElement>('input[name="tema"]') ?? []);
     const weekly = dialog?.querySelector<HTMLInputElement>('input[name="frequencia"][value="semanal"]');
     const terms = dialog?.querySelector<HTMLInputElement>('input[name="termos"]');
     const submit = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__submit");
@@ -133,6 +135,9 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     const proposal = dialog?.querySelector<HTMLInputElement>(".alerts-email-modal__daily-search");
     const proposalOptions = dialog?.querySelector<HTMLElement>(".alerts-email-modal__proposal-options");
     const proposalHelper = dialog?.querySelector<HTMLElement>("[data-alerts-proposal-helper]");
+    const themesTemplate = dialog?.querySelector<HTMLTemplateElement>("[data-alerts-themes-template]");
+    let themesSection = dialog?.querySelector<HTMLElement>("[data-alerts-themes]") ?? null;
+    const frequencySection = dialog?.querySelector<HTMLElement>(".alerts-email-modal__frequency-section");
 
     /** Proposição escolhida: guardada como id porque é isso que a API tokeniza. */
     let proposalId: number | null = null;
@@ -206,29 +211,65 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
         document.documentElement.style.setProperty("--alerts-header-height", `${siteHeader.getBoundingClientRect().height}px`);
     };
 
+    const mountThemes = () => {
+        if (!form || !themesTemplate || themesSection) return;
+        form.insertBefore(themesTemplate.content.cloneNode(true), frequencySection ?? null);
+        themesSection = form.querySelector<HTMLElement>("[data-alerts-themes]");
+        topics = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="tema"]'));
+        topics.forEach((topic) => topic.addEventListener("change", updateSubmitState));
+    };
+    const unmountThemes = () => {
+        themesSection?.remove();
+        themesSection = null;
+        topics = [];
+    };
+    const isDesktopModal = () => window.matchMedia("(min-width: 821px)").matches;
+    const setModalState = (expanded: boolean) => {
+        if (!dialog) return;
+        const desktop = isDesktopModal();
+        dialog.dataset.state = desktop && expanded ? "expanded" : "initial";
+        if (desktop && expanded || !desktop) mountThemes();
+        if (desktop && !expanded) unmountThemes();
+    };
+    const expandModal = () => {
+        if (isDesktopModal()) setModalState(true);
+    };
+    const syncModalState = () => {
+        setModalState(Boolean(email?.value.trim()));
+    };
+
     opener?.addEventListener("click", () => {
         if (window.matchMedia("(max-width: 767px)").matches) {
             window.scrollTo(0, 0);
             if (weeklyNote) weeklyNote.hidden = false;
         }
         syncHeaderHeight();
+        syncModalState();
         if (backdrop) backdrop.hidden = false;
         document.body.classList.add("alerts-email-modal-open");
         dialog?.show();
+        if (isDesktopModal()) close?.focus();
         if (dialog) dialog.scrollTop = 0;
     });
     close?.addEventListener("click", () => dialog?.close());
     dialog.addEventListener("close", () => {
+        setModalState(false);
         if (backdrop) backdrop.hidden = true;
         document.body.classList.remove("alerts-email-modal-open");
+        if (isDesktopModal()) opener?.focus();
     });
     window.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && dialog.open) dialog.close();
     }, { signal: activeWindowListeners.signal });
     window.addEventListener("resize", syncHeaderHeight, { signal: activeWindowListeners.signal });
+    window.addEventListener("resize", syncModalState, { signal: activeWindowListeners.signal });
 
-    email?.addEventListener("input", updateSubmitState);
-    topics.forEach((topic) => topic.addEventListener("change", updateSubmitState));
+    email?.addEventListener("focus", expandModal);
+    email?.addEventListener("input", () => {
+        expandModal();
+        updateSubmitState();
+    });
+    email?.addEventListener("change", expandModal);
     terms?.addEventListener("change", updateSubmitState);
 
     // Semanal e diário são independentes: o texto do modal promete "uma ou as duas".
@@ -369,6 +410,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
         }
     });
 
+    syncModalState();
     updateSubmitState();
     };
 
@@ -399,7 +441,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     .alerts-email-modal__email-field input:not(:placeholder-shown) { border: 2px solid #0b0f5e; }
     .alerts-email-modal__email-field input::placeholder, .alerts-email-modal__select-label input::placeholder { color: #998d96; opacity: 1; }
     .alerts-email-modal__section { width: 100%; min-width: 0; margin: 0; padding: 0; border: 0; }
-    .alerts-email-modal__section > legend { margin-top: 36px; }
+    .alerts-email-modal__section > legend { margin: 0; }
     .alerts-email-modal__section > p { padding-top: 5px; }
     .alerts-email-modal__topics { display: grid; grid-template-columns: repeat(2, 300px); gap: 12px 24px; padding-top: 16px; }
     .alerts-email-modal__topics label, .alerts-email-modal__terms, .alerts-email-modal__daily-options label, .alerts-email-modal__daily-options fieldset label { display: flex; align-items: center; gap: 10px; color: #998d96; font: 400 16px/24px "Plus Jakarta Sans", sans-serif; }
@@ -463,6 +505,45 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
     .alerts-email-modal__submit:not(:disabled) { padding-right: 24px; }
     .alerts-email-modal__submit:not(:disabled) img { display: none; }
     .alerts-email-modal__submit img { width: 13.414px; height: 8.121px; transform: rotate(-90deg); filter: brightness(0) invert(1); }
+    @media (min-width: 821px) {
+        .alerts-email-modal {
+            background-color: #fff;
+            background-image: none;
+            opacity: 1;
+        }
+        .alerts-email-modal__shell,
+        .alerts-email-modal__content { background-color: #fff; background-image: none; opacity: 1; }
+        .alerts-email-modal__content { gap: 0; }
+        .alerts-email-modal__intro { display: flex; margin-inline: auto; flex-direction: column; gap: 16px; }
+        .alerts-email-modal__intro p { width: 624px; max-width: 100%; padding-top: 0; margin: 0; }
+        .alerts-email-modal[data-state="initial"] .alerts-email-modal__intro { align-items: center; text-align: center; }
+        .alerts-email-modal[data-state="initial"] h2 { color: #1e2546; font-size: 36px; font-weight: 700; line-height: 42px; text-align: center; text-transform: uppercase; }
+        .alerts-email-modal[data-state="initial"] .alerts-email-modal__intro p { margin-inline: auto; color: #998d96; text-align: center; }
+        .alerts-email-modal[data-state="expanded"] .alerts-email-modal__intro { align-items: flex-start; text-align: left; }
+        .alerts-email-modal[data-state="expanded"] h2 { color: #1e2546; font-size: 33px; font-weight: 800; font-variation-settings: "wdth" 100; line-height: 45px; text-align: left; text-transform: none; }
+        .alerts-email-modal[data-state="expanded"] .alerts-email-modal__intro p { text-align: left; }
+        .alerts-email-modal__form { padding-top: 40px; padding-bottom: 16px; }
+        .alerts-email-modal__email-field { gap: 8px; }
+        .alerts-email-modal__email-field input { padding: 13px 17px; }
+        .alerts-email-modal__email-field input::placeholder { opacity: .7; }
+        .alerts-email-modal__email-field input:focus,
+        .alerts-email-modal__email-field input:not(:placeholder-shown) {
+            padding: 14px 18px;
+            border: 2px solid #0b0f5e;
+            font-weight: 700;
+        }
+        .alerts-email-modal__topics { padding-top: 25px; }
+        .alerts-email-modal__topics input[type="checkbox"] { width: 18px; height: 18px; flex-basis: 18px; }
+        .alerts-email-modal__topics input:checked + span { color: #0b0f5e; font-weight: 600; }
+        .alerts-email-modal__section { height: auto; min-height: 0; margin-top: 36px; padding-top: 0; }
+        .alerts-email-modal__section > legend { margin: 0; }
+        .alerts-email-modal__section > p { margin: 0; padding: 5px 0 0; }
+        .alerts-email-modal__frequencies { padding-top: 25px; }
+        .alerts-email-modal__frequency-card input[type="checkbox"] { width: 22px; height: 22px; flex-basis: 22px; }
+        .alerts-email-modal__terms { padding-top: 36px; }
+        .alerts-email-modal__form > .alerts-email-modal__submit { margin-top: 44px; white-space: nowrap; }
+        .alerts-email-modal__submit:disabled { opacity: .3; background: #4242f6; }
+    }
     @media (max-width: 767px) {
         :global(body.alerts-email-modal-open) { overflow: auto; }
         .alerts-email-backdrop { display: none !important; }

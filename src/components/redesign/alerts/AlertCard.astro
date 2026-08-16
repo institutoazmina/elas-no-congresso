@@ -13,8 +13,10 @@ const { alert, featured = false } = Astro.props;
 </article>
 
 <style>
-    .alert-card { background: #fff; border: 2px solid #1e2546; box-sizing: border-box; color: #1e2546; height: 230px; padding: 17px 23px 0; position: relative; width: 816px; }
-    .alert-card--featured::before { background: #c8f53e; content: ""; height: 230px; left: 0; position: absolute; top: -2px; width: 4px; }
+    .alert-card { isolation: isolate; background: #fff; border: 2px solid #1e2546; box-sizing: border-box; color: #1e2546; height: 230px; overflow: hidden; padding: 17px 23px 0; position: relative; width: 816px; }
+    .alert-card::before { position: absolute; top: 0; bottom: 0; left: 0; width: var(--alert-hover-width, 4px); box-sizing: border-box; background: #def279; content: ""; opacity: 0; pointer-events: none; transition: opacity 150ms ease; }
+    @media (hover: hover) and (pointer: fine) { .alert-card:hover::before { opacity: 1; } }
+    .alert-card:focus-within::before, .alert-card:focus-visible::before { opacity: 1; }
     .alert-card__meta { align-items: flex-start; display: flex; height: 32px; justify-content: space-between; }
     .alert-card__tag { align-items: center; background: #4242f6; box-sizing: border-box; color: #fff; display: inline-flex; font: 700 20px/24px "ETC Anybody", sans-serif; font-variation-settings: "wdth" 75; height: 32px; padding: 5px 8px 3px; text-transform: uppercase; }
     .alert-card time { font: 700 20px/24px "ETC Anybody", sans-serif; font-variation-settings: "wdth" 75; margin: 3px 0 0; text-transform: uppercase; }
@@ -27,7 +29,6 @@ const { alert, featured = false } = Astro.props;
     @media (max-width: 940px) { .alert-card { width: 100%; } }
     @media (max-width: 767px) {
         .alert-card { height: auto; min-height: 0; padding: 17px 22px 24px; }
-        .alert-card--featured::before { content: none; }
         .alert-card h2 { margin-top: 16px; overflow-wrap: anywhere; }
         .alert-card p { height: auto; overflow: visible; overflow-wrap: anywhere; }
         .alert-card time { font-size: 18px; }
