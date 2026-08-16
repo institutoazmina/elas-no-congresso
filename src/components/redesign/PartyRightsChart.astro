@@ -71,7 +71,7 @@ const views = [
                             <Papelada class="party-rights-chart__paper" arrangement="pile" category="favoravel" size="a4" gap={gap} amount={party.positive} alt={`${party.positive} proposições favoráveis`} />
                         </div>
                     </div>
-                    <div class="party-rights-chart__description"><strong>{party.name}</strong><span>{party.percentage.split("\n").map((line) => <>{line}<br /></>)}</span></div>
+                    <div class="party-rights-chart__description"><strong class="party-rights-chart__party-name">{party.name}</strong><span class="party-rights-chart__party-percentage">{party.percentage.split("\n").map((line) => <>{line}<br /></>)}</span></div>
                 </article>
             ))}
         </figure>
@@ -114,11 +114,105 @@ const views = [
     .party-rights-chart__footer span { margin-top: 4px; }
     .party-rights-chart__footer img { width: 113.217px; height: 12px; margin: 6px 8px 0; }
     .party-rights-chart__mobile-question { display: none; }
+
+    @media (min-width: 984px) {
+        .party-rights-chart h2 {
+            display: grid;
+            width: 648px;
+            height: 96px;
+            grid-template-columns: 230px 1fr;
+            grid-template-rows: 24px 56px;
+            align-items: center;
+            column-gap: 16px;
+            row-gap: 16px;
+        }
+        .party-rights-chart h2 > span:first-child {
+            grid-column: 1 / -1;
+            grid-row: 1;
+            align-self: start;
+            height: 24px;
+            line-height: 24px;
+        }
+        .party-rights-chart h2 > span:last-child {
+            grid-column: 2;
+            grid-row: 2;
+            align-self: center;
+            height: 24px;
+            line-height: 24px;
+        }
+        .party-rights-chart h2 :global(.stance-toggle) {
+            grid-column: 1;
+            grid-row: 2;
+            width: 230px;
+            height: 56px;
+            flex: none;
+            justify-content: flex-start;
+            gap: 6px;
+            font-size: 36px;
+            line-height: 42px;
+        }
+        .party-rights-chart h2 :global(.stance-toggle__chevron) {
+            flex: none;
+        }
+
+        .party-rights-chart__figure {
+            width: 887px;
+            height: 425px;
+            padding: 0;
+            align-items: start;
+            gap: 72px;
+        }
+        .party-rights-chart__party {
+            display: grid;
+            height: 385px;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: 281px 88px;
+            align-content: start;
+            align-items: stretch;
+            gap: 16px;
+            padding: 0;
+        }
+        .party-rights-chart__piles {
+            height: 281px;
+            min-height: 0;
+            padding-top: 24px;
+            align-items: end;
+            overflow: hidden;
+        }
+        /* The tallest shared pile fills Y=24..281 without touching the header. */
+        .party-rights-chart__pile {
+            transform: scaleY(0.94632);
+            transform-origin: bottom;
+        }
+        .party-rights-chart__description {
+            height: 88px;
+            min-height: 88px;
+            padding: 8px 0 0;
+            display: block;
+            line-height: 24px;
+        }
+        .party-rights-chart__party-name {
+            display: block;
+            height: 24px;
+            margin: 0;
+            line-height: 24px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .party-rights-chart__party-percentage {
+            display: block;
+            min-height: 48px;
+            margin: 0;
+            line-height: 24px;
+            text-align: center;
+        }
+    }
+
     @media (max-width: 983px) {
         .party-rights-chart { height: auto; overflow: hidden; }
         .party-rights-chart__container { width: 100%; height: auto; padding: 24px 16px; }
         .party-rights-chart__header { width: 100%; height: auto; margin: 0; }
-        .party-rights-chart h2 { --stance-toggle-font-size: 28px; width: 100%; height: auto; font-size: 28px; line-height: 34px; }
+        .party-rights-chart h2 { --stance-toggle-font-size: 28px; display: flex; width: 100%; height: auto; grid-template-columns: none; grid-template-rows: none; column-gap: normal; row-gap: normal; font-size: 28px; line-height: 34px; }
         .party-rights-chart h2 > span { height: auto; white-space: normal; }
         .party-rights-chart__header > p { width: 100%; height: auto; }
         .party-rights-chart__figure { width: 100%; height: auto; margin-top: 10px; flex-wrap: wrap; gap: 20px; overflow: visible; }
