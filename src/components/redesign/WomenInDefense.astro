@@ -79,7 +79,7 @@ const charts = [
         min-height: 0;
         overflow: visible;
         color: #0b0f5e;
-        background: #fff;
+        background: #FFFFFF;
         font-family: "Plus Jakarta Sans", sans-serif;
     }
     .women-defense *, .women-defense *::before, .women-defense *::after { box-sizing: border-box; }
@@ -133,13 +133,16 @@ const charts = [
     }
 
     @media (min-width: 768px) {
-        .women-defense {
+.women-defense {
             min-height: 970.5px;
+            margin-top: 0;
+            padding-top: 48px;
             overflow: hidden;
         }
 
         .women-defense__container { width: 816px; height: 970.5px; padding: 48px; }
         .women-defense__header { width: 720px; height: 132px; }
+        .women-defense__header > img { width: 96px; height: 4px; }
         .women-defense h2 { width: 720px; height: 24px; font-size: 36px; line-height: 42px; }
         .women-defense__header p { width: 720px; }
         .women-defense__figure { width: 720px; height: 690.5px; align-items: flex-end; flex-direction: row; overflow: hidden; }
