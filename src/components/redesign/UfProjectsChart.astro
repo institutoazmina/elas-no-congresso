@@ -98,9 +98,9 @@ const ufLabels: Record<string, string> = {
     <div class="uf-projects-chart__container">
         <header class="uf-projects-chart__header">
             <img class="uf-projects-chart__attention" src={attention.src} alt="" />
-            <div class="uf-projects-chart__heading">
-                <h2 id="uf-projects-chart-title">Estas são as UFs dos parlamentares que apresentam mais projetos</h2>
-                <StanceToggle labels={{ unfavorable: "Desfavoráveis", favorable: "Favoráveis" }} />
+            <div class="uf-projects-chart__heading uf-title-group">
+                <h2 class="uf-section-title" id="uf-projects-chart-title">Estas são as UFs dos parlamentares que apresentam mais projetos</h2>
+                <div class="uf-state-selector"><StanceToggle labels={{ unfavorable: "Desfavoráveis", favorable: "Favoráveis" }} /></div>
             </div>
             <p>Boa parte das bancadas dos estados do Centro-Oeste, além das de Rondônia,<br /> Espírito Santo e Santa Catarina, lidera a apresentação de propostas que restringem<br /> direitos de mulheres, meninas e da população LGBTQIAPN+</p>
         </header>
@@ -391,12 +391,16 @@ const ufLabels: Record<string, string> = {
     @media (min-width: 821px) {
         .uf-projects-chart { height: 1218px; min-height: 1218px; }
         .uf-projects-chart__container { height: 1162px; padding: 24px 48px; }
-        .uf-projects-chart__header { height: 246px; gap: 16px; }
+        .uf-projects-chart__header { height: auto; gap: 16px; }
         .uf-projects-chart__attention { width: 96px; height: 4px; }
-        .uf-projects-chart__heading { display: flex; height: 138px; flex-direction: column; align-items: flex-start; align-content: flex-start; gap: 16px; }
-        .uf-projects-chart__heading h2,
-        .uf-projects-chart__heading :global(.stance-toggle) { margin: 0; }
-        .uf-projects-chart h2 { width: 525px; height: 66px; font-size: 36px; font-weight: 700; line-height: 42px; margin: 0; }
+        .uf-projects-chart__heading { display: flex; height: auto; flex-direction: column; align-items: flex-start; align-content: flex-start; gap: 16px; }
+        .uf-title-group { display: flex; height: auto; flex-direction: column; align-items: flex-start; gap: 16px; }
+        .uf-projects-chart .uf-section-title { display: block; height: auto; min-height: 0; margin: 0; padding: 0; line-height: 42px; overflow: visible; text-box-trim: trim-both; text-box-edge: cap alphabetic; }
+        @supports not (text-box-trim: trim-both) {
+            .uf-projects-chart .uf-section-title { line-height: 33px; }
+        }
+        .uf-state-selector { margin: 0; }
+        .uf-projects-chart h2 { width: 525px; font-size: 36px; font-weight: 700; }
         .uf-projects-chart__heading :global(.stance-toggle) {
             width: 307px;
             height: 56px;
