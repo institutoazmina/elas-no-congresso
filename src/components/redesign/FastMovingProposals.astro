@@ -45,43 +45,43 @@ const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, fea
 
 <script>
     const initializeFastMovingProposals = () => {
-    document.querySelectorAll<HTMLElement>("[data-carousel]").forEach((carousel) => {
-        if (carousel.dataset.carouselInitialized) return;
-        carousel.dataset.carouselInitialized = "true";
-        const track = carousel.querySelector<HTMLElement>("[data-track]");
-        const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
-        const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
-        if (!track || !previous || !next) return;
-        let physicalIndex = 7;
-        let isResetting = false;
-        const cards = Array.from(track.querySelectorAll<HTMLElement>(".fast-moving-proposals__card"));
-        const update = () => {
-            track.style.transform = `translateX(${-192 - physicalIndex * 432}px)`;
-            cards.forEach((card, cardIndex) => {
-                const isActive = cardIndex === physicalIndex;
-                card.classList.toggle("fast-moving-proposals__card--featured", isActive);
-                card.setAttribute("aria-hidden", String(!isActive));
+        document.querySelectorAll<HTMLElement>("[data-carousel]").forEach((carousel) => {
+            if (carousel.dataset.carouselInitialized) return;
+            carousel.dataset.carouselInitialized = "true";
+            const track = carousel.querySelector<HTMLElement>("[data-track]");
+            const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
+            const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
+            if (!track || !previous || !next) return;
+            let physicalIndex = 7;
+            let isResetting = false;
+            const cards = Array.from(track.querySelectorAll<HTMLElement>(".fast-moving-proposals__card"));
+            const update = () => {
+                track.style.transform = `translateX(${-192 - physicalIndex * 432}px)`;
+                cards.forEach((card, cardIndex) => {
+                    const isActive = cardIndex === physicalIndex;
+                    card.classList.toggle("fast-moving-proposals__card--featured", isActive);
+                    card.setAttribute("aria-hidden", String(!isActive));
+                });
+            };
+            const move = (direction: number) => {
+                if (isResetting) return;
+                physicalIndex += direction;
+                update();
+            };
+            track.addEventListener("transitionend", (event) => {
+                if (event.propertyName !== "transform" || (physicalIndex > 4 && physicalIndex < 10)) return;
+                isResetting = true;
+                physicalIndex += physicalIndex < 5 ? 5 : -5;
+                track.style.transition = "none";
+                update();
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    track.style.transition = "";
+                    isResetting = false;
+                }));
             });
-        };
-        const move = (direction: number) => {
-            if (isResetting) return;
-            physicalIndex += direction;
-            update();
-        };
-        track.addEventListener("transitionend", (event) => {
-            if (event.propertyName !== "transform" || physicalIndex > 4 && physicalIndex < 10) return;
-            isResetting = true;
-            physicalIndex += physicalIndex < 5 ? 5 : -5;
-            track.style.transition = "none";
-            update();
-            requestAnimationFrame(() => requestAnimationFrame(() => {
-                track.style.transition = "";
-                isResetting = false;
-            }));
+            previous.addEventListener("click", () => move(-1));
+            next.addEventListener("click", () => move(1));
         });
-        previous.addEventListener("click", () => move(-1));
-        next.addEventListener("click", () => move(1));
-    });
     };
 
     initializeFastMovingProposals();

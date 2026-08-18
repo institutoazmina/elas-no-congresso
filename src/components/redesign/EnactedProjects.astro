@@ -66,30 +66,49 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
 
 <script>
     const initializeEnactedProjects = () => {
-    document.querySelectorAll<HTMLElement>("[data-enacted-carousel]").forEach((carousel) => {
-        if (carousel.dataset.enactedCarouselInitialized) return;
-        carousel.dataset.enactedCarouselInitialized = "true";
-        const track = carousel.querySelector<HTMLElement>("[data-track]");
-        const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
-        const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
-        if (!track || !previous || !next) return;
-        const cards = Array.from(track.querySelectorAll<HTMLElement>(".enacted-projects__card"));
-        let physical = 7;
-        let resetting = false;
-        const update = () => {
-            const activeCard = cards[physical];
-            const cardWidth = activeCard?.getBoundingClientRect().width ?? 0;
-            const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
-            track.style.transform = `translateX(${-physical * (cardWidth + gap) - cardWidth / 2}px)`;
-            cards.forEach((card, index) => { const active = index === physical; card.classList.toggle("enacted-projects__card--featured", active); card.setAttribute("aria-hidden", String(!active)); });
-        };
-        const move = (direction: number) => { if (!resetting) { physical += direction; update(); } };
-        track.addEventListener("transitionend", (event) => { if (event.propertyName !== "transform" || (physical > 4 && physical < 10)) return; resetting = true; physical += physical < 5 ? 5 : -5; track.style.transition = "none"; update(); requestAnimationFrame(() => requestAnimationFrame(() => { track.style.transition = ""; resetting = false; })); });
-        previous.addEventListener("click", () => move(-1));
-        next.addEventListener("click", () => move(1));
-        window.addEventListener("resize", update, { passive: true });
-        update();
-    });
+        document.querySelectorAll<HTMLElement>("[data-enacted-carousel]").forEach((carousel) => {
+            if (carousel.dataset.enactedCarouselInitialized) return;
+            carousel.dataset.enactedCarouselInitialized = "true";
+            const track = carousel.querySelector<HTMLElement>("[data-track]");
+            const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
+            const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
+            if (!track || !previous || !next) return;
+            const cards = Array.from(track.querySelectorAll<HTMLElement>(".enacted-projects__card"));
+            let physical = 7;
+            let resetting = false;
+            const update = () => {
+                const activeCard = cards[physical];
+                const cardWidth = activeCard?.getBoundingClientRect().width ?? 0;
+                const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
+                track.style.transform = `translateX(${-physical * (cardWidth + gap) - cardWidth / 2}px)`;
+                cards.forEach((card, index) => {
+                    const active = index === physical;
+                    card.classList.toggle("enacted-projects__card--featured", active);
+                    card.setAttribute("aria-hidden", String(!active));
+                });
+            };
+            const move = (direction: number) => {
+                if (!resetting) {
+                    physical += direction;
+                    update();
+                }
+            };
+            track.addEventListener("transitionend", (event) => {
+                if (event.propertyName !== "transform" || (physical > 4 && physical < 10)) return;
+                resetting = true;
+                physical += physical < 5 ? 5 : -5;
+                track.style.transition = "none";
+                update();
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    track.style.transition = "";
+                    resetting = false;
+                }));
+            });
+            previous.addEventListener("click", () => move(-1));
+            next.addEventListener("click", () => move(1));
+            window.addEventListener("resize", update, { passive: true });
+            update();
+        });
     };
 
     initializeEnactedProjects();
@@ -97,10 +116,49 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
 </script>
 
 <style>
-    .enacted-projects{height:907.9435424804688px;background:#fff;color:#0b0f5e;font-family:"Plus Jakarta Sans",sans-serif;overflow:hidden}.enacted-projects *{box-sizing:border-box}.enacted-projects__header{width:816px;height:84px;margin:48px auto 10px;padding:0 48px;display:flex;flex-direction:column;gap:16px}.enacted-projects__header>img{width:96px;height:4px}.enacted-projects h2,.enacted-projects p{margin:0}.enacted-projects h2{font-family:"ETC Anybody",sans-serif;font-size:36px;font-weight:700;line-height:24px;text-transform:uppercase;font-variation-settings:"wdth" 75}.enacted-projects__header p{font-size:18px;line-height:24px}.enacted-projects__figure{height:717.9435424804688px;padding:24px 0;overflow:hidden}.enacted-projects__carousel{position:relative;height:669.9435424804688px;padding:48px;overflow:hidden;background-repeat:repeat;background-position:center top;border-top:1px solid #000}.enacted-projects__controls{position:absolute;z-index:2;top:48px;left:calc(50% - 58px);display:flex;gap:4px}.enacted-projects__controls button{width:56px;height:40px;border:1px solid #4242f6;background:#fff;color:#4242f6;font:32px/1 Arial;cursor:pointer}.enacted-projects__controls button:focus-visible{outline:2px solid #0b0f5e;outline-offset:2px}.enacted-projects__viewport{position:absolute;top:112px;left:0;width:100%;overflow:hidden}.enacted-projects__track{display:flex;width:max-content;gap:48px;transform:translateX(-2496px);transition:transform .2s ease}.enacted-projects__card{display:flex;width:384px;height:509.94354248046875px;flex:none;flex-direction:column;border:1px solid #998d96;background:#fff;overflow:visible}.enacted-projects__card--desfavorável{height:407.94354248046875px}.enacted-projects__card--featured{border-color:#0b0f5e;box-shadow:-4px 4px 0 #0b0f5e}.enacted-projects__card-header{position:relative;height:69.94354248046875px;flex:none;padding:8px 16px;border-bottom:1px solid #998d96}.enacted-projects__card-header>strong{position:absolute;top:18.971769332885742px;left:16px;font-family:"ETC Anybody",sans-serif;font-size:20px;line-height:24px;font-variation-settings:"wdth" 75}.enacted-projects__status{position:absolute;top:8px;right:16px;width:168.30795288085938px;height:53.94354248046875px}.enacted-projects__document{position:absolute;top:0;left:4.444942951202393px;width:36px;height:51px;transform:rotate(-5deg)}.enacted-projects__rating{position:absolute;top:10.971768379211426px;left:32.307952880859375px;display:flex;height:32px;align-items:center;gap:8px}.enacted-projects__rating-icon{display:block;width:32px;height:32px;border-radius:50%;overflow:hidden;background:#def279}.enacted-projects__rating-icon img{display:block;width:32px;height:32px}.enacted-projects__card--desfavorável .enacted-projects__rating-icon{background:#ff5865}.enacted-projects__card--desfavorável .enacted-projects__rating-icon img{transform:rotate(180deg)}.enacted-projects__rating b{font-family:"ETC Anybody",sans-serif;font-size:16px;line-height:24px;text-transform:uppercase;font-variation-settings:"wdth" 75}.enacted-projects__details{height:358px;padding:24px 16px;overflow:hidden;display:flex;flex-direction:column;gap:16px}.enacted-projects__card--desfavorável .enacted-projects__details{height:256px}.enacted-projects__authors{display:flex;min-height:24px;flex-direction:column;gap:10px}.enacted-projects__authors p{height:24px;display:flex;justify-content:space-between;font-size:18px;line-height:24px;min-width:0}.enacted-projects__authors p span,.enacted-projects__authors p strong{min-width:0}.enacted-projects__authors p strong{font-weight:700}.enacted-projects__more{display:block!important;color:#4242f6}.enacted-projects__theme{width:64px;height:32px;padding:4px 8px;background:#4242f6;color:#fff;font-family:"ETC Anybody",sans-serif;font-size:16px;font-weight:700;line-height:24px;text-transform:uppercase;font-variation-settings:"wdth" 75}.enacted-projects__description{height:120px;color:#0b0f5e;font-size:16px;line-height:24px;opacity:.66;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:5;text-overflow:ellipsis}.enacted-projects__card footer{height:82px;flex:none;padding:16px;display:flex;justify-content:space-between;border-top:1px solid #998d96;background:#4242f6;color:#fff}.enacted-projects__card footer>div{display:flex;flex-direction:column;gap:10px}.enacted-projects__card footer p{height:24px;display:flex;align-items:center;gap:10px;font-size:18px;line-height:24px}.enacted-projects__card footer p img{width:24px;height:24px}.enacted-projects__card footer small{font-size:12px;line-height:16px;opacity:.66}.enacted-projects__card footer>span{align-self:center;font:32px/1 Arial}.enacted-projects__card--featured footer{background:#4242f6}
-</style>
-
-<style>
+    .enacted-projects { height: 907.9435424804688px; background: #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; overflow: hidden; }
+    .enacted-projects * { box-sizing: border-box; }
+    .enacted-projects__header { width: 816px; height: 84px; margin: 48px auto 10px; padding: 0 48px; display: flex; flex-direction: column; gap: 16px; }
+    .enacted-projects__header > img { width: 96px; height: 4px; }
+    .enacted-projects h2, .enacted-projects p { margin: 0; }
+    .enacted-projects h2 { font-family: "ETC Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .enacted-projects__header p { font-size: 18px; line-height: 24px; }
+    .enacted-projects__figure { height: 717.9435424804688px; padding: 24px 0; overflow: hidden; }
+    .enacted-projects__carousel { position: relative; height: 669.9435424804688px; padding: 48px; overflow: hidden; background-repeat: repeat; background-position: center top; border-top: 1px solid #000; }
+    .enacted-projects__controls { position: absolute; z-index: 2; top: 48px; left: calc(50% - 58px); display: flex; gap: 4px; }
+    .enacted-projects__controls button { width: 56px; height: 40px; border: 1px solid #4242f6; background: #fff; color: #4242f6; font: 32px/1 Arial; cursor: pointer; }
+    .enacted-projects__controls button:focus-visible { outline: 2px solid #0b0f5e; outline-offset: 2px; }
+    .enacted-projects__viewport { position: absolute; top: 112px; left: 0; width: 100%; overflow: hidden; }
+    .enacted-projects__track { display: flex; width: max-content; gap: 48px; transform: translateX(-2496px); transition: transform .2s ease; }
+    .enacted-projects__card { display: flex; width: 384px; height: 509.94354248046875px; flex: none; flex-direction: column; border: 1px solid #998d96; background: #fff; overflow: visible; }
+    .enacted-projects__card--desfavorável { height: 407.94354248046875px; }
+    .enacted-projects__card--featured { border-color: #0b0f5e; box-shadow: -4px 4px 0 #0b0f5e; }
+    .enacted-projects__card-header { position: relative; height: 69.94354248046875px; flex: none; padding: 8px 16px; border-bottom: 1px solid #998d96; }
+    .enacted-projects__card-header > strong { position: absolute; top: 18.971769332885742px; left: 16px; font-family: "ETC Anybody", sans-serif; font-size: 20px; line-height: 24px; font-variation-settings: "wdth" 75; }
+    .enacted-projects__status { position: absolute; top: 8px; right: 16px; width: 168.30795288085938px; height: 53.94354248046875px; }
+    .enacted-projects__document { position: absolute; top: 0; left: 4.444942951202393px; width: 36px; height: 51px; transform: rotate(-5deg); }
+    .enacted-projects__rating { position: absolute; top: 10.971768379211426px; left: 32.307952880859375px; display: flex; height: 32px; align-items: center; gap: 8px; }
+    .enacted-projects__rating-icon { display: block; width: 32px; height: 32px; border-radius: 50%; overflow: hidden; background: #def279; }
+    .enacted-projects__rating-icon img { display: block; width: 32px; height: 32px; }
+    .enacted-projects__card--desfavorável .enacted-projects__rating-icon { background: #ff5865; }
+    .enacted-projects__card--desfavorável .enacted-projects__rating-icon img { transform: rotate(180deg); }
+    .enacted-projects__rating b { font-family: "ETC Anybody", sans-serif; font-size: 16px; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .enacted-projects__details { height: 358px; padding: 24px 16px; overflow: hidden; display: flex; flex-direction: column; gap: 16px; }
+    .enacted-projects__card--desfavorável .enacted-projects__details { height: 256px; }
+    .enacted-projects__authors { display: flex; min-height: 24px; flex-direction: column; gap: 10px; }
+    .enacted-projects__authors p { height: 24px; display: flex; justify-content: space-between; font-size: 18px; line-height: 24px; min-width: 0; }
+    .enacted-projects__authors p span, .enacted-projects__authors p strong { min-width: 0; }
+    .enacted-projects__authors p strong { font-weight: 700; }
+    .enacted-projects__more { display: block !important; color: #4242f6; }
+    .enacted-projects__theme { width: 64px; height: 32px; padding: 4px 8px; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 16px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .enacted-projects__description { height: 120px; color: #0b0f5e; font-size: 16px; line-height: 24px; opacity: .66; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; text-overflow: ellipsis; }
+    .enacted-projects__card footer { height: 82px; flex: none; padding: 16px; display: flex; justify-content: space-between; border-top: 1px solid #998d96; background: #4242f6; color: #fff; }
+    .enacted-projects__card footer > div { display: flex; flex-direction: column; gap: 10px; }
+    .enacted-projects__card footer p { height: 24px; display: flex; align-items: center; gap: 10px; font-size: 18px; line-height: 24px; }
+    .enacted-projects__card footer p img { width: 24px; height: 24px; }
+    .enacted-projects__card footer small { font-size: 12px; line-height: 16px; opacity: .66; }
+    .enacted-projects__card footer > span { align-self: center; font: 32px/1 Arial; }
+.enacted-projects__card--featured footer { background: #4242f6; }
     .enacted-projects__carousel { background-color: #fff; background-image: var(--enacted-projects-background); background-position: left top; background-repeat: repeat; background-size: 400px 400px; }
     .enacted-projects__carousel::before, .enacted-projects__carousel::after { position: absolute; z-index: 1; display: block; width: 100%; height: 24px; background-image: var(--enacted-projects-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; content: ""; pointer-events: none; mix-blend-mode: multiply; }
     .enacted-projects__carousel::before { top: 0; left: 0; transform: scaleY(-1); }
@@ -119,10 +177,7 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
     .enacted-projects__card--desfavorável footer > span { opacity: 1; }
     .enacted-projects__law-icon { display: block; position: relative; width: 24px; height: 24px; flex: none; }
     .enacted-projects__law-icon img { position: absolute; top: 2px; left: 4px; width: 16px !important; height: 20px !important; }
-    .enacted-projects__card--desfavorável .enacted-projects__law-icon img { filter: brightness(0) invert(1); }
-</style>
-
-<style>
+.enacted-projects__card--desfavorável .enacted-projects__law-icon img { filter: brightness(0) invert(1); }
     @media (max-width: 767px) {
         .enacted-projects {
             width: 100%;

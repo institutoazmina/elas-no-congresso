@@ -49,41 +49,49 @@ const items = Array.from({ length: 15 }, (_, index) => index);
 
 <script>
     const initializeParliamentariansCarousel = () => {
-    document.querySelectorAll<HTMLElement>("[data-parliamentarians]").forEach((carousel) => {
-        if (carousel.dataset.parliamentariansCarouselInitialized) return;
-        carousel.dataset.parliamentariansCarouselInitialized = "true";
-        const track = carousel.querySelector<HTMLElement>("[data-track]");
-        const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
-        const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
-        if (!track || !previous || !next) return;
+        document.querySelectorAll<HTMLElement>("[data-parliamentarians]").forEach((carousel) => {
+            if (carousel.dataset.parliamentariansCarouselInitialized) return;
+            carousel.dataset.parliamentariansCarouselInitialized = "true";
+            const track = carousel.querySelector<HTMLElement>("[data-track]");
+            const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
+            const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
+            if (!track || !previous || !next) return;
 
-        const cards = Array.from(track.querySelectorAll<HTMLElement>(".parliamentarians__card"));
-        let active = 7;
-        let resetting = false;
-        const update = () => {
-            const cardWidth = cards[0]?.getBoundingClientRect().width ?? 384;
-            const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
-            track.style.transform = `translateX(${-cardWidth / 2 - active * (cardWidth + gap)}px)`;
-            cards.forEach((card, index) => {
-                const isActive = index === active;
-                card.classList.toggle("parliamentarians__card--active", isActive);
-                card.setAttribute("aria-hidden", String(!isActive));
+            const cards = Array.from(track.querySelectorAll<HTMLElement>(".parliamentarians__card"));
+            let active = 7;
+            let resetting = false;
+            const update = () => {
+                const cardWidth = cards[0]?.getBoundingClientRect().width ?? 384;
+                const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
+                track.style.transform = `translateX(${-cardWidth / 2 - active * (cardWidth + gap)}px)`;
+                cards.forEach((card, index) => {
+                    const isActive = index === active;
+                    card.classList.toggle("parliamentarians__card--active", isActive);
+                    card.setAttribute("aria-hidden", String(!isActive));
+                });
+            };
+            const move = (direction: number) => {
+                if (!resetting) {
+                    active += direction;
+                    update();
+                }
+            };
+            track.addEventListener("transitionend", (event) => {
+                if (event.propertyName !== "transform" || (active > 4 && active < 10)) return;
+                resetting = true;
+                active += active < 5 ? 5 : -5;
+                track.style.transition = "none";
+                update();
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    track.style.transition = "";
+                    resetting = false;
+                }));
             });
-        };
-        const move = (direction: number) => { if (!resetting) { active += direction; update(); } };
-        track.addEventListener("transitionend", (event) => {
-            if (event.propertyName !== "transform" || (active > 4 && active < 10)) return;
-            resetting = true;
-            active += active < 5 ? 5 : -5;
-            track.style.transition = "none";
+            previous.addEventListener("click", () => move(-1));
+            next.addEventListener("click", () => move(1));
+            window.addEventListener("resize", update);
             update();
-            requestAnimationFrame(() => requestAnimationFrame(() => { track.style.transition = ""; resetting = false; }));
         });
-        previous.addEventListener("click", () => move(-1));
-        next.addEventListener("click", () => move(1));
-        window.addEventListener("resize", update);
-        update();
-    });
     };
 
     initializeParliamentariansCarousel();

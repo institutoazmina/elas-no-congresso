@@ -26,16 +26,44 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
 
 <script>
     const initializeSlowMovingProposals = () => {
-    document.querySelectorAll<HTMLElement>("[data-slow-carousel]").forEach((carousel) => {
-        if (carousel.dataset.slowCarouselInitialized) return;
-        carousel.dataset.slowCarouselInitialized = "true";
-        const track = carousel.querySelector<HTMLElement>("[data-track]"); const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]"); const next = carousel.querySelector<HTMLButtonElement>("[data-next]"); if (!track || !previous || !next) return;
-        const cards = Array.from(track.querySelectorAll<HTMLElement>(".slow-moving-proposals__card")); let physical = 7; let resetting = false;
-        const update = () => { track.style.transform = `translateX(${-192 - physical * 432}px)`; cards.forEach((card, index) => { const active=index===physical; card.classList.toggle("slow-moving-proposals__card--featured",active); card.setAttribute("aria-hidden",String(!active)); }); };
-        const move=(direction:number)=>{ if(!resetting){ physical+=direction; update(); } };
-        track.addEventListener("transitionend",(event)=>{ if(event.propertyName!=="transform" || physical>4&&physical<10)return; resetting=true; physical+=physical<5?5:-5; track.style.transition="none"; update(); requestAnimationFrame(()=>requestAnimationFrame(()=>{track.style.transition="";resetting=false;})); });
-        previous.addEventListener("click",()=>move(-1)); next.addEventListener("click",()=>move(1));
-    });
+        document.querySelectorAll<HTMLElement>("[data-slow-carousel]").forEach((carousel) => {
+            if (carousel.dataset.slowCarouselInitialized) return;
+            carousel.dataset.slowCarouselInitialized = "true";
+            const track = carousel.querySelector<HTMLElement>("[data-track]");
+            const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
+            const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
+            if (!track || !previous || !next) return;
+            const cards = Array.from(track.querySelectorAll<HTMLElement>(".slow-moving-proposals__card"));
+            let physical = 7;
+            let resetting = false;
+            const update = () => {
+                track.style.transform = `translateX(${-192 - physical * 432}px)`;
+                cards.forEach((card, index) => {
+                    const active = index === physical;
+                    card.classList.toggle("slow-moving-proposals__card--featured", active);
+                    card.setAttribute("aria-hidden", String(!active));
+                });
+            };
+            const move = (direction: number) => {
+                if (!resetting) {
+                    physical += direction;
+                    update();
+                }
+            };
+            track.addEventListener("transitionend", (event) => {
+                if (event.propertyName !== "transform" || (physical > 4 && physical < 10)) return;
+                resetting = true;
+                physical += physical < 5 ? 5 : -5;
+                track.style.transition = "none";
+                update();
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    track.style.transition = "";
+                    resetting = false;
+                }));
+            });
+            previous.addEventListener("click", () => move(-1));
+            next.addEventListener("click", () => move(1));
+        });
     };
 
     initializeSlowMovingProposals();
@@ -43,10 +71,43 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
 </script>
 
 <style>
-    .slow-moving-proposals{height:923.9435424804688px;overflow:hidden;background:#fff;color:#0b0f5e;font-family:"Plus Jakarta Sans",sans-serif}.slow-moving-proposals *{box-sizing:border-box}.slow-moving-proposals__header{display:flex;width:816px;height:174px;margin:auto;padding:48px;flex-direction:column;gap:16px}.slow-moving-proposals__header>img{width:96px;height:4px}.slow-moving-proposals h2,.slow-moving-proposals p{margin:0}.slow-moving-proposals h2{width:720px;height:66px;font-family:"ETC Anybody",sans-serif;font-size:36px;font-weight:700;line-height:32px;text-transform:uppercase;font-variation-settings:"wdth" 75}.slow-moving-proposals__header p{font-size:18px;line-height:24px}.slow-moving-proposals__carousel{position:relative;height:643.9435424804688px;margin-top:34px;overflow:hidden;background:#fff url("../../assets/images/redesign/background/bg-pattern-rough-paper.png") repeat left top/400px 400px}.slow-moving-proposals__controls{position:absolute;z-index:2;top:48px;left:calc(50% - 58px);display:flex;gap:4px}.slow-moving-proposals__controls button{width:56px;height:40px;border:2px solid #4242f6;background:#fff;color:#4242f6;font:32px/1 Arial}.slow-moving-proposals__viewport{position:absolute;top:112px;width:100%;overflow:hidden}.slow-moving-proposals__track{display:flex;width:max-content;gap:48px;transform:translateX(-2496px);transition:transform .2s ease}.slow-moving-proposals__card{display:flex;width:384px;height:483.94354248046875px;flex:none;flex-direction:column;overflow:visible;border:1px solid #998d96;background:#fff}.slow-moving-proposals__card--featured{border-color:#0b0f5e;box-shadow:-4px 4px 0 #0b0f5e}.slow-moving-proposals__card-header{position:relative;display:flex;height:69.94354248046875px;align-items:center;border-bottom:1px solid #998d96;padding:8px 16px}.slow-moving-proposals__card-header>strong{font-family:"ETC Anybody",sans-serif;font-size:20px;line-height:24px;font-variation-settings:"wdth" 75}.slow-moving-proposals__status{position:absolute;top:8px;right:16px;width:143.30795288085938px;height:53.94354248046875px}.slow-moving-proposals__document{position:absolute;top:0;left:4.444942951202393px;width:36px;height:51px;transform:rotate(-5deg);object-fit:fill}.slow-moving-proposals__thumb{position:absolute;top:10.971768379211426px;left:32.307952880859375px;width:32px;height:32px;overflow:hidden;border-radius:50%}.slow-moving-proposals__thumb>img:first-child{position:absolute;inset:0;width:32px;height:32px;filter:hue-rotate(53deg) saturate(.65) brightness(1.25)}.slow-moving-proposals__thumb>img:last-child{position:absolute;inset:4px;width:24px;height:24px}.slow-moving-proposals__status b{position:absolute;top:14.971768379211426px;left:72.30795288085938px;font-family:"ETC Anybody",sans-serif;font-size:16px;line-height:24px;text-transform:uppercase;font-variation-settings:"wdth" 75}.slow-moving-proposals__content{height:358px;padding:24px 16px}.slow-moving-proposals__authors p{display:flex;justify-content:space-between;height:24px;font-size:18px;line-height:24px}.slow-moving-proposals__authors strong{font-weight:700}.slow-moving-proposals__authors .slow-moving-proposals__more{display:block;color:#4242f6}.slow-moving-proposals__badge{display:inline-block;margin-top:16px;padding:4px 8px;background:#4242f6;color:#fff;font-family:"ETC Anybody",sans-serif;font-size:16px;font-weight:700;line-height:24px;text-transform:uppercase;font-variation-settings:"wdth" 75}.slow-moving-proposals__description{margin-top:16px!important;font-size:16px;line-height:24px}.slow-moving-proposals__card footer{height:56px;border-top:1px solid #998d96;padding:16px;font-size:18px;line-height:24px}.slow-moving-proposals__card footer strong{margin:0 4px;color:#4242f6}.slow-moving-proposals__card footer b{margin-left:4px}@media(max-width:767px){.slow-moving-proposals__header{width:100%;padding:48px 24px}.slow-moving-proposals h2{width:100%;font-size:28px}.slow-moving-proposals__header p{width:100%}.slow-moving-proposals__card{width:336px}}
-</style>
-
-<style>
+    .slow-moving-proposals { height: 923.9435424804688px; overflow: hidden; background: #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
+    .slow-moving-proposals * { box-sizing: border-box; }
+    .slow-moving-proposals__header { display: flex; width: 816px; height: 174px; margin: auto; padding: 48px; flex-direction: column; gap: 16px; }
+    .slow-moving-proposals__header > img { width: 96px; height: 4px; }
+    .slow-moving-proposals h2, .slow-moving-proposals p { margin: 0; }
+    .slow-moving-proposals h2 { width: 720px; height: 66px; font-family: "ETC Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 32px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .slow-moving-proposals__header p { font-size: 18px; line-height: 24px; }
+    .slow-moving-proposals__carousel { position: relative; height: 643.9435424804688px; margin-top: 34px; overflow: hidden; background: #fff url("../../assets/images/redesign/background/bg-pattern-rough-paper.png") repeat left top/400px 400px; }
+    .slow-moving-proposals__controls { position: absolute; z-index: 2; top: 48px; left: calc(50% - 58px); display: flex; gap: 4px; }
+    .slow-moving-proposals__controls button { width: 56px; height: 40px; border: 2px solid #4242f6; background: #fff; color: #4242f6; font: 32px/1 Arial; }
+    .slow-moving-proposals__viewport { position: absolute; top: 112px; width: 100%; overflow: hidden; }
+    .slow-moving-proposals__track { display: flex; width: max-content; gap: 48px; transform: translateX(-2496px); transition: transform .2s ease; }
+    .slow-moving-proposals__card { display: flex; width: 384px; height: 483.94354248046875px; flex: none; flex-direction: column; overflow: visible; border: 1px solid #998d96; background: #fff; }
+    .slow-moving-proposals__card--featured { border-color: #0b0f5e; box-shadow: -4px 4px 0 #0b0f5e; }
+    .slow-moving-proposals__card-header { position: relative; display: flex; height: 69.94354248046875px; align-items: center; border-bottom: 1px solid #998d96; padding: 8px 16px; }
+    .slow-moving-proposals__card-header > strong { font-family: "ETC Anybody", sans-serif; font-size: 20px; line-height: 24px; font-variation-settings: "wdth" 75; }
+    .slow-moving-proposals__status { position: absolute; top: 8px; right: 16px; width: 143.30795288085938px; height: 53.94354248046875px; }
+    .slow-moving-proposals__document { position: absolute; top: 0; left: 4.444942951202393px; width: 36px; height: 51px; transform: rotate(-5deg); object-fit: fill; }
+    .slow-moving-proposals__thumb { position: absolute; top: 10.971768379211426px; left: 32.307952880859375px; width: 32px; height: 32px; overflow: hidden; border-radius: 50%; }
+    .slow-moving-proposals__thumb > img:first-child { position: absolute; inset: 0; width: 32px; height: 32px; filter: hue-rotate(53deg) saturate(.65) brightness(1.25); }
+    .slow-moving-proposals__thumb > img:last-child { position: absolute; inset: 4px; width: 24px; height: 24px; }
+    .slow-moving-proposals__status b { position: absolute; top: 14.971768379211426px; left: 72.30795288085938px; font-family: "ETC Anybody", sans-serif; font-size: 16px; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .slow-moving-proposals__content { height: 358px; padding: 24px 16px; }
+    .slow-moving-proposals__authors p { display: flex; justify-content: space-between; height: 24px; font-size: 18px; line-height: 24px; }
+    .slow-moving-proposals__authors strong { font-weight: 700; }
+    .slow-moving-proposals__authors .slow-moving-proposals__more { display: block; color: #4242f6; }
+    .slow-moving-proposals__badge { display: inline-block; margin-top: 16px; padding: 4px 8px; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 16px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .slow-moving-proposals__description { margin-top: 16px !important; font-size: 16px; line-height: 24px; }
+    .slow-moving-proposals__card footer { height: 56px; border-top: 1px solid #998d96; padding: 16px; font-size: 18px; line-height: 24px; }
+    .slow-moving-proposals__card footer strong { margin: 0 4px; color: #4242f6; }
+    .slow-moving-proposals__card footer b { margin-left: 4px; }
+    @media (max-width: 767px) {
+        .slow-moving-proposals__header { width: 100%; padding: 48px 24px; }
+        .slow-moving-proposals h2 { width: 100%; font-size: 28px; }
+        .slow-moving-proposals__header p { width: 100%; }
+        .slow-moving-proposals__card { width: 336px; }
+    }
     @media (max-width: 767px) {
         .slow-moving-proposals { height: auto; }
         .slow-moving-proposals__header { padding-inline: 15px; }
@@ -81,11 +142,8 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
         .slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(8).slow-moving-proposals__card--featured) { --mobile-active-index: 7; }
         .slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(9).slow-moving-proposals__card--featured) { --mobile-active-index: 8; }
         .slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(10).slow-moving-proposals__card--featured) { --mobile-active-index: 9; }
-        .slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(11).slow-moving-proposals__card--featured) { --mobile-active-index: 10; }
+.slow-moving-proposals__track:has(> .slow-moving-proposals__card:nth-child(11).slow-moving-proposals__card--featured) { --mobile-active-index: 10; }
     }
-</style>
-
-<style>
     .slow-moving-proposals__carousel { background-color: #fff; background-image: var(--slow-moving-proposals-background); background-position: left top; background-repeat: repeat; background-size: 400px 400px; }
     .slow-moving-proposals__carousel::before, .slow-moving-proposals__carousel::after { position: absolute; z-index: 1; display: block; width: 100%; height: 24px; background-image: var(--slow-moving-proposals-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; content: ""; pointer-events: none; mix-blend-mode: multiply; }
     .slow-moving-proposals__carousel::before { top: 0; left: 0; transform: scaleY(-1); }
@@ -104,18 +162,8 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
     .slow-moving-proposals__authors p > * { min-width: 0; }
     .slow-moving-proposals__description { height: 120px; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; text-overflow: ellipsis; }
     .slow-moving-proposals__card footer { color: #0b0f5e; }
-    .slow-moving-proposals__card footer strong,
+.slow-moving-proposals__card footer strong,
     .slow-moving-proposals__card footer b { margin: 0; color: inherit; font-weight: 700; }
-    @media (max-width: 767px) {
-        .slow-moving-proposals__thumb { width: 20px; height: 20px; }
-        .slow-moving-proposals__thumbs b { top: 4px; left: 26px; font-size: 10px; line-height: 12px; }
-        .slow-moving-proposals__authors { height: 46px; gap: 2px; }
-        .slow-moving-proposals__authors p { height: 10px; font-size: 9px; line-height: 10px; }
-        .slow-moving-proposals__description { height: auto; margin-top: 6px !important; font-size: 9px; line-height: 11px; -webkit-line-clamp: 4; }
-    }
-</style>
-
-<style>
     @media (max-width: 767px) {
         .slow-moving-proposals {
             box-sizing: border-box;
