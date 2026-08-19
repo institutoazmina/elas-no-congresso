@@ -421,7 +421,7 @@ const [categories, committees] = await Promise.all([getCategoryOptions(), getCom
 
 <style>
     :global(body.alerts-email-modal-open) { overflow: hidden; }
-    .alerts-email-backdrop { position: fixed; z-index: 10; inset: var(--alerts-header-height, 104px) 0 0; background: rgba(255, 255, 255, .92); }
+    .alerts-email-backdrop { position: fixed; z-index: 10; inset: var(--alerts-header-height, 104px) 0 0; background: #fff; }
     .alerts-email-modal, .alerts-email-modal * { box-sizing: border-box; }
     .alerts-email-modal { position: fixed; z-index: 11; top: calc(var(--alerts-header-height, 104px) + 24px); right: 0; left: 0; width: min(672px, calc(100vw - 48px)); max-height: calc(100dvh - var(--alerts-header-height, 104px) - 48px); margin: 0 auto; padding: 0; overflow: auto; border: 0; background: #fff; color: #1e2546; }
     .alerts-email-modal__shell { min-height: 100%; }
