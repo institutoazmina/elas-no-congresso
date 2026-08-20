@@ -21,12 +21,12 @@ const gap = pileGap({
     class="tw:relative tw:h-auto tw:overflow-hidden tw:py-12 tw:text-[#0B0F5E] tw:lg:h-[1241.5px] tw:lg:overflow-visible tw:lg:bg-white tw:lg:pt-12 tw:lg:pb-0"
     aria-labelledby="rights-under-attack-title"
 >
-    <div class="tw:mx-auto tw:flex tw:w-full tw:max-w-[816px] tw:flex-col tw:gap-10 tw:px-6 tw:lg:h-[1193.5px] tw:lg:w-[816px] tw:lg:max-w-none tw:lg:gap-2.5 tw:lg:p-12">
-        <header class="tw:flex tw:w-full tw:flex-col tw:items-start tw:gap-4 tw:lg:h-[174px]">
+    <div class="tw:mx-auto tw:flex tw:w-full tw:max-w-[816px] tw:flex-col tw:gap-10 tw:px-6 tw:lg:h-[1193.5px] tw:lg:w-[816px] tw:lg:max-w-none tw:lg:gap-2.5 tw:lg:px-12 tw:lg:pb-12 tw:lg:pt-6">
+        <header class="tw:flex tw:w-full tw:flex-col tw:items-start tw:gap-4 tw:lg:mx-auto tw:lg:h-auto tw:lg:max-w-[960px] tw:lg:justify-center">
             <img class="tw:h-1 tw:w-24" src={attention.src} alt="" />
             <h2
                 id="rights-under-attack-title"
-                class="tw:m-0 tw:w-full tw:font-[ETC_Anybody] tw:text-[clamp(28px,7vw,36px)] tw:font-bold tw:leading-[1.1667] tw:uppercase tw:[font-variation-settings:'wdth'_75] tw:lg:h-[66px] tw:text-[36px] tw:leading-[42px]"
+                class="tw:m-0 tw:w-full tw:font-[ETC_Anybody] tw:text-[clamp(28px,7vw,36px)] tw:font-bold tw:leading-[1.1667] tw:uppercase tw:[font-variation-settings:'wdth'_75] tw:text-[36px] tw:leading-[42px]"
             >
                 Os direitos das mulheres e pessoas LGBTQIA+ nunca foram tão atacados
             </h2>
@@ -264,5 +264,15 @@ const gap = pileGap({
     }
     @media (min-width: 768px) {
         .rights-under-attack__note--mobile { display: none; }
+        section[aria-labelledby="rights-under-attack-title"] > div > header > h2 {
+            height: auto;
+            text-box-trim: trim-both;
+            text-box-edge: cap alphabetic;
+        }
+        @supports not (text-box-trim: trim-both) {
+            section[aria-labelledby="rights-under-attack-title"] > div > header > h2 {
+                height: 76px;
+            }
+        }
     }
 </style>
