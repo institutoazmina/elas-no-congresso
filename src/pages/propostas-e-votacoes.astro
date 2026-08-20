@@ -1,268 +1,52 @@
 ---
-import RedesignLayout from "../components/redesign/RedesignLayout.astro";
-import Share from "../components/Share.astro";
-import { legislaturasKeys } from "../lib/dados";
+import { ClientRouter } from "astro:transitions";
+import RedesignHeader from "../components/redesign/RedesignHeader.astro";
+import ActivityHero from "../components/redesign/ActivityHero.astro";
+import ActivityExplorer from "../components/redesign/ActivityExplorer.astro";
+import RedesignFooter from "../components/redesign/RedesignFooter.astro";
+import "../styles/tailwind.css";
+import "../styles/redesign-shared-background.css";
 ---
 
-<RedesignLayout title="Propostas">
-    <main>
-        <header class="abertura-propostas-votacoes tw:min-h-[50vh]!">
-            <Share />
-            <div class="container-fluid wrap">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h2 class="titulo-variavel tcb t9 mb2 tw:leading-[1.2]">
-                            <span class="w900 wdth200">Propostas</span>
-                        </h2>
-                        <p
-                            class="ff1 tw:text-xl tw:text-white tw:uppercase wdth300"
-                        >
-                            Confira as últimas atualizações do parlamento.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </header>
-        <!-- Propostas -->
-        <article class="conteudo-propostas">
-            <div class="tw:px-4 tw:md:px-8 tw:w-full tw:max-w-7xl tw:mx-auto">
-                <div
-                    class="tw:max-w-prose tw:flex tw:flex-col tw:items-center tw:text-center tw:mx-auto tw:border tw:border-black/10 tw:shadow-xl tw:mb-8 tw:p-4 tw:py-6"
-                >
-                    <div
-                        class="tw:w-24 tw:h-4 tw:bg-linear-to-r tw:from-[#8cd89c] tw:via-[#f9df79] tw:to-[#ff808a] tw:relative"
-                    >
-                        <div
-                            class="tw:absolute tw:-translate-x-1/2 tw:left-0 tw:-top-0.5 tw:h-[calc(100%+4px)] tw:w-1.5 tw:bg-black/15"
-                            style="left: 50%"
-                        >
-                        </div>
-                    </div>
-                    <div class="tw:w-24 tw:relative">
-                        <div
-                            class="tw:absolute tw:-translate-x-1 tw:left-0 tw:-top-3"
-                            style="left: 50%"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="lucide lucide-mouse-pointer2-icon lucide-mouse-pointer-2 tw:fill-white tw:text-black"
-                            >
-                                <path
-                                    d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z"
-                                ></path>
-                            </svg>
-                            <div class="tw:text-xs tw:text-center">0.5</div>
-                        </div>
-                    </div>
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Explore proposições sensíveis a gênero, avaliações e movimentações do Congresso Nacional." />
+        <title>Atividade Legislativa | Elas no Congresso</title>
+        <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet" />
+        <ClientRouter fallback="swap" />
+    </head>
+    <body class="tw:!m-0 tw:!bg-white tw:!pt-0">
+        <div class="activity-page redesign-shared-background">
+            <RedesignHeader />
+            <main>
+                <ActivityHero />
+                <ActivityExplorer />
+            </main>
+            <RedesignFooter />
+        </div>
+    </body>
+</html>
 
-                    <h3
-                        class="ff1 tw:font-bold tw:uppercase tw:mb-2! tw:text-2xl tw:mt-8!"
-                    >
-                        Quiteriômetro
-                    </h3>
-                    <p class="tw:text-lg">
-                        No Quiteriômetro, quanto mais a seta está no vermelho,
-                        maior o risco da proposição para meninas, mulheres e
-                        LGBTQIAPN+.
-                    </p>
-                    <p class="tw:text-sm tw:mb-0!">
-                        Obs: Essa base de dados inclui o nome da proposição;
-                        autoria, com partido e UF; resumo; nome da organização
-                        avaliadora; avaliação humana e avaliação da QuitérIA. <strong
-                            >Quando há divergência entre as duas, a palavra
-                            final é sempre a humana.</strong
-                        >
-                    </p>
-                </div>
-                <!-- Filtros -->
-                <section class="tw:mb-5">
-                    <div class="col-xs-12">
-                        <form class="filtros">
-                            <div class="row center-xs mb2">
-                                <div class="col-xs">
-                                    <span class="custom-select big">
-                                        <select
-                                            name="legislatura"
-                                            onchange="window.legislatura=this.value;props.filtrar();"
-                                        >
-                                            {
-                                                legislaturasKeys.map((l) => (
-                                                    <option value={l}>
-                                                        {l}ª legislatura (
-                                                        {2019 +
-                                                            (Number(l) - 56) *
-                                                                4}
-                                                        -
-                                                        {2019 +
-                                                            ((Number(l) - 56) *
-                                                                4 +
-                                                                4)}
-                                                        )
-                                                    </option>
-                                                ))
-                                            }
-                                        </select>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="row center-xs mb2">
-                                <div class="col-xs">
-                                    <div class="switch">
-                                        <label>
-                                            <input
-                                                type="radio"
-                                                name="cargo"
-                                                onchange="props.cargo=this.value;props.filtrar();"
-                                                value="Deputado"
-                                                checked
-                                            />
-                                            <span>Câmara</span>
-                                        </label>
-                                        <label>
-                                            <input
-                                                type="radio"
-                                                name="cargo"
-                                                onchange="props.cargo=this.value;props.filtrar();"
-                                                value="Senador"
-                                            />
-                                            <span>Senado</span>
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row middle-xs">
-                                <div class="col-xs-12 col-md-6">
-                                    <h3 class="titulo-variavel tca">
-                                        <span class="w900 wdth300"
-                                            >Propostas</span
-                                        ><span class="w400 wdth200">
-                                            da câmara</span
-                                        >
-                                    </h3>
-                                </div>
-                                <div
-                                    class="col-xs-12 col-md-6 mb1 mb0-md tr-md"
-                                >
-                                    <a
-                                        href="/metodologia"
-                                        class="t3 tcvm uc w300 wdth200 ff1 mb0"
-                                        data-info="informacao"
-                                        >como avaliamos <span
-                                            class="w900 wdth300"
-                                            >as Propostas?</span
-                                        ></a
-                                    >
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12 col-md-5">
-                                    <label class="busca">
-                                        <input
-                                            type="text"
-                                            name="busca"
-                                            placeholder="Buscar pelo número ou palavra-chave"
-                                            onkeyup="props.numero = this.value;props.filtrar();"
-                                        />
-                                    </label>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </section>
-
-                <section class="">
-                    <div class="col-xs-12">
-                        <div class="/table-wrap">
-                            <table class="propostas">
-                                <thead
-                                    class="tw:bg-white tw:md:sticky tw:top-16 tw:z-100 tw:border-b tw:border-black/10"
-                                >
-                                    <tr>
-                                        <th
-                                            ><label
-                                                ><input
-                                                    type="radio"
-                                                    name="ordem"
-                                                    onclick="if(props.ordem==this.value){props.ordemdir*=-1;}else{props.ordem=this.value;props.ordemdir=1;};props.montar();"
-                                                    value="numero"
-                                                    checked
-                                                /><span>Proposta</span></label
-                                            ></th
-                                        >
-
-                                        <th
-                                            ><label
-                                                ><span>Autor(es)</span></label
-                                            ></th
-                                        >
-
-                                        <th
-                                            ><label><span>Resumo</span></label
-                                            ></th
-                                        >
-
-                                        <th
-                                            ><label
-                                                ><input
-                                                    type="radio"
-                                                    name="ordem"
-                                                    onclick="if(props.ordem==this.value){props.ordemdir*=-1;}else{props.ordem=this.value;props.ordemdir=1;};props.montar();"
-                                                    value="avaliador"
-                                                /><span
-                                                    >Organização<br
-                                                    />Avaliadora</span
-                                                ></label
-                                            ></th
-                                        >
-
-                                        <th
-                                            ><label
-                                                ><input
-                                                    type="radio"
-                                                    name="ordem"
-                                                    onclick="if(props.ordem==this.value){props.ordemdir*=-1;}else{props.ordem=this.value;props.ordemdir=1;};props.montar();"
-                                                    value="favoravel"
-                                                /><span
-                                                    >Avaliação<br /> humana</span
-                                                ></label
-                                            ></th
-                                        >
-
-                                        <th
-                                            ><label
-                                                ><span>Quiteriômetro</span
-                                                ></label
-                                            >
-                                        </th>
-                                    </tr>
-                                    <tbody id="rankingPropostas">
-                                        <tr>
-                                            <td colspan="6" class="relative">
-                                                <div class="preloader"></div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </thead>
-                            </table>
-                        </div>
-                    </div>
-                    <section class="grid">
-                        <div class="col-xs-12 col-md-10 col-md-offset-1">
-                            <nav class="paginacao">
-                                <ul id="paginacaoAtiva"></ul>
-                            </nav>
-                        </div>
-                    </section>
-                </section>
-            </div>
-        </article>
-    </main>
-</RedesignLayout>
+<style is:global>
+    @font-face {
+        font-family: "ETC Anybody";
+        font-style: normal;
+        font-weight: 50 1000;
+        font-display: swap;
+        src: url("/assets/fonts/ETCAnybodyVariable.woff2") format("woff2-variations");
+    }
+    html { scroll-behavior: smooth; }
+    body:has(.activity-page) { margin: 0; background: #fff; }
+    .activity-page { min-width: 320px; overflow-x: clip; }
+    .redesign-header, .redesign-header * { box-sizing: border-box; }
+    .redesign-header .container-fluid { width: 100%; }
+    .redesign-header .wrap { max-width: 1310px; }
+    .redesign-header .ff1 { font-family: "ETC Anybody", sans-serif; }
+    .activity-page > .redesign-shared-background { background: transparent; }
+</style>
