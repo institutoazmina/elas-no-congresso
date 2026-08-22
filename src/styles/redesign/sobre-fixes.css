@@ -1,11 +1,13 @@
 body:has(.sobre-page) .sobre-page .partner-section{padding-bottom:41.2px}body:has(.sobre-page) .sobre-page .partner-logos-wrap{padding-bottom:0}body:has(.sobre-page) .sobre-page .partner-section + .sobre-section{padding:66px 48px 64px}body:has(.sobre-page) .sobre-page .partner-section + .sobre-section .sobre-narrow{gap:28px;margin:0 auto;width:820px}body:has(.sobre-page) .sobre-page .partner-section + .sobre-section .sobre-narrow>header{height:44px;margin:0}body:has(.sobre-page) .sobre-page .partner-section + .sobre-section .sobre-narrow>header i{background:#0b0f5e;flex-shrink:0}body:has(.sobre-page) .sobre-page .partner-section + .sobre-section .sobre-narrow>.open-list{gap:20px}body:has(.sobre-page) .sobre-page .partner-section + .sobre-section .sobre-narrow>.open-list li{line-height:24px;min-height:57.59px;padding-left:24px}body:has(.sobre-page) .sobre-page .partner-section + .sobre-section .sobre-narrow>.open-list li:nth-child(2){min-height:86.39px}body:has(.sobre-page) .sobre-page .partner-section + .sobre-section .sobre-narrow>.open-list li b{color:#4242f6;font-size:18px;font-weight:700;line-height:28.8px}body:has(.sobre-page) .sobre-page .partner-section + .sobre-section .open-list li:before{color:#4242f6;font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:400;height:28.8px;line-height:28.8px;top:0;width:13.134px}
 
-.timeline-scroll,.channels-scroll{display:contents}.flow-placeholder__mobile{display:none}
+.sobre-page .timeline-scroll,.sobre-page .channels-scroll{display:contents}.sobre-page .flow-placeholder__mobile{display:none}
 
 @media(max-width:700px){
-html:has(.sobre-page),body:has(.sobre-page){max-width:100%;overflow-x:hidden}
+html:has(.sobre-page),body:has(.sobre-page){max-width:100%;overflow-x:clip}
 body:has(.sobre-page) .sobre-page{width:100%;overflow-x:clip}
-body:has(.sobre-page) .sobre-page .redesign-header{height:52px;min-height:52px;overflow:visible;transition:none}
+body:has(.sobre-page) .sobre-page .redesign-header{background-color:transparent;background-image:none;height:52px;min-height:52px;overflow:visible;position:sticky;top:0;transition:transform .2s ease;will-change:transform;z-index:100}
+body:has(.sobre-page) .sobre-page .redesign-header[data-scroll-direction='down']:not(:has(.redesign-header__mobile-menu[open])){transform:translateY(-100%)}
+body:has(.sobre-page) .sobre-page .redesign-header[data-scroll-direction='up']{transform:translateY(0)}
 body:has(.sobre-page) .sobre-page .redesign-header:has(.redesign-header__mobile-menu[open]){height:331px}
 body:has(.sobre-page) .sobre-page .redesign-header__content{height:52px;min-height:52px;padding:15px 16px}
 body:has(.sobre-page) .sobre-page .redesign-header__brand{height:14px;width:128px}
@@ -54,7 +56,7 @@ body:has(.sobre-page) .sobre-page .timeline article:first-child{padding-left:0}
 body:has(.sobre-page) .sobre-page .timeline article+article{border-left:2px solid rgba(66,66,246,.25);border-top:0;padding-top:0}
 body:has(.sobre-page) .sobre-page .timeline small{bottom:0;left:24px;margin:0;position:absolute;width:1486px}
 
-body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section{display:flex;gap:0;padding:66px 24px 0}
+body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section{display:flex;flex-direction:column;gap:0;padding:66px 24px 0}
 body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section .sobre-narrow{align-items:flex-start;gap:28px;margin:0;width:100%}
 body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section .sobre-narrow>header{height:86px;margin:0}
 body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section .sobre-narrow>header h2{font-size:36px;line-height:42px}
@@ -73,16 +75,16 @@ body:has(.sobre-page) .sobre-page .ratings{gap:30px;padding-top:4.79px;width:100
 body:has(.sobre-page) .sobre-page .ratings li{align-items:flex-start;display:flex;flex-direction:column;gap:10px;height:auto;line-height:24px;width:100%}
 body:has(.sobre-page) .sobre-page .ratings .rating-chip{font-size:14px;line-height:21px;margin:0;padding:4px 12px}
 body:has(.sobre-page) .sobre-page .ratings .rating-description,body:has(.sobre-page) .sobre-page .ratings .rating-description--tall{font-size:18px;line-height:27px;margin:0;width:100%}
-body:has(.sobre-page) .sobre-page .channels-scroll{display:block;margin:64px -24px 0;overflow-x:auto;overscroll-behavior-inline:contain;width:100vw}
+body:has(.sobre-page) .sobre-page .channels-scroll{display:block;margin:59.3px -24px 0;overflow-x:auto;overscroll-behavior-inline:contain;width:100vw}
 body:has(.sobre-page) .sobre-page .channels{display:flex;gap:24px;height:453.565px;margin:0;max-width:none;padding-top:4.7px;width:929px}
 body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section .channels .channel-card{flex:0 0 293.666px;height:448.865px;padding:30px 26px}
 body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section .channels .channel-card--daily{padding-bottom:71px}
 body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section .channels .channel-card--activity{padding-bottom:135.57px}
 
-body:has(.sobre-page) .sobre-page .partner-section{gap:27.4px;padding:66px 0 96px}
+body:has(.sobre-page) .sobre-page .partner-section{gap:0;padding:66px 0 96px}
 body:has(.sobre-page) .sobre-page .partner-section>header{height:86px;margin:0 24px;width:calc(100% - 48px)}
 body:has(.sobre-page) .sobre-page .partner-section>header h2{font-size:36px;line-height:42px;width:100%}
-body:has(.sobre-page) .sobre-page .partner-section>.sobre-narrow{gap:19px;margin:0 24px;width:calc(100% - 48px)}
+body:has(.sobre-page) .sobre-page .partner-section>.sobre-narrow{gap:19px;margin:27.4px 24px 0;width:calc(100% - 48px)}
 body:has(.sobre-page) .sobre-page .partner-section>.sobre-narrow p{font-size:18px;line-height:24px}
 body:has(.sobre-page) .sobre-page .partner-logos-wrap{align-items:flex-start;display:block;height:252px;justify-content:flex-start;min-height:252px;overflow-x:auto;padding:48px 68px 48px 26px;width:100vw}
 body:has(.sobre-page) .sobre-page .partner-logos-layer{height:156px;max-width:none;overflow:hidden;width:1318px}
@@ -99,7 +101,7 @@ body:has(.sobre-page) .sobre-page .sobre-challenges>.sobre-narrow,body:has(.sobr
 body:has(.sobre-page) .sobre-page .sobre-challenges .sobre-narrow>header,body:has(.sobre-page) .sobre-page .sobre-next-steps .sobre-narrow>header,body:has(.sobre-page) .sobre-page .recognition .sobre-narrow>header{height:44px;margin:0 0 8px}
 body:has(.sobre-page) .sobre-page .sobre-challenges .sobre-narrow>p,body:has(.sobre-page) .sobre-page .sobre-next-steps .sobre-narrow>p,body:has(.sobre-page) .sobre-page .recognition .sobre-narrow>p{font-size:18px;line-height:29.7px;min-height:0!important;padding-top:0!important;width:100%}
 
-body:has(.sobre-page) .sobre-page .credits{gap:32px;margin:0;padding:66px 0 64px 24px;width:100%}
+body:has(.sobre-page) .sobre-page .credits{gap:32px;margin:0;padding:66px 0 15px 24px;width:100%}
 body:has(.sobre-page) .sobre-page .credits>header{height:44px;width:351px}
 body:has(.sobre-page) .sobre-page .credits-grid{display:flex;flex-direction:column;gap:0;grid-template:none;margin:0;width:351px}
 body:has(.sobre-page) .sobre-page .credits-grid>div{gap:14px;min-height:0;width:351px}
@@ -145,15 +147,12 @@ body:has(.sobre-page) .sobre-page .redesign-header__mobile-menu:not([open]) .red
 body:has(.sobre-page) .sobre-page .redesign-header__mobile-menu[open] .redesign-header__mobile-panel{display:flex!important;top:37px!important}
 body:has(.sobre-page) .sobre-page .redesign-header__mobile-menu summary span{width:20px!important}
 body:has(.sobre-page) .sobre-page .timeline-scroll{margin-top:85.8125px}
-body:has(.sobre-page) .sobre-page .channels-scroll{margin-top:0}
 body:has(.sobre-page) .sobre-page .partner-section{padding-bottom:0}
-body:has(.sobre-page) .sobre-page .partner-logos-wrap{margin-top:18.219px}
+body:has(.sobre-page) .sobre-page .partner-logos-wrap{margin-top:0}
 body:has(.sobre-page) .sobre-page .partner-section+.sobre-section{padding-bottom:31.016px}
 body:has(.sobre-page) .sobre-page .sobre-challenges{padding-bottom:64px}
 body:has(.sobre-page) .sobre-page .sobre-next-steps{padding-bottom:64px}
 body:has(.sobre-page) .sobre-page .recognition{padding-bottom:64px}
-body:has(.sobre-page) .sobre-page .credits{padding-bottom:64px}
-body:has(.sobre-page) .sobre-page .support{padding-bottom:19.484px}
 body:has(.sobre-page) .sobre-page .sobre-section h2{left:auto!important;position:static!important;top:auto!important}
 
 body:has(.sobre-page) .sobre-page :is(.sobre-history,.sobre-history+.sobre-section,.sobre-challenges,.sobre-next-steps,.recognition,.credits) header{position:relative!important}

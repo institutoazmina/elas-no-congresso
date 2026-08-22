@@ -56,6 +56,10 @@ const timelineLabelAssets = [[label1a, label1b], [label2a, label2b, label2c, lab
   <section class="sobre-section support"><div class="sobre-narrow"><header><i></i><h2>Apoio</h2></header><p>Este projeto conta com o apoio da Rede Feminista de IA da América Latina e do Caribe, do Codesinfo (Fundo de Inovação para o Jornalismo, coordenado pelo Projor com apoio da Google News Initiative), do Fundo ELAS+ Doar Para Transformar e da Agence Française de Développement (AFD). As ideias e opiniões expressas neste projeto são de responsabilidade das autoras e não refletem, necessariamente, o ponto de vista destes apoiadores.</p></div></section>
 </main><RedesignFooter /></div></body></html>
 <script is:inline data-astro-rerun>
+(() => {
+  const page = document.querySelector('.sobre-page');
+  if (!page) return;
+
   if (document.fonts) {
     void Promise.all([
       document.fonts.load('400 72px "ETC Anybody"'),
@@ -72,18 +76,18 @@ const timelineLabelAssets = [[label1a, label1b], [label2a, label2b, label2c, lab
     wrapper.append(element);
   };
   wrapMobileOverflow(
-    document.querySelector('.sobre-history .timeline'),
+    page.querySelector('.sobre-history .timeline'),
     'timeline-scroll',
     'Linha do tempo do projeto. Role horizontalmente para ver todos os períodos.',
   );
-  const channels = document.querySelector('.sobre-history + .sobre-section .channels');
+  const channels = page.querySelector('.sobre-history + .sobre-section .channels');
   if (channels) channels.innerHTML = '<article class="channel-card channel-card--daily"><h3>Radar Diário</h3><p>Alerta customizável por tema, casa legislativa, comissão ou proposição, entregue por e-mail.<br><a href="/redesign/alertas">Cadastre-se aqui</a></p></article><article class="channel-card channel-card--newsletter"><h3>Newsletter com Radar Semanal</h3><p>Principal canal de acompanhamento contínuo do projeto. Reúne, contextualiza e analisa os impactos políticos das tramitações, funcionando como instrumento de transparência e mobilização para a sociedade civil. A newsletter é a mesma para todas as pessoas assinantes; o Radar Semanal que a acompanha é customizável por tema.</p></article><article class="channel-card channel-card--activity"><h3>Painel de Atividade Legislativa</h3><p>Na página <a href="/redesign/propostas-e-votacoes">Atividade Legislativa</a> você navega pelas propostas, compara a avaliação da <strong>QuitérIA</strong> com a avaliação humana e filtra por partido, tema e outros critérios.</p></article>';
   wrapMobileOverflow(
     channels,
     'channels-scroll',
     'Canais do Elas no Congresso. Role horizontalmente para ver todos os canais.',
   );
-  const flowPlaceholder = document.querySelector('.flow-placeholder');
+  const flowPlaceholder = page.querySelector('.flow-placeholder');
   if (flowPlaceholder && !flowPlaceholder.querySelector('.flow-placeholder__mobile')) {
     const mobileFlow = document.createElement('div');
     mobileFlow.className = 'flow-placeholder__mobile';
@@ -91,7 +95,7 @@ const timelineLabelAssets = [[label1a, label1b], [label2a, label2b, label2c, lab
     mobileFlow.innerHTML = '<span class="flow-api">API</span><span class="flow-note flow-note--1">Palavra 1</span><span class="flow-note flow-note--2">Palavra 1</span><span class="flow-note flow-note--3">Palavra 1</span><span class="flow-note flow-note--4">Palavra 1</span>';
     flowPlaceholder.append(mobileFlow);
   }
-  const partnerSection = document.querySelector('.sobre-history + .sobre-section + .sobre-section');
+  const partnerSection = page.querySelector('.sobre-history + .sobre-section + .sobre-section');
   if (partnerSection) {
     partnerSection.classList.add('partner-section');
     const partnerNarrow = partnerSection.querySelector('.sobre-narrow');
@@ -120,6 +124,7 @@ const timelineLabelAssets = [[label1a, label1b], [label2a, label2b, label2c, lab
       partnerLogos.replaceWith(layer);
     }
   }
+})();
 </script>
 <style is:global>
 .partner-section{align-items:center;border-top-color:rgba(66,66,246,.06);display:flex;flex-direction:column;gap:27.4px;padding:66px 0 96px}.partner-section>header{height:44px;margin:0;width:820px}.partner-section>header h2{font-family:'ETC Anybody',sans-serif;font-size:36px;font-stretch:normal;font-variation-settings:'wdth' 75;font-weight:700;letter-spacing:0;line-height:42px;width:720px}.partner-section>.sobre-narrow{gap:19px;margin:0;width:820px}.partner-section>.sobre-narrow p{color:#0b0f5e;font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:400;letter-spacing:0;line-height:24px;margin:0}.partner-section>.sobre-narrow strong{font-weight:700}.partner-logos-wrap{align-items:center;display:flex;justify-content:center;min-height:252px;padding:80px 26px;width:100%}.partner-section .partner-logos{display:block;height:722px;margin:0;max-width:none;width:1318px}@media(max-width:900px){.partner-section{padding-left:24px;padding-right:24px}.partner-section>header,.partner-section>.sobre-narrow{width:100%}.partner-logos-wrap{padding-left:0;padding-right:0}.partner-section .partner-logos{height:auto;max-width:100%;width:1318px}}
