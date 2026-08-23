@@ -323,7 +323,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 
     const bindMobileHeaderScroll = () => {
         const header = document.querySelector(
-            ".sobre-page .redesign-header",
+            ".sobre-page .redesign-header, .reportagens-page .redesign-header",
         );
 
         if (!(header instanceof HTMLElement) || header.dataset.scrollBound) {
@@ -336,8 +336,14 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 
         const updateScrollDirection = () => {
             const currentScrollY = window.scrollY;
+            const isRevealPage = header.closest(
+                ".sobre-page, .reportagens-page",
+            );
 
-            if (!window.matchMedia("(max-width: 700px)").matches) {
+            if (
+                !isRevealPage ||
+                !window.matchMedia("(max-width: 700px)").matches
+            ) {
                 delete header.dataset.scrollDirection;
                 delete header.dataset.scrollPosition;
                 lastScrollY = currentScrollY;

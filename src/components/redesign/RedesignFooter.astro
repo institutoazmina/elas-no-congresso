@@ -13,9 +13,22 @@ import codesInfo from "../../assets/images/redesign/funders/codesinfo.png";
 import iaFeminista from "../../assets/images/redesign/funders/ia-feminista.png";
 import franceAfd from "../../assets/images/redesign/funders/france-afd.png";
 import elasFunder from "../../assets/images/redesign/funders/elas.png";
+import projor from "../../assets/images/redesign/funders/projor.png";
+
+interface Props {
+    mobileVariant?: "default" | "reportagens";
+}
+
+const { mobileVariant = "default" } = Astro.props;
 ---
 
-<footer class="redesign-footer" style={`--footer-pattern: url(${pattern.src})`}>
+<footer
+    class:list={[
+        "redesign-footer",
+        mobileVariant === "reportagens" && "redesign-footer--reportagens-mobile",
+    ]}
+    style={`--footer-pattern: url(${pattern.src})`}
+>
     <div class="redesign-footer__main">
         <section class="redesign-footer__alerts" aria-labelledby="footer-alerts-title">
             <h2 id="footer-alerts-title">Receba nossos alertas</h2>
@@ -46,6 +59,7 @@ import elasFunder from "../../assets/images/redesign/funders/elas.png";
         <div class="redesign-footer__funder-logos">
             <img class="redesign-footer__ia" src={iaFeminista.src} alt="IA Feminista" />
             <img class="redesign-footer__codesinfo" src={codesInfo.src} alt="Codesinfo" />
+            {mobileVariant === "reportagens" && <img class="redesign-footer__projor" src={projor.src} alt="Projor" />}
             <img class="redesign-footer__afd" src={franceAfd.src} alt="Agence Française de Développement" />
             <img class="redesign-footer__elas-funder" src={elasFunder.src} alt="Elas" />
         </div>
@@ -76,6 +90,7 @@ import elasFunder from "../../assets/images/redesign/funders/elas.png";
     .redesign-footer__funders h2 { margin: 0 -24px 0 0; color: #0b0f5e; font-family: "ETC Anybody", sans-serif; font-size: 24px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 32px; text-transform: uppercase; white-space: nowrap; }
     .redesign-footer__funder-logos { display: flex; align-items: center; gap: 32px; }
     .redesign-footer__funder-logos img { display: block; object-fit: cover; flex: none; }
+    .redesign-footer__funder-logos .redesign-footer__projor { display: none; }
     .redesign-footer__ia { width: 121px; height: 59px; }
     .redesign-footer__codesinfo { width: 138px; height: 38px; }
     .redesign-footer__afd { width: 89px; height: 53px; }
@@ -99,5 +114,83 @@ import elasFunder from "../../assets/images/redesign/funders/elas.png";
         .redesign-footer__funder-logos { width: 100%; flex-wrap: wrap; gap: 24px; }
         .redesign-footer__banner { height: auto; padding: 24px; flex-wrap: wrap; }
         .redesign-footer__banner p { white-space: normal; text-align: center; }
+
+        .redesign-footer--reportagens-mobile .redesign-footer__main {
+            gap: 16px;
+            height: 612px;
+            justify-content: flex-start;
+            padding: 32px 24px;
+        }
+        .redesign-footer--reportagens-mobile .redesign-footer__alerts {
+            gap: 30px;
+            height: 276px;
+            max-width: 100%;
+            overflow: hidden;
+            padding: 0 0 32px;
+            width: 316px;
+        }
+        .redesign-footer--reportagens-mobile .redesign-footer__alerts p {
+            max-width: 100%;
+            width: 316px;
+        }
+        .redesign-footer--reportagens-mobile .redesign-footer__identity {
+            gap: 55px;
+            height: 256px;
+            padding: 17px 0 0;
+            width: 100%;
+        }
+        .redesign-footer--reportagens-mobile .redesign-footer__funders {
+            gap: 20px;
+            height: 140px;
+            justify-content: flex-start;
+            padding: 24px 32px;
+        }
+        .redesign-footer--reportagens-mobile .redesign-footer__funders h2 {
+            font-size: 18px;
+            line-height: 24px;
+            margin-right: 0;
+            white-space: nowrap;
+        }
+        .redesign-footer--reportagens-mobile .redesign-footer__funder-logos {
+            align-items: center;
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 0;
+            height: 48px;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .redesign-footer--reportagens-mobile .redesign-footer__ia { height: 31px; width: 63px; }
+        .redesign-footer--reportagens-mobile .redesign-footer__codesinfo { height: 19px; width: 71px; }
+        .redesign-footer--reportagens-mobile .redesign-footer__projor { display: block; height: 11.741px; width: 29.071px; }
+        .redesign-footer--reportagens-mobile .redesign-footer__afd { height: 36px; width: 60px; }
+        .redesign-footer--reportagens-mobile .redesign-footer__elas-funder { height: 48px; width: 34px; }
+        .redesign-footer--reportagens-mobile .redesign-footer__banner {
+            flex-direction: column;
+            flex-wrap: nowrap;
+            gap: 20px;
+            height: 134px;
+            padding: 24px;
+        }
+        .redesign-footer--reportagens-mobile .redesign-footer__banner p {
+            font-size: 14px;
+            line-height: 16px;
+            max-width: 100%;
+            order: 1;
+            text-align: center;
+            text-transform: uppercase;
+            white-space: normal;
+            width: 330px;
+        }
+        .redesign-footer--reportagens-mobile .redesign-footer__banner .redesign-footer__azmina {
+            height: 34px;
+            object-fit: contain;
+            object-position: center top;
+            order: 2;
+            width: 50px;
+        }
+        .redesign-footer--reportagens-mobile .redesign-footer__banner > img:not(.redesign-footer__azmina) {
+            display: none;
+        }
     }
 </style>
