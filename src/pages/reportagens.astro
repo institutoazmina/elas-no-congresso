@@ -73,7 +73,7 @@ const posts = allPage.posts;
                     {allPage.totalPages > 1 && <div class="reportagens-pagination-region" style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}><div class="reportagens-pagination-region__texture redesign-shared-background" aria-hidden="true"></div><nav class="reportagens-pagination" aria-label="Pagina&#231;&#227;o das reportagens"><button class="reportagens-pagination__button" type="button" data-pagination-previous aria-label="P&#225;gina anterior" disabled><span><img src={paginationPrevious.src} alt="" /></span></button><button class="reportagens-pagination__button" type="button" data-pagination-next aria-label="Pr&#243;xima p&#225;gina"><span><img src={paginationNext.src} alt="" /></span></button><span class="reportagens-pagination__status" aria-live="polite" data-pagination-status>P&aacute;gina 1 de {allPage.totalPages}</span></nav></div>}
                 </section>
             </main>
-            <RedesignFooter mobileVariant="reportagens" />
+            <RedesignFooter />
         </div>
     </body>
 </html>
@@ -348,7 +348,6 @@ const posts = allPage.posts;
         .reportagens-page .redesign-header__mobile-panel a:last-child { border-bottom: 0; flex-basis: 55px; height: 55px; padding: 16px 24px; }
         .reportagens-page .redesign-header__mobile-panel a[aria-current="page"] { color: #0b0f5e; }
         .reportagens-page .redesign-header__mobile-panel a[aria-current="page"] > span { align-items: center; background: #def279; color: #0b0f5e; display: inline-flex; height: 23px; line-height: 23px; margin-left: -2px; padding: 0 2px; }
-        .reportagens-page > .redesign-footer { margin-top: 30px; }
     }
     @media (max-width: 560px) {
         .reportagens-hero { height: 251px; }

@@ -122,26 +122,6 @@ body:has(.sobre-page) .sobre-page .support .sobre-narrow{gap:27.375px;margin:0;w
 body:has(.sobre-page) .sobre-page .support .sobre-narrow>header{height:44px;width:100%}
 body:has(.sobre-page) .sobre-page .support .sobre-narrow>p{font-size:18px;height:auto;line-height:29.7px;width:332px;max-width:100%}
 
-body:has(.sobre-page) .sobre-page .redesign-footer{margin-top:30px}
-body:has(.sobre-page) .sobre-page .redesign-footer__main{height:612px;padding:32px 24px;gap:16px}
-body:has(.sobre-page) .sobre-page .redesign-footer__alerts{gap:30px;height:276px;overflow:hidden;padding:0 0 32px;width:316px;max-width:100%}
-body:has(.sobre-page) .sobre-page .redesign-footer__alerts h2{font-size:24px;line-height:32px}
-body:has(.sobre-page) .sobre-page .redesign-footer__alerts p{font-size:16px;line-height:24px;width:316px;max-width:100%}
-body:has(.sobre-page) .sobre-page .redesign-footer__button{height:56px;padding:18px 24px 14px}
-body:has(.sobre-page) .sobre-page .redesign-footer__identity{gap:39px;height:240px;padding:17px 0 0;width:100%}
-body:has(.sobre-page) .sobre-page .redesign-footer__identity>a,body:has(.sobre-page) .sobre-page .redesign-footer__identity>a img{height:96px;width:204px}
-body:has(.sobre-page) .sobre-page .redesign-footer__social{gap:32px}
-body:has(.sobre-page) .sobre-page .redesign-footer__funders{gap:20px;height:140px;padding:24px 32px}
-body:has(.sobre-page) .sobre-page .redesign-footer__funders h2{font-size:18px;line-height:24px;white-space:nowrap}
-body:has(.sobre-page) .sobre-page .redesign-footer__funder-logos{align-items:center;display:flex;flex-wrap:nowrap;gap:0;justify-content:space-between;width:100%}
-body:has(.sobre-page) .sobre-page .redesign-footer__funder-logos .redesign-footer__ia{height:31px;width:63px}
-body:has(.sobre-page) .sobre-page .redesign-footer__funder-logos .redesign-footer__codesinfo{height:19px;width:71px}
-body:has(.sobre-page) .sobre-page .redesign-footer__funder-logos .redesign-footer__afd{height:36px;width:60px}
-body:has(.sobre-page) .sobre-page .redesign-footer__funder-logos .redesign-footer__elas-funder{height:48px;width:34px}
-body:has(.sobre-page) .sobre-page .redesign-footer__banner{flex-direction:column;flex-wrap:nowrap;gap:20px;height:156px;padding:24px}
-body:has(.sobre-page) .sobre-page .redesign-footer__banner p{font-size:14px;line-height:16px;order:1;text-align:center;text-transform:uppercase;white-space:normal;width:330px;max-width:100%}
-body:has(.sobre-page) .sobre-page .redesign-footer__banner .redesign-footer__azmina{height:27.01px;order:2;width:50px}
-body:has(.sobre-page) .sobre-page .redesign-footer__banner>img:not(.redesign-footer__azmina){display:none}
 }
 
 @media(max-width:700px){
