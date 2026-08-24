@@ -323,32 +323,7 @@ const posts = allPage.posts;
     .reportagens-feedback { color: #fff; font-size: 16px; line-height: 24px; margin: 48px 24px 0; position: relative; z-index: 2; }
     .reportagens-feedback--light { color: #1e2546; margin: 48px 0; }
     @media (max-width: 900px) { .reportagens-hero { height: 610px; } .reportagens-hero__top-row { align-items: flex-start; height: 586px; padding: 48px 24px; } .reportagens-hero__copy { gap: 20px; max-width: 100%; } .reportagens-hero p { width: 100%; } .reportagens-hero__art { bottom: 16px; margin: 0; position: absolute; right: -88px; transform: scale(.54); transform-origin: bottom right; } .reportagens-recent { padding: 64px 0; } .reportagens-recent h2 { width: auto; } .reportagens-recent__scroll { padding-left: 24px; padding-right: 24px; } .reportagens-all { --reportagens-all-inline-padding: 24px; padding: 64px var(--reportagens-all-inline-padding) 0; } .reportagens-all h2 { margin-bottom: 40px; } .reportagens-all__grid { gap: 64px 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); } .reportagens-all__grid .reportagem-card, .reportagens-all__grid .reportagem-card__image { width: 100%; } }
-    @media (max-width: 700px) {
-        .reportagens-page .redesign-header { height: 52px; min-height: 52px; overflow: visible; position: sticky; top: 0; transition: transform .2s ease; will-change: transform; z-index: 100; }
-        .reportagens-page .redesign-header[data-scroll-position="scrolled"][data-scroll-direction="up"]:not(:has(.redesign-header__mobile-menu[open])) { background-color: transparent; background-image: none; }
-        .reportagens-page .redesign-header[data-scroll-direction="down"]:not(:has(.redesign-header__mobile-menu[open])) { transform: translateY(-100%); }
-        .reportagens-page .redesign-header[data-scroll-direction="up"] { transform: translateY(0); }
-        .reportagens-page .redesign-header:has(.redesign-header__mobile-menu[open]) { height: 331px; }
-        .reportagens-page .redesign-header__content { height: 52px; min-height: 52px; padding: 15px 16px; }
-        .reportagens-page .redesign-header__brand { height: 14px; width: 128px; }
-        .reportagens-page .redesign-header .highlighter-marks { display: none; }
-        .reportagens-page .redesign-header__mobile-menu { height: 22px; width: 28px; }
-        .reportagens-page .redesign-header__mobile-menu summary { align-items: center; display: flex; height: 22px; justify-content: center; padding: 4px; width: 28px; }
-        .reportagens-page .redesign-header__mobile-menu summary span { height: 2px; position: absolute; transition: none; width: 20px; }
-        .reportagens-page .redesign-header__mobile-menu summary span:first-child { transform: translateY(-6px); }
-        .reportagens-page .redesign-header__mobile-menu summary span:last-child { transform: translateY(6px); }
-        .reportagens-page .redesign-header__mobile-menu[open] summary span:first-child { transform: rotate(45deg); }
-        .reportagens-page .redesign-header__mobile-menu[open] summary span:nth-child(2) { opacity: 0; }
-        .reportagens-page .redesign-header__mobile-menu[open] summary span:last-child { transform: rotate(-45deg); }
-        .reportagens-page .redesign-header__mobile-menu:not([open]) .redesign-header__mobile-panel { display: none; }
-        .reportagens-page .redesign-header__mobile-menu[open] .redesign-header__mobile-panel { display: flex; }
-        .reportagens-page .redesign-header__mobile-panel { background: #0b0f5e; border: 0; box-shadow: none; flex-direction: column; gap: 0; height: 279px; padding: 0; position: absolute; right: -16px; top: 37px; width: 100vw; z-index: 20; }
-        .reportagens-page .redesign-header__mobile-panel a { align-items: center; border-bottom: 1px solid rgba(255, 255, 255, .3); color: #fff; display: flex; flex: 0 0 56px; font-family: "ETC Anybody", sans-serif; font-size: 18px; font-variation-settings: "wdth" 75; font-weight: 700; height: 56px; line-height: 24px; padding: 16px 24px 17px; position: relative; text-transform: uppercase; width: 100%; }
-        .reportagens-page .redesign-header__mobile-panel a:not([aria-current="page"]) > span { color: #fff; }
-        .reportagens-page .redesign-header__mobile-panel a:last-child { border-bottom: 0; flex-basis: 55px; height: 55px; padding: 16px 24px; }
-        .reportagens-page .redesign-header__mobile-panel a[aria-current="page"] { color: #0b0f5e; }
-        .reportagens-page .redesign-header__mobile-panel a[aria-current="page"] > span { align-items: center; background: #def279; color: #0b0f5e; display: inline-flex; height: 23px; line-height: 23px; margin-left: -2px; padding: 0 2px; }
-    }
+
     @media (max-width: 560px) {
         .reportagens-hero { height: 251px; }
         .reportagens-hero__top-row { align-items: flex-start; height: 100%; padding: 24px; }

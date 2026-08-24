@@ -643,61 +643,6 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
         updateHeader(true);
     };
 
-    const bindSobreReportagensScroll = () => {
-        const header = document.querySelector<HTMLElement>(
-            ".sobre-page .redesign-header, .reportagens-page .redesign-header",
-        );
-
-        if (!(header instanceof HTMLElement) || header.dataset.sobreReportagensScrollBound) {
-            return;
-        }
-
-        header.dataset.sobreReportagensScrollBound = "true";
-        let lastScrollY = window.scrollY;
-        let ticking = false;
-
-        const updateScrollDirection = () => {
-            const currentScrollY = window.scrollY;
-            const isRevealPage = header.closest(".sobre-page, .reportagens-page");
-
-            if (!isRevealPage || !window.matchMedia("(max-width: 700px)").matches) {
-                delete header.dataset.scrollDirection;
-                delete header.dataset.scrollPosition;
-                lastScrollY = currentScrollY;
-                return;
-            }
-
-            header.dataset.scrollPosition = currentScrollY <= 0 ? "top" : "scrolled";
-
-            const menuIsOpen = header.querySelector(
-                ".redesign-header__mobile-menu[open]",
-            );
-
-            if (menuIsOpen || currentScrollY <= 0) {
-                header.dataset.scrollDirection = "up";
-            } else if (Math.abs(currentScrollY - lastScrollY) >= 4) {
-                header.dataset.scrollDirection =
-                    currentScrollY > lastScrollY ? "down" : "up";
-            }
-
-            lastScrollY = currentScrollY;
-        };
-
-        const handleScroll = () => {
-            if (ticking) return;
-
-            ticking = true;
-            window.requestAnimationFrame(() => {
-                updateScrollDirection();
-                ticking = false;
-            });
-        };
-
-        updateScrollDirection();
-        window.addEventListener("scroll", handleScroll, { passive: true });
-        window.addEventListener("resize", updateScrollDirection);
-    };
-
     const resetDesktopHeaderState = () => {
         const header = document.querySelector<HTMLElement>(".redesign-header");
         if (!header) return;
@@ -747,7 +692,6 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
         bindMobileMenu();
         bindMobileHeaderScroll();
         bindDesktopHeaderScroll();
-        bindSobreReportagensScroll();
         bindHighlighterLayoutObserver();
         scheduleHighlighterUpdate();
     };
