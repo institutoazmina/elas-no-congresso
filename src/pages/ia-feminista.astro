@@ -1,0 +1,223 @@
+---
+import { ClientRouter } from "astro:transitions";
+import RedesignHeader from "../components/redesign/RedesignHeader.astro";
+import RedesignFooter from "../components/redesign/RedesignFooter.astro";
+import heroIllustration from "../assets/images/redesign/ia-feminista/hero-illustration.png";
+import attention from "../assets/images/redesign/hero/attention.svg";
+import halftoneShadow from "../assets/images/redesign/hero/halftone-shadow.png";
+import "../styles/tailwind.css";
+import "../styles/redesign-shared-background.css";
+
+const categories = [
+  ["Violências de Gênero", "Propostas relacionadas à prevenção, enfrentamento, responsabilização e reparação das diversas formas de violência baseadas em gênero, assédio, violência doméstica, sexual, política, institucional, obstétrica, digital e feminicídio, além de proposições sobre acesso a armas ou que alterem a Lei Maria da Penha."],
+  ["Direitos Sexuais e Reprodutivos", "Autonomia corporal, direitos reprodutivos e sexuais, acesso à contracepção, aborto, planejamento familiar, reprodução assistida e garantia de direitos ligados à sexualidade."],
+  ["Saúde", "Promoção, prevenção e acesso à saúde, com atenção às necessidades específicas de mulheres, pessoas gestantes, pessoas LGBTQIAPN+ e outros grupos em situação de vulnerabilidade. Abrange saúde materna, menstruação e dignidade menstrual, menopausa, climatério, cânceres do aparelho reprodutor, saúde mental, acesso a medicamentos, prevenção de doenças e organização dos serviços de saúde."],
+  ["Igualdade e Antidiscriminação", "Iniciativas voltadas a promover igualdade de direitos e oportunidades e a combater discriminações baseadas em gênero, sexo, orientação sexual, identidade de gênero, raça, território e outras formas de desigualdade."],
+  ["LGBTQIAPN+", "Direitos, cidadania, proteção e reconhecimento das pessoas LGBTQIAPN+, incluindo identidade de gênero, orientação sexual, acesso a direitos e combate à violência e à discriminação."],
+  ["Família, Parentalidade e Relações Civis", "Organização familiar, casamento, união estável, divórcio, filiação, guarda, adoção, poder familiar, registro civil e demais direitos e deveres nas relações familiares."],
+  ["Educação e Cultura", "Educação formal e não formal, produção cultural, liberdade de ensino, conteúdos curriculares, memória e preservação histórica, homenagens e reconhecimento de personalidades ou marcos relevantes para a igualdade de gênero, a diversidade e os direitos humanos."],
+  ["Infância e Adolescência", "[A produzir]"],
+  ["Trabalho, Economia, Cuidado e Proteção Social", "Mercado de trabalho, economia, geração de renda, empreendedorismo, previdência, seguridade e assistência social, políticas de proteção econômica e social, maternidade, licença-maternidade e outros direitos trabalhistas, acesso a creches e políticas de cuidado, valorização do trabalho doméstico e de cuidados, regulamentação ou direitos relacionados à prostituição, além de iniciativas sobre os impactos das mudanças climáticas e das políticas ambientais nas condições de vida, trabalho, cuidado e proteção social."],
+  ["Participação Política e Institucionalidade", "Participação de mulheres e da população LGBTQIAPN+ nos espaços de poder, representação política, cargos e funcionamento das instituições públicas, mecanismos de participação social e políticas públicas de promoção da igualdade de gênero."],
+];
+const metrics = [
+  { label: "Acurácia", href: "https://ia.wiki.br/machine-learning/avaliacao/metricas/acuracia/", previous: "0,82", current: "0,87", trend: "up" },
+  { label: "AUC", href: "https://pt.wikipedia.org/wiki/Caracter%C3%ADstica_de_Opera%C3%A7%C3%A3o_do_Receptor", previous: "–", current: "0,85", trend: "neutral" },
+  { label: "F1 Score", suffix: " Índice 0", href: "https://ia.wiki.br/machine-learning/avaliacao/metricas/pontuacao-f1/", previous: "0,88", current: "0,92", trend: "up" },
+  { label: "F1 Score", suffix: " Índice 1", href: "https://ia.wiki.br/machine-learning/avaliacao/metricas/pontuacao-f1/", previous: "0,64", current: "0,67", trend: "up" },
+  { label: "Precisão", suffix: " Índice 0", href: "https://ia.wiki.br/machine-learning/avaliacao/metricas/precisao-e-revocacao/", previous: "0,91", current: "0,89", trend: "down" },
+  { label: "Precisão", suffix: " Índice 1", href: "https://ia.wiki.br/machine-learning/avaliacao/metricas/precisao-e-revocacao/", previous: "0,59", current: "0,75", trend: "up" },
+  { label: "Revocação", suffix: " Índice 0", href: "https://ia.wiki.br/machine-learning/avaliacao/metricas/precisao-e-revocacao/", previous: "0,86", current: "0,94", trend: "up" },
+  { label: "Revocação", suffix: " Índice 1", href: "https://ia.wiki.br/machine-learning/avaliacao/metricas/precisao-e-revocacao/", previous: "0,70", current: "0,61", trend: "down" },
+];
+---
+<!doctype html><html lang="pt-BR" transition:animate="none"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>IA Feminista | Elas no Congresso</title><link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin /><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" /><ClientRouter fallback="swap" /></head>
+<body class="tw:!pt-0 tw:!bg-white"><div class="ia-page"><RedesignHeader /><main>
+<section class="ia-hero redesign-shared-background" aria-labelledby="ia-hero-title" style={`--ia-hero-halftone-shadow: url(${halftoneShadow.src})`}><div class="ia-hero__top-row"><div class="ia-hero__copy"><img class="ia-hero__attention" src={attention.src} alt="" /><h1 id="ia-hero-title"><span class="hero__title-narrow">Quem foi </span><strong>Maria Quitéria?</strong></h1><p>O nome da ferramenta homenageia a heroína baiana Maria Quitéria de Jesus (1792–1853), primeira mulher a integrar o Exército Brasileiro. Em 1822, ela se apresentou como homem, sob o pseudônimo "Soldado Medeiros", para lutar na Guerra de Independência do Brasil na Bahia. A QuitérIA carrega esse legado de coragem e resistência para o combate à opacidade legislativa.</p></div><div class="ia-hero__art"><div class="ia-hero__illustration"><div class="ia-hero__illustration-inner"><img src={heroIllustration.src} alt="Ilustração de Maria Quitéria" /></div></div></div></div><div class="ia-hero__shadow" aria-hidden="true"></div></section>
+<section class="ia-section"><header><i></i><h2>Diferencial tecnológico</h2></header><div class="ia-narrow"><p>Diferente das IAs genéricas, treinadas com dados indeterminados da internet, a QuitérIA parte de um modelo de linguagem pré-treinado em português brasileiro (BERTimbau Base), com ajuste fino sobre um dataset construído ao longo de anos de avaliação humana de projetos de lei sensíveis a gênero na Câmara e no Senado.</p><p>O foco estratégico está no Processamento de Linguagem Natural (PLN) aplicado tanto às ementas quanto ao inteiro teor das matérias, priorizando eixos como violência de gênero, direitos sexuais e reprodutivos e igualdade no trabalho.</p><p>A escolha por modelos compactos e especializados, em vez de Large Language Models (LLMs), alia eficiência e soberania tecnológica: consomem significativamente menos energia e poder computacional, garantem maior autonomia operacional e facilitam futuros retreinamentos.</p><h3>Arquitetura dos modelos</h3><div class="ia-cards"><article><h4>Modelo de Desfavorabilidade</h4><p>Principal modelo da ferramenta. Baseado no BERTimbau Base, adaptado ao português brasileiro, com uma camada adicional de classificação para ajuste fino.</p><b>87% de acurácia</b><small>na avaliação de matérias de gênero</small></article><article><h4>Modelo de Temas</h4><p>Mesma estratégia do modelo anterior, com o desafio adicional de classificação <em>multi-label</em>, cobrindo dez temas diferentes de projetos de lei.</p></article></div></div></section>
+<section class="ia-section ia-section--border ia-categories"><header><i></i><h2>feminismo de dados e treinamento ético</h2></header><div class="ia-narrow"><p>A QuitérIA aplica na prática os princípios do Feminismo de Dados e, como integrante da Rede Feminista de Inteligência Artificial da América Latina e do Caribe, <a href="https://iafeminista.lat/declaracion-de-principios/">reconhece e adota sua declaração de princípios</a>.</p><p>Na prática, a IA faz a triagem, classifica as proposições por categoria e calcula uma pontuação de desfavorabilidade de 0 a 1. Mas nunca opera de forma 100% autônoma: projetos ambíguos ou divergentes são encaminhados para validação por analistas humanos, e as correções feitas pelas especialistas retroalimentam o sistema em ciclos contínuos de readequação e retreinamento.</p><p>Esse processo prevê retreinamentos periódicos. <b>Atualmente estamos no segundo ciclo.</b> A cada ciclo, novas proposições são avaliadas e o modelo é atualizado com os ajustes feitos pela equipe humana.</p></div><h3 class="ia-categories__title">As dez categorias temáticas</h3><div class="ia-categories__table"><table><thead><tr><th>Categoria</th><th>Conceito</th></tr></thead><tbody>{categories.map(([name, text]) => <tr><th>{name}</th><td class={text === "[A produzir]" ? "pending" : ""}>{text}</td></tr>)}</tbody></table></div></section>
+<section class="ia-section ia-section--border ia-governance"><header><i></i><h2>Governança, transparência e segurança</h2></header><div class="ia-narrow"><p>Infraestruturas de dados e sistemas de inteligência artificial são, majoritariamente, orientados por lógicas institucionais, corporativas ou opacas. A QuitérIA propõe uma reapropriação crítica dessas tecnologias a partir de uma perspectiva feminista e voltada ao interesse público, concretizando, no campo do monitoramento legislativo, os princípios da <a href="https://azmina.com.br/revista-azmina/#uso-de-inteligencia-artificial" target="_blank">política de uso de inteligência artificial do Instituto AzMina</a>, que estabelece a revisão humana como condição inegociável, o compromisso com a transparência e a abertura de código sempre que possível.</p><p>Por isso tornamos públicos não apenas os resultados do monitoramento, mas também os processos, critérios e metodologias usados na coleta, seleção e análise das proposições. Cada proposição monitorada vem acompanhada de informações sobre tramitação, autoria, situação legislativa, classificação de impacto e, quando aplicável, a organização responsável pela avaliação e sua justificativa técnica. A metodologia de coleta, os critérios de inclusão, o protocolo de avaliação e a documentação da IA também são públicos, permitindo escrutínio e aperfeiçoamento contínuo.</p><h3>Duas instâncias de supervisão</h3><div class="ia-cards"><article><h4>Comitê de Governança</h4><p>Responsável pelas diretrizes estratégicas, aprovação de protocolos metodológicos, gestão de riscos tecnológicos e salvaguarda dos princípios éticos.</p><small>Atuação vigente de junho a setembro de 2026.</small></article><article><h4>Comitê de Validação</h4><p>Instância técnica encarregada de auditar as classificações da IA, monitorar possíveis vieses algorítmicos, avaliar indicadores de desempenho e propor ajustes nos dados de treino.</p><small>Atuação vigente de agosto a setembro de 2026.</small></article></div><h3 class="ia-not-do__title">O que a QuitérIA&nbsp;<span>não faz</span></h3><p>O papel do sistema é apoiar a análise, a organização e o monitoramento, e não automatizar decisões políticas complexas. A QuitérIA:</p><ul class="ia-not-do__list"><li>não substitui decisões humanas em temas políticos, jurídicos ou de direitos humanos;</li><li>não define sozinha, de forma definitiva, se uma proposta é favorável ou desfavorável;</li><li>não toma decisões de moderação sem supervisão nem atua como autoridade jurídica;</li><li>não invisibiliza divergências políticas legítimas;</li><li>não substitui a análise contextual especializada, e opera com transparência sobre suas limitações e margens de erro;</li><li>não reproduz vieses presentes nos dados legislativos ou nas anotações humanas sem mecanismos de auditoria e revisão crítica.</li></ul></div></section>
+<section class="ia-section ia-section--border ia-performance"><header><i></i><h2>desempenho do modelo</h2></header><div class="ia-performance__title">Métricas do modelo de avaliação de desfavorabilidade</div><table class="metrics ia-performance__metrics"><thead><tr><th><a href="https://ia.wiki.br/machine-learning/avaliacao/metricas/" target="_blank" rel="noreferrer">Métricas</a></th><th>QuitérIA 1.0 (2025)</th><th>QuitérIA 2.0 (2026)</th><th></th></tr></thead><tbody>{metrics.map(({ label, suffix, href, previous, current, trend }) => <tr><td><a href={href} target="_blank" rel="noreferrer"><span>{label}</span></a>{suffix && <span>{suffix}</span>}</td><td>{previous}</td><td>{current}</td><td>{trend && <span class={`ia-trend ia-trend--${trend}`}>{trend === "up" ? "↑" : trend === "down" ? "↓" : "–"}</span>}</td></tr>)}</tbody></table><div class="ia-performance__title ia-performance__title--secondary">Partição dos dados</div><table class="metrics partition ia-performance__partition"><thead><tr><th>Partição</th><th>Acurácia</th><th>Percentual da base</th><th>Quantidade absoluta</th></tr></thead><tbody><tr><td>Treino</td><td>0,92</td><td>80,93%</td><td>2.518</td></tr><tr><td>Validação</td><td>0,84</td><td>9,03%</td><td>281</td></tr><tr><td>Teste</td><td>0,87</td><td>10,06%</td><td>313</td></tr></tbody></table><div class="ia-performance__title ia-performance__title--secondary">Métricas do modelo de categorização temática</div><div class="placeholder">[ Gráfico / tabela de categorização — a inserir ]</div></section>
+<section class="ia-section ia-section--border"><header><i></i><h2>código e dados abertos</h2></header><div class="ia-narrow"><p>A QuitérIA é um ecossistema aberto, transparente e replicável para outros campos da defesa dos direitos humanos. Visite os dados, códigos e documentação:</p><ul><li><a href="https://github.com/institutoazmina/ia-feminista-elas-no-congresso">Repositório de treinamento da QuitérIA</a></li><li><a href="https://github.com/institutoazmina/elasnocongressobot">Código do raspador</a></li><li><a href="https://api.elasnocongresso.com.br/api/v1/docs">API pública</a></li><li><a href="https://github.com/institutoazmina/elasnocongressobot/blob/master/README.md">Documentação</a></li><li><a href="https://github.com/institutoazmina/elasnocongressobot/blob/master/LICENSE.txt">Licença de uso</a></li></ul></div></section>
+</main><RedesignFooter /></div></body></html>
+<style is:global>
+@font-face{font-family:"ETC Anybody";font-style:normal;font-weight:50 1000;font-display:swap;src:url("/assets/fonts/ETCAnybodyVariable.woff2") format("woff2-variations")}body:has(.ia-page){margin:0}.ia-page{color:#0b0f5e;font-family:"Plus Jakarta Sans",sans-serif}.ia-page *{box-sizing:border-box}.ia-page p{margin:0;font-size:18px;line-height:29.7px}.ia-page h1,.ia-page h2,.ia-page h3,.ia-page h4{font-family:"ETC Anybody",sans-serif;font-weight:700;font-variation-settings:"wdth" 75;text-transform:uppercase}.ia-hero{display:flex;align-items:center;justify-content:space-between;min-height:452px;padding:24px 48px}.ia-hero>div:first-child{width:681px}.ia-page i{display:block;width:96px;height:4px;background:#0b0f5e;margin-bottom:16px}.ia-hero i{height:8px;margin-bottom:24px}.ia-hero h1{font-size:72px;line-height:72px;margin:0 0 24px}.ia-hero h1 strong{font-variation-settings:"wdth" 75}.ia-hero h1{font-variation-settings:"wdth" 60}.ia-hero p{font-weight:700;line-height:24px;width:640px}.ia-hero-art{display:flex;align-items:center;justify-content:center;width:580px;height:380px;background-image:var(--ia-hero-pattern);background-size:cover;overflow:hidden}.ia-hero-art img{width:506px;height:487px;object-fit:contain}.ia-section{display:flex;flex-direction:column;gap:28px;padding:64px 48px}.ia-section--border{border-top:2px solid rgba(66,66,246,.06);padding-top:66px}.ia-section header,.ia-narrow{width:820px;margin:auto}.ia-section h2{font-size:36px;line-height:42px;margin:0}.ia-narrow{display:flex;flex-direction:column;gap:19.2px}.ia-narrow h3,.ia-wide h3{font-size:32px;line-height:32px;margin:12px 0 4px}.ia-cards{display:flex;gap:24px;padding-top:4px}.ia-cards article{border:2px solid #0b0f5e;flex:1;min-height:255px;padding:30px 26px;display:flex;flex-direction:column}.ia-cards h4{font-size:24px;line-height:32px;margin:0}.ia-cards p{font-size:16px;line-height:24px;margin-top:14px}.ia-cards b{font-family:"ETC Anybody";font-variation-settings:"wdth" 75;font-size:18px;line-height:24px;margin-top:auto;text-transform:uppercase}.ia-cards small{color:#998d96;font-size:14px;line-height:23.1px}.ia-wide{width:1344px;margin:auto}.ia-wide h3{font-size:28px;margin:0 0 24px}table{border-collapse:collapse;width:100%;font-size:16px;line-height:24.8px}th,td{border-bottom:1px solid rgba(66,66,246,.25);padding:16px 20px;text-align:left;vertical-align:top}thead th{border-bottom:2px solid #0b0f5e;font-family:"ETC Anybody";font-weight:300;text-transform:uppercase}tbody th{font-weight:700;width:30.3%}tbody tr:nth-child(even){background:rgba(66,66,246,.06)}td.pending{color:#998d96;font-style:italic}.ia-narrow h5{font-size:18px;line-height:29.7px;margin:0 0 4px}.metrics{margin:14px 0 18px}.metrics th,.metrics td{text-align:center;padding:12px 16px}.metrics th:first-child,.metrics td:first-child{text-align:left}.placeholder{align-items:center;border:2px dashed rgba(66,66,246,.25);display:flex;height:281px;justify-content:center;margin:auto;width:1344px;color:#998d96;font-family:"ETC Anybody";font-size:18px;font-weight:300;letter-spacing:.9px;text-transform:uppercase}.ia-narrow ul{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:15px}.ia-narrow li{padding-left:24px;position:relative}.ia-narrow li:before{content:"→";position:absolute;left:0}.ia-narrow a{color:#4242f6;font-weight:700;text-decoration:none}.ia-narrow p a{text-decoration:underline}@media(max-width:900px){.ia-hero{flex-direction:column;align-items:flex-start;padding:48px 24px}.ia-hero>div:first-child,.ia-hero p,.ia-section header,.ia-narrow,.ia-wide,.placeholder{width:100%}.ia-hero h1{font-size:52px;line-height:56px}.ia-hero-art{width:100%;margin-top:24px}.ia-section{padding:48px 24px}.ia-section h2{font-size:32px;line-height:36px}.ia-wide{overflow:auto}.ia-wide table{min-width:820px}.placeholder{padding:24px;text-align:center}.ia-cards{flex-direction:column}}@media(max-width:560px){.ia-hero h1{font-size:40px;line-height:44px}.ia-hero-art{height:300px}.ia-hero-art img{width:100%;height:auto}.ia-page p{font-size:16px;line-height:25px}.ia-section h2{font-size:28px;line-height:32px}}
+.ia-hero{align-items:flex-start;display:flex;flex-direction:column;height:452px;justify-content:center;padding:0}.ia-hero__top-row{align-items:center;display:flex;flex:0 0 428px;height:428px;justify-content:space-between;padding:24px 48px;width:100%;z-index:auto}.ia-hero__shadow{bottom:auto;flex:0 0 24px;height:24px;left:auto;position:relative;width:100%;z-index:auto}.ia-hero__art{align-items:center;display:flex;flex:0 0 auto;height:380px;justify-content:center;padding:10px;position:relative;width:580px}.ia-hero__illustration{height:487px;overflow:hidden;position:relative;width:506px}.ia-hero__illustration-inner{height:576.881px;left:calc(50% - 15.56px);position:absolute;top:calc(50% - 38.44px);transform:translate(-50%,-50%);width:351.877px}.ia-hero__illustration-inner>img{height:104.39%;left:-16.01%;max-width:none;position:absolute;top:-1.63%;width:136.91%}@media(max-width:900px){.ia-hero{height:610px}.ia-hero__top-row{flex-basis:586px;height:586px;width:100%}.ia-hero__shadow{flex-basis:24px}}
+.ia-hero {
+    height: 500px;
+    overflow: hidden;
+    position: relative;
+    justify-content: flex-start;
+}
+
+.ia-hero__top-row {
+    align-items: center;
+    flex: 0 0 476px;
+    height: 476px;
+    padding: 48px;
+    position: relative;
+    width: 100%;
+    z-index: 2;
+}
+
+.ia-hero > div.ia-hero__top-row {
+    width: 100%;
+}
+
+.ia-hero__copy {
+    align-items: flex-start;
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: 24px;
+    justify-content: center;
+    max-width: 960px;
+    min-width: 0;
+    width: 681px;
+}
+
+.ia-hero__attention {
+    display: block;
+    height: 8px;
+    width: 96px;
+}
+
+.ia-hero h1 {
+    color: #0b0f5e;
+    font-size: 72px;
+    font-variation-settings: "wdth" 75;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 72px;
+    margin: 0;
+    mix-blend-mode: multiply;
+    white-space: nowrap;
+    width: 681px;
+}
+
+.ia-hero .hero__title-narrow {
+    font-variation-settings: "wdth" 60;
+    font-weight: 400;
+}
+
+.ia-hero h1 strong {
+    font-variation-settings: "wdth" 75;
+}
+
+.ia-hero__copy > p {
+    color: #0b0f5e;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 24px;
+    margin: 0;
+    mix-blend-mode: multiply;
+    width: 640px;
+}
+
+.ia-hero__art {
+    bottom: 24px;
+    flex: 0 0 auto;
+    overflow: visible;
+    position: absolute;
+    right: 48px;
+}
+
+.ia-hero__shadow {
+    background-image: var(--ia-hero-halftone-shadow);
+    background-position: left bottom;
+    background-repeat: repeat-x;
+    background-size: 1440px 24px;
+    bottom: 0;
+    display: block;
+    height: 24px;
+    left: 0;
+    mix-blend-mode: multiply;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    z-index: 3;
+}
+
+@media (max-width: 900px) {
+    .ia-hero__copy,
+    .ia-hero h1,
+    .ia-hero__copy > p {
+        width: 100%;
+    }
+
+    .ia-hero h1 {
+        white-space: normal;
+    }
+}
+/* Figma: IA Feminista — ajustes localizados */
+.ia-section:has(> .ia-wide){gap:27.2px}
+.ia-wide h3{margin:0 0 32px;padding-top:12.8px}
+.ia-wide>table{margin-bottom:4.8px;table-layout:fixed}
+.ia-wide>table>thead>tr{height:48px}
+.ia-wide>table>thead th{color:#0b0f5e;font-family:"ETC Anybody",sans-serif;font-size:18px;font-weight:300;font-variation-settings:"wdth" 100;letter-spacing:0;line-height:normal;padding:14px 20px 15px;text-align:left;text-transform:uppercase;vertical-align:top;white-space:nowrap}
+.ia-wide>table>thead th:first-child{width:407.44px}
+.ia-wide>table>thead th:nth-child(2){width:936.56px}
+.ia-narrow p a{font-weight:400}
+.ia-governance .ia-narrow{gap:15.3px}
+.ia-governance .ia-narrow>p:nth-of-type(2){padding-top:4.7px}
+.ia-governance .ia-narrow>p:first-child a{color:#4242f6;font-family:"Plus Jakarta Sans",sans-serif;font-size:18px;font-weight:400;letter-spacing:0;line-height:29.7px;text-decoration:underline;text-decoration-style:solid;text-underline-position:from-font}
+.ia-governance .ia-narrow>p:first-child a:hover{color:#4242f6;text-decoration:underline}
+.ia-governance .ia-narrow>h3:not(.ia-not-do__title){margin:0;padding-top:24.7px}
+.ia-governance .ia-cards{gap:24px;padding-top:8.7px}
+.ia-governance .ia-cards article{gap:11px;min-height:0;padding:30px 26px}
+.ia-governance .ia-cards article>p{font-size:16px;line-height:26.4px;margin:0;padding-top:2.085px}
+.ia-governance .ia-cards article:nth-child(2)>p{padding-bottom:.67px;padding-top:2.28px}
+.ia-governance .ia-cards article>small{font-size:14px;font-weight:400;letter-spacing:0;line-height:23.1px;margin-top:0}
+.ia-governance .ia-cards article:first-child{padding-bottom:56.4px}
+.ia-not-do__title{align-items:flex-start;display:flex;font-size:28px!important;line-height:32px!important;margin:0!important;padding-top:24.2px!important;white-space:nowrap}
+.ia-not-do__title span{background:linear-gradient(104.044deg,rgba(255,88,101,.25) 0%,rgba(255,88,101,.5) 30%,rgba(255,88,101,.5) 70%,rgba(255,88,101,.25) 100%);font-family:"ETC Anybody",sans-serif;font-size:24px;font-weight:300;font-variation-settings:"wdth" 100;line-height:28px;margin-left:0;padding:.5px 8px;text-transform:uppercase}
+.ia-governance .ia-not-do__title+p{margin:0;width:820px}
+.ia-not-do__list{display:flex;flex-direction:column;gap:14px;height:301.82px;list-style:none;margin:0;padding:8.69px 0 0;width:820px}
+.ia-not-do__list li{color:#0b0f5e;font-family:"Plus Jakarta Sans",sans-serif;font-size:18px;font-weight:400;line-height:27.9px;padding-left:28px;position:relative}
+.ia-not-do__list li::before{color:#ff5865;content:"✕";font-weight:700;left:0;line-height:27.9px;position:absolute;top:16px;transform:translateY(-50%)}
+/* Figma node 1051:25272 — categorias temáticas */
+.ia-section:has(> .ia-wide){gap:27.2px}
+.ia-section:has(> .ia-wide)>.ia-narrow{height:408px}
+.ia-section:has(> .ia-wide)>.ia-wide{display:contents}
+.ia-section:has(> .ia-wide) .ia-wide h3{align-self:stretch;font-family:"ETC Anybody",Anybody,sans-serif;font-size:28px;font-style:normal;font-weight:700;font-variation-settings:"wdth" 75;line-height:32px;margin:0;padding:12.8px 0 0;text-transform:uppercase;width:100%}
+.ia-section:has(> .ia-wide) .ia-wide table{margin:4.8px auto 0;width:1344px}
+.ia-section:has(> .ia-wide) .ia-wide>table>thead th{color:var(--Arapawa,var(--color-blue-21,#0B0F5E));font-family:"ETC Anybody",Anybody,sans-serif;font-size:18px;font-style:normal;font-weight:300;font-variation-settings:"wdth" 100;letter-spacing:0;line-height:normal;text-transform:uppercase}
+@media(max-width:900px){.ia-section:has(> .ia-wide)>.ia-narrow{height:auto}}
+
+/* Figma node 1051:25397 — desempenho do modelo */
+.ia-performance{gap:0}
+.ia-performance__title,.ia-performance__metrics,.ia-performance__partition{margin-left:auto;margin-right:auto;width:820px}
+.ia-performance__title{color:#0b0f5e;font-family:"Plus Jakarta Sans",sans-serif;font-size:18px;font-weight:700;line-height:29.7px;margin-top:32px;padding-top:4px}
+.ia-performance__metrics{margin:32px auto 0;table-layout:fixed}
+.ia-performance .metrics{border-collapse:collapse;font-size:16px;line-height:normal}
+.ia-performance .ia-performance__metrics,.ia-performance .ia-performance__metrics tbody tr{background:#fff}
+.ia-performance .metrics th,.ia-performance .metrics td{height:45px;padding:12px 16px;text-align:center;vertical-align:top}
+.ia-performance .metrics thead th{height:49px;font-family:"ETC Anybody",sans-serif;font-size:18px;font-style:normal;font-weight:700;font-variation-settings:"wdth" 75;line-height:24px;padding:12px 16px 13px;text-transform:uppercase;vertical-align:top}
+.ia-performance .metrics th:first-child,.ia-performance .metrics td:first-child{text-align:left}
+.ia-performance__metrics th:nth-child(1),.ia-performance__metrics td:nth-child(1){width:252.34px}.ia-performance__metrics th:nth-child(2),.ia-performance__metrics td:nth-child(2){width:242.22px}.ia-performance__metrics th:nth-child(3),.ia-performance__metrics td:nth-child(3){width:243.23px}.ia-performance__metrics th:nth-child(4),.ia-performance__metrics td:nth-child(4){width:82.2px}
+.ia-performance .metrics a{color:#4242f6;font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;font-weight:400;line-height:normal;text-decoration:none}.ia-performance .metrics td:first-child a>span{color:#4242f6;text-decoration:underline;text-decoration-style:solid;text-underline-position:from-font}.ia-performance .metrics thead th:first-child a{font-family:"ETC Anybody",sans-serif;font-size:18px;font-weight:700;font-variation-settings:"wdth" 75;line-height:24px;text-transform:uppercase}
+.ia-performance__title--secondary{margin-top:32px;padding-top:16px}.ia-performance__partition{margin:32px auto 0;table-layout:fixed}
+.ia-performance__partition th:nth-child(1),.ia-performance__partition td:nth-child(1){width:138.63px}.ia-performance__partition th:nth-child(2),.ia-performance__partition td:nth-child(2){width:142.53px}.ia-performance__partition th:nth-child(3),.ia-performance__partition td:nth-child(3){width:259.98px}.ia-performance__partition th:nth-child(4),.ia-performance__partition td:nth-child(4){width:278.86px}
+.ia-performance .placeholder{height:281px;margin:32px auto 0;width:1344px}.ia-trend{align-items:flex-start;color:#0b0f5e;display:inline-flex;font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;font-weight:700;justify-content:center;line-height:normal;min-width:28px;padding:2px 8px}.ia-trend--up{background:rgba(222,242,121,.5)}.ia-trend--down{background:rgba(255,88,101,.25)}
+
+/* Nodes 1051:25285–1051:25292: categories title and table are siblings in the
+   section's auto-layout. Keeping that structure prevents a wrapper from adding
+   vertical space before the title. */
+@font-face{font-family:"Anybody";font-style:normal;font-weight:100 900;font-stretch:normal;src:url("/assets/fonts/anybodyvariable.ttf") format("truetype")}
+.ia-categories{gap:27.2px;padding:66px 48px 64px}
+.ia-categories>.ia-narrow{height:408px}
+.ia-categories__title{align-self:stretch;color:#0b0f5e;font-family:"Anybody",sans-serif;font-size:28px;font-style:normal;font-weight:700;font-stretch:normal;font-variation-settings:"wdth" 75;line-height:32px;margin:0;padding-top:12.8px;text-transform:uppercase;width:100%}
+.ia-categories__table{align-self:stretch;padding-top:4.8px;width:100%}
+.ia-categories__table table{margin:0;table-layout:fixed;width:100%}
+.ia-categories__table thead tr{height:48px}
+.ia-categories__table thead th{border-bottom:2px solid #0b0f5e;color:#0b0f5e;font-family:"Anybody",sans-serif;font-size:18px;font-style:normal;font-weight:300;font-stretch:normal;font-variation-settings:"wdth" 100;letter-spacing:0;line-height:normal;padding:14px 20px 15px;text-align:left;text-transform:uppercase;vertical-align:top;white-space:nowrap}
+.ia-categories__table thead th:first-child{width:407.44px}
+.ia-categories__table thead th:nth-child(2){width:936.56px}
+.ia-performance__metrics,.ia-performance__metrics thead,.ia-performance__metrics tbody,.ia-performance__metrics tr,.ia-performance__metrics th,.ia-performance__metrics td,.ia-performance__metrics::before,.ia-performance__metrics::after{background-color:#fff}
+.ia-trend--neutral{background:transparent;min-width:auto;padding:2px 0}
+.ia-performance__partition,.ia-performance__partition thead,.ia-performance__partition tbody,.ia-performance__partition tr,.ia-performance__partition th,.ia-performance__partition td,.ia-performance__partition tbody tr:nth-child(even){background-color:#fff}
+.ia-performance__metrics tbody td:first-child,.ia-performance__metrics tbody td:first-child a,.ia-performance__metrics tbody td:first-child span{font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;font-weight:400;line-height:normal}
+@media(max-width:900px){.ia-categories>.ia-narrow{height:auto}.ia-categories__table{overflow:auto}.ia-categories__table table{min-width:820px}}
+</style>

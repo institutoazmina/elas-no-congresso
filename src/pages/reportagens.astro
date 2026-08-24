@@ -1,77 +1,387 @@
 ---
-import RedesignLayout from "../components/redesign/RedesignLayout.astro";
-import Share from "../components/Share.astro";
-import NewsletterSection from "../components/NewsletterSection.astro";
-import { fetchReportagens } from "../lib/wp";
+import { ClientRouter } from "astro:transitions";
+import RedesignHeader from "../components/redesign/RedesignHeader.astro";
+import RedesignFooter from "../components/redesign/RedesignFooter.astro";
+import ReportagemCard from "../components/redesign/ReportagemCard.astro";
+import { fetchReportagensPage, WP_REPORTAGENS_ENDPOINT } from "../lib/wp";
+import heroIllustration from "../assets/images/redesign/reportagens/hero-illustration.png";
+import attention from "../assets/images/redesign/hero/attention.svg";
+import halftoneShadow from "../assets/images/redesign/hero/halftone-shadow.png";
+import cuttingMatPattern from "../assets/images/redesign/home-reportagens/bg-pattern-cutting-mat.svg";
+import paginationPrevious from "../assets/images/redesign/reportagens/pagination-previous.svg";
+import paginationNext from "../assets/images/redesign/reportagens/pagination-next.svg";
+import "../styles/tailwind.css";
+import "../styles/redesign-shared-background.css";
 
-const posts = await fetchReportagens(1988, 99);
+const POSTS_PER_PAGE = 9;
+const [recentPage, allPage] = await Promise.all([
+    fetchReportagensPage(undefined, 3, 1, true),
+    fetchReportagensPage(undefined, POSTS_PER_PAGE, 1, true),
+]);
+const recentPosts = recentPage.posts;
+const posts = allPage.posts;
 ---
 
-<RedesignLayout title="Reportagens">
-    <main>
-        <header class="abertura-acompanhe tw:min-h-[50vh]!">
-            <Share title="Reportagens" />
-
-            <div class="container-fluid wrap">
-                <div class="row">
-                    <div class="col-xs-12 col-md-7 col-md-offset-1">
-                        <h2 class="titulo-variavel tcb t9 mb2">
-                            <span class="w900 wdth350">Reportagens</span>
-                        </h2>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        {
-            posts.length > 0 && (
-                <article class="conteudo-acompanhe">
-                    <div class="container-fluid wrap">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <h3 class="tw:text-2xl tw:md:text-3xl tw:font-semibold ff1 tw:mb-8! tca tw:text-center">
-                                    Veja as histórias que os dados do Congresso
-                                    nos conta.
-                                </h3>
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Reportagens | Elas no Congresso</title>
+        <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet" />
+        <ClientRouter fallback="swap" />
+    </head>
+    <body class="tw:!pt-0 tw:!bg-white">
+        <div class="reportagens-page" style={`--reportagens-pattern: url(${cuttingMatPattern.src})`}>
+            <RedesignHeader />
+            <main>
+                <section class="reportagens-hero redesign-shared-background" aria-labelledby="reportagens-hero-title" style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}>
+                    <div class="reportagens-hero__top-row">
+                        <div class="reportagens-hero__copy">
+                            <img class="reportagens-attention" src={attention.src} alt="" />
+                            <h1 id="reportagens-hero-title">Reportagens</h1>
+                            <p>Veja as histórias que os dados do Congresso nos contam.</p>
+                        </div>
+                        <div class="reportagens-hero__art">
+                            <div class="reportagens-hero__illustration" aria-hidden="true">
+                                <div class="reportagens-hero__illustration-inner">
+                                    <img src={heroIllustration.src} alt="" />
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            {posts.map((post) => {
-                                const img =
-                                    post._embedded?.["wp:featuredmedia"]?.[0]
-                                        ?.link ?? "/uploads/card1.png";
-                                return (
-                                    <div class="col-xs-12 col-sm-6 col-md-4">
-                                        <a
-                                            href={post.link}
-                                            class="card tw:mb-12!"
-                                        >
-                                            <figure class="tw:h-24 tw:relative">
-                                                <img
-                                                    src={img}
-                                                    alt=""
-                                                    loading="lazy"
-                                                    decoding="async"
-                                                    class="tw:object-cover! tw:object-center! tw:w-full! tw:h-full!"
-                                                />
-                                            </figure>
-                                            <h3
-                                                class="ff1 tw:font-black tw:text-2xl wdth200"
-                                                set:html={post.title.rendered}
-                                            />
-                                            <button class="btn-seta">
-                                                Ler matéria
-                                            </button>
-                                        </a>
-                                    </div>
-                                );
-                            })}
-                        </div>
                     </div>
-                </article>
-            )
+                    <div class="reportagens-hero__shadow" aria-hidden="true"></div>
+                </section>
+                <section class="reportagens-recent" aria-labelledby="reportagens-recentes-title">
+                    <h2 id="reportagens-recentes-title">Reportagens mais recentes</h2>
+                    {recentPosts.length > 0 ? <div class="reportagens-recent__scroll" tabindex="0" aria-label="Lista de reportagens mais recentes"><div class="reportagens-recent__track">{recentPosts.map((post) => <ReportagemCard post={post} dark />)}</div></div> : <p class="reportagens-feedback" role="status">N&atilde;o foi poss&iacute;vel carregar as reportagens mais recentes.</p>}
+                </section>
+                <section
+                    class="reportagens-all"
+                    aria-labelledby="todas-reportagens-title"
+                    data-reportagens-pagination
+                    data-pagination-endpoint={WP_REPORTAGENS_ENDPOINT}
+                    data-pagination-total-pages={allPage.totalPages}
+                >
+                    <div class="reportagens-all__content">
+                        <h2 id="todas-reportagens-title"><span>Todas as reportagens</span></h2>
+                        {posts.length > 0 ? <div class="reportagens-all__grid">{posts.map((post) => <div data-reportagem-pagination-card><ReportagemCard post={post} /></div>)}</div> : <p class="reportagens-feedback reportagens-feedback--light" role="status">N&atilde;o foi poss&iacute;vel carregar as reportagens.</p>}
+                    </div>
+                    {allPage.totalPages > 1 && <div class="reportagens-pagination-region" style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}><div class="reportagens-pagination-region__texture redesign-shared-background" aria-hidden="true"></div><nav class="reportagens-pagination" aria-label="Pagina&#231;&#227;o das reportagens"><button class="reportagens-pagination__button" type="button" data-pagination-previous aria-label="P&#225;gina anterior" disabled><span><img src={paginationPrevious.src} alt="" /></span></button><button class="reportagens-pagination__button" type="button" data-pagination-next aria-label="Pr&#243;xima p&#225;gina"><span><img src={paginationNext.src} alt="" /></span></button><span class="reportagens-pagination__status" aria-live="polite" data-pagination-status>P&aacute;gina 1 de {allPage.totalPages}</span></nav></div>}
+                </section>
+            </main>
+            <RedesignFooter mobileVariant="reportagens" />
+        </div>
+    </body>
+</html>
+
+<script>
+    type ClientFeaturedMedia = {
+        alt_text?: string;
+        link?: string;
+        source_url?: string;
+        media_details?: { sizes?: Record<string, { source_url?: string }> };
+    };
+    type ClientPost = {
+        modified?: string;
+        link: string;
+        title: { rendered: string };
+        _embedded?: { "wp:featuredmedia"?: ClientFeaturedMedia[] };
+    };
+    type PaginationWindow = Window & {
+        __reportagensPaginationAbortController?: AbortController;
+    };
+
+    const POSTS_PER_PAGE = 9;
+    const paginationWindow = window as PaginationWindow;
+
+    function initialiseReportagensPagination() {
+        const section = document.querySelector<HTMLElement>("[data-reportagens-pagination]");
+
+        if (!section) {
+            paginationWindow.__reportagensPaginationAbortController?.abort();
+            paginationWindow.__reportagensPaginationAbortController = undefined;
+            return;
         }
 
-        <NewsletterSection />
-    </main>
-</RedesignLayout>
+        if (section.dataset.paginationInitialised === "true") return;
+
+        const cards = Array.from(section.querySelectorAll<HTMLElement>("[data-reportagem-pagination-card]"));
+        const grid = section.querySelector<HTMLElement>(".reportagens-all__grid");
+        const previousButton = section.querySelector<HTMLButtonElement>("[data-pagination-previous]");
+        const nextButton = section.querySelector<HTMLButtonElement>("[data-pagination-next]");
+        const status = section.querySelector<HTMLElement>("[data-pagination-status]");
+        const endpoint = section.dataset.paginationEndpoint;
+        let totalPages = Number(section.dataset.paginationTotalPages ?? 0);
+        let currentPage = 1;
+
+        if (!grid || !previousButton || !nextButton || !status || !endpoint || totalPages < 2) return;
+
+        paginationWindow.__reportagensPaginationAbortController?.abort();
+        const controller = new AbortController();
+        paginationWindow.__reportagensPaginationAbortController = controller;
+        section.dataset.paginationInitialised = "true";
+
+        const decodeTitle = (html: string) => {
+            const documentFragment = new DOMParser().parseFromString(html, "text/html");
+            return documentFragment.body.textContent?.trim() ?? "";
+        };
+
+        const resolveImage = (media?: ClientFeaturedMedia) => {
+            const imagePath =
+                media?.media_details?.sizes?.["az-article-thumbnail-large"]?.source_url ??
+                media?.source_url ??
+                media?.link;
+            return imagePath ? new URL(imagePath, endpoint).href : undefined;
+        };
+
+        const updateCard = (card: HTMLElement, post?: ClientPost) => {
+            card.hidden = !post;
+            if (!post) return;
+
+            const title = card.querySelector<HTMLElement>("[data-reportagem-title]");
+            const imageLink = card.querySelector<HTMLAnchorElement>(".reportagem-card__image");
+            const date = card.querySelector<HTMLTimeElement>("[data-reportagem-date]");
+            const plainTitle = decodeTitle(post.title.rendered);
+            const media = post._embedded?.["wp:featuredmedia"]?.[0];
+            const imageSource = resolveImage(media);
+
+            card.querySelectorAll<HTMLAnchorElement>("[data-reportagem-link]").forEach((link) => {
+                link.href = post.link;
+            });
+
+            if (title) title.innerHTML = post.title.rendered;
+            if (imageLink) {
+                imageLink.setAttribute("aria-label", `Ler: ${plainTitle}`);
+                let image = imageLink.querySelector<HTMLImageElement>("[data-reportagem-image]");
+
+                if (imageSource) {
+                    if (!image) {
+                        image = document.createElement("img");
+                        image.dataset.reportagemImage = "";
+                        image.loading = "lazy";
+                        image.decoding = "async";
+                        image.width = 384;
+                        image.height = 216;
+                        imageLink.append(image);
+                    }
+                    image.src = imageSource;
+                    image.alt = media?.alt_text?.trim() || plainTitle;
+                } else {
+                    image?.remove();
+                }
+            }
+
+            if (date) {
+                if (post.modified) {
+                    date.hidden = false;
+                    date.dateTime = post.modified;
+                    date.textContent = `Atualizada em ${new Intl.DateTimeFormat("pt-BR", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                        timeZone: "America/Sao_Paulo",
+                    }).format(new Date(post.modified))}`;
+                } else {
+                    date.hidden = true;
+                    date.removeAttribute("datetime");
+                    date.textContent = "";
+                }
+            }
+        };
+
+        const renderState = () => {
+            previousButton.disabled = currentPage === 1;
+            nextButton.disabled = currentPage === totalPages;
+            status.textContent = `P\u00e1gina ${currentPage} de ${totalPages}`;
+        };
+
+        const updateUrl = (page: number, mode: "push" | "replace" | "none") => {
+            if (mode === "none") return;
+            const url = new URL(window.location.href);
+            if (page === 1) url.searchParams.delete("pagina");
+            else url.searchParams.set("pagina", String(page));
+            history[mode === "push" ? "pushState" : "replaceState"]({}, "", url);
+        };
+
+        const renderPage = async (page: number, historyMode: "push" | "replace" | "none" = "push") => {
+            const requestedPage = Math.min(Math.max(page, 1), totalPages);
+            if (requestedPage === currentPage) {
+                updateUrl(currentPage, historyMode);
+                renderState();
+                return;
+            }
+
+            grid.setAttribute("aria-busy", "true");
+            previousButton.disabled = true;
+            nextButton.disabled = true;
+            status.textContent = "Carregando reportagens.";
+
+            try {
+                const url = new URL(endpoint);
+                url.searchParams.set("_embed", "wp:featuredmedia");
+                url.searchParams.set("_fields", "title,link,modified,_links.wp:featuredmedia");
+                url.searchParams.set("per_page", String(POSTS_PER_PAGE));
+                url.searchParams.set("page", String(requestedPage));
+                url.searchParams.set("orderby", "date");
+                url.searchParams.set("order", "desc");
+
+                const response = await fetch(url, { headers: { Accept: "application/json" }, signal: controller.signal });
+                if (!response.ok) throw new Error(`WordPress respondeu com ${response.status}`);
+
+                const posts = await response.json() as ClientPost[];
+                const responseTotalPages = Number(response.headers.get("x-wp-totalpages"));
+                if (responseTotalPages > 0) totalPages = responseTotalPages;
+                if (posts.length === 0) throw new Error("A pagina solicitada nao possui reportagens.");
+
+                cards.forEach((card, index) => updateCard(card, posts[index]));
+                currentPage = Math.min(requestedPage, totalPages);
+                section.dataset.paginationTotalPages = String(totalPages);
+                updateUrl(currentPage, historyMode);
+                renderState();
+            } catch (error) {
+                if ((error as Error).name !== "AbortError") {
+                    status.textContent = "N\u00e3o foi poss\u00edvel carregar esta p\u00e1gina. Tente novamente.";
+                    renderState();
+                }
+            } finally {
+                grid.removeAttribute("aria-busy");
+            }
+        };
+
+        previousButton.addEventListener("click", () => void renderPage(currentPage - 1), { signal: controller.signal });
+        nextButton.addEventListener("click", () => void renderPage(currentPage + 1), { signal: controller.signal });
+        window.addEventListener("popstate", () => {
+            const requestedPage = Number(new URL(window.location.href).searchParams.get("pagina") ?? 1);
+            void renderPage(Number.isFinite(requestedPage) ? requestedPage : 1, "none");
+        }, { signal: controller.signal });
+
+        renderState();
+        const requestedPage = Number(new URL(window.location.href).searchParams.get("pagina") ?? 1);
+        if (Number.isFinite(requestedPage) && requestedPage > 1) void renderPage(requestedPage, "replace");
+    }
+
+    initialiseReportagensPagination();
+    document.addEventListener("astro:page-load", initialiseReportagensPagination);
+</script>
+
+<style is:global>
+    @font-face { font-family: "ETC Anybody"; font-style: normal; font-weight: 50 1000; font-display: swap; src: url("/assets/fonts/ETCAnybodyVariable.woff2") format("woff2-variations"); }
+    body:has(.reportagens-page) { margin: 0; }
+    .reportagens-page, .reportagens-page * { box-sizing: border-box; }
+    .reportagens-page { color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
+    .reportagens-hero { color: #0b0f5e; height: 500px; overflow: hidden; position: relative; }
+    .reportagens-hero__top-row { align-items: center; display: flex; height: 476px; justify-content: space-between; padding: 48px; position: relative; z-index: 2; }
+    .reportagens-hero__copy { align-items: flex-start; display: flex; flex: 1 0 0; flex-direction: column; gap: 24px; justify-content: center; max-width: 960px; min-width: 0; }
+    .reportagens-attention { display: block; height: 8px; width: 96px; }
+    .reportagens-hero h1, .reportagens-hero p { mix-blend-mode: multiply; }
+    .reportagens-hero h1, .reportagens-recent h2, .reportagem-card h3, .reportagem-card__link { font-family: "ETC Anybody", sans-serif; font-weight: 700; font-variation-settings: "wdth" 75; text-transform: uppercase; }
+    .reportagens-hero h1 { color: #0b0f5e; font-size: 72px; letter-spacing: 0; line-height: 72px; margin: 0; }
+    .reportagens-hero p { font-size: 18px; font-weight: 700; letter-spacing: 0; line-height: 24px; margin: 0; width: 640px; }
+    .reportagens-hero__art { align-items: center; display: flex; flex: none; height: 380px; justify-content: center; overflow: hidden; padding: 10px; position: relative; width: 580px; }
+    .reportagens-hero__illustration { flex: none; height: 487px; overflow: hidden; position: relative; width: 506px; }
+    .reportagens-hero__illustration-inner { height: 414.045px; left: 50%; position: absolute; top: 50%; transform: translate(-50%, -50%); width: 461.738px; }
+    .reportagens-hero__illustration-inner img { height: 125.9%; left: 4.84%; max-width: none; position: absolute; top: -12.95%; width: 90.32%; }
+    .reportagens-hero__shadow { background-image: var(--reportagens-hero-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; bottom: 0; display: block; height: 24px; left: 0; mix-blend-mode: multiply; pointer-events: none; position: absolute; width: 100%; z-index: 1; }
+    .reportagens-recent { background: #0b0f5e var(--reportagens-pattern) center top / 200px 200px repeat; color: #fff; min-height: 647px; padding: 96px 0 106px; position: relative; }
+    .reportagens-recent::before { background: linear-gradient(to bottom, rgba(66, 66, 246, .25), transparent); content: ""; height: 12px; left: 0; position: absolute; right: 0; top: 0; }
+    .reportagens-recent h2 { font-size: 32px; line-height: 32px; margin: 0 auto; text-align: center; width: 720px; }
+    .reportagens-recent__scroll { display: flex; gap: 48px; justify-content: center; margin: 48px auto 0; overflow-x: auto; padding: 0 48px 16px; scroll-snap-type: x mandatory; width: 100%; }
+    .reportagens-recent__track { display: flex; flex: none; gap: 48px; }
+    .reportagem-card { display: flex; flex: 0 0 384px; flex-direction: column; gap: 16px; scroll-snap-align: start; }
+    .reportagem-card__image { border: 2px solid #4242f6; display: block; height: 216px; overflow: hidden; width: 384px; }
+    .reportagem-card__image img { height: 100%; object-fit: cover; width: 100%; }
+    .reportagem-card h3 { color: #0b0f5e; font-size: 24px; line-height: 32px; margin: 0; min-height: 64px; }
+    .reportagem-card--dark h3 { color: #fff; min-height: 96px; }
+    .reportagem-card__details { align-items: flex-start; display: flex; flex-direction: column; gap: 16px; justify-content: center; overflow: hidden; }
+    .reportagem-card__link { align-items: center; align-self: flex-start; background: #4242f6; color: #fff; display: flex; font-size: 18px; gap: 8px; height: 38px; justify-content: center; line-height: 24px; padding: 8px 12px 6px 14px; text-decoration: none; }
+    .reportagem-card__link > span:last-child { align-items: center; display: flex; height: 24px; justify-content: flex-end; width: 12px; }
+    .reportagem-card__link img { display: block; height: 6px; transform: rotate(-90deg); width: 12px; }
+    .reportagem-card__date { color: #1e2546; font-size: 14px; font-weight: 400; letter-spacing: 0; line-height: 16px; margin: 0; }
+    .reportagem-card--dark .reportagem-card__date { color: #fff; }
+    .reportagens-all { --reportagens-all-inline-padding: 48px; padding: 72px var(--reportagens-all-inline-padding) 0; }
+    .reportagens-all__content { margin: 0 auto; max-width: 1344px; width: 100%; }
+    .reportagens-all h2 { align-items: flex-start; display: flex; font-family: "ETC Anybody", sans-serif; font-size: 32px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 42px; margin: 0 0 48px; max-width: 100%; text-transform: uppercase; width: 820px; }
+    .reportagens-all h2 > span { flex: 0 0 292px; text-align: center; }
+    .reportagens-all__grid { display: grid; gap: 96px; grid-template-columns: repeat(3, 384px); justify-content: space-between; margin: 0 auto; max-width: 1344px; }
+    .reportagens-all__grid > [hidden] { display: none; }
+    .reportagens-pagination-region { height: 195px; margin-left: calc(var(--reportagens-all-inline-padding) * -1); margin-top: 30px; overflow: hidden; position: relative; width: calc(100% + (var(--reportagens-all-inline-padding) * 2)); }
+    .reportagens-pagination-region__texture { background-position: center -30px; bottom: 0; left: 0; pointer-events: none; position: absolute; right: 0; top: 30px; z-index: 0; }
+    .reportagens-pagination-region::before { background-image: var(--reportagens-hero-halftone-shadow); background-position: left top; background-repeat: repeat-x; background-size: 1440px 24px; content: ""; height: 24px; left: 0; mix-blend-mode: multiply; pointer-events: none; position: absolute; right: 0; top: 30px; transform: rotate(180deg); z-index: 1; }
+    .reportagens-pagination { align-items: flex-start; display: flex; gap: 4px; justify-content: center; left: 0; margin: 0; position: absolute; right: 0; top: 78px; z-index: 2; }
+    .reportagens-pagination__button { align-items: center; background: #fff; border: 2px solid #4242f6; color: #4242f6; cursor: pointer; display: flex; height: 40px; justify-content: center; padding: 8px 16px; transition: background-color 150ms ease, color 150ms ease; width: 56px; }
+    .reportagens-pagination__button > span { align-items: center; display: flex; height: 24px; justify-content: center; width: 24px; }
+    .reportagens-pagination__button img { display: block; height: 16px; width: 16px; }
+    .reportagens-pagination__button:hover:not(:disabled), .reportagens-pagination__button:focus-visible { background: #4242f6; outline: none; }
+    .reportagens-pagination__button:hover:not(:disabled) img, .reportagens-pagination__button:focus-visible img { filter: brightness(0) invert(1); }
+    .reportagens-pagination__button:focus-visible { outline: 2px solid #0b0f5e; outline-offset: 2px; }
+    .reportagens-pagination__button:disabled { cursor: default; opacity: .4; }
+    .reportagens-pagination__status { height: 1px; margin: -1px; overflow: hidden; position: absolute; width: 1px; clip: rect(0 0 0 0); }
+    .reportagens-feedback { color: #fff; font-size: 16px; line-height: 24px; margin: 48px 24px 0; position: relative; z-index: 2; }
+    .reportagens-feedback--light { color: #1e2546; margin: 48px 0; }
+    @media (max-width: 900px) { .reportagens-hero { height: 610px; } .reportagens-hero__top-row { align-items: flex-start; height: 586px; padding: 48px 24px; } .reportagens-hero__copy { gap: 20px; max-width: 100%; } .reportagens-hero p { width: 100%; } .reportagens-hero__art { bottom: 16px; margin: 0; position: absolute; right: -88px; transform: scale(.54); transform-origin: bottom right; } .reportagens-recent { padding: 64px 0; } .reportagens-recent h2 { width: auto; } .reportagens-recent__scroll { padding-left: 24px; padding-right: 24px; } .reportagens-all { --reportagens-all-inline-padding: 24px; padding: 64px var(--reportagens-all-inline-padding) 0; } .reportagens-all h2 { margin-bottom: 40px; } .reportagens-all__grid { gap: 64px 24px; grid-template-columns: repeat(2, minmax(0, 1fr)); } .reportagens-all__grid .reportagem-card, .reportagens-all__grid .reportagem-card__image { width: 100%; } }
+    @media (max-width: 700px) {
+        .reportagens-page .redesign-header { height: 52px; min-height: 52px; overflow: visible; position: sticky; top: 0; transition: transform .2s ease; will-change: transform; z-index: 100; }
+        .reportagens-page .redesign-header[data-scroll-position="scrolled"][data-scroll-direction="up"]:not(:has(.redesign-header__mobile-menu[open])) { background-color: transparent; background-image: none; }
+        .reportagens-page .redesign-header[data-scroll-direction="down"]:not(:has(.redesign-header__mobile-menu[open])) { transform: translateY(-100%); }
+        .reportagens-page .redesign-header[data-scroll-direction="up"] { transform: translateY(0); }
+        .reportagens-page .redesign-header:has(.redesign-header__mobile-menu[open]) { height: 331px; }
+        .reportagens-page .redesign-header__content { height: 52px; min-height: 52px; padding: 15px 16px; }
+        .reportagens-page .redesign-header__brand { height: 14px; width: 128px; }
+        .reportagens-page .redesign-header .highlighter-marks { display: none; }
+        .reportagens-page .redesign-header__mobile-menu { height: 22px; width: 28px; }
+        .reportagens-page .redesign-header__mobile-menu summary { align-items: center; display: flex; height: 22px; justify-content: center; padding: 4px; width: 28px; }
+        .reportagens-page .redesign-header__mobile-menu summary span { height: 2px; position: absolute; transition: none; width: 20px; }
+        .reportagens-page .redesign-header__mobile-menu summary span:first-child { transform: translateY(-6px); }
+        .reportagens-page .redesign-header__mobile-menu summary span:last-child { transform: translateY(6px); }
+        .reportagens-page .redesign-header__mobile-menu[open] summary span:first-child { transform: rotate(45deg); }
+        .reportagens-page .redesign-header__mobile-menu[open] summary span:nth-child(2) { opacity: 0; }
+        .reportagens-page .redesign-header__mobile-menu[open] summary span:last-child { transform: rotate(-45deg); }
+        .reportagens-page .redesign-header__mobile-menu:not([open]) .redesign-header__mobile-panel { display: none; }
+        .reportagens-page .redesign-header__mobile-menu[open] .redesign-header__mobile-panel { display: flex; }
+        .reportagens-page .redesign-header__mobile-panel { background: #0b0f5e; border: 0; box-shadow: none; flex-direction: column; gap: 0; height: 279px; padding: 0; position: absolute; right: -16px; top: 37px; width: 100vw; z-index: 20; }
+        .reportagens-page .redesign-header__mobile-panel a { align-items: center; border-bottom: 1px solid rgba(255, 255, 255, .3); color: #fff; display: flex; flex: 0 0 56px; font-family: "ETC Anybody", sans-serif; font-size: 18px; font-variation-settings: "wdth" 75; font-weight: 700; height: 56px; line-height: 24px; padding: 16px 24px 17px; position: relative; text-transform: uppercase; width: 100%; }
+        .reportagens-page .redesign-header__mobile-panel a:not([aria-current="page"]) > span { color: #fff; }
+        .reportagens-page .redesign-header__mobile-panel a:last-child { border-bottom: 0; flex-basis: 55px; height: 55px; padding: 16px 24px; }
+        .reportagens-page .redesign-header__mobile-panel a[aria-current="page"] { color: #0b0f5e; }
+        .reportagens-page .redesign-header__mobile-panel a[aria-current="page"] > span { align-items: center; background: #def279; color: #0b0f5e; display: inline-flex; height: 23px; line-height: 23px; margin-left: -2px; padding: 0 2px; }
+        .reportagens-page > .redesign-footer { margin-top: 30px; }
+    }
+    @media (max-width: 560px) {
+        .reportagens-hero { height: 251px; }
+        .reportagens-hero__top-row { align-items: flex-start; height: 100%; padding: 24px; }
+        .reportagens-hero__copy { flex: none; gap: 15px; justify-content: flex-start; max-width: 100%; width: 100%; }
+        .reportagens-attention { height: 4px; width: 32px; }
+        .reportagens-hero h1 { font-size: 32px; line-height: 32px; text-box-edge: cap alphabetic; text-box-trim: trim-both; }
+        .reportagens-hero p { max-width: 320px; padding: 5px 0 10px; width: 320px; }
+        .reportagens-hero__art { display: none; }
+
+        .reportagens-recent { background-color: #0b0f5e; background-image: none; min-height: 783px; overflow: hidden; padding: 65px 0 106px; }
+        .reportagens-recent::after { background: var(--reportagens-pattern) center top / 200px 200px repeat; content: ""; height: 621px; left: 0; pointer-events: none; position: absolute; right: 0; top: 0; z-index: 0; }
+        .reportagens-recent::before { z-index: 1; }
+        .reportagens-recent h2 { margin: 0; padding: 0 24px; position: relative; text-align: left; text-box-edge: cap alphabetic; text-box-trim: trim-both; white-space: nowrap; width: 100%; z-index: 2; }
+        .reportagens-recent__scroll { display: block; margin: 58px 0 0; overflow-x: auto; overflow-y: hidden; padding: 0 0 16px; position: relative; scroll-snap-type: none; scrollbar-width: thin; width: 100%; z-index: 2; }
+        .reportagens-recent__track { gap: 48px; padding: 0 24px; width: max-content; }
+        .reportagens-recent .reportagem-card { flex: 0 0 384px; width: 384px; }
+        .reportagens-recent .reportagem-card__image { aspect-ratio: 384 / 216; height: 216px; width: 384px; }
+        .reportagens-recent .reportagem-card h3 { min-height: 0; }
+
+        .reportagens-all { --reportagens-all-inline-padding: 24px; padding: 72px 23px 85px 24px; }
+        .reportagens-all h2 { line-height: 32px; margin-bottom: 48px; min-height: 42px; text-box-edge: cap alphabetic; text-box-trim: trim-both; width: 100%; }
+        .reportagens-all h2 > span { flex-basis: 292px; text-align: left; }
+        .reportagens-all__grid { gap: 96px; grid-template-columns: minmax(0, 1fr); justify-content: start; max-width: none; width: 100%; }
+        .reportagens-all__grid > div { width: 100%; }
+        .reportagens-all__grid .reportagem-card { flex: none; width: 100%; }
+        .reportagens-all__grid .reportagem-card__image { aspect-ratio: 384 / 216; height: auto; width: 100%; }
+        .reportagens-all__grid .reportagem-card h3 { min-height: 0; }
+
+        .reportagens-pagination-region { margin-left: -24px; margin-top: 69.5px; width: calc(100% + 47px); }
+        .reportagens-pagination-region__texture { bottom: 29px; top: 30px; }
+        .reportagens-pagination-region::before, .reportagens-pagination-region::after { background-image: var(--reportagens-hero-halftone-shadow); background-position: left top; background-repeat: repeat-x; background-size: 720px 12px; content: ""; height: 12px; left: 0; mix-blend-mode: multiply; pointer-events: none; position: absolute; right: 0; z-index: 1; }
+        .reportagens-pagination-region::before { top: 30px; transform: rotate(180deg); }
+        .reportagens-pagination-region::after { bottom: 29px; }
+    }
+</style>

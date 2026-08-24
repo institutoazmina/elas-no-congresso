@@ -1,0 +1,21 @@
+---
+import type { WpPost } from "../../lib/wp";
+import chevronRight from "../../assets/images/redesign/reportagens/chevron-right.svg";
+
+interface Props { post: WpPost; dark?: boolean; }
+const { post, dark = false } = Astro.props;
+const media = post._embedded?.["wp:featuredmedia"]?.[0];
+const imagePath = media?.media_details?.sizes?.["az-article-thumbnail-large"]?.source_url ?? media?.source_url ?? media?.link;
+const image = imagePath ? new URL(imagePath, "https://azmina.com.br").href : undefined;
+const plainTitle = post.title.rendered.replace(/<[^>]*>/g, "").trim();
+const imageAlt = media?.alt_text?.trim() || plainTitle;
+const updatedAt = post.modified ? new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", year: "numeric", timeZone: "America/Sao_Paulo" }).format(new Date(post.modified)) : undefined;
+---
+<article class:list={["reportagem-card", { "reportagem-card--dark": dark }]}>
+    <a href={post.link} class="reportagem-card__image" data-reportagem-link aria-label={`Ler: ${plainTitle}`}>{image && <img src={image} alt={imageAlt} width="384" height="216" loading="lazy" decoding="async" data-reportagem-image />}</a>
+    <h3 data-reportagem-title set:html={post.title.rendered} />
+    <div class="reportagem-card__details">
+        <a href={post.link} class="reportagem-card__link" data-reportagem-link><span>Ler reportagem</span><span aria-hidden="true"><img src={chevronRight.src} alt="" /></span></a>
+        <time class="reportagem-card__date" datetime={post.modified} data-reportagem-date hidden={!updatedAt}>{updatedAt && <>Atualizada em {updatedAt}</>}</time>
+    </div>
+</article>
