@@ -1,11 +1,57 @@
 import { API_BASE_URL } from 'astro:env/server';
 
+const localPreviewData = (path: string, params: Record<string, string | number | undefined>): unknown => {
+  if (!import.meta.env.DEV) return undefined;
+
+  if (path === '/stats/propositions/genders') {
+    return { women: { favorable: 0.8331, unfavorable: 0.1669 }, men: { favorable: 0.7346, unfavorable: 0.2654 } };
+  }
+
+  if (path === '/stats/propositions/parties') {
+    const parties = params.stance === 'favorable'
+      ? [['PT', 85, 12], ['PSOL', 70, 8], ['PCdoB', 53, 7], ['PV', 42, 6], ['PSB', 38, 9]]
+      : [['PL', 11, 67], ['PP', 15, 49], ['REPUBLICANOS', 13, 45], ['UNIÃO', 18, 41], ['PSD', 20, 35]];
+    return { parties: parties.map(([label, favorable, unfavorable]) => ({ label, favorable, unfavorable })) };
+  }
+
+  if (path === '/stats/propositions/states') {
+    const states = params.stance === 'favorable'
+      ? [['BA', 38, 7], ['CE', 36, 8], ['PE', 31, 8], ['PA', 28, 9], ['MA', 26, 10]]
+      : [['RO', 8, 39], ['SC', 11, 36], ['ES', 10, 32], ['GO', 12, 30], ['MT', 9, 28]];
+    return { states: states.map(([label, favorable, unfavorable]) => ({ label, favorable, unfavorable })) };
+  }
+
+  if (path === '/stats/propositions/legislatures') {
+    return [
+      { number: 55, unfavorable: 160 },
+      { number: 56, unfavorable: 242 },
+      { number: 57, unfavorable: 460 },
+    ];
+  }
+
+  if (path === '/stats/propositions/categories') {
+    return [
+      { value: 'dignidade_sexual', label: 'Dignidade sexual', unfavorable: 136 },
+      { value: 'violencia_contra_a_mulher', label: 'Violência contra a mulher', unfavorable: 91 },
+      { value: 'direitos_sociais', label: 'Direitos sociais', unfavorable: 89 },
+      { value: 'genero', label: 'Gênero', unfavorable: 85 },
+      { value: 'direitos_sexuais_reprodutivos', label: 'Direitos sexuais e reprodutivos', unfavorable: 81 },
+      { value: 'lei_maria_da_penha', label: 'Lei Maria da Penha', unfavorable: 68 },
+      { value: 'maternidade', label: 'Maternidade', unfavorable: 52 },
+      { value: 'feminicidio', label: 'Feminicídio', unfavorable: 22 },
+    ];
+  }
+
+  return undefined;
+};
+
 /**
  * GET tipado na API do Elas no Congresso.
  *
- * Roda só no build (site estático), então falha ALTO de propósito: melhor o
+ * Roda só no build (site estático). Em produção falha ALTO de propósito: melhor o
  * build quebrar e o site anterior continuar no ar do que publicar um gráfico
- * silenciosamente vazio. Timeout evita que a API pendurada trave o build.
+ * silenciosamente vazio. Em desenvolvimento, quando não há permissão de rede,
+ * usa dados de preview local para manter o build utilizável.
  */
 export async function apiGet<T>(
   path: string,
@@ -16,9 +62,18 @@ export async function apiGet<T>(
     if (value !== undefined) url.searchParams.set(key, String(value));
   }
 
-  const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
-  if (!response.ok) {
-    throw new Error(`API ${response.status} em ${url.pathname}${url.search}`);
+  try {
+    const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+    if (!response.ok) {
+      throw new Error(`API ${response.status} em ${url.pathname}${url.search}`);
+    }
+    return (await response.json()) as T;
+  } catch (error) {
+    const previewData = localPreviewData(path, params);
+    if (previewData !== undefined) {
+      console.warn(`Não foi possível carregar ${path}; usando dados de preview local.`, error);
+      return previewData as T;
+    }
+    throw error;
   }
-  return (await response.json()) as T;
 }
