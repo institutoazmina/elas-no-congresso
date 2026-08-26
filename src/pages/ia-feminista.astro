@@ -4,10 +4,7 @@ import RedesignHeader from "../components/redesign/RedesignHeader.astro";
 import RedesignFooter from "../components/redesign/RedesignFooter.astro";
 import heroIllustration from "../assets/images/redesign/ia-feminista/hero-illustration.png";
 import fluxoProcessamento from "../assets/images/redesign/ia-feminista/fluxo-processamento.svg";
-import arrow1 from "../assets/images/redesign/ia-feminista/arrow-1.svg";
-import arrow2 from "../assets/images/redesign/ia-feminista/arrow-2.svg";
-import arrow3 from "../assets/images/redesign/ia-feminista/arrow-3.svg";
-import arrow4 from "../assets/images/redesign/ia-feminista/arrow-4.svg";
+import fluxoProcessamentoMobile from "../assets/images/redesign/ia-feminista/fluxo-processamento-mobile.png";
 import attention from "../assets/images/redesign/hero/attention.svg";
 import halftoneShadow from "../assets/images/redesign/hero/halftone-shadow.png";
 import "../styles/tailwind.css";
@@ -65,7 +62,7 @@ const thematicPartitions = [
   ["Violências de Gênero", "1156 (45,75%)", "129 (45,74%)", "159 (50,80%)"],
 ];
 ---
-<!doctype html><html lang="pt-BR" transition:animate="none"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>IA Feminista | Elas no Congresso</title><link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin /><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" /><ClientRouter fallback="swap" /></head>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>IA Feminista | Elas no Congresso</title><link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin /><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" /><ClientRouter fallback="swap" /></head>
 <body class="tw:!pt-0 tw:!bg-white"><div class="ia-page ia-feminista-page"><RedesignHeader /><main>
 <section class="ia-hero redesign-shared-background" aria-labelledby="ia-hero-title" style={`--ia-hero-halftone-shadow: url(${halftoneShadow.src})`}><div class="ia-hero__top-row"><div class="ia-hero__copy"><img class="ia-hero__attention" src={attention.src} alt="" /><h1 id="ia-hero-title"><span class="hero__title-narrow">Quem foi </span><strong>Maria Quitéria?</strong></h1><p>O nome da ferramenta homenageia a heroína baiana Maria Quitéria de Jesus (1792–1853), primeira mulher a integrar o Exército Brasileiro. Em 1822, ela se apresentou como homem, sob o pseudônimo "Soldado Medeiros", para lutar na Guerra de Independência do Brasil na Bahia. A QuitérIA carrega esse legado de coragem e resistência para o combate à opacidade legislativa.</p></div><div class="ia-hero__art"><div class="ia-hero__illustration"><div class="ia-hero__illustration-inner"><img src={heroIllustration.src} alt="Ilustração de Maria Quitéria" /></div></div></div></div><div class="ia-hero__shadow" aria-hidden="true"></div></section>
 <section class="ia-section ia-differential">
@@ -80,36 +77,7 @@ const thematicPartitions = [
       <img src={fluxoProcessamento.src} alt="Fluxo de processamento da QuitérIA em cinco etapas" />
     </div>
     <div class="ia-flow ia-flow--mobile">
-      <div class="ia-flow-mobile__title">
-        <span class="ia-flow-mobile__title-main">Fluxo</span>
-        <span class="ia-flow-mobile__title-sub">de processamento</span>
-      </div>
-      <div class="ia-flow-mobile__steps">
-        <div class="ia-flow-mobile__step ia-flow-mobile__step--1">
-          <div class="ia-flow-mobile__circle">1</div>
-          <div class="ia-flow-mobile__label">Coleta automatizada</div>
-        </div>
-        <img class="ia-flow-mobile__arrow" src={arrow1.src} alt="" />
-        <div class="ia-flow-mobile__step ia-flow-mobile__step--2">
-          <div class="ia-flow-mobile__circle">2</div>
-          <div class="ia-flow-mobile__label">Classificação de desfavorabilidade</div>
-        </div>
-        <img class="ia-flow-mobile__arrow" src={arrow2.src} alt="" />
-        <div class="ia-flow-mobile__step ia-flow-mobile__step--3">
-          <div class="ia-flow-mobile__circle">3</div>
-          <div class="ia-flow-mobile__label">Classificação por tema</div>
-        </div>
-        <img class="ia-flow-mobile__arrow" src={arrow3.src} alt="" />
-        <div class="ia-flow-mobile__step ia-flow-mobile__step--4">
-          <div class="ia-flow-mobile__circle">4</div>
-          <div class="ia-flow-mobile__label">Validação humana semanal</div>
-        </div>
-        <img class="ia-flow-mobile__arrow" src={arrow4.src} alt="" />
-        <div class="ia-flow-mobile__step ia-flow-mobile__step--5">
-          <div class="ia-flow-mobile__circle">5</div>
-          <div class="ia-flow-mobile__label">Rotulação humana de novos projetos</div>
-        </div>
-      </div>
+      <img src={fluxoProcessamentoMobile.src} width={fluxoProcessamentoMobile.width} height={fluxoProcessamentoMobile.height} style={`max-width:${fluxoProcessamentoMobile.width}px`} alt="Fluxo de processamento da QuitérIA em cinco etapas" />
     </div>
     </div>
     <header><h3 class="ia-architecture__title">Arquitetura dos modelos</h3></header>
@@ -127,22 +95,14 @@ const thematicPartitions = [
   <div class="ia-performance__title ia-performance__title--secondary">Métricas do modelo de categorização temática</div>
   <div class="ia-table-scroll"><table class="metrics ia-performance__thematic-metrics"><tbody>{thematicMetrics.map(([label, value]) => <tr><td>{label}</td><td>{value}</td></tr>)}</tbody></table></div>
   <div class="ia-performance__title ia-performance__title--secondary">Partição dos dados</div>
-  <div class="ia-table-scroll"><div class="ia-performance__thematic-partition partition-table">
-    <div class="partition-row partition-header" aria-hidden="false">
-      <div class="partition-base">Base</div>
-      <div class="partition-training">Treino</div>
-      <div class="partition-validation">Validação</div>
-      <div class="partition-test">Teste</div>
-    </div>
-    {thematicPartitions.map(([base, training, validation, test], i) => (
-      <div class={`partition-row partition-data ${["Quantidade de Projetos","Educação e Cultura","Infância e Adolescência","LGBTQIAPN+","Saúde","Violências de Gênero"].includes(base) ? "partition-row--45" : "partition-row--65"}`}>
-        <div class="partition-base">{base}</div>
-        <div class="partition-training">{training}</div>
-        <div class="partition-validation">{validation}</div>
-        <div class="partition-test">{test}</div>
-      </div>
-    ))}
-  </div></div>
+  <div class="ia-table-scroll"><table class="metrics ia-performance__thematic-partition">
+    <thead><tr><th>Base</th><th>Treino</th><th>Validação</th><th>Teste</th></tr></thead>
+    <tbody>{thematicPartitions.map(([base, training, validation, test]) => (
+      <tr class={["Quantidade de Projetos","Educação e Cultura","Infância e Adolescência","LGBTQIAPN+","Saúde","Violências de Gênero"].includes(base) ? "partition-row--45" : "partition-row--65"}>
+        <td>{base}</td><td>{training}</td><td>{validation}</td><td>{test}</td>
+      </tr>
+    ))}</tbody>
+  </table></div>
 </section>
 <section class="ia-section ia-section--border"><header><i></i><h2>código e dados abertos</h2></header><div class="ia-narrow"><p>A QuitérIA é um ecossistema aberto, transparente e replicável para outros campos da defesa dos direitos humanos. Visite os dados, códigos e documentação:</p><ul><li><a href="https://github.com/institutoazmina/ia-feminista-elas-no-congresso">Repositório de treinamento da QuitérIA</a></li><li><a href="https://github.com/institutoazmina/elasnocongressobot">Código do raspador</a></li><li><a href="https://api.elasnocongresso.com.br/api/v1/docs">API pública</a></li><li><a href="https://github.com/institutoazmina/elasnocongressobot/blob/master/README.md">Documentação</a></li><li><a href="https://github.com/institutoazmina/elasnocongressobot/blob/master/LICENSE.txt">Licença de uso</a></li></ul></div></section>
 </main><RedesignFooter /></div></body></html>
@@ -323,7 +283,8 @@ const thematicPartitions = [
 .ia-categories__table thead th:nth-child(2){width:936.56px}
 .ia-performance__metrics,.ia-performance__metrics thead,.ia-performance__metrics tbody,.ia-performance__metrics tr,.ia-performance__metrics th,.ia-performance__metrics td,.ia-performance__metrics::before,.ia-performance__metrics::after{background-color:#fff}
 .ia-trend--neutral{background:transparent;min-width:auto;padding:2px 0}
-.ia-performance__partition,.ia-performance__partition thead,.ia-performance__partition tbody,.ia-performance__partition tr,.ia-performance__partition th,.ia-performance__partition td,.ia-performance__partition tbody tr:nth-child(even){background-color:#fff}
+.ia-performance__partition,.ia-performance__partition thead,.ia-performance__partition tbody,.ia-performance__partition tr,.ia-performance__partition th,.ia-performance__partition td,.ia-performance__partition tbody tr:nth-child(even),.ia-performance__thematic-partition,.ia-performance__thematic-partition thead,.ia-performance__thematic-partition tbody,.ia-performance__thematic-partition tr,.ia-performance__thematic-partition th,.ia-performance__thematic-partition td,.ia-performance__thematic-partition tbody tr:nth-child(even){background-color:#fff}
+.ia-performance__thematic-metrics tbody tr:nth-child(even){background-color:#fff}
 .ia-performance__metrics tbody td:first-child,.ia-performance__metrics tbody td:first-child a,.ia-performance__metrics tbody td:first-child span{font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;font-weight:400;line-height:normal}
 @media(max-width:900px){.ia-categories>.ia-narrow{height:auto}.ia-categories__table{overflow:auto}.ia-categories__table table{min-width:820px}}
 
@@ -353,19 +314,18 @@ const thematicPartitions = [
   .ia-performance__thematic-metrics td:first-child{width:417px}
   .ia-performance__thematic-metrics td:nth-child(2){width:403px}
   .ia-performance__thematic-metrics tbody tr:nth-child(even){background-color:#fff}
-  .partition-table{width:820px;background:#fff}
-  .partition-row{display:flex;justify-content:space-between;width:820px;background:#fff}
-  .partition-header{height:49px;border-bottom:2px solid #0b0f5e}
-  .partition-header .partition-base,.partition-header .partition-training,.partition-header .partition-validation,.partition-header .partition-test{align-items:flex-start;color:#0b0f5e;font-family:"ETC Anybody",sans-serif;font-size:18px;font-weight:700;font-variation-settings:"wdth" 75;height:47px;line-height:24px;padding:12px 16px 13px;text-transform:uppercase;white-space:nowrap}
-  .partition-header .partition-base{width:250px;text-align:left}
-  .partition-header .partition-training,.partition-header .partition-validation,.partition-header .partition-test{width:150px;text-align:center}
-  .partition-data{border-bottom:1px solid rgba(66,66,246,.25)}
-  .partition-row--45{height:45px}
-  .partition-row--65{height:65px}
-  .partition-data .partition-base{width:250px;color:#0b0f5e;font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;font-weight:400;line-height:20px;padding:12px 16px 13px;text-align:left}
-  .partition-data .partition-training{width:142.53px;color:#0b0f5e;font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;font-weight:400;line-height:20px;padding:12px 16px 13px;text-align:center;white-space:nowrap}
-  .partition-data .partition-validation,.partition-data .partition-test{width:150px;color:#0b0f5e;font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;font-weight:400;line-height:20px;padding:12px 16px 13px;text-align:center;white-space:nowrap}
-  .partition-data .partition-training,.partition-data .partition-validation,.partition-data .partition-test{display:flex;align-items:center;justify-content:center}
+  .ia-performance__thematic-partition{table-layout:fixed;margin:32px auto 0;background:#fff}
+  .ia-performance__thematic-partition thead th{border-bottom:2px solid #0b0f5e}
+  .ia-performance__thematic-partition tbody tr{border-bottom:1px solid rgba(66,66,246,.25)}
+  .ia-performance__thematic-partition th:nth-child(1),.ia-performance__thematic-partition td:nth-child(1){width:250px}
+  .ia-performance__thematic-partition th:nth-child(2),.ia-performance__thematic-partition td:nth-child(2){width:190px}
+  .ia-performance__thematic-partition th:nth-child(3),.ia-performance__thematic-partition td:nth-child(3){width:190px}
+  .ia-performance__thematic-partition th:nth-child(4),.ia-performance__thematic-partition td:nth-child(4){width:190px}
+  .ia-performance__thematic-partition tr.partition-row--45{height:45px}
+  .ia-performance__thematic-partition tr.partition-row--65{height:65px}
+  .ia-performance__thematic-partition td:nth-child(2),
+  .ia-performance__thematic-partition td:nth-child(3),
+  .ia-performance__thematic-partition td:nth-child(4){vertical-align:middle}
 }
 
 /* ==================================================
@@ -386,12 +346,13 @@ const thematicPartitions = [
   .ia-feminista-page .ia-narrow p{font-size:18px;line-height:24px}
 
   /* Hero */
-  .ia-feminista-page .ia-hero{height:401px;min-height:0;padding:24px;overflow:hidden;justify-content:flex-start}
-  .ia-feminista-page .ia-hero__top-row{flex:1 1 auto;height:auto;padding:0;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:15px}
-  .ia-feminista-page .ia-hero__copy{width:100%;max-width:100%;gap:15px}
+  .ia-feminista-page .ia-hero{height:auto;min-height:0;padding:24px 24px 48px;overflow:hidden;justify-content:flex-start}
+  .ia-feminista-page .ia-hero__top-row{flex:0 0 auto;height:auto;padding:0;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:12px}
+  .ia-feminista-page .ia-hero__copy{width:100%;max-width:100%;gap:12px}
   .ia-feminista-page .ia-hero__attention{width:32px;height:4px;margin:0}
-  .ia-feminista-page .ia-hero h1{font-size:32px;line-height:32px;width:100%;white-space:normal}
-  .ia-feminista-page .ia-hero__copy>p{max-width:320px;width:100%;font-size:18px;font-weight:500;line-height:24px;padding-top:5px;padding-bottom:10px}
+  .ia-feminista-page .ia-hero h1{font-size:32px;line-height:32px;width:100%;max-width:240px;white-space:normal}
+  .ia-feminista-page .ia-hero h1 strong{white-space:nowrap}
+  .ia-feminista-page .ia-hero__copy>p{max-width:320px;width:100%;font-size:18px;font-weight:500;line-height:24px;padding-top:5px;padding-bottom:0}
   .ia-feminista-page .ia-hero__art{display:none}
   .ia-feminista-page .ia-hero__shadow{position:absolute;bottom:0;left:0;height:24px;width:100%}
 
@@ -402,27 +363,8 @@ const thematicPartitions = [
 
   /* Fluxo mobile */
   .ia-feminista-page .ia-flow__eyebrow{font-size:28px!important;line-height:32px!important;margin:0!important;padding-top:12.8px}
-  .ia-feminista-page .ia-flow--mobile{padding-top:40px}
-  .ia-feminista-page .ia-flow-mobile__title{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0}
-  .ia-feminista-page .ia-flow-mobile__title-main{color:#2ecece;font-family:"ETC Anybody","Anybody",sans-serif;font-size:48px;font-style:italic;font-weight:900;line-height:48px;letter-spacing:-0.48px;text-transform:uppercase}
-  .ia-feminista-page .ia-flow-mobile__title-sub{color:#1a1a2e;font-family:"ETC Anybody","Anybody",sans-serif;font-size:20px;font-weight:700;line-height:24px;letter-spacing:1.2px;text-transform:uppercase}
-  .ia-feminista-page .ia-flow-mobile__steps{display:flex;flex-direction:column;align-items:flex-start;padding-top:40px;gap:0;width:100%}
-  .ia-feminista-page .ia-flow-mobile__step{display:flex;align-items:center;gap:12px}
-  .ia-feminista-page .ia-flow-mobile__step--1{padding-left:8px}
-  .ia-feminista-page .ia-flow-mobile__step--2{padding-left:45px}
-  .ia-feminista-page .ia-flow-mobile__step--3{padding-left:8px}
-  .ia-feminista-page .ia-flow-mobile__step--3-wrapper{padding-left:98px;width:420px;max-width:100%}
-  .ia-feminista-page .ia-flow-mobile__step--4{padding-left:63px}
-  .ia-feminista-page .ia-flow-mobile__step--5{padding-left:8px}
-  .ia-feminista-page .ia-flow-mobile__circle{width:42px;height:42px;border-radius:21px;background:#cee83a;box-shadow:0 2px 4px rgba(206,232,58,.45);display:flex;align-items:center;justify-content:center;color:#1a1a2e;font-family:"ETC Anybody","Anybody",sans-serif;font-size:19.2px;font-weight:900;line-height:28.8px;flex:0 0 42px}
-  .ia-feminista-page .ia-flow-mobile__label{color:#1a1a2e;font-family:"Plus Jakarta Sans",sans-serif;font-size:16px;font-weight:700;line-height:20.8px}
-  .ia-feminista-page .ia-flow-mobile__step--2 .ia-flow-mobile__label{max-width:234px}
-  .ia-feminista-page .ia-flow-mobile__step--5 .ia-flow-mobile__label{max-width:250.665px}
-  .ia-feminista-page .ia-flow-mobile__arrow{width:110px !important;height:58px !important;display:block;margin:0;max-width:none !important;max-height:none !important}
-  .ia-feminista-page .ia-flow-mobile__arrow:nth-of-type(1){margin-left:8px}
-  .ia-feminista-page .ia-flow-mobile__arrow:nth-of-type(2){margin-left:45px}
-  .ia-feminista-page .ia-flow-mobile__arrow:nth-of-type(3){margin-left:63px}
-  .ia-feminista-page .ia-flow-mobile__arrow:nth-of-type(4){margin-left:8px}
+  .ia-feminista-page .ia-flow--mobile{width:332px;max-width:calc(100vw - 43px);margin-inline:auto;background:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden;padding-top:40px}
+  .ia-feminista-page .ia-flow--mobile img{width:100%;height:auto;display:block;margin:0}
 
   /* Arquitetura */
   .ia-feminista-page .ia-architecture__title{font-size:32px;line-height:32px}
@@ -440,8 +382,8 @@ const thematicPartitions = [
   .ia-feminista-page .ia-governance{padding:66px 24px 64px}
   .ia-feminista-page .ia-governance .ia-narrow{gap:15.3px}
   .ia-feminista-page .ia-governance .ia-narrow>h3:not(.ia-not-do__title){margin:0;padding-top:24.7px}
-  .ia-feminista-page .ia-governance .ia-cards{flex-direction:column;gap:24px;padding-top:8.7px}
-  .ia-feminista-page .ia-governance .ia-cards article{width:100%;min-height:0;padding:30px 26px}
+  .ia-feminista-page .ia-governance .ia-cards{display:flex;flex-direction:row;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-top:8.7px;width:100%}
+  .ia-feminista-page .ia-governance .ia-cards article{flex:0 0 85%;scroll-snap-align:start;width:auto;min-height:0;padding:30px 26px}
   .ia-feminista-page .ia-governance .ia-cards article:first-child{padding-bottom:30px}
 
   /* O que não faz */
@@ -455,8 +397,7 @@ const thematicPartitions = [
   .ia-feminista-page .ia-performance__title{width:100%;margin:32px 0 0;padding-top:4px}
   .ia-feminista-page .ia-performance__title--secondary{margin-top:32px;padding-top:16px}
   .ia-feminista-page .ia-table-scroll{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .ia-feminista-page .ia-table-scroll .metrics,
-  .ia-feminista-page .ia-table-scroll .partition-table{margin:0;min-width:820px;width:auto}
+  .ia-feminista-page .ia-table-scroll .metrics{margin:0;min-width:820px;width:auto}
   .ia-feminista-page .ia-performance__metrics,
   .ia-feminista-page .ia-performance__partition{margin:0;min-width:820px}
   .ia-feminista-page .ia-performance__thematic-metrics,
