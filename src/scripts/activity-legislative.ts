@@ -1,5 +1,3 @@
-import { papelada, papeladaSize, pileGap } from "../lib/papelada";
-
 type RawParliamentarian = {
     nome: string;
     numero: number;
@@ -35,6 +33,9 @@ type RawLegislature = {
 
 type RawData = { legislaturas: Record<string, RawLegislature> };
 type Proposal = RawProposal & { year: number; authors: RawParliamentarian[]; parties: string[]; states: string[]; genders: string[] };
+type DashboardRow = { key: string; label: string; favorable: number; unfavorable: number; photo?: string; meta?: string };
+type DashboardSort = "unfavorable" | "favorable" | "total";
+type TableSort = "number" | "author" | "summary" | "assessment" | "evaluator" | "progress" | "category" | "updated";
 
 const normalize = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const escapeCsv = (value: unknown) => `"${String(value ?? "").replaceAll('"', '""')}"`;
@@ -52,20 +53,22 @@ function initActivity(root: HTMLElement) {
     const cards = $("[data-cards]");
     const empty = $("[data-empty]");
     const pagination = $("[data-pagination]");
-    const chart = $("[data-chart]");
+    const dashboard = $("[data-dashboard]");
     const filterPanel = $("[data-filter-panel]");
     const backdrop = $("[data-backdrop]");
     const parliamentarianDialog = $("[data-parliamentarian-dialog]") as HTMLDialogElement;
     const itemsSelect = $("[data-items-per-page]") as HTMLSelectElement;
-    const sortSelect = $("[data-sort]") as HTMLSelectElement;
     const apiBase = (import.meta.env.PUBLIC_API_BASE_URL || "https://api.elasnocongresso.com.br/api/v1").replace(/\/$/, "");
+    const mapLayers = JSON.parse($("[data-map-layers]").textContent || "{}") as Record<string, string>;
 
     let all: Proposal[] = [];
     let visible: Proposal[] = [];
     let page = 1;
-    let activeView: "list" | "charts" = "list";
+    let tableSort: TableSort = "updated";
+    let tableSortDirection: "ascending" | "descending" = "descending";
     let panelAdvanced = false;
     let lastFocused: HTMLElement | null = null;
+    let stateDashboard = new Map<string, DashboardRow>();
 
     const field = (name: string) => filters.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null;
     const value = (name: string) => field(name)?.value ?? "";
@@ -136,12 +139,24 @@ function initActivity(root: HTMLElement) {
     }
 
     function sortItems(items: Proposal[]) {
-        const sort = sortSelect.value;
+        const text = (item: Proposal, key: TableSort) => {
+            if (key === "number") return item.numero;
+            if (key === "author") return item.authors[0]?.nome || "";
+            if (key === "summary") return item.resumo;
+            if (key === "evaluator") return item.avaliador || "";
+            return "";
+        };
+        const number = (item: Proposal, key: TableSort) => {
+            if (key === "assessment") return item.favoravel;
+            if (key === "progress") return item.quiteria_prob ?? -1;
+            if (key === "updated") return item.year * 1_000_000 + item.i;
+            return 0;
+        };
+        const direction = tableSortDirection === "ascending" ? 1 : -1;
         return [...items].sort((a, b) => {
-            if (sort === "oldest") return a.year - b.year || a.i - b.i;
-            if (sort === "number") return a.numero.localeCompare(b.numero, "pt-BR", { numeric: true });
-            if (sort === "assessment") return b.favoravel - a.favoravel;
-            return b.year - a.year || b.i - a.i;
+            if (["assessment", "progress", "updated"].includes(tableSort)) return (number(a, tableSort) - number(b, tableSort)) * direction;
+            if (tableSort === "category") return (a.i - b.i) * direction;
+            return text(a, tableSort).localeCompare(text(b, tableSort), "pt-BR", { numeric: true }) * direction;
         });
     }
 
@@ -211,6 +226,143 @@ function initActivity(root: HTMLElement) {
         return wrapper;
     }
 
+    function aggregateRows(items: Proposal[], groupsFor: (item: Proposal) => { key: string; label: string; photo?: string; meta?: string }[]) {
+        const rows = new Map<string, DashboardRow>();
+        items.forEach((item) => {
+            const seen = new Set<string>();
+            groupsFor(item).forEach((group) => {
+                if (!group.key || seen.has(group.key)) return;
+                seen.add(group.key);
+                const row = rows.get(group.key) || { ...group, favorable: 0, unfavorable: 0 };
+                if (item.favoravel > 0) row.favorable += 1;
+                if (item.favoravel < 0) row.unfavorable += 1;
+                rows.set(group.key, row);
+            });
+        });
+        return [...rows.values()];
+    }
+
+    function sortDashboardRows(rows: DashboardRow[], mode: DashboardSort) {
+        const share = (row: DashboardRow, stance: "favorable" | "unfavorable") => {
+            const total = row.favorable + row.unfavorable;
+            return total ? row[stance] / total : 0;
+        };
+        return [...rows].sort((a, b) => {
+            const primary = mode === "total"
+                ? (b.favorable + b.unfavorable) - (a.favorable + a.unfavorable)
+                : share(b, mode) - share(a, mode);
+            return primary || (b.favorable + b.unfavorable) - (a.favorable + a.unfavorable) || a.label.localeCompare(b.label, "pt-BR");
+        });
+    }
+
+    function dashboardRow(row: DashboardRow, peak: number, author = false) {
+        const element = document.createElement("div");
+        element.className = "activity-dashboard-card__row";
+        const key = document.createElement("div");
+        key.className = "activity-dashboard-card__key";
+        if (author) {
+            const control = document.createElement(row.key.startsWith("person:") ? "button" : "div");
+            control.className = "activity-dashboard-card__author";
+            if (control instanceof HTMLButtonElement) {
+                control.type = "button";
+                control.dataset.parliamentarian = row.key.slice(7);
+                control.setAttribute("aria-label", `Ver informações de ${row.label}`);
+            }
+            if (row.photo) {
+                const image = document.createElement("img");
+                image.src = row.photo.replace(/^http:/, "https:");
+                image.alt = "";
+                image.loading = "lazy";
+                image.addEventListener("error", () => image.remove(), { once: true });
+                control.append(image);
+            }
+            const copy = document.createElement("span");
+            const name = document.createElement("span");
+            name.textContent = row.label;
+            const meta = document.createElement("small");
+            meta.textContent = row.meta || "Autoria institucional";
+            copy.append(name, meta);
+            control.append(copy);
+            key.append(control);
+        } else {
+            key.textContent = row.label;
+        }
+        const bars = document.createElement("div");
+        bars.className = "activity-dashboard-card__bars";
+        const favorable = document.createElement("span");
+        const unfavorable = document.createElement("span");
+        favorable.style.setProperty("--bar-width", `${(row.favorable / peak) * 100}%`);
+        unfavorable.style.setProperty("--bar-width", `${(row.unfavorable / peak) * 100}%`);
+        bars.append(favorable, unfavorable);
+        const values = document.createElement("div");
+        values.className = "activity-dashboard-card__values";
+        const favorableValue = document.createElement("span");
+        const unfavorableValue = document.createElement("span");
+        favorableValue.textContent = formatNumber.format(row.favorable);
+        unfavorableValue.textContent = formatNumber.format(row.unfavorable);
+        values.append(favorableValue, unfavorableValue);
+        element.append(key, bars, values);
+        return element;
+    }
+
+    function fillDashboardRows(selector: string, rows: DashboardRow[], options: { sort?: DashboardSort; author?: boolean; limit?: number } = {}) {
+        const target = $(selector);
+        const sorted = options.sort ? sortDashboardRows(rows, options.sort) : rows;
+        const shown = options.limit ? sorted.slice(0, options.limit) : sorted;
+        const peak = Math.max(1, ...shown.flatMap((row) => [row.favorable, row.unfavorable]));
+        target.replaceChildren(...shown.map((row) => dashboardRow(row, peak, options.author)));
+        if (!shown.length) {
+            const message = document.createElement("p");
+            message.textContent = "Sem dados para os filtros selecionados.";
+            target.append(message);
+        }
+    }
+
+    function renderDashboard() {
+        const genders = aggregateRows(visible, (item) => item.genders.map((gender) => ({ key: gender, label: gender === "F" ? "Feminino" : gender === "M" ? "Masculino" : gender })));
+        const houses = aggregateRows(visible, (item) => {
+            const label = normalize(item.casa).startsWith("sen") ? "Senado" : normalize(item.casa).startsWith("dep") || normalize(item.casa).includes("cam") ? "Câmara" : item.casa;
+            return [{ key: normalize(label), label }];
+        });
+        const parties = aggregateRows(visible, (item) => item.parties.map((party) => ({ key: party, label: party })));
+        const states = aggregateRows(visible, (item) => item.states.map((state) => ({ key: state.toUpperCase(), label: state.toUpperCase() })));
+        const authors = aggregateRows(visible, (item) => item.authors.map((author) => ({
+            key: `person:${author.numero}`,
+            label: author.nome,
+            photo: author.foto,
+            meta: [author.partido, author.estado].filter(Boolean).join("/"),
+        })));
+        stateDashboard = new Map(states.map((row) => [row.key, row]));
+
+        fillDashboardRows("[data-dashboard-gender]", sortDashboardRows(genders, "total"));
+        fillDashboardRows("[data-dashboard-house]", sortDashboardRows(houses, "total"));
+        fillDashboardRows("[data-dashboard-party]", parties, { sort: ($<HTMLSelectElement>('[data-dashboard-sort="party"]').value as DashboardSort) });
+        fillDashboardRows("[data-dashboard-author]", authors, { sort: ($<HTMLSelectElement>('[data-dashboard-sort="author"]').value as DashboardSort), author: true });
+        $("[data-dashboard-category]").textContent = "Categorias não estão disponíveis no arquivo de dados desta listagem.";
+        $("[data-dashboard-status]").textContent = "Status legislativos completos não estão disponíveis no arquivo de dados desta listagem.";
+
+        const stateLayers = $("[data-map-state-layers]");
+        stateLayers.replaceChildren(...states.flatMap((row) => {
+            const stance = row.favorable >= row.unfavorable ? "favoravel" : "desfavoravel";
+            const src = mapLayers[`${row.key}:${stance}`];
+            if (!src) return [];
+            const image = document.createElement("img");
+            image.src = src;
+            image.alt = "";
+            return [image];
+        }));
+        const favorable = visible.filter((item) => item.favoravel > 0).length;
+        const unfavorable = visible.filter((item) => item.favoravel < 0).length;
+        const total = favorable + unfavorable || 1;
+        $("[data-map-percentages]").textContent = `${Math.round((favorable / total) * 100)}% favoráveis · ${Math.round((unfavorable / total) * 100)}% desfavoráveis`;
+        $$<SVGPathElement>("[data-map-hitboxes] path").forEach((path) => {
+            const row = stateDashboard.get(path.id.toUpperCase());
+            path.tabIndex = 0;
+            path.setAttribute("aria-label", row ? `${path.id}: ${row.favorable} favoráveis e ${row.unfavorable} desfavoráveis` : `${path.id}: sem proposições nos filtros atuais`);
+        });
+        dashboard.removeAttribute("hidden");
+    }
+
     function createTableRow(item: Proposal) {
         const row = document.createElement("tr");
         const number = document.createElement("td");
@@ -233,16 +385,20 @@ function initActivity(root: HTMLElement) {
         const evaluator = document.createElement("td");
         evaluator.textContent = item.avaliador || "—";
         if (item.comentario) {
-            const comment = document.createElement("small");
+            const comment = document.createElement("a");
+            comment.href = `/proposta/${item.slug}`;
+            comment.className = "activity-table__comments";
             comment.textContent = "Ler comentários";
             evaluator.append(comment);
         }
         const progress = document.createElement("td");
         progress.innerHTML = `<strong>${(item.quiteria_prob ?? 0) >= .55 ? "Rápida" : "Lenta"}</strong><small>${Math.round((item.quiteria_prob ?? 0) * 100)}% de chance de avançar</small>`;
         const theme = document.createElement("td");
-        theme.textContent = "Não classificada";
+        theme.textContent = "Não informada";
+        theme.title = "A base desta listagem não fornece a categoria da proposição";
         const updated = document.createElement("td");
-        updated.textContent = String(item.year || "—");
+        updated.textContent = "—";
+        updated.title = "A base desta listagem não fornece a data de atualização";
         row.append(number, author, summary, stance, evaluator, progress, theme, updated);
         return row;
     }
@@ -261,7 +417,7 @@ function initActivity(root: HTMLElement) {
         header.append(titleWrap, createStance(item));
         const tag = document.createElement("span");
         tag.className = "activity-card__tag";
-        tag.textContent = item.comentario ? "Com ressalvas" : "Sem ressalvas";
+        tag.textContent = "Categoria não informada";
         const summary = document.createElement("p");
         summary.className = "activity-card__summary";
         summary.textContent = item.resumo;
@@ -318,54 +474,7 @@ function initActivity(root: HTMLElement) {
         const controls = document.createElement("span");
         controls.append(makeButton("‹", page - 1, page === 1), makeButton("›", page + 1, page === pages));
         pagesRoot.append(label, controls);
-        pagination.hidden = activeView !== "list" || visible.length === 0;
-    }
-
-    async function renderChart() {
-        chart.replaceChildren();
-        const wrapper = document.createElement("div");
-        wrapper.className = "activity-chart-card";
-        wrapper.innerHTML = `<div class="activity-chart-card__attention"></div><p class="activity-chart-card__eyebrow">Panorama dos resultados</p><h2>Partidos com mais proposições avaliadas</h2><p class="activity-chart-card__description">Comparação entre proposições favoráveis e desfavoráveis aos direitos de meninas e mulheres.</p>`;
-        const grouped = new Map<string, { favorable: number; unfavorable: number }>();
-        visible.forEach((item) => item.parties.forEach((party) => {
-            const stats = grouped.get(party) || { favorable: 0, unfavorable: 0 };
-            if (item.favoravel > 0) stats.favorable += 1;
-            if (item.favoravel < 0) stats.unfavorable += 1;
-            grouped.set(party, stats);
-        }));
-        const rankings = [...grouped.entries()].sort((a, b) => (b[1].favorable + b[1].unfavorable) - (a[1].favorable + a[1].unfavorable)).slice(0, 5);
-        const graph = document.createElement("div");
-        graph.className = "activity-chart-bars";
-        const peak = Math.max(1, ...rankings.flatMap(([, stats]) => [stats.favorable, stats.unfavorable]));
-        const gap = pileGap({ width: 46, height: 180, peak });
-        rankings.forEach(([party, stats]) => {
-            const group = document.createElement("article");
-            const piles = document.createElement("div");
-            piles.className = "activity-chart-bars__piles";
-            (["unfavorable", "favorable"] as const).forEach((stance) => {
-                const pile = document.createElement("div");
-                const count = stats[stance];
-                const amount = document.createElement("strong");
-                amount.textContent = String(count);
-                const canvas = document.createElement("canvas");
-                const dimensions = papeladaSize({ arrangement: "pile", size: "a4", category: stance === "favorable" ? "favoravel" : "desfavoravel", gap, amount: count });
-                canvas.width = dimensions.width;
-                canvas.height = dimensions.height;
-                canvas.setAttribute("aria-label", `${count} proposições ${stance === "favorable" ? "favoráveis" : "desfavoráveis"}`);
-                pile.append(amount, canvas);
-                piles.append(pile);
-                papelada(canvas, { arrangement: "pile", size: "a4", category: stance === "favorable" ? "favoravel" : "desfavoravel", gap, amount: count }).catch(console.error);
-            });
-            const label = document.createElement("b");
-            label.textContent = party;
-            group.append(piles, label);
-            graph.append(group);
-        });
-        const legend = document.createElement("div");
-        legend.className = "activity-chart-legend";
-        legend.innerHTML = `<span><i class="is-unfavorable"></i>Desfavoráveis</span><span><i class="is-favorable"></i>Favoráveis</span>`;
-        wrapper.append(graph, legend);
-        chart.append(wrapper);
+        pagination.hidden = visible.length === 0;
     }
 
     function renderResults() {
@@ -373,10 +482,9 @@ function initActivity(root: HTMLElement) {
         tableBody.replaceChildren(...slice.map(createTableRow));
         cards.replaceChildren(...slice.map(createCard));
         empty.hidden = visible.length !== 0;
-        $("[data-results]").toggleAttribute("hidden", visible.length === 0 || activeView !== "list");
-        chart.hidden = activeView !== "charts";
-        if (activeView === "charts") renderChart();
+        $("[data-results]").toggleAttribute("hidden", visible.length === 0);
         renderSummary();
+        renderDashboard();
         renderPagination();
     }
 
@@ -466,7 +574,6 @@ function initActivity(root: HTMLElement) {
             filters.dataset.searchTimer = String(window.setTimeout(applyFilters, 250));
         }
     });
-    sortSelect.addEventListener("change", () => { visible = sortItems(visible); page = 1; renderResults(); });
     itemsSelect.addEventListener("change", () => { page = 1; renderResults(); });
     root.addEventListener("click", (event) => {
         const target = (event.target as HTMLElement).closest<HTMLElement>("button, a");
@@ -479,10 +586,19 @@ function initActivity(root: HTMLElement) {
             target.textContent = panelAdvanced ? "Menos filtros" : "Mais filtros";
         }
         if (target.matches("[data-clear-filters]")) resetFilters();
-        if (target.matches("[data-view]")) {
-            activeView = target.dataset.view as "list" | "charts";
-            root.classList.toggle("is-chart-view", activeView === "charts");
-            $$<HTMLElement>("[data-view]").forEach((tab) => { tab.classList.toggle("is-active", tab.dataset.view === activeView); tab.setAttribute("aria-selected", String(tab.dataset.view === activeView)); });
+        if (target.matches("[data-table-sort]")) {
+            const next = target.dataset.tableSort as TableSort;
+            tableSortDirection = tableSort === next && tableSortDirection === "descending" ? "ascending" : "descending";
+            tableSort = next;
+            $$<HTMLButtonElement>("[data-table-sort]").forEach((button) => {
+                const active = button === target;
+                button.classList.toggle("is-active", active);
+                const heading = button.closest("th");
+                heading?.removeAttribute("aria-sort");
+                if (active) heading?.setAttribute("aria-sort", tableSortDirection);
+            });
+            visible = sortItems(visible);
+            page = 1;
             renderResults();
         }
         if (target.matches("[data-download]")) {
@@ -501,6 +617,34 @@ function initActivity(root: HTMLElement) {
         if (target.matches("[data-retry]")) load();
     });
     backdrop.addEventListener("click", closeFilters);
+    $$<HTMLSelectElement>("[data-dashboard-sort]").forEach((select) => select.addEventListener("change", renderDashboard));
+    const mapTooltip = $("[data-map-tooltip]");
+    const showMapTooltip = (path: SVGPathElement, event?: PointerEvent) => {
+        const row = stateDashboard.get(path.id.toUpperCase());
+        mapTooltip.textContent = row
+            ? `${path.id}: ${formatNumber.format(row.favorable)} favoráveis · ${formatNumber.format(row.unfavorable)} desfavoráveis`
+            : `${path.id}: sem proposições nos filtros atuais`;
+        mapTooltip.removeAttribute("hidden");
+        const bounds = path.getBoundingClientRect();
+        const left = event?.clientX ?? bounds.left + bounds.width / 2;
+        const top = event?.clientY ?? bounds.top + bounds.height / 2;
+        mapTooltip.style.left = `${Math.min(window.innerWidth - 230, Math.max(8, left + 12))}px`;
+        mapTooltip.style.top = `${Math.min(window.innerHeight - 80, Math.max(8, top + 12))}px`;
+    };
+    root.addEventListener("pointerover", (event) => {
+        const path = event.target instanceof Element ? event.target.closest<SVGPathElement>("[data-map-hitboxes] path") : null;
+        if (path) showMapTooltip(path, event);
+    });
+    root.addEventListener("pointerout", (event) => {
+        if (event.target instanceof Element && event.target.closest("[data-map-hitboxes] path")) mapTooltip.setAttribute("hidden", "");
+    });
+    root.addEventListener("focusin", (event) => {
+        const path = event.target instanceof Element ? event.target.closest<SVGPathElement>("[data-map-hitboxes] path") : null;
+        if (path) showMapTooltip(path);
+    });
+    root.addEventListener("focusout", (event) => {
+        if (event.target instanceof Element && event.target.closest("[data-map-hitboxes] path")) mapTooltip.setAttribute("hidden", "");
+    });
     parliamentarianDialog.addEventListener("close", () => lastFocused?.focus());
     parliamentarianDialog.addEventListener("click", (event) => { if (event.target === parliamentarianDialog) parliamentarianDialog.close(); });
     document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !filterPanel.hasAttribute("hidden")) closeFilters(); });
@@ -521,6 +665,7 @@ function initActivity(root: HTMLElement) {
             status.className = "activity-status is-error";
             status.innerHTML = `<p><strong>Não foi possível carregar as proposições.</strong><br />Confira sua conexão e tente novamente.</p><button type="button" data-retry>Tentar novamente</button>`;
             $("[data-results]").setAttribute("hidden", "");
+            dashboard.setAttribute("hidden", "");
             pagination.hidden = true;
         }
     }

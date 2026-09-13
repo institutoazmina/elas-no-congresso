@@ -7,7 +7,7 @@ import halftone from "../../assets/images/redesign/hero/halftone-shadow.png";
 <section class="activity-hero redesign-shared-background" aria-labelledby="activity-title" style={`--activity-halftone: url(${halftone.src})`}>
     <div class="activity-hero__copy">
         <img class="activity-hero__attention" src={attention.src} alt="" />
-        <h1 id="activity-title">Atividade Legislativa</h1>
+        <h1 id="activity-title"><span>Atividade</span> Legislativa</h1>
         <p>Use filtros e explore as movimentações do legislativo sensíveis a gênero, atualizadas diariamente pela nossa robô que monitora o Congresso.</p>
     </div>
     <img class="activity-hero__robot" src={robot.src} alt="Ilustração de um robô feito de papel" />
@@ -21,15 +21,16 @@ import halftone from "../../assets/images/redesign/hero/halftone-shadow.png";
         display: flex;
         width: 100%;
         height: 384px;
-        align-items: flex-start;
+        align-items: center;
         justify-content: space-between;
         overflow: hidden;
-        padding: 48px;
+        padding: 0 48px 24px;
         color: #0b0f5e;
     }
     .activity-hero__copy { display: flex; width: 681px; max-width: calc(100% - 420px); flex-direction: column; align-items: flex-start; gap: 24px; }
     .activity-hero__attention { display: block; width: 96px; height: 8px; object-fit: fill; }
-    .activity-hero h1 { margin: 0; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 72px; font-weight: 700; font-variation-settings: "wdth" 75; letter-spacing: -1.44px; line-height: 72px; text-transform: uppercase; }
+    .activity-hero h1 { margin: 0; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 72px; font-weight: 700; font-variation-settings: "wdth" 75; letter-spacing: 0; line-height: 72px; text-transform: uppercase; }
+    .activity-hero h1 span { font-variation-settings: "wdth" 60; }
     .activity-hero p { width: 640px; max-width: 100%; margin: 0; font-family: "Plus Jakarta Sans", sans-serif; font-size: 18px; font-weight: 400; line-height: 24px; }
     .activity-hero__robot { position: absolute; top: -48px; right: 158px; display: block; width: 360px; height: 450px; object-fit: contain; }
     .activity-hero__halftone { position: absolute; right: 0; bottom: 0; left: 0; height: 24px; background-image: var(--activity-halftone); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; mix-blend-mode: multiply; pointer-events: none; }
