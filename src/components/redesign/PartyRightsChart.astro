@@ -2,9 +2,8 @@
 import attention from "../../assets/images/redesign/party-chart/attention.svg";
 import elasHorizontal from "../../assets/images/redesign/party-chart/elas-horizontal.svg";
 import StanceToggle from "./StanceToggle.astro";
-import thumbBase from "../../assets/images/redesign/party-chart/thumbs-down-base.svg";
-import thumb from "../../assets/images/redesign/party-chart/thumbs-down.svg";
-import thumbsUp from "./assets/thumbs-up.svg";
+import thumbsDown from "../../assets/images/thumbs-down.svg";
+import thumbsUp from "../../assets/images/thumbs-up.svg";
 import Papelada from "./Papelada.astro";
 import { pileGap } from "../../lib/papelada";
 import { getStanceByParty, type GroupStat, type Stance } from "../../service/api/stats";
@@ -63,7 +62,7 @@ const views = [
                 <article class="party-rights-chart__party" style={`width: ${party.width}px`}>
                     <div class="party-rights-chart__piles">
                         <div class="party-rights-chart__pile">
-                            <div class="party-rights-chart__value"><strong>{party.negative}</strong><span class="party-rights-chart__thumb"><img src={thumbBase.src} alt="" /><img src={thumb.src} alt="" /></span></div>
+                            <div class="party-rights-chart__value"><strong>{party.negative}</strong><img class="party-rights-chart__thumb" src={thumbsDown.src} alt="" /></div>
                             <Papelada class="party-rights-chart__paper" arrangement="pile" category="desfavoravel" size="a4" gap={gap} amount={party.negative} alt={`${party.negative} proposições desfavoráveis`} />
                         </div>
                         <div class="party-rights-chart__pile">
@@ -96,8 +95,6 @@ const views = [
     .party-rights-chart h2 { --stance-toggle-font-size: 36px; display: flex; width: 648px; height: 96px; flex-wrap: wrap; align-items: center; gap: 16px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 42px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
     .party-rights-chart h2 > span { height: 24px; white-space: nowrap; }
     .party-rights-chart__thumb { position: relative; display: block; width: 32px; height: 32px; flex: none; overflow: hidden; border-radius: 999px; }
-    .party-rights-chart__thumb > img:first-child { position: absolute; inset: 0; width: 32px; height: 32px; }
-    .party-rights-chart__thumb > img:last-child { position: absolute; inset: 4.44px 4px 3.56px; width: 24px; height: 24px; transform: rotate(180deg); }
     .party-rights-chart__header > p { width: 720px; height: 24px; font-size: 18px; line-height: 24px; }
     .party-rights-chart__figure { display: flex; width: 887px; height: 425px; padding: 24px 0; align-items: end; justify-content: center; gap: 72px; overflow: hidden; }
     .party-rights-chart__party { display: flex; flex: none; flex-direction: column; align-items: center; justify-content: end; gap: 16px; padding: 16px 0; }
@@ -143,7 +140,7 @@ const views = [
         .party-rights-chart h2 :global(.stance-toggle) {
             grid-column: 1;
             grid-row: 2;
-            width: 230px;
+            width: max-content;
             height: 56px;
             flex: none;
             justify-content: flex-start;
@@ -275,25 +272,10 @@ const views = [
             width: 20.591px;
             height: 20.591px;
         }
-        .party-rights-chart :global(.stance-toggle__thumb > img:first-child) {
-            width: 20.591px;
-            height: 20.591px;
-        }
-        .party-rights-chart :global(.stance-toggle__thumb > img:last-child) {
-            inset: 2.659px !important;
-            width: 15.273px;
-            height: 15.273px;
-        }
         .party-rights-chart :global(.stance-toggle__chevron) {
             width: 10.296px;
             height: 5.148px;
             margin-left: 10.296px;
-        }
-        .party-rights-chart :global(.stance-toggle > span[data-stance-view]) {
-            flex-shrink: 0;
-            font-size: 23.165px;
-            line-height: 27.026px;
-            white-space: nowrap;
         }
         .party-rights-chart__header > p {
             width: 100%;

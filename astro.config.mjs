@@ -2,12 +2,13 @@
 import { defineConfig, envField } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import react from '@astrojs/react';
 
 export default defineConfig({
   output: 'static',
   site: 'https://www.elasnocongresso.com.br',
   trailingSlash: 'ignore',
-  integrations: [sitemap()],
+  integrations: [sitemap(), react()],
   env: {
     schema: {
       // Site é estático: a API só é chamada no build, então a variável é de

@@ -1,6 +1,7 @@
 ---
 import attention from "../../assets/images/redesign/hero/attention.svg";
-import thumbsDown from "../../assets/images/redesign/home-chart/thumbs-down.svg";
+import thumbsUp from "../../assets/images/thumbs-up.svg";
+import thumbsDown from "../../assets/images/thumbs-down.svg";
 import elasHorizontal from "../../assets/images/redesign/home-chart/elas-horizontal.svg";
 import Papelada from "./Papelada.astro";
 import { getStanceByGender, type StanceRatio } from "../../service/api/stats";
@@ -38,7 +39,7 @@ const charts = [
                     </header>
                     <div class="women-defense__waffle">
                         <div class="women-defense__label women-defense__label--top">
-                            <div><strong>{chart.favorable}%</strong><span class="women-defense__icon women-defense__icon--up"><img src={thumbsDown.src} alt="" /></span></div>
+                            <div><strong>{chart.favorable}%</strong><span class="women-defense__icon women-defense__icon--up"><img src={thumbsUp.src} alt="" /></span></div>
                             <b>Favoráveis</b>
                         </div>
                         <div class="women-defense__papers">
@@ -100,11 +101,8 @@ const charts = [
     .women-defense__label > div { display: flex; height: 32px; align-items: center; gap: 8px; }
     .women-defense__label strong { display: block; height: 24px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 42px; font-variation-settings: "wdth" 75; }
     .women-defense__label b { height: 24px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; white-space: nowrap; }
-    .women-defense__icon { display: grid; width: 32px; height: 32px; place-items: center; flex: none; overflow: hidden; border-radius: 999px; background: #ff5865; box-shadow: inset -.5px -.5px 0 #0b0f5e; }
-    .women-defense__icon--up { background: #def279; }
-    /* O asset desenha o polegar pra cima; o desfavorável é quem gira. */
-    .women-defense__icon img { width: 24px; height: 24px; transform: rotate(180deg); }
-    .women-defense__icon--up img { transform: none; }
+    .women-defense__icon { display: grid; width: 32px; height: 32px; place-items: center; flex: none; overflow: hidden; border-radius: 999px; }
+    .women-defense__icon img { width: 100%; height: 100%; }
     /* O canvas do waffle já sai com a proporção certa (10 colunas + o intervalo
        entre as duas categorias); a altura vem sozinha. */
     .women-defense__papers { width: 100%; }
@@ -127,8 +125,8 @@ const charts = [
             aspect-ratio: 1 / 1;
         }
         .women-defense__label--bottom .women-defense__icon img {
-            width: 15.273px;
-            height: 15.273px;
+            width: 100%;
+            height: 100%;
         }
     }
 

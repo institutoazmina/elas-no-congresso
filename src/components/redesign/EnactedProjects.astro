@@ -1,8 +1,8 @@
 ---
 import attention from "../../assets/images/redesign/party-chart/attention.svg";
 import documentImage from "../../assets/images/redesign/hero/proposicao-9.png";
-import favorableThumb from "../../assets/images/redesign/slow-moving-proposals/thumbs-up-hand.svg";
-import unfavorableThumb from "../../assets/images/redesign/party-chart/thumbs-down.svg";
+import favorableThumb from "../../assets/images/thumbs-up.svg";
+import unfavorableThumb from "../../assets/images/thumbs-down.svg";
 import bookIcon from "../../assets/images/redesign/enacted-projects/book.svg";
 import mobileBackgroundPattern from "../../assets/images/redesign/enacted-projects/carousel-pattern.png";
 import backgroundPattern from "../../assets/images/redesign/parliamentarians/bg-pattern.svg";
@@ -138,10 +138,8 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
     .enacted-projects__status { position: absolute; top: 8px; right: 16px; width: 168.30795288085938px; height: 53.94354248046875px; }
     .enacted-projects__document { position: absolute; top: 0; left: 4.444942951202393px; width: 36px; height: 51px; transform: rotate(-5deg); }
     .enacted-projects__rating { position: absolute; top: 10.971768379211426px; left: 32.307952880859375px; display: flex; height: 32px; align-items: center; gap: 8px; }
-    .enacted-projects__rating-icon { display: block; width: 32px; height: 32px; border-radius: 50%; overflow: hidden; background: #def279; }
+    .enacted-projects__rating-icon { display: block; width: 32px; height: 32px; border-radius: 50%; overflow: hidden; }
     .enacted-projects__rating-icon img { display: block; width: 32px; height: 32px; }
-    .enacted-projects__card--desfavorável .enacted-projects__rating-icon { background: #ff5865; }
-    .enacted-projects__card--desfavorável .enacted-projects__rating-icon img { transform: rotate(180deg); }
     .enacted-projects__rating b { font-family: "ETC Anybody", sans-serif; font-size: 16px; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
     .enacted-projects__details { height: 358px; padding: 24px 16px; overflow: hidden; display: flex; flex-direction: column; gap: 16px; }
     .enacted-projects__card--desfavorável .enacted-projects__details { height: 256px; }

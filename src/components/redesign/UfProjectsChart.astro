@@ -338,7 +338,7 @@ const ufLabels: Record<string, string> = {
         .uf-projects-chart__heading { align-items: flex-start; gap: 16px; text-align: left; }
         .uf-projects-chart h2 { max-width: 332px; font-size: 28px; line-height: 32px; }
         .uf-projects-chart__heading :global(.stance-toggle) {
-            width: 203.06956px;
+            width: max-content;
             height: 40px;
             padding: 7.722px 10.296px;
             gap: 5.148px;
@@ -352,21 +352,6 @@ const ufLabels: Record<string, string> = {
         .uf-projects-chart__heading :global(.stance-toggle__thumb) {
             width: 20.591px;
             height: 20.591px;
-        }
-        .uf-projects-chart__heading :global(.stance-toggle__thumb > img:first-child) {
-            width: 20.591px;
-            height: 20.591px;
-        }
-        .uf-projects-chart__heading :global(.stance-toggle__thumb > img:last-child) {
-            inset: 2.659px;
-            width: 15.273px;
-            height: 15.273px;
-        }
-        .uf-projects-chart__heading :global(.stance-toggle > span[data-stance-view]) {
-            flex-shrink: 0;
-            font-size: 23.165px;
-            line-height: 27.026px;
-            white-space: nowrap;
         }
         .uf-projects-chart__heading :global(.stance-toggle__chevron) {
             width: 10.296px;
@@ -402,7 +387,7 @@ const ufLabels: Record<string, string> = {
         .uf-state-selector { margin: 0; }
         .uf-projects-chart h2 { width: 525px; font-size: 36px; font-weight: 700; }
         .uf-projects-chart__heading :global(.stance-toggle) {
-            width: 307px;
+            width: max-content;
             height: 56px;
             flex: none;
             box-sizing: border-box;

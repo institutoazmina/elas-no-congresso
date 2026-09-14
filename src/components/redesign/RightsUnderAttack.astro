@@ -1,7 +1,7 @@
 ---
 import Papelada from "./Papelada.astro";
 import { pileGap } from "../../lib/papelada";
-import thumbsDown from "../../assets/images/redesign/home-chart/thumbs-down.svg";
+import thumbsDown from "../../assets/images/thumbs-down.svg";
 import attention from "../../assets/images/redesign/hero/attention.svg";
 import { getUnfavorableByLegislature } from "../../service/api/stats";
 
@@ -42,8 +42,8 @@ const gap = pileGap({
                         <div class="rights-under-attack__value tw:flex tw:flex-col tw:items-center tw:gap-1">
                             <div class="tw:flex tw:h-8 tw:items-center tw:justify-center tw:gap-2">
                                 <span class="tw:font-[ETC_Anybody] tw:text-[36px] tw:font-bold tw:leading-[42px] tw:uppercase tw:[font-variation-settings:'wdth'_75]">{legislature.unfavorable}</span>
-                                <span class="tw:relative tw:block tw:size-8 tw:rounded-full tw:bg-[#FF5865] tw:shadow-[-0.5px_-0.5px_0_#0B0F5E]">
-                                    <img class="tw:absolute tw:inset-[12.5%] tw:size-6 tw:rotate-180" src={thumbsDown.src} alt="" />
+                                <span class="tw:relative tw:block tw:size-8 tw:rounded-full">
+                                    <img class="tw:block tw:size-full" src={thumbsDown.src} alt="" />
                                 </span>
                             </div>
                             <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">Desfavoráveis</span>
@@ -147,8 +147,8 @@ const gap = pileGap({
         }
         .rights-under-attack__value > div > span:nth-child(2) img {
             inset: 0 !important;
-            width: 15.273px !important;
-            height: 15.273px !important;
+            width: 100% !important;
+            height: 100% !important;
             margin: auto;
         }
         .rights-under-attack__value > span {
