@@ -1,0 +1,21 @@
+---
+import elasHorizontal from "../../assets/images/redesign/home-chart/elas-horizontal.svg";
+
+interface Props {
+    content: string;
+    class?: string;
+}
+
+const { content, class: className, ...attributes } = Astro.props;
+---
+
+<footer class:list={["section-divider", className]} {...attributes}>
+    <span>{content}</span>
+    <img src={elasHorizontal.src} alt="Elas no Congresso" />
+</footer>
+
+<style>
+    .section-divider {
+        margin-inline: auto;
+    }
+</style>

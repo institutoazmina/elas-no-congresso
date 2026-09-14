@@ -1,9 +1,9 @@
 ---
 import Papelada from "./Papelada.astro";
+import SectionDivider from "./SectionDivider.astro";
 import { pileGap } from "../../lib/papelada";
 import thumbsDown from "../../assets/images/thumbs-down.svg";
 import info from "../../assets/images/redesign/home-chart/info.svg";
-import elasHorizontal from "../../assets/images/redesign/home-chart/elas-horizontal.svg";
 import attention from "../../assets/images/redesign/hero/attention.svg";
 import { getUnfavorableByCategory } from "../../service/api/stats";
 
@@ -130,18 +130,10 @@ const themes = categories.map((category, index) => {
             </div>
         </figure>
 
-        <footer
+        <SectionDivider
+            content="Lorem ipsum dolor sit amet, consectetur adipiscing eli"
             class="tw:flex tw:w-full tw:items-start tw:justify-between tw:gap-6 tw:border-t tw:border-[#0B0F5E] tw:pt-2 tw:font-[Plus_Jakarta_Sans] tw:text-[14px] tw:leading-4 tw:lg:h-8"
-        >
-            <span class="tw:pt-1"
-                >Lorem ipsum dolor sit amet, consectetur adipiscing eli</span
-            >
-            <img
-                class="tw:mt-1 tw:h-3 tw:w-[113.217px] tw:shrink-0"
-                src={elasHorizontal.src}
-                alt="Elas no Congresso"
-            />
-        </footer>
+        />
     </div>
 </section>
 </div>
@@ -149,6 +141,8 @@ const themes = categories.map((category, index) => {
 <style>
     /* This extra element only participates in the mobile indicator layout. */
     .legislative-setbacks__mobile-unfavorable { display: none; }
+    section[aria-labelledby="legislative-setbacks-title"] footer :global(span) { padding-top: 4px; }
+    section[aria-labelledby="legislative-setbacks-title"] footer :global(img) { width: 113.217px; height: 12px; margin-top: 4px; flex-shrink: 0; }
 
     @media (max-width: 767px) {
         section[aria-labelledby="legislative-setbacks-title"] > div {
@@ -289,13 +283,13 @@ const themes = categories.map((category, index) => {
             box-sizing: border-box;
             text-align: center;
         }
-        section[aria-labelledby="legislative-setbacks-title"] footer span {
+        section[aria-labelledby="legislative-setbacks-title"] footer :global(span) {
             width: 100%;
             padding: 4px 0;
             font-size: 14px;
             line-height: 16px;
         }
-        section[aria-labelledby="legislative-setbacks-title"] footer img {
+        section[aria-labelledby="legislative-setbacks-title"] footer :global(img) {
             width: 113.217px;
             height: 12px;
             margin: 6px 0 0;

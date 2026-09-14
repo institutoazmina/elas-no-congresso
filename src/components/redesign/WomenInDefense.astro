@@ -2,8 +2,8 @@
 import attention from "../../assets/images/redesign/hero/attention.svg";
 import thumbsUp from "../../assets/images/thumbs-up.svg";
 import thumbsDown from "../../assets/images/thumbs-down.svg";
-import elasHorizontal from "../../assets/images/redesign/home-chart/elas-horizontal.svg";
 import Papelada from "./Papelada.astro";
+import SectionDivider from "./SectionDivider.astro";
 import { getStanceByGender, type StanceRatio } from "../../service/api/stats";
 
 // As duas fatias somam 1.0 na API. Arredonda uma e deriva a outra — arredondar
@@ -61,10 +61,10 @@ const charts = [
 
         <aside class="women-defense__note">A cada 100 proposições sobre gênero assinadas por mulheres, {women.favorable} são favoráveis</aside>
 
-        <footer class="women-defense__footer">
-            <span>No Congresso Nacional não há dados sobre pessoas não-binárias</span>
-            <img src={elasHorizontal.src} alt="Elas no Congresso" />
-        </footer>
+        <SectionDivider
+            class="women-defense__footer"
+            content="No Congresso Nacional não há dados sobre pessoas não-binárias"
+        />
     </div>
 </section>
 
@@ -109,8 +109,8 @@ const charts = [
     .women-defense__papers :global(canvas) { display: block; width: 100%; height: auto; }
     .women-defense__note { position: relative; z-index: 1; top: auto; left: auto; display: flex; width: 240px; height: 180px; margin: 12px auto 48px; align-items: center; justify-content: center; padding: 48px 24px; transform: rotate(-5deg); background: #def279; box-shadow: 0 4px 0 #0b0f5e; color: #0b0f5e; font-size: 18px; font-weight: 700; line-height: 24px; text-align: center; }
     .women-defense__footer { position: relative; bottom: auto; left: auto; display: flex; width: 100%; height: auto; align-items: flex-start; justify-content: space-between; gap: 24px; border-top: 1px solid #0b0f5e; padding-top: 8px; color: #0b0f5e; font-size: 14px; line-height: 16px; }
-    .women-defense__footer span { margin-top: 4px; }
-    .women-defense__footer img { width: 113.217px; height: 12px; margin: 6px 8px 0; }
+    .women-defense__footer :global(span) { margin-top: 4px; }
+    .women-defense__footer :global(img) { width: 113.217px; height: 12px; margin: 6px 8px 0; }
     .women-defense-fact { display: flex; width: 100%; height: auto; min-height: 168px; margin: 0; box-sizing: border-box; flex-direction: column; align-items: center; justify-content: flex-start; overflow: hidden; padding: 48px 24px; background: #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
     .women-defense-fact__content { display: flex; width: 100%; height: auto; flex: none; flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 16px; overflow: hidden; }
     .women-defense-fact p { width: 100%; height: auto; margin: 0; flex: none; color: #0b0f5e; font-size: 18px; font-weight: 400; line-height: 24px; letter-spacing: 0; text-align: left; text-transform: none; transform: matrix(0.9999947547912598, -0.003228801768273115, 0.003228801768273115, 0.9999947547912598, -0.1143484115600586, 2.324735403060913); transform-origin: 0 0; }
@@ -152,8 +152,6 @@ const charts = [
     }
 
     @media (min-width: 821px) {
-        .women-defense__container { position: static; }
-        .women-defense__note { left: 208.07px; gap: 10px; transform: rotate(5deg); z-index: 2; }
-        .women-defense__footer { left: 360px; }
+        .women-defense__note { gap: 10px; transform: rotate(5deg); z-index: 2; }
     }
 </style>

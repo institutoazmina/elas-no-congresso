@@ -1,7 +1,7 @@
 ---
 import attention from "../../assets/images/redesign/party-chart/attention.svg";
-import elasHorizontal from "../../assets/images/redesign/party-chart/elas-horizontal.svg";
 import StanceToggle from "./StanceToggle.astro";
+import SectionDivider from "./SectionDivider.astro";
 import thumbsDown from "../../assets/images/thumbs-down.svg";
 import thumbsUp from "../../assets/images/thumbs-up.svg";
 import Papelada from "./Papelada.astro";
@@ -76,7 +76,10 @@ const views = [
         </figure>
         ))}
 
-        <footer class="party-rights-chart__footer"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit</span><img src={elasHorizontal.src} alt="Elas no Congresso" /></footer>
+        <SectionDivider
+            class="party-rights-chart__footer"
+            content="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+        />
     </div>
 </section>
 
@@ -108,8 +111,8 @@ const views = [
     .party-rights-chart__description strong { max-width: 192px; min-width: 96px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
     .party-rights-chart__description span { font-size: 16px; line-height: 24px; white-space: nowrap; }
     .party-rights-chart__footer { position: absolute; right: 48px; bottom: 48px; left: 48px; display: flex; width: 887px; height: 32px; align-items: flex-start; justify-content: space-between; border-top: 1px solid #0b0f5e; padding-top: 8px; font-size: 14px; line-height: 16px; }
-    .party-rights-chart__footer span { margin-top: 4px; }
-    .party-rights-chart__footer img { width: 113.217px; height: 12px; margin: 6px 8px 0; }
+    .party-rights-chart__footer :global(span) { margin-top: 4px; }
+    .party-rights-chart__footer :global(img) { width: 113.217px; height: 12px; margin: 6px 8px 0; }
     .party-rights-chart__mobile-question { display: none; }
 
     @media (min-width: 984px) {
@@ -215,7 +218,7 @@ const views = [
         .party-rights-chart__figure { width: 100%; height: auto; margin-top: 10px; flex-wrap: wrap; gap: 20px; overflow: visible; }
         .party-rights-chart__party { width: calc(50% - 10px) !important; }
         .party-rights-chart__footer { position: relative; right: auto; bottom: auto; left: auto; width: 100%; height: auto; min-height: 32px; margin-top: 10px; gap: 16px; }
-        .party-rights-chart__footer img { flex: none; }
+        .party-rights-chart__footer :global(img) { flex: none; }
     }
 
     @media (max-width: 767px) {
@@ -339,14 +342,14 @@ const views = [
             gap: 24px;
             text-align: center;
         }
-        .party-rights-chart__footer span {
+        .party-rights-chart__footer :global(span) {
             width: 100%;
             margin-top: 0;
             padding: 4px 0;
             font-size: 14px;
             line-height: 16px;
         }
-        .party-rights-chart__footer img {
+        .party-rights-chart__footer :global(img) {
             width: 113.217px;
             height: 12px;
             margin: 6px 0 0;

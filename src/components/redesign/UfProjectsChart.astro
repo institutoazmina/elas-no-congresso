@@ -1,7 +1,6 @@
 ---
 import attention from "../../assets/images/redesign/party-chart/attention.svg";
 import buttonChevron from "../../assets/images/redesign/home-reportagens/chevron-right.svg";
-import elasHorizontal from "../../assets/images/redesign/party-chart/elas-horizontal.svg";
 import { Image } from "astro:assets";
 import mapBase from "./assets/map/map-br-base@2.5x.png";
 import mapLabels from "./assets/map/map-br-labels@2.5x.png";
@@ -17,6 +16,7 @@ import rankingHighlighter4b from "./assets/table-ranking-highlighter-4-b.svg?url
 import rankingHighlighter5a from "./assets/table-ranking-highlighter-5-a.svg?url";
 import rankingHighlighter5b from "./assets/table-ranking-highlighter-5-b.svg?url";
 import StanceToggle from "./StanceToggle.astro";
+import SectionDivider from "./SectionDivider.astro";
 import { getStanceByState, type GroupStat, type Stance } from "../../service/api/stats";
 
 // A tabela lista as 27 UFs; o mapa destaca só o topo do mesmo ranking, então
@@ -170,10 +170,10 @@ const ufLabels: Record<string, string> = {
             </div>
         </figure>
 
-        <footer class="uf-projects-chart__footer">
-            <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit</span>
-            <img src={elasHorizontal.src} alt="Elas no Congresso" />
-        </footer>
+        <SectionDivider
+            class="uf-projects-chart__footer"
+            content="Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+        />
     </div>
     <button class="uf-projects-chart__button" type="button">Veja como está o seu estado <img src={buttonChevron.src} alt="" /></button>
     <div class="uf-projects-chart__tooltip" role="status" aria-live="polite" data-tooltip hidden>
@@ -326,8 +326,8 @@ const ufLabels: Record<string, string> = {
     .uf-projects-chart__ranking-highlighter--3 .uf-projects-chart__ranking-highlighter-layer--two, .uf-projects-chart__ranking-highlighter--4 .uf-projects-chart__ranking-highlighter-layer--two, .uf-projects-chart__ranking-highlighter--5 .uf-projects-chart__ranking-highlighter-layer--two { top: 4.529px; height: 22.647px; }
     .uf-projects-chart__share--top-five { font-weight: 700; }
     .uf-projects-chart__footer { position: absolute; right: 48px; bottom: 48px; left: 48px; display: flex; width: 720px; height: 32px; align-items: flex-start; justify-content: space-between; border-top: 1px solid #0b0f5e; padding-top: 8px; font-size: 14px; line-height: 16px; }
-    .uf-projects-chart__footer span { margin-top: 4px; }
-    .uf-projects-chart__footer img { width: 113.217px; height: 12px; margin: 6px 8px 0; }
+    .uf-projects-chart__footer :global(span) { margin-top: 4px; }
+    .uf-projects-chart__footer :global(img) { width: 113.217px; height: 12px; margin: 6px 8px 0; }
     .uf-projects-chart__button { position: absolute; bottom: 0; left: 50%; display: flex; width: 294px; height: 56px; align-items: center; justify-content: center; gap: 16px; border: 0; padding: 16px 24px; transform: translateX(-50%); background: #4242f6; color: #fff; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
     .uf-projects-chart__button img { width: 13.4142px; height: 8.12132px; transform: rotate(-90deg); }
     @media (max-width: 767px) {
@@ -368,8 +368,8 @@ const ufLabels: Record<string, string> = {
         .uf-projects-chart__panel[data-panel-view="table"] { display: none !important; }
         .uf-projects-chart__panel[data-panel-view="map"] { display: block !important; }
         .uf-projects-chart__footer { position: relative; right: auto; bottom: auto; left: auto; width: min(251px, 100%); min-height: 80px; margin: 0 auto 48px; flex-direction: column; align-items: center; justify-content: flex-start; gap: 16px; text-align: center; }
-        .uf-projects-chart__footer span { margin-top: 4px; }
-        .uf-projects-chart__footer img { flex: none; margin: 0; }
+        .uf-projects-chart__footer :global(span) { margin-top: 4px; }
+        .uf-projects-chart__footer :global(img) { flex: none; margin: 0; }
         .uf-projects-chart__button { position: relative; bottom: auto; left: 50%; max-width: 100%; }
     }
 
@@ -424,7 +424,7 @@ const ufLabels: Record<string, string> = {
         .uf-projects-chart__map { width: 720px; height: 720px; }
         .uf-projects-chart__panel[data-panel-view="table"] { width: 720px; height: 720px; }
         .uf-projects-chart__footer { bottom: 24px; left: 48px; right: 48px; width: 720px; height: 32px; color: #0b0f5e; }
-        .uf-projects-chart__footer span { margin-top: 4px; margin-left: 12px; color: #0b0f5e; }
+        .uf-projects-chart__footer :global(span) { margin-top: 4px; margin-left: 12px; color: #0b0f5e; }
         .uf-projects-chart__button { bottom: 0; width: 294px; height: 56px; }
     }
 </style>
