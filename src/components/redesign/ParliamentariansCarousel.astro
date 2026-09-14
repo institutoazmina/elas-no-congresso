@@ -1,46 +1,188 @@
 ---
-import card from "../../assets/images/redesign/parliamentarians/samia-bomfim-card.png";
 import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
 import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
 import backgroundPattern from "../../assets/images/redesign/parliamentarians/bg-pattern.svg";
 import halftoneShadow from "../../assets/images/redesign/hero/halftone-shadow.png";
+import thumbDown from "../../assets/images/thumbs-down.svg";
+import thumbUp from "../../assets/images/thumbs-up.svg";
+import favorableProposal from "../../assets/images/proposicao-favoravel.svg";
+import unfavorableProposal from "../../assets/images/proposicao-desfavoravel.svg";
+import { getCurrentParliamentarians } from "../../service/api/parliamentarians";
 
-const items = Array.from({ length: 15 }, (_, index) => index);
+const people = await getCurrentParliamentarians(100);
+const itemCount = people.length;
+const propositionCountLabel = (count: number) =>
+    `${count} ${count === 1 ? "proposição" : "proposições"}`;
 ---
 
-<section class="parliamentarians" aria-labelledby="parliamentarians-title" data-parliamentarians style={`--parliamentarians-background: url(${backgroundPattern.src}); --parliamentarians-halftone-shadow: url(${halftoneShadow.src})`}>
+<section
+    class="parliamentarians"
+    aria-labelledby="parliamentarians-title"
+    data-parliamentarians
+    data-item-count={itemCount}
+    style={`--parliamentarians-background: url(${backgroundPattern.src}); --parliamentarians-halftone-shadow: url(${halftoneShadow.src})`}
+>
     <header class="parliamentarians__header">
         <span class="parliamentarians__attention" aria-hidden="true"></span>
         <h2 id="parliamentarians-title">Lorem ipsum dolor sit</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
     </header>
 
-    <div class="parliamentarians__figure" aria-label="Carrossel de parlamentares">
+    <div
+        class="parliamentarians__figure"
+        aria-label="Carrossel de parlamentares"
+    >
         <div class="parliamentarians__carousel">
             <div class="parliamentarians__controls">
-                <button type="button" aria-label="Parlamentar anterior" data-previous><img src={arrowBack.src} alt="" /></button>
-                <button type="button" aria-label="Próximo parlamentar" data-next><img src={arrowForward.src} alt="" /></button>
+                <button
+                    type="button"
+                    aria-label="Parlamentar anterior"
+                    data-previous
+                    disabled={itemCount <= 1}
+                >
+                    <img src={arrowBack.src} alt="" />
+                </button>
+                <button
+                    type="button"
+                    aria-label="Próximo parlamentar"
+                    data-next
+                    disabled={itemCount <= 1}
+                >
+                    <img src={arrowForward.src} alt="" />
+                </button>
             </div>
             <div class="parliamentarians__viewport">
                 <div class="parliamentarians__track" data-track>
-                    {items.map((item) => <article class:list={["parliamentarians__card", { "parliamentarians__card--active": item === 7 }]} aria-label="Perfil de Sâmia Bomfim" aria-hidden={item === 7 ? undefined : "true"}>
-                        <img src={card.src} alt="" />
-                        <span class="parliamentarians__hole" aria-hidden="true"></span>
-                        <div class="parliamentarians__text-layer">
-                            <span class="t t--tag">Câmara dos Deputados</span>
-                            <span class="t t--name">Sâmia Bomfim</span>
-                            <span class="t t--party">PSOL/SP</span>
-                            <span class="t t--label t--unfavorable">Desfavorável</span>
-                            <span class="t t--count t--unfavorable-count">1 proposição</span>
-                            <span class="t t--label t--favorable">Favorável</span>
-                            <span class="t t--count t--favorable-count">12 proposições</span>
-                            <span class="t t--detail t--birth-label">Nascimento</span><span class="t t--detail t--birth-value">22/08/1989</span>
-                            <span class="t t--detail t--profession-label">Profissões</span><span class="t t--detail t--profession-value">Servidora pública</span>
-                            <span class="t t--detail t--education-label">Escolaridade</span><span class="t t--detail t--education-value">Superior</span>
-                            <span class="t t--detail t--race-label">Cor/Raça</span><span class="t t--detail t--race-value">Branca</span>
-                            <span class="t t--detail t--religion-label">Religião</span><span class="t t--detail t--religion-value">Indisponível</span>
-                        </div>
-                    </article>)}
+                    {people.map((person, index) => (
+                        <article
+                            class:list={[
+                                "parliamentarians__card",
+                                {
+                                    "parliamentarians__card--active":
+                                        index === 0,
+                                },
+                            ]}
+                            data-parliamentarian-id={String(person.id)}
+                            aria-label={`Perfil de ${person.displayName}`}
+                            aria-hidden={index === 0 ? undefined : "true"}
+                        >
+                            <div class="parliamentarians__card-content">
+                                <span
+                                    class="parliamentarians__card-lime"
+                                    aria-hidden="true"
+                                ></span>
+                                <header class="parliamentarians__card-header">
+                                    <span class="parliamentarians__tag">
+                                        <i aria-hidden="true"></i>
+                                        {person.house}
+                                    </span>
+                                    <div class="parliamentarians__identity">
+                                        {person.photoUrl !== "Indisponível" ? (
+                                            <img
+                                                class="parliamentarians__portrait"
+                                                src={person.photoUrl}
+                                                alt={`Foto de ${person.displayName}`}
+                                                loading="lazy"
+                                                draggable={false}
+                                            />
+                                        ) : (
+                                            <span class="parliamentarians__portrait parliamentarians__portrait--unavailable">
+                                                Indisponível
+                                            </span>
+                                        )}
+                                        <div class="parliamentarians__person-name">
+                                            <h3>{person.displayName}</h3>
+                                            <p>
+                                                {person.partyAcronym}/
+                                                {person.state}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </header>
+
+                                <section
+                                    class="parliamentarians__ratings"
+                                    aria-label="Posicionamentos"
+                                >
+                                    <div class="parliamentarians__rating">
+                                        <span
+                                            class="parliamentarians__rating-art"
+                                            aria-hidden="true"
+                                        >
+                                            <img
+                                                class="parliamentarians__proposal"
+                                                src={unfavorableProposal.src}
+                                                alt=""
+                                                draggable={false}
+                                            />
+                                            <span class="parliamentarians__thumb-badge">
+                                                <img
+                                                    class="parliamentarians__thumb"
+                                                    src={thumbDown.src}
+                                                    alt=""
+                                                    draggable={false}
+                                                />
+                                            </span>
+                                        </span>
+                                        <strong>Desfavorável</strong>
+                                        <span>
+                                            {propositionCountLabel(
+                                                person.unfavorablePropositionsCount,
+                                            )}
+                                        </span>
+                                    </div>
+                                    <div class="parliamentarians__rating">
+                                        <span
+                                            class="parliamentarians__rating-art"
+                                            aria-hidden="true"
+                                        >
+                                            <img
+                                                class="parliamentarians__proposal"
+                                                src={favorableProposal.src}
+                                                alt=""
+                                                draggable={false}
+                                            />
+                                            <span class="parliamentarians__thumb-badge">
+                                                <img
+                                                    class="parliamentarians__thumb"
+                                                    src={thumbUp.src}
+                                                    alt=""
+                                                    draggable={false}
+                                                />
+                                            </span>
+                                        </span>
+                                        <strong>Favorável</strong>
+                                        <span>
+                                            {propositionCountLabel(
+                                                person.favorablePropositionsCount,
+                                            )}
+                                        </span>
+                                    </div>
+                                </section>
+
+                                <dl class="parliamentarians__details">
+                                    <div>
+                                        <dt>Nascimento</dt>
+                                        <dd>{person.birthDate}</dd>
+                                    </div>
+                                    <div>
+                                        <dt>Profissões</dt>
+                                        <dd>{person.profession}</dd>
+                                    </div>
+                                    <div>
+                                        <dt>Escolaridade</dt>
+                                        <dd>{person.education}</dd>
+                                    </div>
+                                    <!-- <div><dt>Cor/Raça</dt><dd>{person.race}</dd></div> -->
+                                    <!-- <div><dt>Religião</dt><dd>{person.religion}</dd></div> -->
+                                </dl>
+                            </div>
+                            <span
+                                class="parliamentarians__hole"
+                                aria-hidden="true"
+                            ></span>
+                        </article>
+                    ))}
                 </div>
             </div>
         </div>
@@ -49,192 +191,560 @@ const items = Array.from({ length: 15 }, (_, index) => index);
 
 <script>
     const initializeParliamentariansCarousel = () => {
-        document.querySelectorAll<HTMLElement>("[data-parliamentarians]").forEach((carousel) => {
-            if (carousel.dataset.parliamentariansCarouselInitialized) return;
-            carousel.dataset.parliamentariansCarouselInitialized = "true";
-            const track = carousel.querySelector<HTMLElement>("[data-track]");
-            const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
-            const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
-            if (!track || !previous || !next) return;
+        document
+            .querySelectorAll<HTMLElement>("[data-parliamentarians]")
+            .forEach((carousel) => {
+                if (carousel.dataset.parliamentariansCarouselInitialized)
+                    return;
+                const track =
+                    carousel.querySelector<HTMLElement>("[data-track]");
+                const previous =
+                    carousel.querySelector<HTMLButtonElement>(
+                        "[data-previous]",
+                    );
+                const next =
+                    carousel.querySelector<HTMLButtonElement>("[data-next]");
+                if (!track || !previous || !next) return;
 
-            const cards = Array.from(track.querySelectorAll<HTMLElement>(".parliamentarians__card"));
-            let active = 7;
-            let resetting = false;
-            const update = () => {
-                const cardWidth = cards[0]?.getBoundingClientRect().width ?? 384;
-                const gap = Number.parseFloat(getComputedStyle(track).columnGap) || 0;
-                track.style.transform = `translateX(${-cardWidth / 2 - active * (cardWidth + gap)}px)`;
-                cards.forEach((card, index) => {
-                    const isActive = index === active;
-                    card.classList.toggle("parliamentarians__card--active", isActive);
-                    card.setAttribute("aria-hidden", String(!isActive));
-                });
-            };
-            const move = (direction: number) => {
-                if (!resetting) {
+                let cards = Array.from(
+                    track.querySelectorAll<HTMLElement>(
+                        ".parliamentarians__card",
+                    ),
+                );
+                const itemCount =
+                    Number.parseInt(carousel.dataset.itemCount ?? "0", 10) || 0;
+                if (!cards.length || itemCount <= 1) {
+                    previous.disabled = true;
+                    next.disabled = true;
+                    cards[0]?.removeAttribute("aria-hidden");
+                    carousel.dataset.parliamentariansCarouselInitialized =
+                        "true";
+                    return;
+                }
+                const centerIndex = Math.floor(cards.length / 2);
+                const leadingCards = cards.splice(-centerIndex);
+                track.prepend(...leadingCards);
+                cards = Array.from(
+                    track.querySelectorAll<HTMLElement>(
+                        ".parliamentarians__card",
+                    ),
+                );
+                let active = centerIndex;
+                let animating = false;
+                let pendingDirection = 0;
+                const update = () => {
+                    const cardWidth =
+                        cards[0]?.getBoundingClientRect().width ?? 384;
+                    const gap =
+                        Number.parseFloat(getComputedStyle(track).columnGap) ||
+                        0;
+                    track.style.transform = `translateX(${-cardWidth / 2 - active * (cardWidth + gap)}px)`;
+                    cards.forEach((card, index) => {
+                        const isActive = index === active;
+                        card.classList.toggle(
+                            "parliamentarians__card--active",
+                            isActive,
+                        );
+                        card.setAttribute("aria-hidden", String(!isActive));
+                    });
+                };
+                const move = (direction: number) => {
+                    if (animating) return;
+                    animating = true;
+                    pendingDirection = direction;
                     active += direction;
                     update();
-                }
-            };
-            track.addEventListener("transitionend", (event) => {
-                if (event.propertyName !== "transform" || (active > 4 && active < 10)) return;
-                resetting = true;
-                active += active < 5 ? 5 : -5;
+                };
+                track.addEventListener("transitionend", (event) => {
+                    if (
+                        event.target !== track ||
+                        event.propertyName !== "transform"
+                    )
+                        return;
+                    track.style.transition = "none";
+                    if (pendingDirection > 0) {
+                        track.append(cards[0]);
+                    } else {
+                        track.prepend(cards[cards.length - 1]);
+                    }
+                    cards = Array.from(
+                        track.querySelectorAll<HTMLElement>(
+                            ".parliamentarians__card",
+                        ),
+                    );
+                    active = centerIndex;
+                    update();
+                    requestAnimationFrame(() =>
+                        requestAnimationFrame(() => {
+                            track.style.transition = "";
+                            animating = false;
+                        }),
+                    );
+                });
+                previous.addEventListener("click", () => move(-1));
+                next.addEventListener("click", () => move(1));
+                window.addEventListener("resize", update);
                 track.style.transition = "none";
                 update();
-                requestAnimationFrame(() => requestAnimationFrame(() => {
-                    track.style.transition = "";
-                    resetting = false;
-                }));
+                track.getBoundingClientRect();
+                track.style.transition = "";
+                carousel.dataset.parliamentariansCarouselInitialized = "true";
             });
-            previous.addEventListener("click", () => move(-1));
-            next.addEventListener("click", () => move(1));
-            window.addEventListener("resize", update);
-            update();
-        });
     };
 
     initializeParliamentariansCarousel();
-    document.addEventListener("astro:page-load", initializeParliamentariansCarousel);
+    document.addEventListener(
+        "astro:page-load",
+        initializeParliamentariansCarousel,
+    );
 </script>
 
 <style>
-    .parliamentarians { min-height: 993.8869018554688px; height: auto; margin-top: 48px; background: #fff; box-shadow: 0 -48px 0 #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; overflow: hidden; }
-    .parliamentarians *, .parliamentarians *::before, .parliamentarians *::after { box-sizing: border-box; }
-    .parliamentarians__header { width: 100%; height: auto; margin: 48px auto 10px; padding: 0 24px; display: flex; flex-direction: column; gap: 16px; }
-    .parliamentarians__attention { display: block; width: 96px; height: 4px; flex: none; background: #0b0f5e; }
-    .parliamentarians h2, .parliamentarians p { margin: 0; }
-    .parliamentarians h2 { height: auto; font-family: "ETC Anybody", sans-serif; font-size: 36px; font-weight: 700; line-height: 42px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
-    .parliamentarians__header p { height: auto; font-size: 18px; line-height: 24px; }
-    .parliamentarians__figure { height: 803.8869018554688px; padding: 24px 0; overflow: hidden; }
-    .parliamentarians__carousel { position: relative; height: 755.8869018554688px; padding: 48px; overflow: hidden; background-color: #fff; background-image: var(--parliamentarians-background); background-position: left top; background-repeat: repeat; background-size: 400px 400px; }
-    .parliamentarians__carousel::before, .parliamentarians__carousel::after { position: absolute; z-index: 1; display: block; width: 100%; height: 24px; background-image: var(--parliamentarians-halftone-shadow); background-position: left bottom; background-repeat: repeat-x; background-size: 1440px 24px; content: ""; pointer-events: none; mix-blend-mode: multiply; }
-    .parliamentarians__carousel::before { top: 0; left: 0; transform: scaleY(-1); }
-    .parliamentarians__carousel::after { bottom: 0; left: 0; }
-    .parliamentarians__controls { position: absolute; z-index: 3; top: 48px; left: calc(50% - 58px); display: flex; gap: 4px; }
-    .parliamentarians__controls button { display: grid; width: 56px; height: 40px; padding: 8px 16px; place-items: center; border: 2px solid #4242f6; border-radius: 0; background: #fff; cursor: pointer; }
-    .parliamentarians__controls img { display: block; width: 24px; height: 24px; }
-    .parliamentarians__controls button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-    .parliamentarians__viewport { position: absolute; z-index: 2; top: 112px; left: 0; width: 100%; height: 595.8869018554688px; }
-    .parliamentarians__track { position: relative; left: 50%; display: flex; width: max-content; gap: 48px; transform: translateX(-3216px); transition: transform .2s ease; }
-    .parliamentarians__card { position: relative; width: 384px; height: 595.8869018554688px; flex: none; border-radius: 24px; overflow: hidden; }
-    .parliamentarians__card img { display: block; width: 384px; height: 595.8869018554688px; }
-    .parliamentarians__hole { position: absolute; top: 23.20703125px; left: 143px; width: 98px; height: 18px; border: 1px solid #998d96; border-radius: 999px; background: #fff; }
-    .parliamentarians__card--active .parliamentarians__hole { overflow: hidden; background: #0b0f5e; }
-    .parliamentarians__card--active .parliamentarians__hole::before { position: absolute; inset: 0; border-radius: inherit; background: #fff; content: ""; transform: translate(-4px, 4px); }
-    .parliamentarians__text-layer { position: absolute; inset: 0; pointer-events: none; }
-    .parliamentarians__text-layer .t { position: absolute; display: block; margin: 0; white-space: nowrap; letter-spacing: 0; }
-    .parliamentarians__text-layer .t:not(.t--tag) { background: #fff; }
-    .t--tag { top: 69px; left: 68px; width: 184px; height: 24px; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
-    .t--name, .t--party { left: 162px; height: 24px; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; font-size: 18px; line-height: 24px; }
-    .t--name { top: 206px; width: 190px; font-weight: 400; text-align: left; }
-    .t--party { top: 240px; width: 82px; font-weight: 700; text-align: right; }
-    .t--label, .t--count { height: 24px; color: #0b0f5e; font-family: "ETC Anybody", sans-serif; font-size: 18px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
-    .t--label { text-align: center; }
-    .t--count { text-align: left; }
-    .t--unfavorable { top: 310.9716796875px; left: 104.3079833984375px; width: 96px; }
-    .t--unfavorable-count { top: 310.9716796875px; left: 258px; width: 94px; }
-    .t--favorable { top: 380.9150390625px; left: 104.3079833984375px; width: 71px; }
-    .t--favorable-count { top: 380.9150390625px; left: 243px; width: 109px; }
-    .t--detail { height: 16px; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; font-size: 14px; font-weight: 400; line-height: 16px; }
-    .t--birth-label { top: 443.88671875px; left: 32px; width: 241px; }.t--birth-value { top: 443.88671875px; left: 273px; width: 79px; text-align: right; }
-    .t--profession-label { top: 469.88671875px; left: 32px; width: 204px; }.t--profession-value { top: 469.88671875px; left: 236px; width: 116px; text-align: right; }
-    .t--education-label { top: 495.88671875px; left: 32px; width: 263px; }.t--education-value { top: 495.88671875px; left: 295px; width: 57px; text-align: right; }
-    .t--race-label { top: 521.88671875px; left: 32px; width: 273px; }.t--race-value { top: 521.88671875px; left: 305px; width: 47px; text-align: right; }
-    .t--religion-label { top: 547.88671875px; left: 32px; width: 240px; }.t--religion-value { top: 547.88671875px; left: 272px; width: 80px; color: #998d96; text-align: right; }
-    .parliamentarians__card--active { z-index: 1; box-shadow: -4px 4px 0 #0b0f5e; }
+    .parliamentarians {
+        --card-width: 384px;
+        --card-padding: 32px;
+        --card-radius: 24px;
+        --hole-width: 98px;
+        --hole-height: 18px;
+        --hole-top: 23px;
+        --rating-art-height: 54px;
+        --rating-art-width: 64px;
+        --proposal-width: 41px;
+        --thumb-size: 32px;
+        --track-gap: 48px;
+        margin-top: 48px;
+        background: #fff;
+        box-shadow: 0 -48px 0 #fff;
+        color: #0b0f5e;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        overflow: hidden;
+    }
+    .parliamentarians *,
+    .parliamentarians *::before,
+    .parliamentarians *::after {
+        box-sizing: border-box;
+    }
+    .parliamentarians__header {
+        width: min(100%, 816px);
+        margin: 48px auto 10px;
+        padding-inline: 48px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    .parliamentarians__attention {
+        display: block;
+        width: 96px;
+        height: 4px;
+        background: #0b0f5e;
+    }
+    .parliamentarians h2,
+    .parliamentarians p {
+        margin: 0;
+    }
+    .parliamentarians h2 {
+        font-family: "ETC Anybody", sans-serif;
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 42px;
+        text-transform: uppercase;
+        font-variation-settings: "wdth" 75;
+    }
+    .parliamentarians__header p {
+        font-size: 18px;
+        line-height: 24px;
+    }
+    .parliamentarians__figure {
+        padding: 24px 0;
+        overflow: hidden;
+    }
+    .parliamentarians__carousel {
+        position: relative;
+        padding: 48px 0;
+        overflow: hidden;
+        background: #fff var(--parliamentarians-background) left top / 400px
+            400px repeat;
+    }
+    .parliamentarians__carousel::before,
+    .parliamentarians__carousel::after {
+        position: absolute;
+        z-index: 1;
+        display: block;
+        width: 100%;
+        height: 24px;
+        background: var(--parliamentarians-halftone-shadow) left bottom / 1440px
+            24px repeat-x;
+        content: "";
+        pointer-events: none;
+        mix-blend-mode: multiply;
+    }
+    .parliamentarians__carousel::before {
+        top: 0;
+        transform: scaleY(-1);
+    }
+    .parliamentarians__carousel::after {
+        bottom: 0;
+    }
+    .parliamentarians__controls {
+        position: relative;
+        z-index: 3;
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        margin-bottom: 24px;
+    }
+    .parliamentarians__controls button {
+        display: grid;
+        width: 56px;
+        height: 40px;
+        padding: 8px 16px;
+        place-items: center;
+        border: 2px solid #4242f6;
+        background: #fff;
+        cursor: pointer;
+    }
+    .parliamentarians__controls img {
+        display: block;
+        width: 24px;
+        height: 24px;
+    }
+    .parliamentarians__controls button:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 3px;
+    }
+    .parliamentarians__viewport {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+    }
+    .parliamentarians__track {
+        position: relative;
+        left: 50%;
+        display: flex;
+        align-items: flex-start;
+        width: max-content;
+        gap: var(--track-gap);
+        opacity: 0;
+        transition: transform 0.2s ease;
+    }
+    .parliamentarians[data-parliamentarians-carousel-initialized]
+        .parliamentarians__track {
+        opacity: 1;
+    }
+
+    .parliamentarians__card {
+        position: relative;
+        width: var(--card-width);
+        flex: none;
+        border: 1px solid #c8c8cc;
+        border-radius: var(--card-radius);
+        background: transparent;
+        overflow: hidden;
+    }
+    .parliamentarians__card-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: 64px var(--card-padding) 32px;
+        background: #fff;
+        -webkit-mask:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 98 18'%3E%3Crect width='98' height='18' rx='9' fill='black'/%3E%3C/svg%3E")
+                center var(--hole-top) / var(--hole-width) var(--hole-height)
+                no-repeat,
+            linear-gradient(#000 0 0);
+        -webkit-mask-composite: destination-out;
+        mask:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 98 18'%3E%3Crect width='98' height='18' rx='9' fill='black'/%3E%3C/svg%3E")
+                center var(--hole-top) / var(--hole-width) var(--hole-height)
+                no-repeat,
+            linear-gradient(#000 0 0);
+        mask-composite: exclude, add;
+    }
+    .parliamentarians__card-lime {
+        position: absolute;
+        z-index: 0;
+        inset: 0 auto auto 0;
+        width: 100%;
+        height: 96px;
+        border-radius: var(--card-radius) var(--card-radius) 0 0;
+        background: linear-gradient(#def279 0 64px, transparent 64px);
+    }
+    .parliamentarians__hole {
+        position: absolute;
+        z-index: 3;
+        top: var(--hole-top);
+        left: 50%;
+        width: var(--hole-width);
+        height: var(--hole-height);
+        border: 1px solid #998d96;
+        border-radius: 999px;
+        background: transparent;
+        pointer-events: none;
+        transform: translateX(-50%);
+    }
+    .parliamentarians__card--active .parliamentarians__hole {
+        box-shadow: inset -4px 4px 0 #0b0f5e;
+    }
+    .parliamentarians__card-header {
+        position: relative;
+        z-index: 1;
+    }
+    .parliamentarians__tag {
+        position: relative;
+        display: flex;
+        width: fit-content;
+        min-height: 32px;
+        align-items: center;
+        gap: 10px;
+        padding: 4px 8px;
+        background: #4242f6;
+        color: #fff;
+        font:
+            700 18px/24px "ETC Anybody",
+            sans-serif;
+        font-variation-settings: "wdth" 75;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .parliamentarians__tag i {
+        position: relative;
+        display: block;
+        width: 18px;
+        height: 11px;
+        flex: none;
+        border: 2px solid #fff;
+        border-top: 0;
+        border-radius: 0 0 12px 12px;
+    }
+    .parliamentarians__tag i::before {
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        width: 18px;
+        border-top: 2px solid #fff;
+        content: "";
+    }
+    .parliamentarians__identity {
+        display: grid;
+        grid-template-columns: 120px minmax(0, 1fr);
+        gap: 10px;
+        align-items: end;
+        margin-top: 16px;
+    }
+    .parliamentarians__portrait {
+        display: block;
+        width: 100%;
+        aspect-ratio: 120 / 161;
+        border: 1px solid #998d96;
+        object-fit: cover;
+    }
+    .parliamentarians__portrait--unavailable {
+        display: grid;
+        padding: 8px;
+        place-items: center;
+        background: #f7f7f7;
+        color: #998d96;
+        font-size: 14px;
+        text-align: center;
+    }
+    .parliamentarians__person-name {
+        min-width: 0;
+        padding-bottom: 7px;
+    }
+    .parliamentarians__person-name h3 {
+        margin: 0 0 10px;
+        overflow: hidden;
+        color: #0b0f5e;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 24px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .parliamentarians__person-name p {
+        margin: 0;
+        overflow: hidden;
+        color: #0b0f5e;
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 24px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .parliamentarians__ratings {
+        display: grid;
+        gap: 16px;
+        margin-top: 24px;
+    }
+    .parliamentarians__rating {
+        display: grid;
+        grid-template-columns: var(--rating-art-width) minmax(0, 1fr) auto;
+        align-items: center;
+        min-height: var(--rating-art-height);
+        color: #0b0f5e;
+        font:
+            700 16px/24px "ETC Anybody",
+            sans-serif;
+        font-variation-settings: "wdth" 75;
+        text-transform: uppercase;
+    }
+    .parliamentarians__rating > strong {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .parliamentarians__rating > span:last-child {
+        min-width: 0;
+        overflow: hidden;
+        text-align: right;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .parliamentarians__rating-art {
+        position: relative;
+        display: block;
+        width: var(--rating-art-width);
+        height: var(--rating-art-height);
+    }
+    .parliamentarians__proposal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: var(--proposal-width);
+        height: var(--rating-art-height);
+    }
+    .parliamentarians__thumb-badge {
+        position: absolute;
+        z-index: 2;
+        top: calc((var(--rating-art-height) - var(--thumb-size)) / 2);
+        right: 0;
+        display: grid;
+        width: var(--thumb-size);
+        height: var(--thumb-size);
+        border-radius: 50%;
+        place-items: center;
+        transform: rotate(-5deg);
+    }
+    .parliamentarians__thumb {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+    .parliamentarians__details {
+        display: grid;
+        gap: 2px;
+        margin: 23px 0 0;
+        padding: 0;
+        color: #0b0f5e;
+        font-size: 14px;
+        line-height: 24px;
+    }
+    .parliamentarians__details div {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+        min-height: 24px;
+    }
+    .parliamentarians__details dt,
+    .parliamentarians__details dd {
+        min-width: 0;
+        margin: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .parliamentarians__details dd {
+        text-align: right;
+    }
+    .parliamentarians__details div:last-child dd {
+        color: #998d96;
+    }
+    .parliamentarians__card--active {
+        z-index: 1;
+        box-shadow: -4px 4px 0 #0b0f5e;
+    }
 
     @media (max-width: 767px) {
         .parliamentarians {
-            min-height: 0;
+            --card-width: min(279px, calc(100vw - 32px));
+            --card-padding: 24px;
+            --card-radius: 18px;
+            --hole-width: 72px;
+            --hole-height: 14px;
+            --hole-top: 17px;
+            --rating-art-height: 40px;
+            --rating-art-width: 48px;
+            --proposal-width: 30px;
+            --thumb-size: 24px;
+            --track-gap: 24px;
             margin-top: 0;
             box-shadow: none;
         }
-
         .parliamentarians__header {
             margin-top: 48px;
             padding-inline: 15px;
         }
-
         .parliamentarians h2 {
-            width: 343px;
-            max-width: 100%;
             font-size: 28px;
             line-height: 32px;
         }
-
         .parliamentarians__header p {
-            width: 343px;
-            max-width: 100%;
             font-size: 14px;
-            font-weight: 400;
             line-height: 24px;
         }
-
-        .parliamentarians__figure {
-            height: 640.949077px;
+        .parliamentarians__card-content {
+            padding-top: 48px;
         }
-
-        .parliamentarians__carousel {
-            height: 592.949077px;
+        .parliamentarians__card-lime {
+            height: 72px;
+            background: linear-gradient(#def279 0 48px, transparent 48px);
         }
-
-        .parliamentarians__viewport {
-            height: 432.949077px;
+        .parliamentarians__tag {
+            min-height: 24px;
+            gap: 8px;
+            padding: 3px 6px;
+            font-size: 14px;
+            line-height: 18px;
         }
-
-        .parliamentarians__track {
-            gap: 25px;
+        .parliamentarians__tag i,
+        .parliamentarians__tag i::before {
+            width: 14px;
         }
-
-        .parliamentarians__card {
-            width: 279px;
-            height: 432.949077px;
-            border-radius: 17.4375px;
+        .parliamentarians__tag i {
+            height: 9px;
         }
-
-        .parliamentarians__card > img {
-            width: 279px;
-            height: 432.949077px;
+        .parliamentarians__identity {
+            grid-template-columns: 88px minmax(0, 1fr);
+            margin-top: 12px;
         }
-
-        .parliamentarians__hole {
-            top: 16.855103px;
-            left: 103.921875px;
-            width: 71.203125px;
-            height: 13.078125px;
+        .parliamentarians__person-name {
+            padding-bottom: 4px;
         }
-
-        .parliamentarians__card--active .parliamentarians__hole::before {
-            transform: translate(-2.90625px, 2.90625px);
+        .parliamentarians__person-name h3,
+        .parliamentarians__person-name p {
+            font-size: 14px;
+            line-height: 20px;
         }
-
-        .parliamentarians__text-layer {
-            width: 384px;
-            height: 595.8869018554688px;
-            transform: scale(0.7265625);
-            transform-origin: left top;
+        .parliamentarians__person-name h3 {
+            margin-bottom: 6px;
         }
-    }
-
-    @media (min-width: 768px) {
-        .parliamentarians {
-            height: 993.8869018554688px;
-            min-height: 0;
+        .parliamentarians__ratings {
+            gap: 12px;
+            margin-top: 18px;
         }
-
-        .parliamentarians__header {
-            width: 816px;
-            height: 84px;
-            padding: 0 48px;
+        .parliamentarians__rating {
+            font-size: 12px;
+            line-height: 18px;
         }
-
-        .parliamentarians h2 {
-            height: 24px;
+        .parliamentarians__details {
+            margin-top: 17px;
+            font-size: 12px;
+            line-height: 18px;
         }
-
-        .parliamentarians__header p {
-            height: 24px;
+        .parliamentarians__details div {
+            min-height: 18px;
         }
     }
 </style>

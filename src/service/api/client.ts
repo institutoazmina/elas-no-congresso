@@ -42,6 +42,32 @@ const localPreviewData = (path: string, params: Record<string, string | number |
     ];
   }
 
+  if (path === '/legislatures/parliamentarians') {
+    return {
+      items: [
+        {
+          id: 1,
+          full_name: 'Ana Souza',
+          social_name: null,
+          photo_url: null,
+          birth_date: '1989-08-22',
+          profession: 'Indisponível',
+          education: 'Indisponível',
+          race: 'Indisponível',
+          religion: null,
+          favorable_propositions_count: 1,
+          unfavorable_propositions_count: 0,
+          terms: [{ party: 1, house: 'camara', state: 'SP', end_date: null }],
+        },
+      ],
+      count: 1,
+    };
+  }
+
+  if (path === '/legislatures/parties') {
+    return { count: 1, items: [{ id: 1, acronym: 'PSOL', name: 'Partido Socialismo e Liberdade' }] };
+  }
+
   return undefined;
 };
 
