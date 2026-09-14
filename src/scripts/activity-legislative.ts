@@ -34,8 +34,26 @@ type RawLegislature = {
 type RawData = { legislaturas: Record<string, RawLegislature> };
 type Proposal = RawProposal & { year: number; authors: RawParliamentarian[]; parties: string[]; states: string[]; genders: string[] };
 type DashboardRow = { key: string; label: string; favorable: number; unfavorable: number; photo?: string; meta?: string };
-type DashboardSort = "unfavorable" | "favorable" | "total";
 type TableSort = "number" | "author" | "summary" | "assessment" | "evaluator" | "progress" | "category" | "updated";
+
+import {
+    sortDashboardRows as sortDashboardRowsUtil,
+    groupCanetadasByParty,
+    aggregateAuthorships,
+    countAuthorProposals,
+    filterAuthorsByMinProposals,
+    normalizeGenderCode,
+    GENDER_LABELS,
+    normalizeUfCode,
+    normalizeCasa,
+    CASA_LABELS,
+    personKey,
+    createQualityCollector,
+    DEFAULT_DASHBOARD_ORDER,
+    MIN_PROPOSICOES_POR_PARLAMENTAR,
+    type DashboardSort as DashboardSortType,
+    type QualityCollector,
+} from "../lib/dashboard-utils";
 
 const normalize = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const escapeCsv = (value: unknown) => `"${String(value ?? "").replaceAll('"', '""')}"`;
@@ -69,6 +87,7 @@ function initActivity(root: HTMLElement) {
     let panelAdvanced = false;
     let lastFocused: HTMLElement | null = null;
     let stateDashboard = new Map<string, DashboardRow>();
+    let dataQuality: QualityCollector = createQualityCollector();
 
     const field = (name: string) => filters.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null;
     const value = (name: string) => field(name)?.value ?? "";
@@ -79,11 +98,34 @@ function initActivity(root: HTMLElement) {
         const years = new Set<number>();
         const states = new Set<string>();
         const evaluators = new Set<string>();
+        dataQuality = createQualityCollector();
 
         Object.entries(data.legislaturas).forEach(([legislatureId, legislature]) => {
             const people = legislature.parlamentares || {};
             Object.values(legislature.proposicoes || {}).forEach((proposal) => {
-                const authors = Object.keys(proposal.autores || {}).map((id) => people[id]).filter(Boolean);
+                const rawAuthorIds = Object.keys(proposal.autores || {});
+                const authors = rawAuthorIds.map((id) => people[id]).filter(Boolean);
+                if (authors.length !== rawAuthorIds.length) {
+                    dataQuality.record("autoria-nao-resolvida", `${proposal.numero}: ${rawAuthorIds.length - authors.length} autoria(s) sem cadastro correspondente`);
+                }
+                const casa = normalizeCasa(proposal.casa);
+                if (!casa) {
+                    dataQuality.record("casa-desconhecida", `${proposal.numero}: casa=${JSON.stringify(proposal.casa)}`);
+                }
+                for (const author of authors) {
+                    if (author.numero === undefined || author.numero === null) {
+                        dataQuality.record("autor-sem-numero", `${author.nome || author.slug || "?"} em ${proposal.numero}`);
+                    }
+                    if (normalizeGenderCode(author.genero) === "U") {
+                        dataQuality.record("genero-invalido", `${author.nome} (num ${author.numero}): genero=${JSON.stringify(author.genero)}`);
+                    }
+                    if (normalizeUfCode(author.estado) === null) {
+                        dataQuality.record("uf-invalida", `${author.nome} (num ${author.numero}): estado=${JSON.stringify(author.estado)}`);
+                    }
+                    if (author.partido === undefined || author.partido === null || String(author.partido).trim() === "") {
+                        dataQuality.record("partido-ausente", `${author.nome} (num ${author.numero}) em ${proposal.numero}`);
+                    }
+                }
                 const year = Number(proposal.numero?.match(/\/(\d{4})/)?.[1] || 0);
                 const item: Proposal = {
                     ...proposal,
@@ -91,8 +133,8 @@ function initActivity(root: HTMLElement) {
                     year,
                     authors,
                     parties: [...new Set(authors.map((author) => author.partido).filter(Boolean) as string[])],
-                    states: [...new Set(authors.map((author) => author.estado).filter(Boolean) as string[])],
-                    genders: [...new Set(authors.map((author) => author.genero).filter(Boolean) as string[])],
+                    states: [...new Set(authors.map((author) => normalizeUfCode(author.estado)).filter((uf): uf is string => uf !== null))],
+                    genders: [...new Set(authors.map((author) => normalizeGenderCode(author.genero)).filter((code) => code === "F" || code === "M"))],
                 };
                 proposals.push(item);
                 if (year) years.add(year);
@@ -119,6 +161,10 @@ function initActivity(root: HTMLElement) {
         addOptions("state", [...states].sort());
         addOptions("evaluator", [...evaluators].sort((a, b) => a.localeCompare(b, "pt-BR")));
         all = proposals.sort((a, b) => b.year - a.year || b.i - a.i);
+        const quality = dataQuality.summary();
+        if (quality.total > 0) {
+            console.warn("[atividade-legislativa] relatório de qualidade dos dados:", JSON.stringify(quality));
+        }
     }
 
     function matches(item: Proposal) {
@@ -227,32 +273,36 @@ function initActivity(root: HTMLElement) {
     }
 
     function aggregateRows(items: Proposal[], groupsFor: (item: Proposal) => { key: string; label: string; photo?: string; meta?: string }[]) {
-        const rows = new Map<string, DashboardRow>();
-        items.forEach((item) => {
-            const seen = new Set<string>();
-            groupsFor(item).forEach((group) => {
-                if (!group.key || seen.has(group.key)) return;
-                seen.add(group.key);
-                const row = rows.get(group.key) || { ...group, favorable: 0, unfavorable: 0 };
-                if (item.favoravel > 0) row.favorable += 1;
-                if (item.favoravel < 0) row.unfavorable += 1;
-                rows.set(group.key, row);
-            });
+    const rows = new Map<string, DashboardRow>();
+    items.forEach((item) => {
+        const seen = new Set<string>();
+        groupsFor(item).forEach((group) => {
+            if (!group.key || seen.has(group.key)) return;
+            seen.add(group.key);
+            const row = rows.get(group.key) || { ...group, favorable: 0, unfavorable: 0 };
+            if (item.favoravel > 0) row.favorable += 1;
+            if (item.favoravel < 0) row.unfavorable += 1;
+            rows.set(group.key, row);
         });
-        return [...rows.values()];
+    });
+    return [...rows.values()];
     }
 
-    function sortDashboardRows(rows: DashboardRow[], mode: DashboardSort) {
-        const share = (row: DashboardRow, stance: "favorable" | "unfavorable") => {
-            const total = row.favorable + row.unfavorable;
-            return total ? row[stance] / total : 0;
-        };
-        return [...rows].sort((a, b) => {
-            const primary = mode === "total"
-                ? (b.favorable + b.unfavorable) - (a.favorable + a.unfavorable)
-                : share(b, mode) - share(a, mode);
-            return primary || (b.favorable + b.unfavorable) - (a.favorable + a.unfavorable) || a.label.localeCompare(b.label, "pt-BR");
-        });
+    function aggregatePartyCanetadas(items: Proposal[]): DashboardRow[] {
+        const mappedItems = items.map((item) => ({
+            authors: item.authors.map((author) => ({ numero: author.numero, nome: author.nome, slug: author.slug, partido: author.partido })),
+            favorable: item.favoravel,
+        }));
+        const groups = groupCanetadasByParty(mappedItems);
+        return [...groups.entries()].map(([party, counts]) => ({
+            key: party,
+            label: party,
+            ...counts,
+        }));
+    }
+
+    function sortDashboardRows(rows: DashboardRow[], mode?: DashboardSortType) {
+    return sortDashboardRowsUtil(rows, mode);
     }
 
     function dashboardRow(row: DashboardRow, peak: number, author = false) {
@@ -305,7 +355,7 @@ function initActivity(root: HTMLElement) {
         return element;
     }
 
-    function fillDashboardRows(selector: string, rows: DashboardRow[], options: { sort?: DashboardSort; author?: boolean; limit?: number } = {}) {
+    function fillDashboardRows(selector: string, rows: DashboardRow[], options: { sort?: DashboardSortType; author?: boolean; limit?: number } = {}) {
         const target = $(selector);
         const sorted = options.sort ? sortDashboardRows(rows, options.sort) : rows;
         const shown = options.limit ? sorted.slice(0, options.limit) : sorted;
@@ -319,27 +369,53 @@ function initActivity(root: HTMLElement) {
     }
 
     function renderDashboard() {
-        const genders = aggregateRows(visible, (item) => item.genders.map((gender) => ({ key: gender, label: gender === "F" ? "Feminino" : gender === "M" ? "Masculino" : gender })));
-        const houses = aggregateRows(visible, (item) => {
-            const label = normalize(item.casa).startsWith("sen") ? "Senado" : normalize(item.casa).startsWith("dep") || normalize(item.casa).includes("cam") ? "Câmara" : item.casa;
-            return [{ key: normalize(label), label }];
+        // Visão por autorias: cada item carrega os autores resolvidos e a
+        // avaliação da proposição. Usado pelos painéis de canetadas.
+        const authorshipItems = visible.map((item) => ({ authors: item.authors, favorable: item.favoravel }));
+        // Por gênero: autorias únicas por proposição (GENDER_COUNT_MODE, provisório).
+        // Valores inválidos (ex.: nome próprio no campo `genero`) viram "Não informado".
+        const genders = aggregateAuthorships(authorshipItems, (author) => {
+            const code = normalizeGenderCode(author.genero);
+            return { key: code, label: GENDER_LABELS[code] };
         });
-        const parties = aggregateRows(visible, (item) => item.parties.map((party) => ({ key: party, label: party })));
-        const states = aggregateRows(visible, (item) => item.states.map((state) => ({ key: state.toUpperCase(), label: state.toUpperCase() })));
-        const authors = aggregateRows(visible, (item) => item.authors.map((author) => ({
-            key: `person:${author.numero}`,
+        // Por casa: proposições únicas. Poder Executivo excluído da visualização
+        // (sem apagar da base); casa ausente/desconhecida vai ao relatório de
+        // qualidade e não é convertida silenciosamente em Câmara/Senado.
+        const houses = aggregateRows(visible, (item) => {
+            const casa = normalizeCasa(item.casa);
+            if (!casa || casa === "executivo") return [];
+            return [{ key: casa, label: CASA_LABELS[casa] }];
+        });
+        const partyCanetadas = aggregatePartyCanetadas(visible);
+        // Por UF: UF de cada autoria única (UF_COUNT_MODE, provisório).
+        // Siglas inválidas/ausentes vão ao relatório; sem inferência.
+        const states = aggregateAuthorships(authorshipItems, (author) => {
+            const uf = normalizeUfCode(author.estado);
+            return uf ? { key: uf, label: uf } : null;
+        });
+        const allAuthors = aggregateRows(visible, (item) => item.authors.map((author) => ({
+            key: `person:${personKey(author)}`,
             label: author.nome,
             photo: author.foto,
             meta: [author.partido, author.estado].filter(Boolean).join("/"),
         })));
+        const authorProposalCounts = countAuthorProposals(visible);
+        const authors = filterAuthorsByMinProposals(allAuthors, authorProposalCounts);
         stateDashboard = new Map(states.map((row) => [row.key, row]));
 
-        fillDashboardRows("[data-dashboard-gender]", sortDashboardRows(genders, "total"));
-        fillDashboardRows("[data-dashboard-house]", sortDashboardRows(houses, "total"));
-        fillDashboardRows("[data-dashboard-party]", parties, { sort: ($<HTMLSelectElement>('[data-dashboard-sort="party"]').value as DashboardSort) });
-        fillDashboardRows("[data-dashboard-author]", authors, { sort: ($<HTMLSelectElement>('[data-dashboard-sort="author"]').value as DashboardSort), author: true });
+        const genderSort = ($<HTMLSelectElement>('[data-dashboard-sort="gender"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
+        const houseSort = ($<HTMLSelectElement>('[data-dashboard-sort="house"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
+        const partySort = ($<HTMLSelectElement>('[data-dashboard-sort="party"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
+        const authorSort = ($<HTMLSelectElement>('[data-dashboard-sort="author"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
+
+        fillDashboardRows("[data-dashboard-gender]", genders, { sort: genderSort });
+        fillDashboardRows("[data-dashboard-house]", houses, { sort: houseSort });
+        fillDashboardRows("[data-dashboard-party]", partyCanetadas, { sort: partySort });
+        fillDashboardRows("[data-dashboard-author]", authors, { sort: authorSort, author: true });
         $("[data-dashboard-category]").textContent = "Categorias não estão disponíveis no arquivo de dados desta listagem.";
         $("[data-dashboard-status]").textContent = "Status legislativos completos não estão disponíveis no arquivo de dados desta listagem.";
+
+        addDashboardTooltips();
 
         const stateLayers = $("[data-map-state-layers]");
         stateLayers.replaceChildren(...states.flatMap((row) => {
@@ -361,6 +437,79 @@ function initActivity(root: HTMLElement) {
             path.setAttribute("aria-label", row ? `${path.id}: ${row.favorable} favoráveis e ${row.unfavorable} desfavoráveis` : `${path.id}: sem proposições nos filtros atuais`);
         });
         dashboard.removeAttribute("hidden");
+    }
+
+    function closeAllCardTooltips() {
+        root.querySelectorAll(".activity-dashboard-card.touch-tooltip").forEach((card) => {
+            card.classList.remove("touch-tooltip");
+            card.querySelector(".dashboard-tooltip-icon")?.setAttribute("aria-expanded", "false");
+        });
+    }
+
+    function addDashboardTooltips() {
+        const setupCardTooltip = (card: HTMLElement, text: string, id: string) => {
+            let tooltip = card.querySelector(".dashboard-tooltip") as HTMLElement | null;
+            if (!tooltip) {
+                tooltip = document.createElement("div");
+                tooltip.className = "dashboard-tooltip";
+                tooltip.setAttribute("role", "tooltip");
+                tooltip.id = id;
+                tooltip.textContent = text;
+                const header = card.querySelector("header");
+                if (header) {
+                    const trigger = document.createElement("button");
+                    trigger.type = "button";
+                    trigger.className = "dashboard-tooltip-icon";
+                    trigger.setAttribute("aria-label", "Mais informações");
+                    trigger.setAttribute("aria-describedby", id);
+                    trigger.setAttribute("aria-expanded", "false");
+                    trigger.textContent = "ℹ";
+                    const existingLabel = header.querySelector("label");
+                    if (existingLabel) {
+                        existingLabel.appendChild(trigger);
+                    } else {
+                        header.appendChild(trigger);
+                    }
+                }
+                card.appendChild(tooltip);
+            }
+            const trigger = card.querySelector(".dashboard-tooltip-icon") as HTMLElement | null;
+            if (trigger && !trigger.hasAttribute("data-tooltip-bound")) {
+                trigger.setAttribute("data-tooltip-bound", "true");
+                // `click` cobre mouse, teclado (Enter/Espaço) e toque; sem
+                // listener duplo de `touchstart`.
+                trigger.addEventListener("click", (event) => {
+                    event.stopPropagation();
+                    const willShow = !card.classList.contains("touch-tooltip");
+                    closeAllCardTooltips();
+                    card.classList.toggle("touch-tooltip", willShow);
+                    trigger.setAttribute("aria-expanded", String(willShow));
+                });
+                trigger.addEventListener("keydown", (event) => {
+                    if ((event as KeyboardEvent).key === "Escape") {
+                        card.classList.remove("touch-tooltip");
+                        trigger.setAttribute("aria-expanded", "false");
+                    }
+                });
+            }
+        };
+
+        const authorCard = root.querySelector("[data-dashboard-author]")?.closest(".activity-dashboard-card") as HTMLElement | null;
+        if (authorCard) {
+            setupCardTooltip(authorCard, `Esta visualização considera apenas parlamentares com ${MIN_PROPOSICOES_POR_PARLAMENTAR} ou mais proposições relacionadas a gênero.`, "tooltip-author");
+        }
+        const partyCard = root.querySelector("[data-dashboard-party]")?.closest(".activity-dashboard-card") as HTMLElement | null;
+        if (partyCard) {
+            setupCardTooltip(partyCard, "Este painel contabiliza as participações (canetadas) dos parlamentares nas proposições, e não apenas a autoria principal.", "tooltip-party");
+        }
+        const genderCard = root.querySelector("[data-dashboard-gender]")?.closest(".activity-dashboard-card") as HTMLElement | null;
+        if (genderCard) {
+            setupCardTooltip(genderCard, "Este painel contabiliza as assinaturas das pessoas parlamentares. Uma proposição pode ser contabilizada mais de uma vez quando possui múltiplas autorias.", "tooltip-gender");
+        }
+        const stateCard = root.querySelector("[data-dashboard-map]")?.closest(".activity-dashboard-card") as HTMLElement | null;
+        if (stateCard) {
+            setupCardTooltip(stateCard, "Este painel contabiliza a UF de cada assinatura. Uma proposição pode aparecer em mais de uma UF quando possui múltiplas autorias.", "tooltip-state");
+        }
     }
 
     function createTableRow(item: Proposal) {
@@ -521,7 +670,7 @@ function initActivity(root: HTMLElement) {
     }
 
     async function openParliamentarian(id: string) {
-        const author = all.flatMap((item) => item.authors).find((person) => String(person.numero) === id);
+        const author = all.flatMap((item) => item.authors).find((person) => personKey(person) === id);
         if (!author) return;
         lastFocused = document.activeElement as HTMLElement;
         const photo = $("[data-dialog-photo]") as HTMLImageElement;
@@ -538,7 +687,7 @@ function initActivity(root: HTMLElement) {
         $("[data-dialog-education]").textContent = "Carregando…";
         $("[data-dialog-race]").textContent = "Carregando…";
         $("[data-dialog-religion]").textContent = "Carregando…";
-        const authored = all.filter((item) => item.authors.some((person) => person.numero === author.numero));
+        const authored = all.filter((item) => item.authors.some((person) => personKey(person) === personKey(author)));
         $("[data-dialog-favorable]").textContent = formatNumber.format(authored.filter((item) => item.favoravel > 0).length);
         $("[data-dialog-unfavorable]").textContent = formatNumber.format(authored.filter((item) => item.favoravel < 0).length);
         parliamentarianDialog.showModal();
@@ -672,6 +821,15 @@ function initActivity(root: HTMLElement) {
 
     load();
 }
+
+document.addEventListener("click", (event) => {
+    if (!(event.target as HTMLElement).closest(".dashboard-tooltip-icon")) {
+        document.querySelectorAll(".activity-dashboard-card.touch-tooltip").forEach((card) => {
+            card.classList.remove("touch-tooltip");
+            card.querySelector(".dashboard-tooltip-icon")?.setAttribute("aria-expanded", "false");
+        });
+    }
+});
 
 const initialize = () => document.querySelectorAll<HTMLElement>("[data-activity-root]").forEach(initActivity);
 initialize();
