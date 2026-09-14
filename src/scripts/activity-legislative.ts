@@ -403,12 +403,14 @@ function initActivity(root: HTMLElement) {
         const authors = filterAuthorsByMinProposals(allAuthors, authorProposalCounts);
         stateDashboard = new Map(states.map((row) => [row.key, row]));
 
-        const genderSort = ($<HTMLSelectElement>('[data-dashboard-sort="gender"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
         const houseSort = ($<HTMLSelectElement>('[data-dashboard-sort="house"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
         const partySort = ($<HTMLSelectElement>('[data-dashboard-sort="party"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
         const authorSort = ($<HTMLSelectElement>('[data-dashboard-sort="author"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
 
-        fillDashboardRows("[data-dashboard-gender]", genders, { sort: genderSort });
+        // Regra estritamente visual: os dados desconhecidos continuam agregados e
+        // auditados, mas o painel exibe apenas F/M nesta ordem editorial fixa.
+        const displayedGenders = (["F", "M"] as const).flatMap((code) => genders.filter((row) => row.key === code));
+        fillDashboardRows("[data-dashboard-gender]", displayedGenders);
         fillDashboardRows("[data-dashboard-house]", houses, { sort: houseSort });
         fillDashboardRows("[data-dashboard-party]", partyCanetadas, { sort: partySort });
         fillDashboardRows("[data-dashboard-author]", authors, { sort: authorSort, author: true });
@@ -442,73 +444,42 @@ function initActivity(root: HTMLElement) {
     function closeAllCardTooltips() {
         root.querySelectorAll(".activity-dashboard-card.touch-tooltip").forEach((card) => {
             card.classList.remove("touch-tooltip");
-            card.querySelector(".dashboard-tooltip-icon")?.setAttribute("aria-expanded", "false");
         });
     }
 
     function addDashboardTooltips() {
-        const setupCardTooltip = (card: HTMLElement, text: string, id: string) => {
-            let tooltip = card.querySelector(".dashboard-tooltip") as HTMLElement | null;
-            if (!tooltip) {
-                tooltip = document.createElement("div");
-                tooltip.className = "dashboard-tooltip";
-                tooltip.setAttribute("role", "tooltip");
-                tooltip.id = id;
-                tooltip.textContent = text;
-                const header = card.querySelector("header");
-                if (header) {
-                    const trigger = document.createElement("button");
-                    trigger.type = "button";
-                    trigger.className = "dashboard-tooltip-icon";
-                    trigger.setAttribute("aria-label", "Mais informações");
-                    trigger.setAttribute("aria-describedby", id);
-                    trigger.setAttribute("aria-expanded", "false");
-                    trigger.textContent = "ℹ";
-                    const existingLabel = header.querySelector("label");
-                    if (existingLabel) {
-                        existingLabel.appendChild(trigger);
-                    } else {
-                        header.appendChild(trigger);
-                    }
-                }
-                card.appendChild(tooltip);
-            }
-            const trigger = card.querySelector(".dashboard-tooltip-icon") as HTMLElement | null;
-            if (trigger && !trigger.hasAttribute("data-tooltip-bound")) {
-                trigger.setAttribute("data-tooltip-bound", "true");
-                // `click` cobre mouse, teclado (Enter/Espaço) e toque; sem
-                // listener duplo de `touchstart`.
-                trigger.addEventListener("click", (event) => {
-                    event.stopPropagation();
-                    const willShow = !card.classList.contains("touch-tooltip");
-                    closeAllCardTooltips();
-                    card.classList.toggle("touch-tooltip", willShow);
-                    trigger.setAttribute("aria-expanded", String(willShow));
-                });
-                trigger.addEventListener("keydown", (event) => {
-                    if ((event as KeyboardEvent).key === "Escape") {
-                        card.classList.remove("touch-tooltip");
-                        trigger.setAttribute("aria-expanded", "false");
-                    }
-                });
-            }
-        };
-
         const authorCard = root.querySelector("[data-dashboard-author]")?.closest(".activity-dashboard-card") as HTMLElement | null;
-        if (authorCard) {
-            setupCardTooltip(authorCard, `Esta visualização considera apenas parlamentares com ${MIN_PROPOSICOES_POR_PARLAMENTAR} ou mais proposições relacionadas a gênero.`, "tooltip-author");
+        if (!authorCard) return;
+        const text = `Esta visualização considera apenas parlamentares com ${MIN_PROPOSICOES_POR_PARLAMENTAR} ou mais proposições relacionadas a gênero.`;
+        const id = "tooltip-author";
+        let tooltip = authorCard.querySelector(".dashboard-tooltip") as HTMLElement | null;
+        if (!tooltip) {
+            tooltip = document.createElement("div");
+            tooltip.className = "dashboard-tooltip";
+            tooltip.setAttribute("role", "tooltip");
+            tooltip.id = id;
+            tooltip.textContent = text;
+            authorCard.appendChild(tooltip);
         }
-        const partyCard = root.querySelector("[data-dashboard-party]")?.closest(".activity-dashboard-card") as HTMLElement | null;
-        if (partyCard) {
-            setupCardTooltip(partyCard, "Este painel contabiliza as participações (canetadas) dos parlamentares nas proposições, e não apenas a autoria principal.", "tooltip-party");
-        }
-        const genderCard = root.querySelector("[data-dashboard-gender]")?.closest(".activity-dashboard-card") as HTMLElement | null;
-        if (genderCard) {
-            setupCardTooltip(genderCard, "Este painel contabiliza as assinaturas das pessoas parlamentares. Uma proposição pode ser contabilizada mais de uma vez quando possui múltiplas autorias.", "tooltip-gender");
-        }
-        const stateCard = root.querySelector("[data-dashboard-map]")?.closest(".activity-dashboard-card") as HTMLElement | null;
-        if (stateCard) {
-            setupCardTooltip(stateCard, "Este painel contabiliza a UF de cada assinatura. Uma proposição pode aparecer em mais de uma UF quando possui múltiplas autorias.", "tooltip-state");
+        // Sem ícone visual: a explicação é acionada pelo próprio título.
+        const title = authorCard.querySelector(".activity-dashboard-card__title h3, header h3") as HTMLElement | null;
+        if (title && !title.hasAttribute("data-tooltip-bound")) {
+            title.setAttribute("data-tooltip-bound", "true");
+            title.tabIndex = 0;
+            title.setAttribute("aria-describedby", id);
+            // `click` cobre mouse e toque; sem listener duplo de `touchstart`.
+            title.addEventListener("click", (event) => {
+                event.stopPropagation();
+                const willShow = !authorCard.classList.contains("touch-tooltip");
+                closeAllCardTooltips();
+                authorCard.classList.toggle("touch-tooltip", willShow);
+            });
+            title.addEventListener("keydown", (event) => {
+                if ((event as KeyboardEvent).key === "Escape") {
+                    authorCard.classList.remove("touch-tooltip");
+                    title.blur();
+                }
+            });
         }
     }
 
@@ -599,7 +570,11 @@ function initActivity(root: HTMLElement) {
             badge.textContent = String(activeCount);
             badge.hidden = activeCount === 0;
         });
-        $$<HTMLElement>("[data-clear-filters]").forEach((button) => { button.hidden = activeCount === 0; });
+        $$<HTMLButtonElement>("[data-clear-filters]").forEach((button) => {
+            button.hidden = false;
+            button.disabled = activeCount === 0;
+            button.setAttribute("aria-disabled", String(activeCount === 0));
+        });
     }
 
     function renderPagination() {
@@ -823,10 +798,9 @@ function initActivity(root: HTMLElement) {
 }
 
 document.addEventListener("click", (event) => {
-    if (!(event.target as HTMLElement).closest(".dashboard-tooltip-icon")) {
+    if (!(event.target as HTMLElement).closest(".activity-dashboard-card__title")) {
         document.querySelectorAll(".activity-dashboard-card.touch-tooltip").forEach((card) => {
             card.classList.remove("touch-tooltip");
-            card.querySelector(".dashboard-tooltip-icon")?.setAttribute("aria-expanded", "false");
         });
     }
 });
