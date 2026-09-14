@@ -6,8 +6,11 @@ import AlertsToolbar from "../components/redesign/alerts/AlertsToolbar.astro";
 import AlertsList from "../components/redesign/alerts/AlertsList.astro";
 import AlertsEmailModal from "../components/redesign/alerts/AlertsEmailModal.astro";
 import RedesignFooter from "../components/redesign/RedesignFooter.astro";
+import { getAlertPropositions } from "../service/api/alerts";
 import "../styles/tailwind.css";
 import "../styles/redesign-shared-background.css";
+
+const propositionPage = await getAlertPropositions();
 ---
 
 <!doctype html>
@@ -31,7 +34,7 @@ import "../styles/redesign-shared-background.css";
                 <AlertsHero />
                 <section class="alerts-content" aria-label="Alertas recentes">
                     <AlertsToolbar />
-                    <AlertsList />
+                    <AlertsList propositions={propositionPage.items} total={propositionPage.count} />
                 </section>
             </main>
             <RedesignFooter />

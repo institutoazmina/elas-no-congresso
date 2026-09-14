@@ -32,5 +32,13 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     css: { preprocessorOptions: { less: {} } },
+    server: {
+      proxy: {
+        '/api/v1': {
+          target: 'https://api.elasnocongresso.com.br',
+          changeOrigin: true,
+        },
+      },
+    },
   },
 });
