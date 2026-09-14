@@ -10,18 +10,18 @@ export type AlertSelection = {
     categorias: string[];
     casa?: string;
     comissao?: string;
-    proposicao?: number;
+    proposicoes?: number[];
 };
 
 type Leaf = { field: string; op: string; value: unknown };
 export type Ast = Leaf | { op: "AND"; children: Ast[] };
 
-export function buildAst({ categorias, casa, comissao, proposicao }: AlertSelection): Ast {
+export function buildAst({ categorias, casa, comissao, proposicoes }: AlertSelection): Ast {
     const filtros: Leaf[] = [];
     if (categorias.length) filtros.push({ field: "categoria", op: "in", value: categorias });
     if (casa) filtros.push({ field: "casa", op: "eq", value: casa });
     if (comissao) filtros.push({ field: "comissao", op: "eq", value: comissao });
-    if (proposicao) filtros.push({ field: "proposicao", op: "eq", value: proposicao });
+    if (proposicoes?.length) filtros.push({ field: "proposicao", op: "in", value: proposicoes });
 
     if (!filtros.length) throw new Error("Escolha ao menos um tema.");
     return filtros.length === 1 ? filtros[0]! : { op: "AND", children: filtros };

@@ -37,8 +37,8 @@ const propositionPage = await getAlertPropositions();
                     <AlertsList propositions={propositionPage.items} total={propositionPage.count} />
                 </section>
             </main>
-            <RedesignFooter />
             <AlertsEmailModal />
+            <RedesignFooter />
         </div>
     </body>
 </html>
@@ -51,6 +51,7 @@ const propositionPage = await getAlertPropositions();
     .redesign-header .ff1 { font-family: "ETC Anybody", sans-serif; }
     .redesign-alerts-header-background { position: relative; z-index: 12; }
     .redesign-alerts-main { background: #fff; }
+    body.alerts-email-modal-open .redesign-alerts-main { display: none; }
     .alerts-content { box-sizing: border-box; display: flex; flex-direction: column; gap: 32px; margin: 0 auto; padding: 100px 40px 56px; width: 896px; }
     @media (max-width: 940px) { .alerts-content { padding: 64px 32px; width: 100%; } }
     @media (max-width: 767px) {
@@ -60,7 +61,6 @@ const propositionPage = await getAlertPropositions();
             flex-direction: column;
         }
         body.alerts-email-modal-open .redesign-alerts-header-background { order: 0; }
-        body.alerts-email-modal-open .redesign-alerts-main { display: none; }
         body.alerts-email-modal-open .alerts-email-modal { order: 1; }
         body.alerts-email-modal-open .redesign-footer { margin-top: 30px; order: 2; }
         body.alerts-email-modal-open .redesign-header__mobile-menu summary {

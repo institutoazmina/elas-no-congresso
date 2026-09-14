@@ -19,13 +19,13 @@ assert.deepEqual(buildAst({ categorias: ["saude"], casa: "camara", comissao: "CC
     ],
 });
 
-// Proposição é opcional; quando vem, é o id numérico que a API tokeniza.
-assert.deepEqual(buildAst({ categorias: ["saude"], casa: "senado", proposicao: 4242 }), {
+// Proposições são opcionais; quando vêm, são os ids numéricos que a API tokeniza.
+assert.deepEqual(buildAst({ categorias: ["saude"], casa: "senado", proposicoes: [4242, 4343] }), {
     op: "AND",
     children: [
         { field: "categoria", op: "in", value: ["saude"] },
         { field: "casa", op: "eq", value: "senado" },
-        { field: "proposicao", op: "eq", value: 4242 },
+        { field: "proposicao", op: "in", value: [4242, 4343] },
     ],
 });
 
