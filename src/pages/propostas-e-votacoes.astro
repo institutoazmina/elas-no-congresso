@@ -49,4 +49,10 @@ import "../styles/redesign-shared-background.css";
     .redesign-header .wrap { max-width: 1310px; }
     .redesign-header .ff1 { font-family: "ETC Anybody", sans-serif; }
     .activity-page > .redesign-shared-background { background: transparent; }
+    /* Contém a textura no hero: o wrapper da página fica branco puro e o
+       hero (que mantém a própria classe redesign-shared-background + faixa
+       halftone interna com overflow hidden) continua sendo o único dono da textura. */
+    .activity-page.redesign-shared-background { background-image: none; background-color: #fff; }
+    .activity-page main { position: relative; background-color: #fff; }
+    .activity-page .activity-hero { isolation: isolate; }
 </style>
