@@ -279,8 +279,9 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
     .activity-dashboard-card > footer { min-height: 26px; flex: none; padding: 4px 12px 6px; border: 1px solid rgb(66 66 246 / 25%); border-radius: 0 0 4px 4px; color: rgb(11 15 94 / 75%); font-size: 12px; line-height: 16px; }
     .activity-dashboard-card__row { display: grid; min-height: 32px; flex: 0 0 auto; grid-template-columns: minmax(0, 1fr) 80px 34px; align-items: center; gap: 6px; font-size: 14px; line-height: 16px; }
     .activity-dashboard-card__key { min-width: 0; overflow-wrap: anywhere; }
-    .activity-dashboard-card__bars { display: flex; width: 80px; height: 20px; justify-content: center; flex-direction: column; gap: 4px; }
-    .activity-dashboard-card__bars span { display: block; width: var(--bar-width, 0%); min-width: 1px; max-width: 80px; height: 6px; }
+    .activity-dashboard-card__bars { position: relative; display: flex; width: 80px; height: 20px; justify-content: center; flex-direction: column; gap: 4px; }
+    .activity-dashboard-card__bars::before { position: absolute; z-index: 2; inset-block: 0; inset-inline-start: 0; width: 0; border-inline-start: 1px solid #0b0f5e; content: ""; pointer-events: none; }
+    .activity-dashboard-card__bars span { display: block; width: var(--bar-width, 0%); min-width: 0; max-width: 80px; height: 6px; }
     .activity-dashboard-card__bars span:first-child { background: #c1e639; }.activity-dashboard-card__bars span:last-child { background: #ff5865; }
     .activity-dashboard-card__values { display: flex; align-items: flex-end; flex-direction: column; color: rgb(11 15 94 / 75%); font-size: 12px; line-height: 12px; font-variant-numeric: tabular-nums; }
     .activity-dashboard-card--gender .activity-dashboard-card__content, .activity-dashboard-card--house .activity-dashboard-card__content { padding-top: 8px; padding-bottom: 8px; gap: 4px; }
