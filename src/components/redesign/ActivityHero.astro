@@ -43,12 +43,15 @@ import halftone from "../../assets/images/redesign/hero/halftone-shadow.png";
     }
 
     @media (max-width: 767px) {
-        .activity-hero { height: 416px; padding: 32px 16px 24px; align-items: flex-start; }
-        .activity-hero__copy { z-index: 1; width: 343px; max-width: 100%; gap: 16px; }
+        .activity-hero { height: 260px; padding: 24px; align-items: flex-start; }
+        .activity-hero__copy { z-index: 1; width: 100%; max-width: 100%; gap: 15px; }
         .activity-hero__attention { width: 96px; height: 4px; }
-        .activity-hero h1 { width: 260px; font-size: 40px; letter-spacing: -.8px; line-height: 44px; }
-        .activity-hero p { width: 245px; font-size: 14px; line-height: 20px; }
-        .activity-hero__robot { top: 146px; right: -22px; width: 205px; height: 256px; }
-        .activity-hero__halftone { height: 12px; background-size: 720px 12px; }
+        .activity-hero h1 { width: 100%; font-size: 32px; letter-spacing: 0; line-height: 32px; white-space: nowrap; }
+        .activity-hero p { width: 320px; max-width: 100%; padding-top: 5px; padding-bottom: 10px; font-size: 18px; font-weight: 500; line-height: 24px; }
+        .activity-hero__robot { display: none; }
+        .activity-hero__halftone { height: 24px; background-size: 375px 24px; }
+    }
+    @media (max-width: 359px) {
+        .activity-hero h1 { white-space: normal; }
     }
 </style>

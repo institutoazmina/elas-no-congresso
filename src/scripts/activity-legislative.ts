@@ -51,6 +51,11 @@ import {
     createQualityCollector,
     DEFAULT_DASHBOARD_ORDER,
     MIN_PROPOSICOES_POR_PARLAMENTAR,
+    calculateMapFavorableRate,
+    mapFavorableRateToColor,
+    isMapUfCode,
+    MOBILE_ITEMS_PER_PAGE,
+    getSingleDashboardResultMessage,
     type DashboardSort as DashboardSortType,
     type QualityCollector,
 } from "../lib/dashboard-utils";
@@ -72,12 +77,16 @@ function initActivity(root: HTMLElement) {
     const empty = $("[data-empty]");
     const pagination = $("[data-pagination]");
     const dashboard = $("[data-dashboard]");
+    const mapSvg = root.querySelector<SVGSVGElement>("[data-map-hitboxes] svg");
+    mapSvg?.setAttribute("preserveAspectRatio", "xMidYMid meet");
+    root.querySelectorAll<SVGPathElement>("[data-map-hitboxes] path[id]").forEach((path) => {
+        if (isMapUfCode(path.id)) path.setAttribute("data-uf", path.id.toUpperCase());
+    });
     const filterPanel = $("[data-filter-panel]");
     const backdrop = $("[data-backdrop]");
     const parliamentarianDialog = $("[data-parliamentarian-dialog]") as HTMLDialogElement;
     const itemsSelect = $("[data-items-per-page]") as HTMLSelectElement;
     const apiBase = (import.meta.env.PUBLIC_API_BASE_URL || "https://api.elasnocongresso.com.br/api/v1").replace(/\/$/, "");
-    const mapLayers = JSON.parse($("[data-map-layers]").textContent || "{}") as Record<string, string>;
 
     let all: Proposal[] = [];
     let visible: Proposal[] = [];
@@ -88,9 +97,62 @@ function initActivity(root: HTMLElement) {
     let lastFocused: HTMLElement | null = null;
     let stateDashboard = new Map<string, DashboardRow>();
     let dataQuality: QualityCollector = createQualityCollector();
+    let mobileAccordionsReady = false;
+    let mobileViewport = window.matchMedia("(max-width: 767px)");
+
+    function syncResponsivePageSize(render = false) {
+        if (!itemsSelect.dataset.userSelected && mobileViewport.matches && itemsSelect.value !== String(MOBILE_ITEMS_PER_PAGE)) {
+            itemsSelect.value = String(MOBILE_ITEMS_PER_PAGE);
+            if (render && visible.length) {
+                page = 1;
+                renderResults();
+            }
+        }
+    }
 
     const field = (name: string) => filters.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null;
     const value = (name: string) => field(name)?.value ?? "";
+
+    function setupMobileAccordions() {
+        if (mobileAccordionsReady || !window.matchMedia("(max-width: 767px)").matches) return;
+        mobileAccordionsReady = true;
+        const cards = $$<HTMLElement>(".activity-dashboard-card");
+        cards.forEach((card, index) => {
+            const heading = card.querySelector<HTMLElement>("h3");
+            const content = card.querySelector<HTMLElement>(".activity-dashboard-card__content, .activity-dashboard-map");
+            const header = card.querySelector<HTMLElement>(":scope > header");
+            if (!heading || !content || !header) return;
+            const id = `activity-dashboard-panel-${index}`;
+            content.id = content.id || id;
+            const toggle = document.createElement("button");
+            toggle.type = "button";
+            toggle.className = "activity-dashboard-card__toggle";
+            toggle.setAttribute("aria-controls", content.id);
+            const info = heading.querySelector<HTMLElement>("[data-dashboard-tooltip-trigger]");
+            [...heading.childNodes].forEach((node) => {
+                if (node !== info) toggle.append(node);
+            });
+            heading.replaceWith(toggle);
+            if (info) header.append(info);
+            const open = card.classList.contains("activity-dashboard-card--house");
+            const setOpen = (next: boolean) => {
+                card.classList.toggle("is-expanded", next);
+                card.classList.toggle("is-collapsed", !next);
+                toggle.setAttribute("aria-expanded", String(next));
+            };
+            setOpen(open);
+            toggle.addEventListener("click", () => {
+                const next = !card.classList.contains("is-expanded");
+                if (next) cards.forEach((other) => {
+                    if (other === card) return;
+                    other.classList.remove("is-expanded");
+                    other.classList.add("is-collapsed");
+                    other.querySelector<HTMLElement>(".activity-dashboard-card__toggle")?.setAttribute("aria-expanded", "false");
+                });
+                setOpen(next);
+            });
+        });
+    }
 
     function hydrateOptions(data: RawData) {
         const proposals: Proposal[] = [];
@@ -355,7 +417,7 @@ function initActivity(root: HTMLElement) {
         return element;
     }
 
-    function fillDashboardRows(selector: string, rows: DashboardRow[], options: { sort?: DashboardSortType; author?: boolean; limit?: number } = {}) {
+    function fillDashboardRows(selector: string, rows: DashboardRow[], options: { sort?: DashboardSortType; author?: boolean; limit?: number; singleResultMessage?: string | null } = {}) {
         const target = $(selector);
         const sorted = options.sort ? sortDashboardRows(rows, options.sort) : rows;
         const shown = options.limit ? sorted.slice(0, options.limit) : sorted;
@@ -365,10 +427,21 @@ function initActivity(root: HTMLElement) {
             const message = document.createElement("p");
             message.textContent = "Sem dados para os filtros selecionados.";
             target.append(message);
+        } else if (options.singleResultMessage) {
+            const message = document.createElement("p");
+            message.className = "activity-dashboard-card__single-result";
+            message.textContent = options.singleResultMessage;
+            target.append(message);
         }
     }
 
     function renderDashboard() {
+        if (!visible.length) {
+            stateDashboard = new Map();
+            dashboard.setAttribute("hidden", "");
+            return;
+        }
+        dashboard.removeAttribute("hidden");
         // Visão por autorias: cada item carrega os autores resolvidos e a
         // avaliação da proposição. Usado pelos painéis de canetadas.
         const authorshipItems = visible.map((item) => ({ authors: item.authors, favorable: item.favoravel }));
@@ -400,10 +473,12 @@ function initActivity(root: HTMLElement) {
             meta: [author.partido, author.estado].filter(Boolean).join("/"),
         })));
         const authorProposalCounts = countAuthorProposals(visible);
-        const authors = filterAuthorsByMinProposals(allAuthors, authorProposalCounts);
+        // O limite é aplicado depois dos filtros gerais e da contagem de
+        // proposições únicas por parlamentar, antes da ordenação/renderização.
+        const authorMinimum = Number($<HTMLSelectElement>("[data-dashboard-author-filter]")?.value || MIN_PROPOSICOES_POR_PARLAMENTAR);
+        const authors = filterAuthorsByMinProposals(allAuthors, authorProposalCounts, authorMinimum);
         stateDashboard = new Map(states.map((row) => [row.key, row]));
 
-        const houseSort = ($<HTMLSelectElement>('[data-dashboard-sort="house"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
         const partySort = ($<HTMLSelectElement>('[data-dashboard-sort="party"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
         const authorSort = ($<HTMLSelectElement>('[data-dashboard-sort="author"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
 
@@ -411,77 +486,89 @@ function initActivity(root: HTMLElement) {
         // auditados, mas o painel exibe apenas F/M nesta ordem editorial fixa.
         const displayedGenders = (["F", "M"] as const).flatMap((code) => genders.filter((row) => row.key === code));
         fillDashboardRows("[data-dashboard-gender]", displayedGenders);
-        fillDashboardRows("[data-dashboard-house]", houses, { sort: houseSort });
-        fillDashboardRows("[data-dashboard-party]", partyCanetadas, { sort: partySort });
-        fillDashboardRows("[data-dashboard-author]", authors, { sort: authorSort, author: true });
+        // Casa segue a ordem editorial do design (Câmara, Senado); somente
+        // partido e autoria expõem ordenação interativa.
+        const displayedHouses = (["camara", "senado"] as const).flatMap((key) => houses.filter((row) => row.key === key));
+        fillDashboardRows("[data-dashboard-house]", displayedHouses);
+        fillDashboardRows("[data-dashboard-party]", partyCanetadas, { sort: partySort, singleResultMessage: getSingleDashboardResultMessage("party", partyCanetadas) });
+        fillDashboardRows("[data-dashboard-author]", authors, { sort: authorSort, author: true, singleResultMessage: getSingleDashboardResultMessage("author", authors) });
         $("[data-dashboard-category]").textContent = "Categorias não estão disponíveis no arquivo de dados desta listagem.";
         $("[data-dashboard-status]").textContent = "Status legislativos completos não estão disponíveis no arquivo de dados desta listagem.";
 
-        addDashboardTooltips();
-
-        const stateLayers = $("[data-map-state-layers]");
-        stateLayers.replaceChildren(...states.flatMap((row) => {
-            const stance = row.favorable >= row.unfavorable ? "favoravel" : "desfavoravel";
-            const src = mapLayers[`${row.key}:${stance}`];
-            if (!src) return [];
-            const image = document.createElement("img");
-            image.src = src;
-            image.alt = "";
-            return [image];
-        }));
-        const favorable = visible.filter((item) => item.favoravel > 0).length;
-        const unfavorable = visible.filter((item) => item.favoravel < 0).length;
-        const total = favorable + unfavorable || 1;
-        $("[data-map-percentages]").textContent = `${Math.round((favorable / total) * 100)}% favoráveis · ${Math.round((unfavorable / total) * 100)}% desfavoráveis`;
-        $$<SVGPathElement>("[data-map-hitboxes] path").forEach((path) => {
-            const row = stateDashboard.get(path.id.toUpperCase());
+        $$<SVGPathElement>("[data-map-hitboxes] path[data-uf]").filter((path) => isMapUfCode(path.dataset.uf || path.id)).forEach((path) => {
+            const uf = (path.dataset.uf || path.id).toUpperCase();
+            const row = stateDashboard.get(uf);
+            const favorableRate = row ? calculateMapFavorableRate(row) : null;
+            path.style.fill = mapFavorableRateToColor(favorableRate);
             path.tabIndex = 0;
-            path.setAttribute("aria-label", row ? `${path.id}: ${row.favorable} favoráveis e ${row.unfavorable} desfavoráveis` : `${path.id}: sem proposições nos filtros atuais`);
+            path.setAttribute("aria-label", favorableRate === null
+                ? `${path.id}: sem proposições avaliadas nos filtros atuais`
+                : `${path.id}: ${row!.favorable} favoráveis e ${row!.unfavorable} desfavoráveis`);
+            path.setAttribute("aria-describedby", "activity-map-tooltip");
+            path.setAttribute("aria-expanded", "false");
         });
         dashboard.removeAttribute("hidden");
     }
 
-    function closeAllCardTooltips() {
-        root.querySelectorAll(".activity-dashboard-card.touch-tooltip").forEach((card) => {
-            card.classList.remove("touch-tooltip");
-        });
+    const dashboardTooltipTriggers = $$<HTMLButtonElement>("[data-dashboard-tooltip-trigger]");
+    const dashboardTooltips = $$<HTMLElement>("[data-dashboard-tooltip]");
+    let activeDashboardTooltip: HTMLElement | null = null;
+    let activeDashboardTooltipTrigger: HTMLButtonElement | null = null;
+
+    function closeDashboardTooltip(restoreFocus = false) {
+        if (!activeDashboardTooltip) return;
+        activeDashboardTooltip.hidden = true;
+        activeDashboardTooltip.removeAttribute("data-pinned");
+        activeDashboardTooltipTrigger?.setAttribute("aria-expanded", "false");
+        const trigger = activeDashboardTooltipTrigger;
+        activeDashboardTooltip = null;
+        activeDashboardTooltipTrigger = null;
+        if (restoreFocus) trigger?.focus();
     }
 
-    function addDashboardTooltips() {
-        const authorCard = root.querySelector("[data-dashboard-author]")?.closest(".activity-dashboard-card") as HTMLElement | null;
-        if (!authorCard) return;
-        const text = `Esta visualização considera apenas parlamentares com ${MIN_PROPOSICOES_POR_PARLAMENTAR} ou mais proposições relacionadas a gênero.`;
-        const id = "tooltip-author";
-        let tooltip = authorCard.querySelector(".dashboard-tooltip") as HTMLElement | null;
-        if (!tooltip) {
-            tooltip = document.createElement("div");
-            tooltip.className = "dashboard-tooltip";
-            tooltip.setAttribute("role", "tooltip");
-            tooltip.id = id;
-            tooltip.textContent = text;
-            authorCard.appendChild(tooltip);
-        }
-        // Sem ícone visual: a explicação é acionada pelo próprio título.
-        const title = authorCard.querySelector(".activity-dashboard-card__title h3, header h3") as HTMLElement | null;
-        if (title && !title.hasAttribute("data-tooltip-bound")) {
-            title.setAttribute("data-tooltip-bound", "true");
-            title.tabIndex = 0;
-            title.setAttribute("aria-describedby", id);
-            // `click` cobre mouse e toque; sem listener duplo de `touchstart`.
-            title.addEventListener("click", (event) => {
-                event.stopPropagation();
-                const willShow = !authorCard.classList.contains("touch-tooltip");
-                closeAllCardTooltips();
-                authorCard.classList.toggle("touch-tooltip", willShow);
-            });
-            title.addEventListener("keydown", (event) => {
-                if ((event as KeyboardEvent).key === "Escape") {
-                    authorCard.classList.remove("touch-tooltip");
-                    title.blur();
-                }
-            });
-        }
+    function positionDashboardTooltip(trigger: HTMLButtonElement, tooltip: HTMLElement) {
+        const triggerBounds = trigger.getBoundingClientRect();
+        const tooltipWidth = tooltip.offsetWidth;
+        const tooltipHeight = tooltip.offsetHeight;
+        const left = Math.min(window.innerWidth - tooltipWidth - 8, Math.max(8, triggerBounds.left + triggerBounds.width / 2 - tooltipWidth / 2));
+        const top = Math.max(8, triggerBounds.top - tooltipHeight - 8);
+        const tipOffset = Math.min(tooltipWidth - 20, Math.max(4, triggerBounds.left + triggerBounds.width / 2 - left - 8));
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+        tooltip.style.setProperty("--tooltip-tip-offset", `${tipOffset}px`);
     }
+
+    function showDashboardTooltip(trigger: HTMLButtonElement, pinned = false) {
+        const key = trigger.dataset.dashboardTooltipTrigger;
+        const tooltip = dashboardTooltips.find((item) => item.dataset.dashboardTooltip === key);
+        if (!tooltip) return;
+        if (activeDashboardTooltip && activeDashboardTooltip !== tooltip) closeDashboardTooltip();
+        tooltip.hidden = false;
+        tooltip.toggleAttribute("data-pinned", pinned);
+        trigger.setAttribute("aria-expanded", "true");
+        activeDashboardTooltip = tooltip;
+        activeDashboardTooltipTrigger = trigger;
+        positionDashboardTooltip(trigger, tooltip);
+    }
+
+    dashboardTooltipTriggers.forEach((trigger) => {
+        trigger.addEventListener("pointerenter", () => showDashboardTooltip(trigger));
+        trigger.addEventListener("pointerleave", () => {
+            if (!activeDashboardTooltip?.hasAttribute("data-pinned")) closeDashboardTooltip();
+        });
+        trigger.addEventListener("focus", () => showDashboardTooltip(trigger));
+        trigger.addEventListener("blur", () => {
+            window.setTimeout(() => {
+                if (document.activeElement !== trigger && !activeDashboardTooltip?.hasAttribute("data-pinned")) closeDashboardTooltip();
+            });
+        });
+        trigger.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const isPinned = activeDashboardTooltipTrigger === trigger && activeDashboardTooltip?.hasAttribute("data-pinned");
+            if (isPinned) closeDashboardTooltip();
+            else showDashboardTooltip(trigger, true);
+        });
+    });
 
     function createTableRow(item: Proposal) {
         const row = document.createElement("tr");
@@ -580,6 +667,8 @@ function initActivity(root: HTMLElement) {
     function renderPagination() {
         const pages = Math.max(1, Math.ceil(visible.length / Number(itemsSelect.value)));
         page = Math.min(page, pages);
+        const compact = visible.length > 0 && pages <= 1;
+        root.classList.toggle("is-compact-results", compact);
         const pagesRoot = $("[data-pages]");
         pagesRoot.replaceChildren();
         const makeButton = (label: string, target: number, disabled = false, current = false) => {
@@ -598,7 +687,7 @@ function initActivity(root: HTMLElement) {
         const controls = document.createElement("span");
         controls.append(makeButton("‹", page - 1, page === 1), makeButton("›", page + 1, page === pages));
         pagesRoot.append(label, controls);
-        pagination.hidden = visible.length === 0;
+        pagination.hidden = visible.length === 0 || pages <= 1;
     }
 
     function renderResults() {
@@ -630,17 +719,27 @@ function initActivity(root: HTMLElement) {
     function openFilters(advanced = false) {
         panelAdvanced = advanced;
         filterPanel.classList.toggle("is-advanced", advanced);
+        const advancedToggle = $<HTMLButtonElement>("[data-toggle-advanced]");
+        advancedToggle.textContent = advanced ? "Menos filtros" : "Mais filtros";
+        advancedToggle.setAttribute("aria-expanded", String(advanced));
         filterPanel.removeAttribute("hidden");
         backdrop.removeAttribute("hidden");
         root.classList.add("has-overlay");
         lastFocused = document.activeElement as HTMLElement;
-        (filterPanel.querySelector("input, select, button") as HTMLElement | null)?.focus();
+        ["house", "year", "party", "category", "assessment"].forEach((name) => {
+            const desktop = field(name);
+            const mobile = field(`${name}-mobile`);
+            if (desktop && mobile) mobile.value = desktop.value;
+        });
+        $$<HTMLButtonElement>("[data-open-filters]").forEach((button) => button.setAttribute("aria-expanded", "true"));
+        (filterPanel.querySelector(".activity-filter-panel__basic select, .activity-filter-panel__basic input, input, select, button") as HTMLElement | null)?.focus();
     }
 
     function closeFilters() {
         filterPanel.setAttribute("hidden", "");
         backdrop.setAttribute("hidden", "");
         root.classList.remove("has-overlay");
+        $$<HTMLButtonElement>("[data-open-filters]").forEach((button) => button.setAttribute("aria-expanded", "false"));
         lastFocused?.focus();
     }
 
@@ -692,13 +791,17 @@ function initActivity(root: HTMLElement) {
         if (target.name.endsWith("-mobile")) {
             const desktop = field(target.name.replace(/-mobile$/, ""));
             if (desktop) desktop.value = target.value;
+        } else if (target.name && !target.name.includes("-mobile")) {
+            const mobile = field(`${target.name}-mobile`);
+            if (mobile) mobile.value = target.value;
         }
         if (target.name === "search" && window.matchMedia("(min-width: 768px)").matches) {
             window.clearTimeout(Number(filters.dataset.searchTimer));
             filters.dataset.searchTimer = String(window.setTimeout(applyFilters, 250));
         }
     });
-    itemsSelect.addEventListener("change", () => { page = 1; renderResults(); });
+    itemsSelect.addEventListener("change", () => { itemsSelect.dataset.userSelected = "true"; page = 1; renderResults(); });
+    mobileViewport.addEventListener("change", () => syncResponsivePageSize(true));
     root.addEventListener("click", (event) => {
         const target = (event.target as HTMLElement).closest<HTMLElement>("button, a");
         if (!target) return;
@@ -708,6 +811,7 @@ function initActivity(root: HTMLElement) {
             panelAdvanced = !panelAdvanced;
             filterPanel.classList.toggle("is-advanced", panelAdvanced);
             target.textContent = panelAdvanced ? "Menos filtros" : "Mais filtros";
+            target.setAttribute("aria-expanded", String(panelAdvanced));
         }
         if (target.matches("[data-clear-filters]")) resetFilters();
         if (target.matches("[data-table-sort]")) {
@@ -741,37 +845,105 @@ function initActivity(root: HTMLElement) {
         if (target.matches("[data-retry]")) load();
     });
     backdrop.addEventListener("click", closeFilters);
-    $$<HTMLSelectElement>("[data-dashboard-sort]").forEach((select) => select.addEventListener("change", renderDashboard));
+    filterPanel.addEventListener("keydown", (event) => {
+        if (event.key !== "Tab" || filterPanel.hasAttribute("hidden")) return;
+        const focusable = $$<HTMLElement>("button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href]")
+            .filter((element) => filterPanel.contains(element));
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    });
+    filters.addEventListener("change", (event) => {
+        const target = event.target as HTMLInputElement | HTMLSelectElement;
+        if (!target.name) return;
+        const pairedName = target.name.endsWith("-mobile") ? target.name.replace(/-mobile$/, "") : `${target.name}-mobile`;
+        const paired = field(pairedName);
+        if (paired) paired.value = target.value;
+    });
+    $$<HTMLSelectElement>("[data-dashboard-sort], [data-dashboard-author-filter]").forEach((select) => select.addEventListener("change", renderDashboard));
     const mapTooltip = $("[data-map-tooltip]");
-    const showMapTooltip = (path: SVGPathElement, event?: PointerEvent) => {
+    const mapTooltipTitle = $("[data-map-tooltip-title]");
+    const mapTooltipSummary = $("[data-map-tooltip-summary]");
+    const mapTooltipDetails = $("[data-map-tooltip-details]");
+    let activeMapPath: SVGPathElement | null = null;
+
+    const closeMapTooltip = (restoreFocus = false) => {
+        if (!activeMapPath) return;
+        mapTooltip.hidden = true;
+        mapTooltip.removeAttribute("data-pinned");
+        const path = activeMapPath;
+        path.setAttribute("aria-expanded", "false");
+        activeMapPath = null;
+        if (restoreFocus) path.focus();
+    };
+
+    const showMapTooltip = (path: SVGPathElement, event?: PointerEvent, pinned = false) => {
         const row = stateDashboard.get(path.id.toUpperCase());
-        mapTooltip.textContent = row
-            ? `${path.id}: ${formatNumber.format(row.favorable)} favoráveis · ${formatNumber.format(row.unfavorable)} desfavoráveis`
-            : `${path.id}: sem proposições nos filtros atuais`;
-        mapTooltip.removeAttribute("hidden");
+        const favorableRate = row ? calculateMapFavorableRate(row) : null;
+        if (activeMapPath && activeMapPath !== path) closeMapTooltip();
+        mapTooltipTitle.textContent = favorableRate === null ? `${path.id} — N/A` : path.id;
+        mapTooltipSummary.textContent = favorableRate === null
+            ? "Não há proposições avaliadas para o filtro atual."
+            : `${formatNumber.format(row!.favorable)} favoráveis · ${formatNumber.format(row!.unfavorable)} desfavoráveis`;
+        mapTooltipDetails.textContent = favorableRate === null
+            ? "A taxa de favorabilidade não se aplica."
+            : `${Math.round(favorableRate * 100)}% favoráveis · considera a UF de cada parlamentar que assina.`;
+        mapTooltip.hidden = false;
+        mapTooltip.toggleAttribute("data-pinned", pinned);
+        path.setAttribute("aria-expanded", "true");
+        activeMapPath = path;
         const bounds = path.getBoundingClientRect();
-        const left = event?.clientX ?? bounds.left + bounds.width / 2;
-        const top = event?.clientY ?? bounds.top + bounds.height / 2;
-        mapTooltip.style.left = `${Math.min(window.innerWidth - 230, Math.max(8, left + 12))}px`;
-        mapTooltip.style.top = `${Math.min(window.innerHeight - 80, Math.max(8, top + 12))}px`;
+        const anchorX = event?.clientX ?? bounds.left + bounds.width / 2;
+        const tooltipWidth = mapTooltip.offsetWidth;
+        const tooltipHeight = mapTooltip.offsetHeight;
+        const left = Math.min(window.innerWidth - tooltipWidth - 8, Math.max(8, anchorX - tooltipWidth / 2));
+        const top = Math.max(8, bounds.top - tooltipHeight - 8);
+        const tipOffset = Math.min(tooltipWidth - 20, Math.max(4, anchorX - left - 8));
+        mapTooltip.style.left = `${left}px`;
+        mapTooltip.style.top = `${top}px`;
+        mapTooltip.style.setProperty("--tooltip-tip-offset", `${tipOffset}px`);
     };
     root.addEventListener("pointerover", (event) => {
-        const path = event.target instanceof Element ? event.target.closest<SVGPathElement>("[data-map-hitboxes] path") : null;
+        const path = event.target instanceof Element ? event.target.closest<SVGPathElement>("[data-map-hitboxes] path[data-uf]") : null;
         if (path) showMapTooltip(path, event);
     });
     root.addEventListener("pointerout", (event) => {
-        if (event.target instanceof Element && event.target.closest("[data-map-hitboxes] path")) mapTooltip.setAttribute("hidden", "");
+        if (event.target instanceof Element && event.target.closest("[data-map-hitboxes] path[data-uf]") && !mapTooltip.hasAttribute("data-pinned")) closeMapTooltip();
     });
     root.addEventListener("focusin", (event) => {
-        const path = event.target instanceof Element ? event.target.closest<SVGPathElement>("[data-map-hitboxes] path") : null;
+        const path = event.target instanceof Element ? event.target.closest<SVGPathElement>("[data-map-hitboxes] path[data-uf]") : null;
         if (path) showMapTooltip(path);
     });
     root.addEventListener("focusout", (event) => {
-        if (event.target instanceof Element && event.target.closest("[data-map-hitboxes] path")) mapTooltip.setAttribute("hidden", "");
+        if (event.target instanceof Element && event.target.closest("[data-map-hitboxes] path[data-uf]") && !mapTooltip.hasAttribute("data-pinned")) closeMapTooltip();
+    });
+    root.addEventListener("click", (event) => {
+        const path = event.target instanceof Element ? event.target.closest<SVGPathElement>("[data-map-hitboxes] path[data-uf]") : null;
+        if (!path) return;
+        const isPinned = activeMapPath === path && mapTooltip.hasAttribute("data-pinned");
+        if (isPinned) closeMapTooltip();
+        else showMapTooltip(path, event as PointerEvent, true);
     });
     parliamentarianDialog.addEventListener("close", () => lastFocused?.focus());
     parliamentarianDialog.addEventListener("click", (event) => { if (event.target === parliamentarianDialog) parliamentarianDialog.close(); });
-    document.addEventListener("keydown", (event) => { if (event.key === "Escape" && !filterPanel.hasAttribute("hidden")) closeFilters(); });
+    document.addEventListener("click", (event) => {
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target?.closest("[data-dashboard-tooltip-trigger]")) closeDashboardTooltip();
+        if (!target?.closest("[data-map-hitboxes] path[data-uf]")) closeMapTooltip();
+    });
+    document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") return;
+        if (!filterPanel.hasAttribute("hidden")) closeFilters();
+        if (activeDashboardTooltip) closeDashboardTooltip(true);
+        if (activeMapPath) closeMapTooltip(true);
+    });
 
     async function load() {
         status.hidden = false;
@@ -781,6 +953,7 @@ function initActivity(root: HTMLElement) {
             const response = await fetch("/dados.json");
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             hydrateOptions(await response.json());
+            syncResponsivePageSize();
             visible = sortItems(all);
             status.hidden = true;
             renderResults();
@@ -794,16 +967,9 @@ function initActivity(root: HTMLElement) {
         }
     }
 
+    setupMobileAccordions();
     load();
 }
-
-document.addEventListener("click", (event) => {
-    if (!(event.target as HTMLElement).closest(".activity-dashboard-card__title")) {
-        document.querySelectorAll(".activity-dashboard-card.touch-tooltip").forEach((card) => {
-            card.classList.remove("touch-tooltip");
-        });
-    }
-});
 
 const initialize = () => document.querySelectorAll<HTMLElement>("[data-activity-root]").forEach(initActivity);
 initialize();

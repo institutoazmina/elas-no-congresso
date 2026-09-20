@@ -5,24 +5,43 @@
  * - resumo geral, Por casa: proposições únicas;
  * - Por partido: canetadas (autorias/assinaturas únicas por proposição);
  * - Por autoria: proposições únicas por parlamentar;
- * - Por gênero, Por UF: autorias únicas por proposição (provisório).
+ * - Por gênero, Por UF: autorias únicas por proposição.
  */
 
 // ---------------------------------------------------------------------------
-// Configurações provisórias — aguardando validação editorial (ETAPA 1).
-// Não espalhar os valores literais "unfavorable" ou 10 pelo código: usar
-// estas constantes como padrão nos parâmetros das funções e nos textos.
+// Regras editoriais oficiais da Atividade Legislativa.
+// Não espalhar o modo de ordenação ou o limite de autoria pelo código:
+// usar estas constantes nos controles, mensagens e parâmetros das funções.
 // ---------------------------------------------------------------------------
-/** Ordenação padrão provisória dos painéis: maior taxa desfavorável. */
+/** Ordenação padrão dos painéis interativos: maior taxa desfavorável. */
 export const DEFAULT_DASHBOARD_ORDER: DashboardSort = "unfavorable";
-/** Limite provisório do painel "Por autoria": mínimo de proposições. */
-export const MIN_PROPOSICOES_POR_PARLAMENTAR = 10;
-/** Unidade provisória do painel "Por partido": todas as autorias únicas. */
+/** Limite oficial do painel "Por autoria": mínimo de proposições únicas. */
+export const MIN_PROPOSICOES_POR_PARLAMENTAR = 5;
+export const DESKTOP_ITEMS_PER_PAGE = 10;
+export const MOBILE_ITEMS_PER_PAGE = 5;
+export function getDefaultItemsPerPage(isMobile: boolean): number {
+    return isMobile ? MOBILE_ITEMS_PER_PAGE : DESKTOP_ITEMS_PER_PAGE;
+}
+/** Unidade do painel "Por partido": todas as autorias únicas. */
 export const PARTY_COUNT_MODE = "all-unique-authorships" as const;
-/** Unidade provisória do painel "Por gênero": todas as autorias únicas. */
+/** Unidade do painel "Por gênero": todas as autorias únicas. */
 export const GENDER_COUNT_MODE = "all-unique-authorships" as const;
-/** Unidade provisória do painel "Por UF": todas as autorias únicas. */
+/** Unidade do painel "Por UF": todas as autorias únicas. */
 export const UF_COUNT_MODE = "all-unique-authorships" as const;
+/** Códigos oficiais usados pelos paths interativos do vetor do mapa. */
+export const MAP_UF_CODES = ["AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO", "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"] as const;
+export function isMapUfCode(value: string): boolean {
+    return (MAP_UF_CODES as readonly string[]).includes(value.trim().toUpperCase());
+}
+
+/** Domínio absoluto da taxa favorável no mapa, independente dos filtros. */
+export const MAP_FAVORABILITY_DOMAIN = [0.6, 0.9] as const;
+export const MAP_FAVORABILITY_COLORS = {
+    unfavorable: "#FF5865",
+    midpoint: "#FFFFFF",
+    favorable: "#C1E639",
+    unavailable: "#998D96",
+} as const;
 
 export type DashboardSort = "unfavorable" | "favorable" | "total";
 export type CountMode = "all-unique-authorships";
@@ -39,6 +58,94 @@ export function calculateUnfavorableRate(row: DashboardRow): number {
 export function calculateFavorableRate(row: DashboardRow): number {
     const total = row.favorable + row.unfavorable;
     return total ? row.favorable / total : 0;
+}
+
+/** Taxa favorável do mapa. Sem proposição avaliada, a taxa não existe. */
+export function calculateMapFavorableRate(row: DashboardRow): number | null {
+    const total = row.favorable + row.unfavorable;
+    return total > 0 ? row.favorable / total : null;
+}
+
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+type Hsl = { h: number; s: number; l: number };
+
+function hexToHsl(hex: string): Hsl {
+    const value = Number.parseInt(hex.slice(1), 16);
+    const r = ((value >> 16) & 255) / 255;
+    const g = ((value >> 8) & 255) / 255;
+    const b = (value & 255) / 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const lightness = (max + min) / 2;
+    if (max === min) return { h: 0, s: 0, l: lightness };
+    const delta = max - min;
+    const saturation = lightness > 0.5 ? delta / (2 - max - min) : delta / (max + min);
+    let hue = 0;
+    if (max === r) hue = (g - b) / delta + (g < b ? 6 : 0);
+    else if (max === g) hue = (b - r) / delta + 2;
+    else hue = (r - g) / delta + 4;
+    return { h: hue * 60, s: saturation, l: lightness };
+}
+
+function hslToHex({ h, s, l }: Hsl): string {
+    const hue = ((h % 360) + 360) % 360 / 360;
+    if (s === 0) {
+        const channel = Math.round(l * 255).toString(16).padStart(2, "0");
+        return `#${channel}${channel}${channel}`.toUpperCase();
+    }
+    const hueToRgb = (p: number, q: number, t: number) => {
+        let value = t;
+        if (value < 0) value += 1;
+        if (value > 1) value -= 1;
+        if (value < 1 / 6) return p + (q - p) * 6 * value;
+        if (value < 1 / 2) return q;
+        if (value < 2 / 3) return p + (q - p) * (2 / 3 - value) * 6;
+        return p;
+    };
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    const channels = [hueToRgb(p, q, hue + 1 / 3), hueToRgb(p, q, hue), hueToRgb(p, q, hue - 1 / 3)];
+    return `#${channels.map((channel) => Math.round(channel * 255).toString(16).padStart(2, "0")).join("")}`.toUpperCase();
+}
+
+/** Interpola duas cores em HSL, como `d3.interpolateHsl` para estes pontos. */
+function interpolateHsl(fromHex: string, toHex: string, amount: number): string {
+    const from = hexToHsl(fromHex);
+    const to = hexToHsl(toHex);
+    // Em cores acromáticas, a matiz do extremo colorido evita uma transição
+    // artificial pelo vermelho/verde durante a interpolação HSL.
+    if (from.s === 0) from.h = to.h;
+    if (to.s === 0) to.h = from.h;
+    const hueDelta = ((to.h - from.h + 540) % 360) - 180;
+    return hslToHex({
+        h: from.h + hueDelta * amount,
+        s: from.s + (to.s - from.s) * amount,
+        l: from.l + (to.l - from.l) * amount,
+    });
+}
+
+/**
+ * Cor absoluta do mapa. A taxa é normalizada no domínio fixo de 60% a 90%,
+ * com branco em 75%; filtros nunca alteram esse domínio.
+ */
+export function mapFavorableRateToColor(rate: number | null): string {
+    if (rate === null) return MAP_FAVORABILITY_COLORS.unavailable;
+    const [min, max] = MAP_FAVORABILITY_DOMAIN;
+    const normalized = clamp((rate - min) / (max - min), 0, 1);
+    if (normalized === 0) return MAP_FAVORABILITY_COLORS.unfavorable;
+    if (normalized === 0.5) return MAP_FAVORABILITY_COLORS.midpoint;
+    if (normalized === 1) return MAP_FAVORABILITY_COLORS.favorable;
+    return normalized < 0.5
+        ? interpolateHsl(MAP_FAVORABILITY_COLORS.unfavorable, MAP_FAVORABILITY_COLORS.midpoint, normalized / 0.5)
+        : interpolateHsl(MAP_FAVORABILITY_COLORS.midpoint, MAP_FAVORABILITY_COLORS.favorable, (normalized - 0.5) / 0.5);
+}
+
+export function getSingleDashboardResultMessage(kind: "party" | "author", rows: DashboardRow[]): string | null {
+    if (rows.length !== 1) return null;
+    return kind === "party"
+        ? "Para ver mais partidos, tente remover filtros."
+        : "Para ver mais parlamentares, tente remover filtros.";
 }
 
 export function normalizeUnavailable(value: unknown, fallback = "Indefinido"): string {

@@ -5,6 +5,9 @@
 // Nunca usar as funções de produção para gerar os valores esperados.
 import assert from "node:assert/strict";
 import {
+    DESKTOP_ITEMS_PER_PAGE,
+    MOBILE_ITEMS_PER_PAGE,
+    getDefaultItemsPerPage,
     calculateUnfavorableRate,
     calculateFavorableRate,
     sortDashboardRows,
@@ -31,6 +34,9 @@ import {
     type DashboardRow,
 } from "./dashboard-utils.ts";
 
+assert.strictEqual(getDefaultItemsPerPage(true), MOBILE_ITEMS_PER_PAGE);
+assert.strictEqual(getDefaultItemsPerPage(false), DESKTOP_ITEMS_PER_PAGE);
+
 const makeRow = (key: string, label: string, favorable: number, unfavorable: number): DashboardRow =>
     ({ key, label, favorable, unfavorable });
 
@@ -38,7 +44,7 @@ const makeRow = (key: string, label: string, favorable: number, unfavorable: num
 // Configurações provisórias (ETAPA 1, aguardando validação editorial).
 // ---------------------------------------------------------------------------
 assert.strictEqual(DEFAULT_DASHBOARD_ORDER, "unfavorable");
-assert.strictEqual(MIN_PROPOSICOES_POR_PARLAMENTAR, 10);
+assert.strictEqual(MIN_PROPOSICOES_POR_PARLAMENTAR, 5);
 assert.strictEqual(PARTY_COUNT_MODE, "all-unique-authorships");
 assert.strictEqual(GENDER_COUNT_MODE, "all-unique-authorships");
 assert.strictEqual(UF_COUNT_MODE, "all-unique-authorships");
@@ -166,20 +172,23 @@ const FIXTURE: FxItem[] = [
     assert.strictEqual(counts.get(personKey(GILDA)), 1);
     assert.strictEqual(counts.get(personKey(HELENA)), 1);
     assert.strictEqual(counts.size, 9); // 9 pessoas distintas
-    // Limite >= 10: ninguém da fixture passa (prova que o filtro atua).
+    // Limite oficial >= 5: ninguém da fixture passa (prova que o filtro atua).
     const rows = [...counts.entries()].map(([key, n]) => buildDashboardRow(`person:${key}`, key, 0, 0));
     assert.strictEqual(filterAuthorsByMinProposals(rows, counts).length, 0);
     // Com limite 1, todos passam (recalibragem por conjunto).
     assert.strictEqual(filterAuthorsByMinProposals(rows, counts, 1).length, 9);
 }
 
-// Limite 9 x 10 (parlamentar com 9 excluído, com 10 incluído).
+// Limite oficial: quatro proposições excluem; cinco ou mais incluem.
 {
-    const counts = new Map<string, number>([["num:631", 9], ["num:5352", 10]]);
-    const rows = [makeRow("person:num:631", "Nove", 2, 7), makeRow("person:num:5352", "Dez", 10, 0)];
+    const counts = new Map<string, number>([["num:631", 4], ["num:5352", 5], ["num:89", 6]]);
+    const rows = [
+        makeRow("person:num:631", "Quatro", 2, 2),
+        makeRow("person:num:5352", "Cinco", 3, 2),
+        makeRow("person:num:89", "Seis", 4, 2),
+    ];
     const filtered = filterAuthorsByMinProposals(rows, counts);
-    assert.strictEqual(filtered.length, 1);
-    assert.strictEqual(filtered[0].label, "Dez");
+    assert.deepStrictEqual(filtered.map((row) => row.label), ["Cinco", "Seis"]);
 }
 
 // Filtros: painéis recalculados sobre o subconjunto (casa = Deputado).
@@ -209,6 +218,13 @@ const FIXTURE: FxItem[] = [
     const byFav = sortDashboardRows([makeRow("a", "A", 0, 1), makeRow("b", "B", 1, 0)], "favorable");
     assert.deepStrictEqual(byFav.map((r) => r.label), ["B", "A"]);
     assert.strictEqual(sortDashboardRows([makeRow("a", "A", 1, 0)])[0].label, "A"); // padrão = desfavorável
+
+    // Partido e autoria seguem a mesma regra oficial: taxa desfavorável,
+    // maior total e, por fim, ordem alfabética pt-BR com numeric.
+    const partyRows = [makeRow("P2", "P2", 2, 2), makeRow("P10", "P10", 1, 1), makeRow("PL", "PL", 0, 3)];
+    assert.deepStrictEqual(sortDashboardRows(partyRows).map((row) => row.label), ["PL", "P2", "P10"]);
+    const authorRows = [makeRow("person:b", "Bia", 1, 1), makeRow("person:a", "Ana", 2, 2), makeRow("person:c", "Caio", 0, 3)];
+    assert.deepStrictEqual(sortDashboardRows(authorRows).map((row) => row.label), ["Caio", "Ana", "Bia"]);
 }
 
 // Taxas: 0 <= taxa <= 1; denominador zero retorna zero.

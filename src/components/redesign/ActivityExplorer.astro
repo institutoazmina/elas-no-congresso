@@ -9,15 +9,12 @@ import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.
 import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
 import cardTop from "../../assets/images/redesign/activity/parliamentarian-card-top.svg";
 import cardHole from "../../assets/images/redesign/activity/parliamentarian-card-hole.svg";
-import mapBase from "./assets/map/map-br-base@2.5x.png";
+import infoTooltip from "../../assets/images/redesign/activity/info-tooltip.svg";
+import tooltipTip from "../../assets/images/redesign/activity/tooltip-tip.svg";
+import { DEFAULT_DASHBOARD_ORDER, MIN_PROPOSICOES_POR_PARLAMENTAR } from "../../lib/dashboard-utils";
+import mapBase from "./assets/map/map-br-base-labels@2.5x.png";
 import mapLabels from "./assets/map/map-br-labels@2.5x.png";
-import mapHitboxes from "./assets/map/map-br-ufs-vector.svg?raw";
-
-const mapLayerModules = import.meta.glob<{ default: ImageMetadata }>("./assets/map/map-br-ufs-*@2.5x.png", { eager: true });
-const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path, module]) => {
-    const match = path.match(/map-br-ufs-(favoravel|desfavoravel)-([A-Z]{2})@/);
-    return match ? [`${match[2]}:${match[1]}`, module.default.src] : [];
-}).filter((entry) => entry.length));
+import mapHitboxes from "./assets/map/map-br-ufs-diverging.svg?raw";
 ---
 
 <section
@@ -30,7 +27,6 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
     style={`--search-icon: url(${search.src}); --select-chevron: url(${chevron.src}); --sort-down: url(${sortDown.src}); --sort-up: url(${sortUp.src}); --arrow-back: url(${arrowBack.src}); --arrow-forward: url(${arrowForward.src}); --card-top: url(${cardTop.src}); --card-hole: url(${cardHole.src})`}
     aria-labelledby="activity-results-title"
 >
-    <script type="application/json" data-map-layers set:html={JSON.stringify(mapLayers)}></script>
     <form class="activity-filters" data-filters>
         <div class="activity-filters__search">
             <label class="activity-field activity-field--search">
@@ -38,7 +34,7 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
                 <input name="search" type="search" placeholder="Parlamentar, proposta, termo…" autocomplete="off" />
             </label>
             <button class="activity-search-button" type="submit" aria-label="Buscar"></button>
-            <button class="activity-mobile-filter-button" type="button" data-open-filters="basic">Filtros <span data-filter-count hidden>0</span></button>
+            <button class="activity-mobile-filter-button" type="button" data-open-filters="basic" aria-expanded="false" aria-controls="activity-filter-panel">Filtros <span data-filter-count hidden>0</span></button>
         </div>
 
         <div class="activity-filters__desktop-fields">
@@ -47,10 +43,10 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
             <label class="activity-field"><span>Partido</span><select name="party"><option value="">Todos</option></select></label>
             <label class="activity-field activity-field--wide"><span>Categoria</span><select name="category" disabled title="A base atual ainda não fornece esta classificação"><option value="">Todas as categorias</option></select></label>
             <label class="activity-field activity-field--assessment"><span>Avaliação</span><select name="assessment"><option value="">Todas</option><option value="favorable">Favorável</option><option value="unfavorable">Desfavorável</option><option value="unrated">Sem avaliação</option></select></label>
-            <button class="activity-more-filters" type="button" data-open-filters="advanced">Mais filtros <span data-filter-count hidden>0</span></button>
+            <button class="activity-more-filters" type="button" data-open-filters="advanced" aria-expanded="false" aria-controls="activity-filter-panel">Mais filtros <span data-filter-count hidden>0</span></button>
         </div>
 
-        <aside class="activity-filter-panel" data-filter-panel hidden aria-label="Filtros da atividade legislativa">
+        <aside class="activity-filter-panel" id="activity-filter-panel" data-filter-panel hidden aria-label="Filtros da atividade legislativa">
             <header><h2>Filtros</h2><button type="button" data-close-filters aria-label="Fechar filtros">×</button></header>
             <div class="activity-filter-panel__scroll">
                 <div class="activity-filter-panel__basic">
@@ -60,8 +56,8 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
                     <label class="activity-field"><span>Categoria</span><select name="category-mobile" disabled><option value="">Todas as categorias</option></select></label>
                     <label class="activity-field"><span>Avaliação</span><select name="assessment-mobile"><option value="">Todas</option><option value="favorable">Favorável</option><option value="unfavorable">Desfavorável</option><option value="unrated">Sem avaliação</option></select></label>
                 </div>
-                <button class="activity-filter-panel__toggle" type="button" data-toggle-advanced>Mais filtros</button>
-                <div class="activity-filter-panel__advanced">
+                <button class="activity-filter-panel__toggle" type="button" data-toggle-advanced aria-expanded="false" aria-controls="activity-filter-panel-advanced">Mais filtros</button>
+                <div class="activity-filter-panel__advanced" id="activity-filter-panel-advanced">
                     <fieldset>
                         <legend>Proposição</legend>
                         <label class="activity-field"><span>Apresentada em</span><select disabled><option>Qualquer período</option></select></label>
@@ -117,22 +113,31 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
 
         <div class="activity-dashboard__grid">
             <div class="activity-dashboard__column">
-                <article class="activity-dashboard-card activity-dashboard-card--gender"><header><h3>Por gênero</h3></header><div class="activity-dashboard-card__content" data-dashboard-gender></div><footer>Não há dados sobre outros gêneros no Congresso</footer></article>
-                <article class="activity-dashboard-card activity-dashboard-card--house"><header><h3>Por casa</h3></header><div class="activity-dashboard-card__content" data-dashboard-house></div></article>
-                <article class="activity-dashboard-card activity-dashboard-card--category"><header><h3>Por categoria</h3></header><div class="activity-dashboard-card__content activity-dashboard-card__empty" data-dashboard-category></div><footer>A base da listagem não informa a categoria principal</footer></article>
+                <article class="activity-dashboard-card activity-dashboard-card--gender"><header><h3>Por gênero <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="gender" aria-describedby="activity-tooltip-gender" aria-expanded="false" aria-label="Saiba mais sobre o recorte por gênero"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content" data-dashboard-gender></div><footer>Não há dados sobre outros gêneros no Congresso</footer></article>
+                <article class="activity-dashboard-card activity-dashboard-card--house"><header><h3>Por casa <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="house" aria-describedby="activity-tooltip-house" aria-expanded="false" aria-label="Saiba mais sobre o recorte por casa"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content" data-dashboard-house></div></article>
+                <article class="activity-dashboard-card activity-dashboard-card--category"><header><h3>Por categoria <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="category" aria-describedby="activity-tooltip-category" aria-expanded="false" aria-label="Saiba mais sobre o recorte por categoria"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content activity-dashboard-card__empty" data-dashboard-category></div><footer>A base da listagem não informa a categoria principal</footer></article>
             </div>
             <div class="activity-dashboard__column">
-                <article class="activity-dashboard-card activity-dashboard-card--state"><header><h3>Por unidade federativa</h3></header><div class="activity-dashboard-map" data-dashboard-map><div class="activity-dashboard-map__canvas"><img data-map-base-image src={mapBase.src} alt="" /><div data-map-state-layers></div><img data-map-labels-image src={mapLabels.src} alt="" /><div class="activity-dashboard-map__hitboxes" data-map-hitboxes><Fragment set:html={mapHitboxes} /></div></div><div class="activity-dashboard-map__legend"><span>Proposições Favoráveis</span><i><span></span><span></span></i><small data-map-percentages></small></div></div><footer>Considera a UF de cada parlamentar que assina</footer></article>
-                <article class="activity-dashboard-card activity-dashboard-card--status"><header><h3>Por status</h3></header><div class="activity-dashboard-card__content activity-dashboard-card__empty" data-dashboard-status></div><footer>A base não fornece os status completos do design</footer></article>
+                <article class="activity-dashboard-card activity-dashboard-card--state"><header><h3>Por unidade federativa <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="uf" aria-describedby="activity-tooltip-uf" aria-expanded="false" aria-label="Saiba mais sobre o recorte por unidade federativa"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-map__pre-content"><div class="activity-dashboard-map__legend"><span>Proposições Favoráveis (%)</span><i aria-hidden="true"></i><small><span>90 ou +</span><span>75%</span><span>60 ou -</span></small></div></div><div class="activity-dashboard-map" data-dashboard-map><div class="activity-dashboard-map__canvas"><img data-map-base-image src={mapBase.src} alt="" /><div class="activity-dashboard-map__hitboxes" data-map-state-layers data-map-hitboxes><Fragment set:html={mapHitboxes} /></div></div></div><footer>Considera a UF de cada parlamentar que assina</footer></article>
+                <article class="activity-dashboard-card activity-dashboard-card--status"><header><h3>Por status <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="status" aria-describedby="activity-tooltip-status" aria-expanded="false" aria-label="Saiba mais sobre o recorte por status"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content activity-dashboard-card__empty" data-dashboard-status></div><footer>A base não fornece os status completos do design</footer></article>
             </div>
             <div class="activity-dashboard__column">
-                <article class="activity-dashboard-card activity-dashboard-card--party"><header><h3>Por partido</h3><label>Ordem <select data-dashboard-sort="party"><option value="unfavorable">Mais Desfavorável (%)</option><option value="favorable">Mais Favorável (%)</option><option value="total">Mais proposições</option></select></label></header><div class="activity-dashboard-card__content activity-dashboard-card__scroll" data-dashboard-party></div><footer>Usamos o nome atual de partidos renomeados</footer></article>
+                <article class="activity-dashboard-card activity-dashboard-card--party"><header><h3>Por partido <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="party" aria-describedby="activity-tooltip-party" aria-expanded="false" aria-label="Saiba mais sobre o recorte por partido"><img src={infoTooltip.src} alt="" /></button></h3><label>Ordem <select data-dashboard-sort="party"><option value={DEFAULT_DASHBOARD_ORDER}>Mais Desfavorável (%)</option><option value="favorable">Mais Favorável (%)</option><option value="total">Mais proposições</option></select></label></header><div class="activity-dashboard-card__content activity-dashboard-card__scroll" data-dashboard-party></div><footer>Usamos o nome atual de partidos renomeados</footer></article>
             </div>
             <div class="activity-dashboard__column">
-                <article class="activity-dashboard-card activity-dashboard-card--author"><header><div class="activity-dashboard-card__title"><h3>Por autoria</h3></div><label>Ordem <select data-dashboard-sort="author"><option value="unfavorable">Mais Desfavorável (%)</option><option value="favorable">Mais Favorável (%)</option><option value="total">Mais proposições</option></select></label></header><div class="activity-dashboard-card__content activity-dashboard-card__scroll" data-dashboard-author></div><footer>Inclui autorias institucionais, como “Presidência”, etc.</footer></article>
+                <article class="activity-dashboard-card activity-dashboard-card--author"><header><div class="activity-dashboard-card__title"><h3>Por autoria <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="authorship" aria-describedby="activity-tooltip-authorship" aria-expanded="false" aria-label="Saiba mais sobre o recorte por autoria"><img src={infoTooltip.src} alt="" /></button></h3></div><label>Ordem <select data-dashboard-sort="author"><option value={DEFAULT_DASHBOARD_ORDER}>Mais Desfavorável (%)</option><option value="favorable">Mais Favorável (%)</option><option value="total">Mais proposições</option></select></label></header><label class="activity-dashboard-card__author-filter">Ver Parlamentares <select data-dashboard-author-filter><option value={String(MIN_PROPOSICOES_POR_PARLAMENTAR)}>Com {MIN_PROPOSICOES_POR_PARLAMENTAR}+ proposições</option></select></label><div class="activity-dashboard-card__content activity-dashboard-card__scroll" data-dashboard-author></div><footer>Inclui autorias institucionais, como “Presidência”, etc.</footer></article>
             </div>
         </div>
-        <div class="activity-map-tooltip" data-map-tooltip role="status" aria-live="polite" hidden></div>
+        <div class="activity-tooltip-layer" aria-live="polite">
+            <div class="activity-dashboard-tooltip" data-dashboard-tooltip="gender" id="activity-tooltip-gender" role="tooltip" hidden><div><strong>Por gênero</strong><p>Considera cada autoria única da proposição.</p><small>Mostramos somente feminino e masculino.</small></div><img src={tooltipTip.src} alt="" /></div>
+            <div class="activity-dashboard-tooltip" data-dashboard-tooltip="house" id="activity-tooltip-house" role="tooltip" hidden><div><strong>Por casa</strong><p>Conta cada proposição uma vez na casa em que foi apresentada.</p><small>O Poder Executivo não entra neste recorte.</small></div><img src={tooltipTip.src} alt="" /></div>
+            <div class="activity-dashboard-tooltip" data-dashboard-tooltip="category" id="activity-tooltip-category" role="tooltip" hidden><div><strong>Por categoria</strong><p>A categoria temática principal não está disponível na base desta listagem.</p></div><img src={tooltipTip.src} alt="" /></div>
+            <div class="activity-dashboard-tooltip" data-dashboard-tooltip="uf" id="activity-tooltip-uf" role="tooltip" hidden><div><strong>Por unidade federativa</strong><p>Considera a UF de cada parlamentar que assina a proposição.</p></div><img src={tooltipTip.src} alt="" /></div>
+            <div class="activity-dashboard-tooltip" data-dashboard-tooltip="status" id="activity-tooltip-status" role="tooltip" hidden><div><strong>Por status</strong><p>Os status legislativos completos não estão disponíveis nesta base.</p></div><img src={tooltipTip.src} alt="" /></div>
+            <div class="activity-dashboard-tooltip" data-dashboard-tooltip="party" id="activity-tooltip-party" role="tooltip" hidden><div><strong>Por partido</strong><p>Considera as autorias únicas de cada proposição.</p><small>Usamos o nome atual de partidos renomeados.</small></div><img src={tooltipTip.src} alt="" /></div>
+            <div class="activity-dashboard-tooltip" data-dashboard-tooltip="authorship" id="activity-tooltip-authorship" role="tooltip" hidden><div><strong>Por autoria</strong><p>Mostra parlamentares com {MIN_PROPOSICOES_POR_PARLAMENTAR} ou mais proposições relacionadas a gênero.</p><small>Inclui autorias institucionais.</small></div><img src={tooltipTip.src} alt="" /></div>
+        </div>
+        <div class="activity-map-tooltip" data-map-tooltip id="activity-map-tooltip" role="tooltip" hidden><div><strong data-map-tooltip-title></strong><p data-map-tooltip-summary></p><small data-map-tooltip-details></small></div><img src={tooltipTip.src} alt="" /></div>
     </section>
 
     <div class="activity-dashboard-mobile-heading" aria-hidden="true">Proposições</div>
@@ -189,13 +194,14 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
 <style is:global>
     .activity-explorer, .activity-explorer * { box-sizing: border-box; }
     .activity-explorer { position: relative; width: 100%; min-height: 2033px; margin: 48px 0 96px; padding: 24px 0; background: #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
+    .activity-explorer.is-compact-results { min-height: 0; }
     .activity-explorer.is-empty-results { min-height: 0; }
     .sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
     .activity-explorer button, .activity-explorer input, .activity-explorer select { font: inherit; }
     .activity-explorer button { color: inherit; }
     .activity-explorer button:focus-visible, .activity-explorer a:focus-visible, .activity-explorer input:focus-visible, .activity-explorer select:focus-visible { outline: 3px solid #def279; outline-offset: 2px; }
     .activity-filters { display: flex; width: 100%; min-height: 60px; padding: 0 48px; align-items: flex-end; gap: 16px; }
-    .activity-filters__search { display: grid; width: 354px; min-width: 280px; flex: 1 1 354px; grid-template-columns: minmax(0, 1fr) 32px; grid-template-rows: 16px 36px; align-items: end; row-gap: 8px; }
+    .activity-filters__search { display: grid; width: 366px; min-width: 280px; flex: 0 1 366px; grid-template-columns: minmax(0, 1fr) 32px; grid-template-rows: 16px 36px; align-items: end; row-gap: 8px; }
     .activity-field { display: flex; min-width: 103px; flex: 1 1 auto; flex-direction: column; gap: 8px; color: #0b0f5e; font-size: 14px; font-weight: 400; line-height: 16px; }
     .activity-field > span { white-space: nowrap; }
     .activity-field input, .activity-field select, .activity-pagination select { width: 100%; height: 36px; border: 2px solid rgb(66 66 246 / 25%); border-radius: 0; background-color: #fff; color: #5d76dd; font-size: 16px; font-weight: 700; line-height: 24px; }
@@ -218,12 +224,12 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
     .activity-filters__desktop-fields > .activity-field:nth-child(5) { width: 183px; flex: 0 1 183px; }
     .activity-field--wide { min-width: 180px; }
     .activity-field--assessment { min-width: 160px; }
-    .activity-explorer .activity-more-filters, .activity-explorer .activity-mobile-filter-button { position: relative; display: inline-flex; width: 126px; height: 36px; flex: none; align-items: center; justify-content: center; border: 2px solid #4242f6; background: #4242f6; padding: 4px 12px; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 14px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-align: center; text-transform: uppercase; white-space: nowrap; cursor: pointer; }
+    .activity-explorer .activity-more-filters, .activity-explorer .activity-mobile-filter-button { position: relative; display: inline-flex; width: 114px; height: 36px; flex: none; align-items: center; justify-content: center; border: 2px solid #4242f6; background: #4242f6; padding: 4px 12px; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 14px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-align: center; text-transform: uppercase; white-space: nowrap; cursor: pointer; }
     .activity-more-filters:hover, .activity-mobile-filter-button:hover { background: #0b0f5e; border-color: #0b0f5e; color: #fff; }
     [data-filter-count] { position: absolute; top: -11px; right: -9px; display: grid; width: 22px; height: 22px; place-items: center; border-radius: 50%; background: #ff5865; color: #fff; font-family: "Plus Jakarta Sans", sans-serif; font-size: 12px; line-height: 1; }
     .activity-explorer .activity-mobile-filter-button { display: none; }
 
-    .activity-summary { display: flex; min-height: 72px; padding: 24px 48px; flex-direction: column; }
+    .activity-summary { display: flex; min-height: 56px; padding: 24px 48px 8px; flex-direction: column; }
     .activity-summary__heading { display: flex; min-height: 24px; align-items: center; justify-content: space-between; gap: 24px; }
     .activity-summary h2 { margin: 0; font-family: "Plus Jakarta Sans", sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; }
     .activity-explorer:not(.is-empty-results) .activity-summary h2::after { content: " encontradas"; }
@@ -260,15 +266,25 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
     .activity-dashboard__grid { display: grid; width: 100%; height: 752px; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
     .activity-dashboard__column { display: flex; min-width: 0; height: 752px; flex-direction: column; gap: 8px; }
     .activity-dashboard-card { position: relative; display: flex; min-width: 0; overflow: hidden; flex-direction: column; color: #0b0f5e; }
-    .activity-dashboard-card--gender { height: 141px; }.activity-dashboard-card--house { height: 159px; }.activity-dashboard-card--category { height: 436px; }
-    .activity-dashboard-card--state { height: 423px; }.activity-dashboard-card--status { height: 321px; }.activity-dashboard-card--party, .activity-dashboard-card--author { height: 752px; }
+    .activity-dashboard-card--gender { height: 141px; }.activity-dashboard-card--house { height: 141px; }.activity-dashboard-card--category { height: 454px; }
+    .activity-dashboard-card--state { height: 415px; }.activity-dashboard-card--status { height: 329px; }.activity-dashboard-card--party, .activity-dashboard-card--author { height: 752px; }
     .activity-dashboard-card > header { display: flex; height: 23px; min-width: 0; flex: 0 0 23px; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid rgb(66 66 246 / 25%); }
-    .activity-dashboard-card h3 { position: relative; z-index: 1; height: 23px; margin: 0 0 -1px; border: 1px solid rgb(66 66 246 / 25%); border-bottom-color: #fff; background: #fff; padding: 4px 12px 2px; font-family: "ETC Anybody", sans-serif; font-size: 14px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 16px; text-transform: uppercase; white-space: nowrap; }
+    .activity-dashboard-card h3 { position: relative; z-index: 1; display: flex; height: 23px; margin: 0 0 -1px; align-items: center; gap: 4px; border: 1px solid rgb(66 66 246 / 25%); border-bottom-color: #fff; background: #fff; padding: 4px 12px 2px; font-family: "ETC Anybody", sans-serif; font-size: 14px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 16px; text-transform: uppercase; white-space: nowrap; }
+    .activity-dashboard-card__info { display: none; width: 16px; height: 16px; border: 0; background: transparent; padding: 0; cursor: pointer; }
+    .activity-dashboard-card__info img { display: block; width: 16px; height: 16px; }
+    .activity-dashboard-card h3::before { display: none; width: 16px; height: 16px; flex: none; background: var(--select-chevron) center / 12px 8px no-repeat; content: ""; }
+    .activity-dashboard-card__toggle { position: relative; z-index: 1; display: flex; height: 23px; margin: 0 0 -1px; align-items: center; gap: 4px; border: 1px solid rgb(66 66 246 / 25%); border-bottom-color: #fff; background: #fff; padding: 4px 12px 2px; color: #0b0f5e; font-family: "ETC Anybody", sans-serif; font-size: 14px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 16px; text-align: left; text-transform: uppercase; white-space: nowrap; cursor: pointer; }
+    .activity-dashboard-card__toggle::before { display: none; width: 16px; height: 16px; flex: none; background: var(--select-chevron) center / 12px 8px no-repeat; content: ""; }
+    .activity-dashboard-card.is-collapsed .activity-dashboard-card__toggle::before { transform: rotate(-90deg); }
+    .activity-dashboard-card__toggle:focus-visible { outline: 2px solid #4242f6; outline-offset: 2px; }
+    @media (min-width: 768px) { .activity-dashboard-card__info { display: grid; flex: none; place-items: center; } }
     .activity-dashboard-card__title { display: flex; min-width: 0; height: 23px; align-items: flex-start; }
     .activity-dashboard-card header label { display: flex; min-width: 0; height: 23px; flex: none; align-items: center; gap: 3px; color: rgb(11 15 94 / 55%); font-size: 12px; line-height: 16px; white-space: nowrap; }
     .activity-dashboard-card header select { width: 146px; height: 22px; border: 0; background: transparent var(--select-chevron) right 3px center / 8px 5px no-repeat; padding: 0 14px 0 3px; color: #4242f6; font-size: 12px; line-height: 16px; appearance: none; }
     .activity-dashboard-card header select[data-dashboard-sort="party"], .activity-dashboard-card header select[data-dashboard-sort="author"], .activity-dashboard-card header select[data-dashboard-sort="party"]:hover, .activity-dashboard-card header select[data-dashboard-sort="author"]:hover, .activity-dashboard-card header select[data-dashboard-sort="party"]:focus, .activity-dashboard-card header select[data-dashboard-sort="author"]:focus, .activity-dashboard-card header select[data-dashboard-sort="party"]:focus-visible, .activity-dashboard-card header select[data-dashboard-sort="author"]:focus-visible, .activity-dashboard-card header select[data-dashboard-sort="party"]:active, .activity-dashboard-card header select[data-dashboard-sort="author"]:active { border: 0; outline: 0; box-shadow: none; filter: none; }
     .activity-dashboard-card header select[data-dashboard-sort="party"]:focus-visible, .activity-dashboard-card header select[data-dashboard-sort="author"]:focus-visible { color: #0b0f5e; }
+    .activity-dashboard-card__author-filter { display: flex; min-height: 28px; flex: none; align-items: center; justify-content: space-between; gap: 8px; border-right: 1px solid rgb(66 66 246 / 25%); border-left: 1px solid rgb(66 66 246 / 25%); padding: 4px 12px; color: rgb(11 15 94 / 55%); font-size: 12px; line-height: 16px; }
+    .activity-dashboard-card__author-filter select { min-width: 150px; height: 20px; border: 0; background: transparent var(--select-chevron) right 3px center / 8px 5px no-repeat; padding: 0 14px 0 3px; color: #4242f6; font: inherit; appearance: none; }
     .activity-dashboard-card__content { display: flex; min-height: 0; flex: 1; padding: 12px; flex-direction: column; gap: 8px; border-right: 1px solid rgb(66 66 246 / 25%); border-left: 1px solid rgb(66 66 246 / 25%); }
     .activity-dashboard-card__content:last-child { border-bottom: 1px solid rgb(66 66 246 / 25%); border-radius: 0 0 4px 4px; }
     .activity-dashboard-card__scroll { overflow-y: auto; scrollbar-color: #aeb7ea transparent; scrollbar-width: thin; }
@@ -294,20 +310,29 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
     .activity-dashboard-card__author span { display: flex; min-width: 0; flex-direction: column; }
     .activity-dashboard-card__author span > span { display: -webkit-box; overflow: hidden; line-height: 14px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
     .activity-dashboard-card__author small { color: rgb(11 15 94 / 65%); font-size: 11px; line-height: 12px; }
+    .activity-dashboard-card__single-result { margin: 4px 0 0; color: rgb(11 15 94 / 65%); font-size: 12px; line-height: 16px; }
     .activity-dashboard-card__empty { align-items: center; justify-content: center; padding: 24px; color: rgb(11 15 94 / 65%); font-size: 14px; line-height: 20px; text-align: center; text-wrap: balance; }
 
     .activity-dashboard-map { position: relative; min-height: 0; flex: 1; overflow: hidden; border-right: 1px solid rgb(66 66 246 / 25%); border-left: 1px solid rgb(66 66 246 / 25%); }
+    .activity-dashboard-map__pre-content { display: contents; }
     .activity-dashboard-map__canvas { position: absolute; inset: 36px 0 0; aspect-ratio: 1; }
     .activity-dashboard-map__canvas img, .activity-dashboard-map__canvas > div:not(.activity-dashboard-map__hitboxes) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
-    .activity-dashboard-map__canvas [data-map-state-layers] img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+    .activity-dashboard-map__canvas [data-map-base-image] { z-index: 0; }
     .activity-dashboard-map__legend { position: absolute; z-index: 3; top: 12px; right: 12px; display: flex; width: 144px; align-items: flex-end; flex-direction: column; gap: 6px; color: rgb(11 15 94 / 75%); font-size: 12px; line-height: 12px; text-align: right; }
-    .activity-dashboard-map__legend i { display: grid; width: 144px; height: 8px; grid-template-columns: 2fr 1fr; gap: 2px; }.activity-dashboard-map__legend i span:first-child { background: #c1e639; }.activity-dashboard-map__legend i span:last-child { background: #ff5865; }
-    .activity-dashboard-map__legend small { font-size: 11px; line-height: 12px; }
-    .activity-dashboard-map__hitboxes { position: absolute; z-index: 4; inset: 0; pointer-events: none; }
-    .activity-dashboard-map__hitboxes svg { display: block; width: 100%; height: 100%; pointer-events: none; }
-    .activity-dashboard-map__hitboxes path { fill: transparent; pointer-events: all; }
-    .activity-map-tooltip { position: fixed; z-index: 100; max-width: 220px; border: 1px solid #4242f6; background: #fff; padding: 8px 10px; box-shadow: -2px 2px 0 #0b0f5e; font-size: 12px; line-height: 16px; pointer-events: none; }
-    .activity-map-tooltip[hidden] { display: none; }
+    .activity-dashboard-map__legend i { display: block; width: 145px; height: 9px; border: .5px solid #0b0f5e; background: linear-gradient(in hsl shorter hue to right, #ff5865 0%, #fff 50%, #c1e639 100%); }
+    .activity-dashboard-map__legend small { display: flex; width: 145px; justify-content: space-between; font-size: 11px; line-height: 12px; }
+    .activity-dashboard-map__hitboxes { position: absolute; z-index: 1; top: 6.9%; left: 6.55%; width: 84.66%; height: 89%; pointer-events: none; }
+    .activity-dashboard-map__hitboxes :global(svg) { display: block; width: 100%; height: 100%; pointer-events: none; }
+    .activity-dashboard-map__hitboxes :global(path[data-uf]) { fill: #998d96; stroke: #0b0f5e; stroke-width: 1; pointer-events: all; cursor: pointer; }
+    .activity-tooltip-layer { position: fixed; z-index: 110; inset: 0; pointer-events: none; }
+    .activity-dashboard-tooltip, .activity-map-tooltip { position: fixed; z-index: 111; display: flex; width: 288px; max-width: calc(100vw - 16px); align-items: center; flex-direction: column; color: #fff; pointer-events: none; }
+    .activity-dashboard-tooltip[hidden], .activity-map-tooltip[hidden] { display: none; }
+    .activity-dashboard-tooltip > div, .activity-map-tooltip > div { display: flex; width: 100%; flex-direction: column; gap: 6px; background: #0b0f5e; padding: 12px; }
+    .activity-dashboard-tooltip strong, .activity-map-tooltip strong { overflow: hidden; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 14px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 16px; text-align: left; text-decoration: none; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+    .activity-dashboard-tooltip p, .activity-map-tooltip p { margin: 0; color: #fff; font-size: 14px; font-weight: 400; line-height: 16px; }
+    .activity-dashboard-tooltip small, .activity-map-tooltip small { color: rgb(255 255 255 / 75%); font-size: 12px; font-weight: 400; line-height: 12px; }
+    .activity-dashboard-tooltip > img, .activity-map-tooltip > img { width: 16px; height: 8px; align-self: flex-start; margin-left: var(--tooltip-tip-offset, 12px); }
+    .activity-map-tooltip { width: 192px; }
     .activity-dashboard-mobile-heading { display: none; }
 
     .activity-table-wrap { width: 100%; padding: 24px 38px 0; overflow-x: auto; }
@@ -362,16 +387,18 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
 
     .activity-backdrop { position: fixed; z-index: 80; inset: 0; background: rgb(255 255 255 / 75%); }
     .activity-backdrop[hidden], .activity-filter-panel[hidden] { display: none; }
-    .activity-filter-panel { position: fixed; z-index: 81; top: 0; right: 0; display: flex; width: 384px; height: 100dvh; border-left: 2px solid #4242f6; background: #fff; padding: 24px; flex-direction: column; gap: 16px; box-shadow: -4px 0 0 rgb(11 15 94 / 15%); }
-    .activity-filter-panel > header { display: flex; align-items: center; justify-content: space-between; }
+    .activity-filters { position: relative; }
+    .activity-filter-panel { position: absolute; z-index: 81; top: 84px; right: 48px; display: flex; width: 384px; height: 842px; border: 1px solid #4242f6; background: #fff; padding: 24px; flex-direction: column; gap: 12px; box-shadow: -4px 4px 0 #0b0f5e; }
+    .activity-filter-panel > header { position: absolute; top: 6px; right: 8px; z-index: 1; display: flex; align-items: center; justify-content: space-between; }
+    .activity-filter-panel > header h2 { display: none; }
     .activity-filter-panel h2, .activity-filter-panel legend { margin: 0; font-family: "ETC Anybody", sans-serif; font-size: 24px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 32px; text-transform: uppercase; }
     .activity-filter-panel > header button { width: 32px; height: 32px; border: 0; background: none; color: #4242f6; font-size: 30px; line-height: 1; cursor: pointer; }
-    .activity-filter-panel__scroll { display: flex; min-height: 0; flex: 1; flex-direction: column; gap: 16px; overflow-y: auto; padding-right: 4px; }
-    .activity-filter-panel__basic, .activity-filter-panel fieldset { display: flex; flex-direction: column; gap: 16px; }
+    .activity-filter-panel__scroll { display: flex; min-height: 0; flex: 1; flex-direction: column; gap: 12px; overflow-y: auto; padding-right: 4px; }
+    .activity-filter-panel__basic, .activity-filter-panel fieldset { display: flex; flex-direction: column; gap: 12px; }
     .activity-filter-panel__toggle { align-self: flex-start; border: 0; border-bottom: 1px solid currentColor; background: none; padding: 0; color: #4242f6; font-weight: 700; cursor: pointer; }
     .activity-filter-panel__advanced { display: none; flex-direction: column; gap: 24px; }
     .activity-filter-panel.is-advanced .activity-filter-panel__advanced { display: flex; }
-    .activity-filter-panel fieldset { margin: 0; border: 0; border-top: 1px solid rgb(11 15 94 / 25%); padding: 16px 0 0; }
+    .activity-filter-panel fieldset { margin: 0; border: 0; border-top: 1px solid rgb(11 15 94 / 25%); padding: 24px 0 0; }
     .activity-filter-panel legend { margin-bottom: 12px; font-size: 18px; line-height: 24px; }
     .activity-filter-panel__apply { width: 100%; height: 40px; flex: none; border: 0; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 16px; font-weight: 700; font-variation-settings: "wdth" 75; text-transform: uppercase; cursor: pointer; }
     .activity-filter-panel__apply:hover { background: #0b0f5e; }
@@ -401,7 +428,7 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
         .activity-filter-panel__advanced { display: flex; }
     }
 
-    @media (max-width: 1279px) and (min-width: 768px) {
+    @media (max-width: 1399px) and (min-width: 768px) {
         .activity-filters { min-height: 36px; padding-right: 24px; padding-left: 24px; }
         .activity-filters__search { display: flex; width: 100%; min-width: 0; height: 36px; flex: 1; flex-basis: auto; align-items: end; gap: 8px; }
         .activity-field--search { display: flex; width: auto; flex: 1; }
@@ -410,6 +437,7 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
         .activity-search-button { position: absolute; right: 110px; }
         .activity-filters__desktop-fields { display: none; }
         .activity-explorer .activity-mobile-filter-button { display: inline-flex; width: 78px; padding: 4px 8px; background: #fff; color: #4242f6; }
+        .activity-filter-panel { right: 24px; }
         .activity-filter-panel__basic { display: flex; }
         .activity-filter-panel__toggle { display: block; }
         .activity-filter-panel__advanced { display: none; }
@@ -424,12 +452,12 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
     @media (max-width: 767px) {
         .activity-explorer { min-height: 0; margin: 0 0 48px; padding-top: 24px; }
         .activity-filters { min-height: 36px; padding: 0 16px; }
-        .activity-filters__search { display: flex; width: 100%; min-width: 0; height: 36px; flex: 1; align-items: end; gap: 8px; }
-        .activity-field--search { display: flex; width: auto; flex: 1; }
+        .activity-filters__search { display: grid; width: 100%; min-width: 0; height: 60px; flex: 1; grid-template-columns: minmax(0, 1fr) 77px; grid-template-rows: 16px 36px; align-items: end; column-gap: 8px; row-gap: 8px; }
+        .activity-field--search { display: block; width: auto; flex: 1; grid-column: 1; grid-row: 2; }
         .activity-field--search > span { display: none; }
-        .activity-search-button { position: absolute; right: 102px; width: 32px; }
-        .activity-field--search input { padding-right: 42px; font-size: 14px; }
-        .activity-explorer .activity-mobile-filter-button { display: inline-flex; width: 78px; padding: 4px 8px; background: #fff; color: #4242f6; }
+        .activity-search-button { display: none; }
+        .activity-field--search input { width: 100%; padding-right: 12px; font-size: 14px; }
+        .activity-explorer .activity-mobile-filter-button { display: inline-flex; width: 77px; grid-column: 2; grid-row: 2; padding: 4px 8px; background: #fff; color: #4242f6; }
         .activity-filters__desktop-fields { display: none; }
         .activity-summary { min-height: 72px; padding: 24px 16px; }
         .activity-summary__heading { align-items: flex-start; }
@@ -441,10 +469,22 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
         .activity-dashboard__score { height: 62px; gap: 4px; font-size: 14px; line-height: 20px; }
         .activity-dashboard__score b { font-size: 20px; line-height: 24px; }
         .activity-dashboard__paper { width: 28px; height: 38px; }.activity-dashboard__score--favorable .activity-dashboard__paper { margin-right: -10px; }.activity-dashboard__score--unfavorable .activity-dashboard__paper { margin-left: -10px; }.activity-dashboard__thumb { width: 24px; height: 24px; }
-        .activity-dashboard__grid { height: auto; grid-template-columns: 1fr; }
+        .activity-dashboard__grid { height: auto; grid-template-columns: 1fr; gap: 12px; }
         .activity-dashboard__column { display: contents; }
         .activity-dashboard-card { width: 100%; }
-        .activity-dashboard-card--party, .activity-dashboard-card--author { height: 560px; }
+        .activity-dashboard-card h3::before { display: block; }
+        .activity-dashboard-card__toggle { width: fit-content; max-width: 100%; }
+        .activity-dashboard-card__toggle::before { display: block; }
+        .activity-dashboard-card.is-collapsed { height: 24px !important; }
+        .activity-dashboard-card.is-collapsed > :not(header) { display: none; }
+        .activity-dashboard-card.is-collapsed > header > label { display: none; }
+        .activity-dashboard-card.is-collapsed .activity-dashboard-card__title { min-width: 0; }
+        .activity-dashboard-card.is-collapsed .activity-dashboard-card__toggle { overflow: hidden; text-overflow: ellipsis; }
+        .activity-dashboard-card__info { display: grid; flex: none; place-items: center; }
+        .activity-dashboard-card--category { height: 409px; }
+        .activity-dashboard-card--state { height: 415px; }
+        .activity-dashboard-card--status { height: 341px; }
+        .activity-dashboard-card--party, .activity-dashboard-card--author { height: 420px; }
         .activity-dashboard-card header label { min-width: 0; }
         .activity-dashboard-card header select { min-width: 146px; }
         .activity-dashboard-mobile-heading { display: block; width: calc(100% - 32px); margin: 0 16px 8px; border-bottom: 4px solid #4242f6; padding: 8px 0; color: #4242f6; font-family: "ETC Anybody", sans-serif; font-size: 16px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
@@ -461,48 +501,25 @@ const mapLayers = Object.fromEntries(Object.entries(mapLayerModules).map(([path,
         .activity-pagination { min-height: 108px; padding: 24px 16px; gap: 12px; }
         .activity-pagination > div { width: 138px; gap: 8px; }.activity-pagination button { min-width: 36px; padding: 0 4px; }.activity-pagination label { width: 144px; flex-direction: column; align-items: flex-start; font-size: 14px; gap: 8px; }.activity-pagination select { width: 144px; }
         .activity-empty { min-height: 240px; margin: 24px 16px; padding: 48px 20px; }
-        .activity-filter-panel { top: 50%; right: auto; left: 16px; width: calc(100% - 32px); height: min(640px, calc(100dvh - 32px)); transform: translateY(-50%); border: 1px solid #4242f6; padding: 24px; box-shadow: -4px 4px 0 #0b0f5e; }
+        .activity-filters { position: relative; }
+        .activity-filter-panel { top: 84px; right: auto; left: 16px; width: calc(100% - 32px); height: 515px; max-height: calc(100dvh - 32px); transform: none; border: 1px solid #4242f6; padding: 24px; box-shadow: -4px 4px 0 #0b0f5e; gap: 0; overflow: hidden; }
+        .activity-filter-panel.is-advanced { height: 640px; }
+        .activity-filter-panel > header { position: absolute; top: 6px; right: 8px; z-index: 1; }
+        .activity-filter-panel > header h2 { display: none; }
+        .activity-filter-panel > header button { width: 28px; height: 28px; font-size: 26px; }
+        .activity-filter-panel__scroll { flex: 1 1 auto; gap: 12px; overflow-y: auto; padding: 0; scrollbar-width: thin; scrollbar-color: #aeb7ea transparent; }
+        .activity-filter-panel__basic { gap: 12px; }
+        .activity-filter-panel__basic .activity-field { width: auto; max-width: 100%; flex: none; }
+        .activity-filter-panel__basic .activity-field:nth-child(1) { width: 109px; }
+        .activity-filter-panel__basic .activity-field:nth-child(2) { width: 103px; }
+        .activity-filter-panel__basic .activity-field:nth-child(3) { width: 133px; }
+        .activity-filter-panel__basic .activity-field:nth-child(4) { width: 240px; }
+        .activity-filter-panel__basic .activity-field:nth-child(5) { width: 183px; }
+        .activity-filter-panel__toggle { margin-top: 0; }
+        .activity-filter-panel__apply { height: 36px; margin-top: 12px; }
         .activity-filter-panel h2 { font-size: 20px; line-height: 24px; }
         .parliamentarian-dialog { margin: auto; }.parliamentarian-dialog__identity { padding-right: 24px; padding-left: 24px; }.parliamentarian-dialog__scores { margin-right: 24px; margin-left: 24px; }.parliamentarian-dialog dl { padding-right: 24px; padding-left: 24px; }
     }
-    .dashboard-tooltip {
-        display: none;
-        position: absolute;
-        top: 27px;
-        left: 0;
-        z-index: 10;
-        max-width: 300px;
-        padding: 8px 10px;
-        background: #fff;
-        border: 1px solid #4242f6;
-        box-shadow: -2px 2px 0 #0b0f5e;
-        font-size: 12px;
-        line-height: 16px;
-        color: #0b0f5e;
-        pointer-events: none;
-    }
-    .dashboard-tooltip::after {
-        content: "";
-        position: absolute;
-        bottom: 100%;
-        left: 16px;
-        border: 6px solid transparent;
-        border-bottom-color: #4242f6;
-    }
-    .activity-dashboard-card--author:has(.activity-dashboard-card__title h3:hover) .dashboard-tooltip,
-    .activity-dashboard-card--author:has(.activity-dashboard-card__title h3:focus-visible) .dashboard-tooltip {
-        display: block;
-    }
-    @media (max-width: 767px) {
-        .activity-dashboard-card--author:has(.activity-dashboard-card__title h3:hover) .dashboard-tooltip {
-            display: none;
-        }
-        .activity-dashboard-card.touch-tooltip .dashboard-tooltip {
-            display: block;
-        }
-    }
-    .activity-dashboard-card--author .activity-dashboard-card__title h3:focus { outline: none; }
-    .activity-dashboard-card--author .activity-dashboard-card__title h3:focus-visible { outline: 2px solid #4242f6; outline-offset: 2px; }
     @media (max-width: 359px) {
         .activity-dashboard-card h3 { padding-right: 8px; padding-left: 8px; }
         .activity-dashboard-card header label { font-size: 11px; gap: 2px; }
