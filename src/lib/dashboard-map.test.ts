@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import {
     MAP_FAVORABILITY_COLORS,
     MAP_FAVORABILITY_DOMAIN,
+    MAP_FAVORABILITY_STOPS,
     aggregateAuthorships,
     calculateMapFavorableRate,
     getSingleDashboardResultMessage,
@@ -23,6 +24,7 @@ assert.strictEqual(mapFavorableRateToColor(0.75), MAP_FAVORABILITY_COLORS.midpoi
 assert.strictEqual(mapFavorableRateToColor(0.9), MAP_FAVORABILITY_COLORS.favorable);
 assert.strictEqual(mapFavorableRateToColor(0.2), MAP_FAVORABILITY_COLORS.unfavorable);
 assert.strictEqual(mapFavorableRateToColor(1), MAP_FAVORABILITY_COLORS.favorable);
+for (const stop of MAP_FAVORABILITY_STOPS) assert.strictEqual(mapFavorableRateToColor(stop.rate), stop.color);
 
 // Sem avaliação não entra no denominador da taxa favorável.
 assert.strictEqual(calculateMapFavorableRate(row("SP", 3, 1)), 0.75);
@@ -37,9 +39,9 @@ assert.ok(isMapUfCode("SP"));
 assert.ok(isMapUfCode(" sp "));
 assert.ok(!isMapUfCode("background"));
 
-// O vetor exportado contém exatamente uma geometria para cada UF. A aplicação
-// associa `data-uf` somente a estas geometrias, nunca aos paths auxiliares.
-const mapSvg = readFileSync(new URL("../components/redesign/assets/map/map-br-ufs-diverging.svg", import.meta.url), "utf8");
+// O vetor oficial exportado do Figma contém uma geometria identificada para
+// cada UF. A camada de interação referencia exatamente estes 27 IDs.
+const mapSvg = readFileSync(new URL("../assets/images/redesign/activity/map/ufs-vector-diverging-elas-palette.svg", import.meta.url), "utf8");
 const vectorUfs = [...mapSvg.matchAll(/<path id="([A-Z]{2})"/g)].map((match) => match[1]);
 assert.strictEqual(vectorUfs.length, 27);
 assert.deepStrictEqual([...vectorUfs].sort(), [...MAP_UF_CODES].sort());

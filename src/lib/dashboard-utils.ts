@@ -42,6 +42,16 @@ export const MAP_FAVORABILITY_COLORS = {
     favorable: "#C1E639",
     unavailable: "#998D96",
 } as const;
+/** Sete amostras exatas exportadas da legenda divergente do Figma. */
+export const MAP_FAVORABILITY_STOPS = [
+    { rate: 0.60, color: "#FF5865" },
+    { rate: 0.65, color: "#FF9098" },
+    { rate: 0.70, color: "#FFC7CC" },
+    { rate: 0.75, color: "#FFFFFF" },
+    { rate: 0.80, color: "#EAF7BD" },
+    { rate: 0.85, color: "#D6EE7B" },
+    { rate: 0.90, color: "#C1E639" },
+] as const;
 
 export type DashboardSort = "unfavorable" | "favorable" | "total";
 export type CountMode = "all-unique-authorships";
@@ -66,64 +76,16 @@ export function calculateMapFavorableRate(row: DashboardRow): number | null {
     return total > 0 ? row.favorable / total : null;
 }
 
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
-
-type Hsl = { h: number; s: number; l: number };
-
-function hexToHsl(hex: string): Hsl {
-    const value = Number.parseInt(hex.slice(1), 16);
-    const r = ((value >> 16) & 255) / 255;
-    const g = ((value >> 8) & 255) / 255;
-    const b = (value & 255) / 255;
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    const lightness = (max + min) / 2;
-    if (max === min) return { h: 0, s: 0, l: lightness };
-    const delta = max - min;
-    const saturation = lightness > 0.5 ? delta / (2 - max - min) : delta / (max + min);
-    let hue = 0;
-    if (max === r) hue = (g - b) / delta + (g < b ? 6 : 0);
-    else if (max === g) hue = (b - r) / delta + 2;
-    else hue = (r - g) / delta + 4;
-    return { h: hue * 60, s: saturation, l: lightness };
-}
-
-function hslToHex({ h, s, l }: Hsl): string {
-    const hue = ((h % 360) + 360) % 360 / 360;
-    if (s === 0) {
-        const channel = Math.round(l * 255).toString(16).padStart(2, "0");
-        return `#${channel}${channel}${channel}`.toUpperCase();
-    }
-    const hueToRgb = (p: number, q: number, t: number) => {
-        let value = t;
-        if (value < 0) value += 1;
-        if (value > 1) value -= 1;
-        if (value < 1 / 6) return p + (q - p) * 6 * value;
-        if (value < 1 / 2) return q;
-        if (value < 2 / 3) return p + (q - p) * (2 / 3 - value) * 6;
-        return p;
+const interpolateRgb = (fromHex: string, toHex: string, amount: number): string => {
+    const from = Number.parseInt(fromHex.slice(1), 16);
+    const to = Number.parseInt(toHex.slice(1), 16);
+    const channel = (shift: number) => {
+        const start = (from >> shift) & 255;
+        const end = (to >> shift) & 255;
+        return Math.round(start + (end - start) * amount).toString(16).padStart(2, "0");
     };
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    const channels = [hueToRgb(p, q, hue + 1 / 3), hueToRgb(p, q, hue), hueToRgb(p, q, hue - 1 / 3)];
-    return `#${channels.map((channel) => Math.round(channel * 255).toString(16).padStart(2, "0")).join("")}`.toUpperCase();
-}
-
-/** Interpola duas cores em HSL, como `d3.interpolateHsl` para estes pontos. */
-function interpolateHsl(fromHex: string, toHex: string, amount: number): string {
-    const from = hexToHsl(fromHex);
-    const to = hexToHsl(toHex);
-    // Em cores acromáticas, a matiz do extremo colorido evita uma transição
-    // artificial pelo vermelho/verde durante a interpolação HSL.
-    if (from.s === 0) from.h = to.h;
-    if (to.s === 0) to.h = from.h;
-    const hueDelta = ((to.h - from.h + 540) % 360) - 180;
-    return hslToHex({
-        h: from.h + hueDelta * amount,
-        s: from.s + (to.s - from.s) * amount,
-        l: from.l + (to.l - from.l) * amount,
-    });
-}
+    return `#${channel(16)}${channel(8)}${channel(0)}`.toUpperCase();
+};
 
 /**
  * Cor absoluta do mapa. A taxa é normalizada no domínio fixo de 60% a 90%,
@@ -131,14 +93,13 @@ function interpolateHsl(fromHex: string, toHex: string, amount: number): string 
  */
 export function mapFavorableRateToColor(rate: number | null): string {
     if (rate === null) return MAP_FAVORABILITY_COLORS.unavailable;
-    const [min, max] = MAP_FAVORABILITY_DOMAIN;
-    const normalized = clamp((rate - min) / (max - min), 0, 1);
-    if (normalized === 0) return MAP_FAVORABILITY_COLORS.unfavorable;
-    if (normalized === 0.5) return MAP_FAVORABILITY_COLORS.midpoint;
-    if (normalized === 1) return MAP_FAVORABILITY_COLORS.favorable;
-    return normalized < 0.5
-        ? interpolateHsl(MAP_FAVORABILITY_COLORS.unfavorable, MAP_FAVORABILITY_COLORS.midpoint, normalized / 0.5)
-        : interpolateHsl(MAP_FAVORABILITY_COLORS.midpoint, MAP_FAVORABILITY_COLORS.favorable, (normalized - 0.5) / 0.5);
+    if (rate <= MAP_FAVORABILITY_STOPS[0].rate) return MAP_FAVORABILITY_STOPS[0].color;
+    if (rate >= MAP_FAVORABILITY_STOPS.at(-1)!.rate) return MAP_FAVORABILITY_STOPS.at(-1)!.color;
+    const upperIndex = MAP_FAVORABILITY_STOPS.findIndex((stop) => rate <= stop.rate);
+    const lower = MAP_FAVORABILITY_STOPS[upperIndex - 1];
+    const upper = MAP_FAVORABILITY_STOPS[upperIndex];
+    const amount = (rate - lower.rate) / (upper.rate - lower.rate);
+    return interpolateRgb(lower.color, upper.color, amount);
 }
 
 export function getSingleDashboardResultMessage(kind: "party" | "author", rows: DashboardRow[]): string | null {

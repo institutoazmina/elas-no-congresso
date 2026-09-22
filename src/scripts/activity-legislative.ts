@@ -53,7 +53,7 @@ import {
     MIN_PROPOSICOES_POR_PARLAMENTAR,
     calculateMapFavorableRate,
     mapFavorableRateToColor,
-    isMapUfCode,
+    MAP_UF_CODES,
     MOBILE_ITEMS_PER_PAGE,
     getSingleDashboardResultMessage,
     type DashboardSort as DashboardSortType,
@@ -77,11 +77,17 @@ function initActivity(root: HTMLElement) {
     const empty = $("[data-empty]");
     const pagination = $("[data-pagination]");
     const dashboard = $("[data-dashboard]");
-    const mapSvg = root.querySelector<SVGSVGElement>("[data-map-hitboxes] svg");
-    mapSvg?.setAttribute("preserveAspectRatio", "xMidYMid meet");
-    root.querySelectorAll<SVGPathElement>("[data-map-hitboxes] path[id]").forEach((path) => {
-        if (isMapUfCode(path.id)) path.setAttribute("data-uf", path.id.toUpperCase());
-    });
+    const mapVisualPaths = new Map<string, SVGPathElement>();
+    const mapHitAreas = new Map<string, SVGUseElement>();
+    for (const uf of MAP_UF_CODES) {
+        const visualPath = root.querySelector<SVGPathElement>(`[data-map-state-layers] #${uf}`);
+        const hitArea = root.querySelector<SVGUseElement>(`[data-map-hitboxes] [data-uf="${uf}"]`);
+        if (visualPath) {
+            visualPath.dataset.uf = uf;
+            mapVisualPaths.set(uf, visualPath);
+        }
+        if (hitArea) mapHitAreas.set(uf, hitArea);
+    }
     const filterPanel = $("[data-filter-panel]");
     const backdrop = $("[data-backdrop]");
     const parliamentarianDialog = $("[data-parliamentarian-dialog]") as HTMLDialogElement;
@@ -497,18 +503,18 @@ function initActivity(root: HTMLElement) {
         $("[data-dashboard-category]").textContent = "Categorias não estão disponíveis no arquivo de dados desta listagem.";
         $("[data-dashboard-status]").textContent = "Status legislativos completos não estão disponíveis no arquivo de dados desta listagem.";
 
-        $$<SVGPathElement>("[data-map-hitboxes] path[data-uf]").filter((path) => isMapUfCode(path.dataset.uf || path.id)).forEach((path) => {
-            const uf = (path.dataset.uf || path.id).toUpperCase();
+        for (const uf of MAP_UF_CODES) {
+            const visualPath = mapVisualPaths.get(uf);
+            const hitArea = mapHitAreas.get(uf);
+            if (!visualPath || !hitArea) continue;
             const row = stateDashboard.get(uf);
             const favorableRate = row ? calculateMapFavorableRate(row) : null;
-            path.style.fill = mapFavorableRateToColor(favorableRate);
-            path.tabIndex = 0;
-            path.setAttribute("aria-label", favorableRate === null
-                ? `${path.id}: sem proposições avaliadas nos filtros atuais`
-                : `${path.id}: ${row!.favorable} favoráveis e ${row!.unfavorable} desfavoráveis`);
-            path.setAttribute("aria-describedby", "activity-map-tooltip");
-            path.setAttribute("aria-expanded", "false");
-        });
+            visualPath.style.fill = mapFavorableRateToColor(favorableRate);
+            hitArea.setAttribute("aria-label", favorableRate === null
+                ? `${uf}: sem proposições avaliadas nos filtros atuais`
+                : `${uf}: ${row!.favorable} favoráveis e ${row!.unfavorable} desfavoráveis`);
+            hitArea.setAttribute("aria-expanded", "false");
+        }
         dashboard.removeAttribute("hidden");
     }
 
@@ -874,23 +880,28 @@ function initActivity(root: HTMLElement) {
     const mapTooltipTitle = $("[data-map-tooltip-title]");
     const mapTooltipSummary = $("[data-map-tooltip-summary]");
     const mapTooltipDetails = $("[data-map-tooltip-details]");
-    let activeMapPath: SVGPathElement | null = null;
+    let activeMapTarget: SVGUseElement | null = null;
+
+    const getMapTarget = (target: EventTarget | null) => target instanceof Element
+        ? target.closest<SVGUseElement>("[data-map-hitboxes] [data-uf]")
+        : null;
 
     const closeMapTooltip = (restoreFocus = false) => {
-        if (!activeMapPath) return;
+        if (!activeMapTarget) return;
         mapTooltip.hidden = true;
         mapTooltip.removeAttribute("data-pinned");
-        const path = activeMapPath;
-        path.setAttribute("aria-expanded", "false");
-        activeMapPath = null;
-        if (restoreFocus) path.focus();
+        const target = activeMapTarget;
+        target.setAttribute("aria-expanded", "false");
+        activeMapTarget = null;
+        if (restoreFocus) target.focus();
     };
 
-    const showMapTooltip = (path: SVGPathElement, event?: PointerEvent, pinned = false) => {
-        const row = stateDashboard.get(path.id.toUpperCase());
+    const showMapTooltip = (target: SVGUseElement, event?: PointerEvent, pinned = false) => {
+        const uf = target.dataset.uf!;
+        const row = stateDashboard.get(uf);
         const favorableRate = row ? calculateMapFavorableRate(row) : null;
-        if (activeMapPath && activeMapPath !== path) closeMapTooltip();
-        mapTooltipTitle.textContent = favorableRate === null ? `${path.id} — N/A` : path.id;
+        if (activeMapTarget && activeMapTarget !== target) closeMapTooltip();
+        mapTooltipTitle.textContent = favorableRate === null ? `${uf} — N/A` : uf;
         mapTooltipSummary.textContent = favorableRate === null
             ? "Não há proposições avaliadas para o filtro atual."
             : `${formatNumber.format(row!.favorable)} favoráveis · ${formatNumber.format(row!.unfavorable)} desfavoráveis`;
@@ -899,9 +910,9 @@ function initActivity(root: HTMLElement) {
             : `${Math.round(favorableRate * 100)}% favoráveis · considera a UF de cada parlamentar que assina.`;
         mapTooltip.hidden = false;
         mapTooltip.toggleAttribute("data-pinned", pinned);
-        path.setAttribute("aria-expanded", "true");
-        activeMapPath = path;
-        const bounds = path.getBoundingClientRect();
+        target.setAttribute("aria-expanded", "true");
+        activeMapTarget = target;
+        const bounds = target.getBoundingClientRect();
         const anchorX = event?.clientX ?? bounds.left + bounds.width / 2;
         const tooltipWidth = mapTooltip.offsetWidth;
         const tooltipHeight = mapTooltip.offsetHeight;
@@ -913,38 +924,38 @@ function initActivity(root: HTMLElement) {
         mapTooltip.style.setProperty("--tooltip-tip-offset", `${tipOffset}px`);
     };
     root.addEventListener("pointerover", (event) => {
-        const path = event.target instanceof Element ? event.target.closest<SVGPathElement>("[data-map-hitboxes] path[data-uf]") : null;
-        if (path) showMapTooltip(path, event);
+        const target = getMapTarget(event.target);
+        if (target) showMapTooltip(target, event);
     });
     root.addEventListener("pointerout", (event) => {
-        if (event.target instanceof Element && event.target.closest("[data-map-hitboxes] path[data-uf]") && !mapTooltip.hasAttribute("data-pinned")) closeMapTooltip();
+        if (getMapTarget(event.target) && !mapTooltip.hasAttribute("data-pinned")) closeMapTooltip();
     });
     root.addEventListener("focusin", (event) => {
-        const path = event.target instanceof Element ? event.target.closest<SVGPathElement>("[data-map-hitboxes] path[data-uf]") : null;
-        if (path) showMapTooltip(path);
+        const target = getMapTarget(event.target);
+        if (target) showMapTooltip(target);
     });
     root.addEventListener("focusout", (event) => {
-        if (event.target instanceof Element && event.target.closest("[data-map-hitboxes] path[data-uf]") && !mapTooltip.hasAttribute("data-pinned")) closeMapTooltip();
+        if (getMapTarget(event.target) && !mapTooltip.hasAttribute("data-pinned")) closeMapTooltip();
     });
     root.addEventListener("click", (event) => {
-        const path = event.target instanceof Element ? event.target.closest<SVGPathElement>("[data-map-hitboxes] path[data-uf]") : null;
-        if (!path) return;
-        const isPinned = activeMapPath === path && mapTooltip.hasAttribute("data-pinned");
+        const target = getMapTarget(event.target);
+        if (!target) return;
+        const isPinned = activeMapTarget === target && mapTooltip.hasAttribute("data-pinned");
         if (isPinned) closeMapTooltip();
-        else showMapTooltip(path, event as PointerEvent, true);
+        else showMapTooltip(target, event as PointerEvent, true);
     });
     parliamentarianDialog.addEventListener("close", () => lastFocused?.focus());
     parliamentarianDialog.addEventListener("click", (event) => { if (event.target === parliamentarianDialog) parliamentarianDialog.close(); });
     document.addEventListener("click", (event) => {
         const target = event.target instanceof Element ? event.target : null;
         if (!target?.closest("[data-dashboard-tooltip-trigger]")) closeDashboardTooltip();
-        if (!target?.closest("[data-map-hitboxes] path[data-uf]")) closeMapTooltip();
+        if (!target?.closest("[data-map-hitboxes] [data-uf]")) closeMapTooltip();
     });
     document.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") return;
         if (!filterPanel.hasAttribute("hidden")) closeFilters();
         if (activeDashboardTooltip) closeDashboardTooltip(true);
-        if (activeMapPath) closeMapTooltip(true);
+        if (activeMapTarget) closeMapTooltip(true);
     });
 
     async function load() {

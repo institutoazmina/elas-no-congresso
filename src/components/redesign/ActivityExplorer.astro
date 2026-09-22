@@ -11,10 +11,10 @@ import cardTop from "../../assets/images/redesign/activity/parliamentarian-card-
 import cardHole from "../../assets/images/redesign/activity/parliamentarian-card-hole.svg";
 import infoTooltip from "../../assets/images/redesign/activity/info-tooltip.svg";
 import tooltipTip from "../../assets/images/redesign/activity/tooltip-tip.svg";
-import { DEFAULT_DASHBOARD_ORDER, MIN_PROPOSICOES_POR_PARLAMENTAR } from "../../lib/dashboard-utils";
-import mapBase from "./assets/map/map-br-base-labels@2.5x.png";
-import mapLabels from "./assets/map/map-br-labels@2.5x.png";
-import mapHitboxes from "./assets/map/map-br-ufs-diverging.svg?raw";
+import { DEFAULT_DASHBOARD_ORDER, MAP_UF_CODES, MIN_PROPOSICOES_POR_PARLAMENTAR } from "../../lib/dashboard-utils";
+import mapBase from "../../assets/images/redesign/activity/map/map-br-base@2.5x.png";
+import mapLegend from "../../assets/images/redesign/activity/map/legend-diverging-elas-palette.svg";
+import mapUfsVector from "../../assets/images/redesign/activity/map/ufs-vector-diverging-elas-palette.svg?raw";
 ---
 
 <section
@@ -22,8 +22,6 @@ import mapHitboxes from "./assets/map/map-br-ufs-diverging.svg?raw";
     data-activity-root
     data-thumbs-up={thumbsUp.src}
     data-thumbs-down={thumbsDown.src}
-    data-map-base={mapBase.src}
-    data-map-labels={mapLabels.src}
     style={`--search-icon: url(${search.src}); --select-chevron: url(${chevron.src}); --sort-down: url(${sortDown.src}); --sort-up: url(${sortUp.src}); --arrow-back: url(${arrowBack.src}); --arrow-forward: url(${arrowForward.src}); --card-top: url(${cardTop.src}); --card-hole: url(${cardHole.src})`}
     aria-labelledby="activity-results-title"
 >
@@ -118,7 +116,25 @@ import mapHitboxes from "./assets/map/map-br-ufs-diverging.svg?raw";
                 <article class="activity-dashboard-card activity-dashboard-card--category"><header><h3>Por categoria <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="category" aria-describedby="activity-tooltip-category" aria-expanded="false" aria-label="Saiba mais sobre o recorte por categoria"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content activity-dashboard-card__empty" data-dashboard-category></div><footer>A base da listagem não informa a categoria principal</footer></article>
             </div>
             <div class="activity-dashboard__column">
-                <article class="activity-dashboard-card activity-dashboard-card--state"><header><h3>Por unidade federativa <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="uf" aria-describedby="activity-tooltip-uf" aria-expanded="false" aria-label="Saiba mais sobre o recorte por unidade federativa"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-map__pre-content"><div class="activity-dashboard-map__legend"><span>Proposições Favoráveis (%)</span><i aria-hidden="true"></i><small><span>90 ou +</span><span>75%</span><span>60 ou -</span></small></div></div><div class="activity-dashboard-map" data-dashboard-map><div class="activity-dashboard-map__canvas"><img data-map-base-image src={mapBase.src} alt="" /><div class="activity-dashboard-map__hitboxes" data-map-state-layers data-map-hitboxes><Fragment set:html={mapHitboxes} /></div></div></div></article>
+                <article class="activity-dashboard-card activity-dashboard-card--state">
+                    <header><h3>Por unidade federativa <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="uf" aria-describedby="activity-tooltip-uf" aria-expanded="false" aria-label="Saiba mais sobre o recorte por unidade federativa"><img src={infoTooltip.src} alt="" /></button></h3></header>
+                    <div class="activity-dashboard-map__pre-content">
+                        <div class="activity-dashboard-map__legend">
+                            <span>Proposições Favoráveis (%)</span>
+                            <img src={mapLegend.src} alt="" aria-hidden="true" />
+                            <small><span>90 ou +</span><span>75%</span><span>60 ou -</span></small>
+                        </div>
+                    </div>
+                    <div class="activity-dashboard-map" data-dashboard-map>
+                        <div class="activity-dashboard-map__canvas">
+                            <img data-map-base-image src={mapBase.src} alt="Mapa do Brasil com siglas das 27 unidades federativas" />
+                            <div class="activity-dashboard-map__states" data-map-state-layers aria-hidden="true"><Fragment set:html={mapUfsVector} /></div>
+                            <svg class="activity-dashboard-map__hitboxes" data-map-hitboxes viewBox="0 0 277.7 291.685" role="group" aria-label="Unidades federativas interativas">
+                                {MAP_UF_CODES.map((uf) => <use href={`#${uf}`} data-uf={uf} tabindex="0" role="button" aria-label={`${uf}: carregando dados`} aria-describedby="activity-map-tooltip" aria-expanded="false" />)}
+                            </svg>
+                        </div>
+                    </div>
+                </article>
                 <article class="activity-dashboard-card activity-dashboard-card--status"><header><h3>Por status <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="status" aria-describedby="activity-tooltip-status" aria-expanded="false" aria-label="Saiba mais sobre o recorte por status"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content activity-dashboard-card__empty" data-dashboard-status></div><footer>A base não fornece os status completos do design</footer></article>
             </div>
             <div class="activity-dashboard__column">
@@ -318,15 +334,18 @@ import mapHitboxes from "./assets/map/map-br-ufs-diverging.svg?raw";
     .activity-dashboard-map__pre-content { display: flex; height: 62px; flex: 0 0 62px; border-right: 1px solid rgb(66 66 246 / 25%); border-bottom: 1px solid rgb(66 66 246 / 25%); border-left: 1px solid rgb(66 66 246 / 25%); padding: 16px 12px 8px; }
     .activity-dashboard-map { position: relative; width: 100%; height: 330px; min-height: 330px; flex: 0 0 330px; overflow: hidden; border-right: 1px solid rgb(66 66 246 / 25%); border-bottom: 1px solid rgb(66 66 246 / 25%); border-left: 1px solid rgb(66 66 246 / 25%); }
     .activity-dashboard-map__canvas { position: relative; width: 330px; height: 330px; }
-    .activity-dashboard-map__canvas img, .activity-dashboard-map__canvas > div:not(.activity-dashboard-map__hitboxes) { position: absolute; inset: 0; width: 330px; height: 330px; object-fit: contain; }
-    .activity-dashboard-map__canvas [data-map-base-image] { z-index: 0; }
-    .activity-dashboard-map__legend { position: relative; display: grid; width: 306px; height: 38px; grid-template-columns: 157px 149px; grid-template-rows: 12px 8px 12px; align-items: start; color: rgb(11 15 94 / 75%); font-size: 12px; line-height: 12px; }
-    .activity-dashboard-map__legend > span { grid-column: 1; grid-row: 1; }
-    .activity-dashboard-map__legend i { display: block; width: 157px; height: 6px; grid-column: 2; grid-row: 2; border: .5px solid #0b0f5e; background: linear-gradient(in hsl shorter hue to right, #ff5865 0%, #fff 50%, #c1e639 100%); }
-    .activity-dashboard-map__legend small { display: flex; width: 157px; grid-column: 1; grid-row: 3; justify-content: space-between; font-size: 11px; line-height: 12px; }
-    .activity-dashboard-map__hitboxes { position: absolute; z-index: 1; top: 22.731px; left: 21.485px; width: 277.7px; height: 291.685px; pointer-events: none; }
-    .activity-dashboard-map__hitboxes :global(svg) { display: block; width: 100%; height: 100%; pointer-events: none; }
-    .activity-dashboard-map__hitboxes :global(path[data-uf]) { fill: #998d96; stroke: #0b0f5e; stroke-width: 1; pointer-events: all; cursor: pointer; }
+    .activity-dashboard-map__canvas [data-map-base-image] { position: absolute; z-index: 0; inset: 0; display: block; width: 330px; height: 330px; object-fit: contain; }
+    .activity-dashboard-map__legend { display: flex; width: 157px; height: 38px; flex-direction: column; color: rgb(11 15 94 / 75%); font-size: 12px; line-height: 12px; }
+    .activity-dashboard-map__legend > span { height: 12px; flex: 0 0 12px; }
+    .activity-dashboard-map__legend > img { display: block; width: 158px; height: 7px; margin-top: 4px; transform: scaleX(-1); transform-origin: center; }
+    .activity-dashboard-map__legend small { display: grid; width: 157px; height: 12px; margin-top: 3px; grid-template-columns: repeat(3, 1fr); font-size: 12px; line-height: 12px; }
+    .activity-dashboard-map__legend small span:nth-child(2) { text-align: center; }
+    .activity-dashboard-map__legend small span:last-child { text-align: right; }
+    .activity-dashboard-map__states, .activity-dashboard-map__hitboxes { position: absolute; top: 22.731px; left: 21.485px; width: 277.7px; height: 291.685px; }
+    .activity-dashboard-map__states { z-index: 1; mix-blend-mode: multiply; pointer-events: none; }
+    .activity-dashboard-map__states :global(svg) { display: block; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+    .activity-dashboard-map__hitboxes { z-index: 2; display: block; overflow: visible; pointer-events: none; }
+    .activity-dashboard-map__hitboxes use { opacity: 0; pointer-events: all; cursor: pointer; }
     .activity-tooltip-layer { position: fixed; z-index: 110; inset: 0; pointer-events: none; }
     .activity-dashboard-tooltip, .activity-map-tooltip { position: fixed; z-index: 111; display: flex; width: 288px; max-width: calc(100vw - 16px); align-items: center; flex-direction: column; color: #fff; pointer-events: none; }
     .activity-dashboard-tooltip[hidden], .activity-map-tooltip[hidden] { display: none; }
