@@ -1,6 +1,7 @@
 // Testes determinísticos da escala absoluta do mapa da Atividade Legislativa.
 // Rodar: node --experimental-strip-types src/lib/dashboard-map.test.ts
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import {
     MAP_FAVORABILITY_COLORS,
     MAP_FAVORABILITY_DOMAIN,
@@ -23,6 +24,9 @@ assert.strictEqual(mapFavorableRateToColor(0.9), MAP_FAVORABILITY_COLORS.favorab
 assert.strictEqual(mapFavorableRateToColor(0.2), MAP_FAVORABILITY_COLORS.unfavorable);
 assert.strictEqual(mapFavorableRateToColor(1), MAP_FAVORABILITY_COLORS.favorable);
 
+// Sem avaliação não entra no denominador da taxa favorável.
+assert.strictEqual(calculateMapFavorableRate(row("SP", 3, 1)), 0.75);
+
 // Não há divisão 0/0: UF sem avaliadas é N/A, nunca vermelho.
 assert.strictEqual(calculateMapFavorableRate(row("AC", 0, 0)), null);
 assert.strictEqual(mapFavorableRateToColor(calculateMapFavorableRate(row("AC", 0, 0))), MAP_FAVORABILITY_COLORS.unavailable);
@@ -32,6 +36,13 @@ assert.strictEqual(MAP_UF_CODES.length, 27);
 assert.ok(isMapUfCode("SP"));
 assert.ok(isMapUfCode(" sp "));
 assert.ok(!isMapUfCode("background"));
+
+// O vetor exportado contém exatamente uma geometria para cada UF. A aplicação
+// associa `data-uf` somente a estas geometrias, nunca aos paths auxiliares.
+const mapSvg = readFileSync(new URL("../components/redesign/assets/map/map-br-ufs-diverging.svg", import.meta.url), "utf8");
+const vectorUfs = [...mapSvg.matchAll(/<path id="([A-Z]{2})"/g)].map((match) => match[1]);
+assert.strictEqual(vectorUfs.length, 27);
+assert.deepStrictEqual([...vectorUfs].sort(), [...MAP_UF_CODES].sort());
 
 // A mesma taxa recebe a mesma cor, com ou sem filtros que alterem totais.
 const beforeFilters = calculateMapFavorableRate(row("SP", 8, 2));

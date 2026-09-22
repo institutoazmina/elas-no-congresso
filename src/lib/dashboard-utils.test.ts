@@ -179,6 +179,20 @@ const FIXTURE: FxItem[] = [
     assert.strictEqual(filterAuthorsByMinProposals(rows, counts, 1).length, 9);
 }
 
+// Os níveis do subfiltro de autoria são aplicados sobre as proposições já
+// filtradas e preservam o default editorial de 5+.
+{
+    const counts = new Map<string, number>([["a", 1], ["b", 5], ["c", 10], ["d", 20]]);
+    const rows = [
+        makeRow("person:a", "Um", 1, 0), makeRow("person:b", "Cinco", 1, 0),
+        makeRow("person:c", "Dez", 1, 0), makeRow("person:d", "Vinte", 1, 0),
+    ];
+    assert.deepStrictEqual(filterAuthorsByMinProposals(rows, counts, 1).map((row) => row.label), ["Um", "Cinco", "Dez", "Vinte"]);
+    assert.deepStrictEqual(filterAuthorsByMinProposals(rows, counts).map((row) => row.label), ["Cinco", "Dez", "Vinte"]);
+    assert.deepStrictEqual(filterAuthorsByMinProposals(rows, counts, 10).map((row) => row.label), ["Dez", "Vinte"]);
+    assert.deepStrictEqual(filterAuthorsByMinProposals(rows, counts, 20).map((row) => row.label), ["Vinte"]);
+}
+
 // Limite oficial: quatro proposições excluem; cinco ou mais incluem.
 {
     const counts = new Map<string, number>([["num:631", 4], ["num:5352", 5], ["num:89", 6]]);

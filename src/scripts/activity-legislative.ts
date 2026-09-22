@@ -413,7 +413,9 @@ function initActivity(root: HTMLElement) {
         favorableValue.textContent = formatNumber.format(row.favorable);
         unfavorableValue.textContent = formatNumber.format(row.unfavorable);
         values.append(favorableValue, unfavorableValue);
-        element.append(key, bars, values);
+        // O Figma reserva a identidade (176px), os números (38px) e as
+        // barras (80px), nesta ordem. Não inverter: isso encolhe a autoria.
+        element.append(key, values, bars);
         return element;
     }
 
