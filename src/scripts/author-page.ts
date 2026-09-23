@@ -21,6 +21,7 @@ import {
     type AuthorReport,
 } from "../lib/author-page";
 import { resolveReportagemImage } from "../lib/wp";
+import { propositionRoute } from "../lib/proposition-utils";
 
 type AuthorSort = "number" | "author" | "summary" | "assessment" | "evaluator" | "progress" | "category" | "updated";
 type AuthorWindow = Window & { __authorPageAbortController?: AbortController };
@@ -207,7 +208,7 @@ function initAuthorPage() {
         const row = document.createElement("tr");
         const number = document.createElement("td");
         const proposalLink = document.createElement("a");
-        proposalLink.href = `/proposta/${proposal.slug}`;
+        proposalLink.href = propositionRoute(proposal.numero) || "/propostas-e-votacoes";
         proposalLink.textContent = proposal.numero;
         const house = document.createElement("small");
         house.textContent = normalize(proposal.casa).includes("sen") ? "Senado" : "Câmara";
@@ -247,7 +248,7 @@ function initAuthorPage() {
         const identity = document.createElement("span");
         const link = document.createElement("a");
         link.className = "author-card__number";
-        link.href = `/proposta/${proposal.slug}`;
+        link.href = propositionRoute(proposal.numero) || "/propostas-e-votacoes";
         link.textContent = proposal.numero;
         const house = document.createElement("small");
         house.textContent = normalize(proposal.casa).includes("sen") ? "Senado" : "Câmara";

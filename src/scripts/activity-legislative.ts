@@ -60,6 +60,7 @@ import {
     type QualityCollector,
 } from "../lib/dashboard-utils";
 import { authorRoute } from "../lib/author-page";
+import { propositionRoute } from "../lib/proposition-utils";
 
 const normalize = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const escapeCsv = (value: unknown) => `"${String(value ?? "").replaceAll('"', '""')}"`;
@@ -579,7 +580,7 @@ function initActivity(root: HTMLElement) {
         const row = document.createElement("tr");
         const number = document.createElement("td");
         const link = document.createElement("a");
-        link.href = `/proposta/${item.slug}`;
+        link.href = propositionRoute(item.numero) || "/propostas-e-votacoes";
         link.textContent = item.numero;
         const house = document.createElement("small");
         house.textContent = normalize(item.casa).startsWith("sen") ? "Senado" : "Câmara";
@@ -598,7 +599,7 @@ function initActivity(root: HTMLElement) {
         evaluator.textContent = item.avaliador || "—";
         if (item.comentario) {
             const comment = document.createElement("a");
-            comment.href = `/proposta/${item.slug}`;
+            comment.href = propositionRoute(item.numero) || "/propostas-e-votacoes";
             comment.className = "activity-table__comments";
             comment.textContent = "Ler comentários";
             evaluator.append(comment);
@@ -621,7 +622,7 @@ function initActivity(root: HTMLElement) {
         const header = document.createElement("header");
         const titleWrap = document.createElement("div");
         const title = document.createElement("a");
-        title.href = `/proposta/${item.slug}`;
+        title.href = propositionRoute(item.numero) || "/propostas-e-votacoes";
         title.textContent = item.numero;
         const house = document.createElement("small");
         house.textContent = normalize(item.casa).startsWith("sen") ? "Senado" : "Câmara";
