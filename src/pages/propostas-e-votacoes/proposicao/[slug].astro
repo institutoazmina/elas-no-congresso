@@ -194,11 +194,12 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     position: relative;
     height: 212px;
     overflow: hidden;
-    background-color: #363636;
-    background-image: linear-gradient(rgb(66 66 246 / 70%), rgb(66 66 246 / 70%)), var(--proposition-paper);
-    background-position: center, center -180px;
+    background-color: #3838d9;
+    background-image: var(--proposition-paper);
+    background-blend-mode: multiply;
+    background-position: center top;
     background-repeat: no-repeat;
-    background-size: auto, 1440px 960px;
+    background-size: 1440px 960px;
     color: #fff;
   }
   .proposition-hero > a {
@@ -216,7 +217,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
   .proposition-hero > a:focus-visible { color: #fff; text-decoration: underline; }
   .proposition-hero > div {
     position: absolute;
-    top: 57px;
+    top: 57.5px;
     left: 50%;
     display: flex;
     width: min(720px, calc(100% - 32px));
@@ -238,19 +239,18 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
 
   .proposition-overview {
     position: relative;
-    min-height: 571px;
     border-top: 1px solid rgb(153 141 150 / 28%);
     background: #fff;
     box-shadow: 0 -2px 9.8px rgb(0 0 0 / 27%);
-    padding: 89px 48px 40px;
+    padding: 88px 48px 40px;
   }
   .proposition-overview__paperclip {
     position: absolute;
     z-index: 2;
-    top: -20px;
+    top: -20.933px;
     left: max(42px, calc(50% - 678px));
-    width: 47px;
-    height: 85px;
+    width: 46.213px;
+    height: 84.412px;
     background: var(--proposition-paperclip) center / contain no-repeat;
     pointer-events: none;
   }
@@ -265,19 +265,21 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
   }
   .proposition-column { min-width: 0; }
   .proposition-column h2 {
-    margin: 0 0 24px;
+    margin: 0 0 23px;
     color: #0b0f5e;
     font-family: "ETC Anybody", sans-serif;
     font-size: 32px;
     font-weight: 700;
     font-variation-settings: "wdth" 75;
     line-height: 32px;
+    text-box-edge: cap alphabetic;
+    text-box-trim: trim-both;
     text-transform: uppercase;
   }
   .proposition-summary > p {
     width: 268px;
     max-width: 100%;
-    margin: 0 0 18px;
+    margin: 0 0 24px;
     color: #4b5563;
     font-size: 18px;
     font-weight: 400;
@@ -365,7 +367,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
   .proposition-details {
     display: flex;
     min-height: 296px;
-    padding: 24px;
+    padding: 23px;
     border: 1px solid rgb(66 66 246 / 25%);
     flex-direction: column;
     align-items: flex-start;
@@ -385,7 +387,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     line-height: 24px;
     text-transform: uppercase;
   }
-  .proposition-details__body { color: #4b5563; font-size: 18px; line-height: 24px; }
+  .proposition-details__body { width: 100%; color: #4b5563; font-size: 18px; line-height: 24px; }
   .proposition-details__body p { margin: 0 0 24px; }
   .proposition-details__body p:last-child { margin-bottom: 0; }
   .proposition-details__body p > span:first-child {
@@ -398,7 +400,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
 
   .proposition-progress {
     width: 100%;
-    padding: 100px 16px 80px;
+    padding: 100px 16px 40px;
     background: #fff;
   }
   .proposition-progress__bar {
@@ -410,15 +412,16 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     padding: 0 25px 0 20px;
     align-items: center;
     justify-content: space-between;
-    background-color: rgb(66 66 246 / 80%);
-    background-image: linear-gradient(rgb(66 66 246 / 76%), rgb(66 66 246 / 76%)), var(--proposition-paper);
-    background-position: center, center -180px;
+    background-color: #6262ff;
+    background-image: var(--proposition-paper);
+    background-blend-mode: multiply;
+    background-position: center -70px;
     background-repeat: no-repeat;
-    background-size: auto, 741px auto;
+    background-size: 741px auto;
   }
   .proposition-progress__bar h2 {
     position: absolute;
-    top: -47px;
+    top: -46px;
     left: 50%;
     margin: 0;
     transform: translateX(-50%);
@@ -429,6 +432,8 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     font-variation-settings: "wdth" 75;
     line-height: 32px;
     text-align: center;
+    text-box-edge: cap alphabetic;
+    text-box-trim: trim-both;
     text-transform: uppercase;
     white-space: nowrap;
   }
@@ -467,7 +472,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
   .proposition-timeline {
     display: grid;
     width: min(741px, 100%);
-    min-height: 171px;
+    min-height: 296px;
     margin: 0 auto;
     padding: 25px;
     border: 2px solid #1e2546;
