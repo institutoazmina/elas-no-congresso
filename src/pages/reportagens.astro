@@ -223,7 +223,6 @@ const posts = allPage.posts;
             try {
                 const url = new URL(endpoint);
                 url.searchParams.set("_embed", "wp:featuredmedia");
-                url.searchParams.set("_fields", "title,link,modified,_links.wp:featuredmedia");
                 url.searchParams.set("per_page", String(POSTS_PER_PAGE));
                 url.searchParams.set("page", String(requestedPage));
                 url.searchParams.set("orderby", "date");

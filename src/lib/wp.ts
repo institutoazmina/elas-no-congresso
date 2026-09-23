@@ -1,5 +1,5 @@
 type WpImageSize = { source_url?: string };
-type WpFeaturedMedia = {
+export type WpFeaturedMedia = {
   alt_text?: string;
   link?: string;
   source_url?: string;
@@ -23,6 +23,12 @@ export type WpPostsPage = {
 
 export const WP_REPORTAGENS_ENDPOINT = "https://azmina.com.br/wp-json/wp/v2/az_reportagem";
 
+export function resolveReportagemImage(media: WpFeaturedMedia | undefined, baseUrl = "https://azmina.com.br"): string | undefined {
+  const imagePath = media?.media_details?.sizes?.["az-article-thumbnail-large"]?.source_url ?? media?.source_url ?? media?.link;
+  if (!imagePath) return undefined;
+  try { return new URL(imagePath, baseUrl).href; } catch { return undefined; }
+}
+
 export async function fetchReportagensPage(
   tagId: number | undefined,
   perPage: number,
@@ -31,7 +37,6 @@ export async function fetchReportagensPage(
 ): Promise<WpPostsPage> {
   const params = new URLSearchParams({
     _embed: "wp:featuredmedia",
-    _fields: "title,link,date,modified,_links.wp:featuredmedia",
     per_page: String(perPage),
     page: String(page),
   });

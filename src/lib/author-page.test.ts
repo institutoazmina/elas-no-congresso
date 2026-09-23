@@ -3,6 +3,7 @@ import test from "node:test";
 import {
     assertSuccessfulApiStatus,
     authorRoute,
+    authorSlug,
     buildAuthorActivity,
     formatApiDate,
     getActivityAuthorIds,
@@ -17,6 +18,23 @@ import {
     type ActivityData,
     type ApiParliamentarian,
 } from "./author-page.ts";
+import { resolveReportagemImage } from "./wp.ts";
+
+test("resolve a imagem WordPress pela mesma prioridade da página Reportagens", () => {
+    assert.equal(resolveReportagemImage({ media_details: { sizes: { "az-article-thumbnail-large": { source_url: "/large.jpg" } } } }), "https://azmina.com.br/large.jpg");
+    assert.equal(resolveReportagemImage({ source_url: "https://cdn.example/image.jpg" }), "https://cdn.example/image.jpg");
+    assert.equal(resolveReportagemImage(undefined), undefined);
+});
+
+test("slugs públicos normalizam nomes sem acentos nem caracteres inválidos", () => {
+    assert.equal(authorSlug("Sâmia Bomfim"), "samia-bomfim");
+    assert.equal(authorSlug("Erika Hilton"), "erika-hilton");
+    assert.equal(authorSlug("Soraya Thronicke"), "soraya-thronicke");
+    assert.equal(authorSlug("Fabiano Contarato"), "fabiano-contarato");
+    assert.equal(authorSlug("  Jo\u00e3o   da Silva!! "), "joao-da-silva");
+    assert.equal(authorSlug("Érica---Hilton"), "erica-hilton");
+    assert.equal(authorRoute("Erika Hilton"), "/propostas-e-votacoes/autoria/erika-hilton");
+});
 
 test("reportagens relacionadas são priorizadas, ordenadas e limitadas a três", () => {
     const result = selectAuthorReports([
@@ -61,8 +79,8 @@ test("a rota usa somente um ID numérico real", () => {
     assert.equal(parseAuthorId("101"), 101);
     assert.equal(parseAuthorId("ana"), null);
     assert.deepEqual(getActivityAuthorIds(data), [101, 202]);
-    assert.equal(authorRoute(101), "/propostas-e-votacoes/autoria/101");
-    assert.equal(authorRoute("Ana"), null);
+    assert.equal(authorRoute("Ana"), "/propostas-e-votacoes/autoria/ana");
+    assert.equal(authorRoute(101), null);
 });
 
 test("foto real é normalizada e fallback vazio não produz imagem quebrada", () => {

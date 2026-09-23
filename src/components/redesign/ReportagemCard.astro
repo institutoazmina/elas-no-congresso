@@ -1,12 +1,11 @@
 ---
-import type { WpPost } from "../../lib/wp";
+import { resolveReportagemImage, type WpPost } from "../../lib/wp";
 import chevronRight from "../../assets/images/redesign/reportagens/chevron-right.svg";
 
 interface Props { post: WpPost; dark?: boolean; }
 const { post, dark = false } = Astro.props;
 const media = post._embedded?.["wp:featuredmedia"]?.[0];
-const imagePath = media?.media_details?.sizes?.["az-article-thumbnail-large"]?.source_url ?? media?.source_url ?? media?.link;
-const image = imagePath ? new URL(imagePath, "https://azmina.com.br").href : undefined;
+const image = resolveReportagemImage(media);
 const plainTitle = post.title.rendered.replace(/<[^>]*>/g, "").trim();
 const imageAlt = media?.alt_text?.trim() || plainTitle;
 const updatedAt = post.modified ? new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", year: "numeric", timeZone: "America/Sao_Paulo" }).format(new Date(post.modified)) : undefined;

@@ -6,7 +6,7 @@ import paperclip from "../../assets/images/redesign/activity/author-paperclip.pn
 import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
 import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
 import chevronRight from "../../assets/images/redesign/reportagens/chevron-right.svg";
-import roughPaper from "../../assets/images/redesign/background/bg-pattern-rough-paper.png";
+import heroPaper from "../../assets/images/redesign/activity/author-hero-paper.png";
 import { formatApiDate, genderLabel, houseLabel, normalizePhotoUrl, partyForTerm, type AuthorInitialData } from "../../lib/author-page";
 import "../../styles/activity-table.css";
 
@@ -30,7 +30,7 @@ const initialPayload = initial ? JSON.stringify(initial).replace(/</g, "\\u003c"
     data-thumbs-up={thumbsUp.src}
     data-thumbs-down={thumbsDown.src}
     data-chevron={chevronRight.src}
-    style={`--author-paper: url(${roughPaper.src}); --author-paperclip: url(${paperclip.src}); --author-circles: url(${circles.src}); --author-arrow-back: url(${arrowBack.src}); --author-arrow-forward: url(${arrowForward.src})`}
+    style={`--author-paper: url(${heroPaper.src}); --author-paperclip: url(${paperclip.src}); --author-circles: url(${circles.src}); --author-arrow-back: url(${arrowBack.src}); --author-arrow-forward: url(${arrowForward.src})`}
 >
     <section class="author-hero" aria-labelledby="author-page-title">
         <a href="/propostas-e-votacoes">←&nbsp; Voltar ao painel</a>
@@ -146,7 +146,7 @@ const initialPayload = initial ? JSON.stringify(initial).replace(/</g, "\\u003c"
     .author-page { min-width: 320px; overflow-x: clip; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
     .author-page [hidden] { display: none !important; }
     .author-page .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-    .author-hero { position: relative; height: 209px; overflow: hidden; background-color: #4242f6; background-image: linear-gradient(rgb(66 66 246 / 82%), rgb(66 66 246 / 82%)), var(--author-paper); background-position: center; background-size: auto, 400px 400px; color: #fff; }
+    .author-hero { position: relative; height: 209px; overflow: hidden; background-color: #363636; background-image: linear-gradient(rgb(66 66 246 / 70%), rgb(66 66 246 / 70%)), var(--author-paper); background-position: center, center -180px; background-repeat: no-repeat; background-size: auto, 1440px 960px; color: #fff; }
     .author-hero > a { position: absolute; top: 12px; left: 48px; color: #d0d0fd; font-size: 16px; font-weight: 700; line-height: 24px; text-decoration: none; }
     .author-hero > a:hover { color: #fff; text-decoration: underline; }
     .author-hero > a:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }

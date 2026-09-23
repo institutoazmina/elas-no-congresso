@@ -4,6 +4,7 @@ import {
     formatApiDate,
     genderLabel,
     groupProposalRatings,
+    authorRoute,
     houseLabel,
     normalizePhotoUrl,
     paginateItems,
@@ -19,6 +20,7 @@ import {
     selectAuthorReports,
     type AuthorReport,
 } from "../lib/author-page";
+import { resolveReportagemImage } from "../lib/wp";
 
 type AuthorSort = "number" | "author" | "summary" | "assessment" | "evaluator" | "progress" | "category" | "updated";
 type AuthorWindow = Window & { __authorPageAbortController?: AbortController };
@@ -170,7 +172,7 @@ function initAuthorPage() {
         const author = activity!.author;
         const link = document.createElement("a");
         link.className = "activity-table__author";
-        link.href = `/propostas-e-votacoes/autoria/${authorId}`;
+        link.href = authorRoute(author.nome) || "/propostas-e-votacoes";
         link.setAttribute("aria-label", `Ver página de autoria de ${author.nome}`);
         if (author.foto) {
             const image = document.createElement("img");
@@ -373,7 +375,7 @@ function initAuthorPage() {
             const grid = $("[data-author-reports-grid]");
             grid.replaceChildren(...posts.map((post) => {
                 const media = post._embedded?.["wp:featuredmedia"]?.[0];
-                const imageSource = media?.media_details?.sizes?.["az-article-thumbnail-large"]?.source_url || media?.source_url || media?.link;
+                const imageSource = resolveReportagemImage(media);
                 const article = document.createElement("article");
                 article.className = "reportagem-card";
                 const imageLink = document.createElement("a");

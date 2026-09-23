@@ -6,6 +6,7 @@ import AuthorPage from "../../../components/redesign/AuthorPage.astro";
 import activityData from "../../../data/dados.json";
 import {
     buildAuthorActivity,
+    authorSlug,
     getActivityAuthorIds,
     partyForTerm,
     resolveApiParliamentarian,
@@ -44,9 +45,11 @@ export async function getStaticPaths() {
         console.warn("Não foi possível carregar o diretório de parlamentares durante o build:", error);
     }
 
-    return getActivityAuthorIds(data).map((id) => {
+    const paths = getActivityAuthorIds(data).map((id) => {
         const localActivity = buildAuthorActivity(data, id);
         const localAuthor = localActivity?.author;
+        const slug = authorSlug(localAuthor?.nome);
+        if (!slug) throw new Error(`Parlamentar ${id} não possui nome válido para slug público.`);
         const resolved = resolveApiParliamentarian(directory.parliamentarians, id);
         const fallbackTerm = {
             id: null,
@@ -81,10 +84,18 @@ export async function getStaticPaths() {
         const parties = resolved ? directory.parties : localAuthor?.partido ? [{ id: 0, acronym: localAuthor.partido, name: localAuthor.partido }] : [];
         const initial: AuthorInitialData | null = localActivity ? { person, term, parties, activity: localActivity } : null;
         return {
-            params: { id: String(id) },
+            params: { slug },
             props: { authorId: id, house: houses.get(id) || "Parlamentar", initial },
         };
     });
+    const seen = new Map<string, number>();
+    for (const path of paths) {
+        const slug = path.params.slug;
+        const previous = seen.get(slug);
+        if (previous !== undefined) throw new Error(`Colisão de slug de autoria: ${slug} (${previous} e ${path.props.authorId})`);
+        seen.set(slug, path.props.authorId);
+    }
+    return paths;
 }
 
 interface Props { authorId: number; house: string; initial: AuthorInitialData | null; }

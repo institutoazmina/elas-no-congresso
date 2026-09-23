@@ -59,6 +59,7 @@ import {
     type DashboardSort as DashboardSortType,
     type QualityCollector,
 } from "../lib/dashboard-utils";
+import { authorRoute } from "../lib/author-page";
 
 const normalize = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const escapeCsv = (value: unknown) => `"${String(value ?? "").replaceAll('"', '""')}"`;
@@ -310,7 +311,7 @@ function initActivity(root: HTMLElement) {
             return wrapper;
         }
         const button = document.createElement("a");
-        button.href = `/propostas-e-votacoes/autoria/${author.numero}`;
+        button.href = authorRoute(author.nome) || "/propostas-e-votacoes";
         button.setAttribute("aria-label", `Ver página de autoria de ${author.nome}`);
         if (author.foto) {
             const photo = document.createElement("img");
@@ -379,7 +380,7 @@ function initActivity(root: HTMLElement) {
             const control = document.createElement(row.key.startsWith("person:num:") ? "a" : "div");
             control.className = "activity-dashboard-card__author";
             if (control instanceof HTMLAnchorElement) {
-                control.href = `/propostas-e-votacoes/autoria/${row.key.slice("person:num:".length)}`;
+                control.href = authorRoute(row.label) || "/propostas-e-votacoes";
                 control.setAttribute("aria-label", `Ver página de autoria de ${row.label}`);
             }
             if (row.photo) {

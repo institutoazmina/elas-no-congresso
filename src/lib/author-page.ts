@@ -97,9 +97,20 @@ export function parseAuthorId(value: unknown): number | null {
     return Number.isSafeInteger(id) && id > 0 ? id : null;
 }
 
+export function authorSlug(value: unknown): string | null {
+    const slug = String(value ?? "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    return slug || null;
+}
+
 export function authorRoute(value: unknown): string | null {
-    const id = parseAuthorId(value);
-    return id === null ? null : `/propostas-e-votacoes/autoria/${id}`;
+    if (/^\d+$/.test(String(value ?? "").trim())) return null;
+    const slug = authorSlug(value);
+    return slug === null ? null : `/propostas-e-votacoes/autoria/${slug}`;
 }
 
 export function normalizePhotoUrl(primary: unknown, fallback?: unknown): string | null {
