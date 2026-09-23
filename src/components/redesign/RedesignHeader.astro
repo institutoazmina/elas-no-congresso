@@ -14,7 +14,7 @@ const links = [
 const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 ---
 
-<header class="redesign-header redesign-shared-background" transition:persist="redesign-header">
+<header class="redesign-header redesign-shared-background">
     <nav
         class="redesign-header__content container-fluid wrap tw:!max-w-screen"
         aria-label="Navegação principal"
@@ -385,6 +385,15 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 </style>
 
 <script>
+    // O módulo executa uma vez por sessão, mas o header é re-renderizado a
+    // cada navegação client-side. Por isso, listeners de window e observers
+    // vivem em escopo de módulo (registrados uma única vez, sem duplicar a
+    // cada rota) e os handlers sempre resolvem o header atual do documento,
+    // nunca um nó de página anterior.
+    let mobileScrollBound = false;
+    let desktopScrollBound = false;
+    let highlighterLayoutObserver: ResizeObserver | null = null;
+
     const updateHighlighter = () => {
         const nav = document.querySelector(".redesign-header__content");
         const highlighter = nav?.querySelector(".highlighter-marks");
@@ -522,13 +531,12 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     };
 
     const bindMobileHeaderScroll = () => {
-        const header = document.querySelector<HTMLElement>(".redesign-header");
-        if (!header) return;
-
         const mobileViewport = window.matchMedia("(max-width: 767px)");
         const threshold = 8;
 
         const updateHeader = (forceVisible = false) => {
+            const header = document.querySelector<HTMLElement>(".redesign-header");
+            if (!header || !header.isConnected) return;
             const currentScroll = Math.max(window.scrollY, 0);
             const previousScroll = Number(header.dataset.mobilePreviousScroll ?? currentScroll);
             const mobileMenu = header.querySelector<HTMLDetailsElement>(
@@ -559,8 +567,8 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
             }
         };
 
-        if (!header.dataset.mobileScrollBound) {
-            header.dataset.mobileScrollBound = "true";
+        if (!mobileScrollBound) {
+            mobileScrollBound = true;
             let ticking = false;
             window.addEventListener("scroll", () => {
                 if (!ticking) {
@@ -579,13 +587,22 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     };
 
     const bindDesktopHeaderScroll = () => {
-        const header = document.querySelector<HTMLElement>(".redesign-header");
-        if (!header || !header.closest(".redesign-home-background")) return;
-
         const desktopViewport = window.matchMedia("(min-width: 821px)");
         const threshold = 8;
 
         const updateHeader = (forceVisible = false) => {
+            const header = document.querySelector<HTMLElement>(".redesign-header");
+            if (!header || !header.isConnected) return;
+            // O comportamento desktop de ocultar/transparecer o header existe
+            // somente na home. Avaliado a cada evento para que um listener
+            // registrado em outra rota nunca contamine o header atual.
+            if (!header.closest(".redesign-home-background")) {
+                header.classList.remove(
+                    "redesign-header--desktop-hidden",
+                    "redesign-header--desktop-scrolled",
+                );
+                return;
+            }
             const currentScroll = Math.max(window.scrollY, 0);
             const previousScroll = Number(header.dataset.desktopPreviousScroll ?? currentScroll);
 
@@ -624,8 +641,8 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
             }
         };
 
-        if (!header.dataset.desktopScrollBound) {
-            header.dataset.desktopScrollBound = "true";
+        if (!desktopScrollBound) {
+            desktopScrollBound = true;
             let ticking = false;
             window.addEventListener("scroll", () => {
                 if (!ticking) {
@@ -673,14 +690,13 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     const bindHighlighterLayoutObserver = () => {
         const nav = document.querySelector(".redesign-header__content");
 
-        if (!nav || nav.dataset.highlighterLayoutBound) return;
+        if (!nav) return;
 
-        nav.dataset.highlighterLayoutBound = "true";
-
-        const observer = new ResizeObserver(scheduleHighlighterUpdate);
-        observer.observe(nav);
+        highlighterLayoutObserver?.disconnect();
+        highlighterLayoutObserver = new ResizeObserver(scheduleHighlighterUpdate);
+        highlighterLayoutObserver.observe(nav);
         nav.querySelectorAll("[data-highlighter-target]").forEach((target) => {
-            observer.observe(target);
+            highlighterLayoutObserver?.observe(target);
         });
 
         document.fonts?.ready.then(scheduleHighlighterUpdate);
