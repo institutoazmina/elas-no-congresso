@@ -1,0 +1,90 @@
+export type ActivityAssessment = "favorable" | "unfavorable" | "unrated" | "";
+
+export type ActivityFilterState = {
+    search: string;
+    house: string;
+    year: string;
+    party: string;
+    category: string;
+    assessment: ActivityAssessment;
+    gender: string;
+    state: string;
+    comments: string;
+    evaluator: string;
+};
+
+export type ActivityFilterItem = {
+    numero: string;
+    resumo: string;
+    casa: string;
+    year: number;
+    favoravel: number;
+    avaliador?: string | null;
+    comentario?: string | null;
+    categoria?: string | null;
+    parties: string[];
+    states: string[];
+    genders: string[];
+    authors: Array<{ nome?: string | null; partido?: string | null; estado?: string | null }>;
+};
+
+export const EMPTY_ACTIVITY_FILTERS: Readonly<ActivityFilterState> = Object.freeze({
+    search: "",
+    house: "",
+    year: "",
+    party: "",
+    category: "",
+    assessment: "",
+    gender: "",
+    state: "",
+    comments: "",
+    evaluator: "",
+});
+
+export const normalizeActivitySearch = (value: unknown) => String(value ?? "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+export function activityAssessment(value: number): Exclude<ActivityAssessment, ""> {
+    if (value > 0) return "favorable";
+    if (value < 0) return "unfavorable";
+    return "unrated";
+}
+
+export function matchesActivityFilters(item: ActivityFilterItem, filters: ActivityFilterState) {
+    const query = normalizeActivitySearch(filters.search.trim());
+    const haystack = normalizeActivitySearch([
+        item.numero,
+        item.resumo,
+        item.avaliador,
+        ...item.authors.map((author) => `${author.nome ?? ""} ${author.partido ?? ""} ${author.estado ?? ""}`),
+    ].join(" "));
+
+    return (!query || haystack.includes(query))
+        && (!filters.house || normalizeActivitySearch(item.casa).startsWith(normalizeActivitySearch(filters.house)))
+        && (!filters.year || item.year === Number(filters.year))
+        && (!filters.party || item.parties.includes(filters.party))
+        && (!filters.category || normalizeActivitySearch(item.categoria) === normalizeActivitySearch(filters.category))
+        && (!filters.assessment || activityAssessment(item.favoravel) === filters.assessment)
+        && (!filters.gender || item.genders.includes(filters.gender))
+        && (!filters.state || item.states.includes(filters.state))
+        && (!filters.evaluator || item.avaliador === filters.evaluator)
+        && (!filters.comments || (filters.comments === "yes" ? Boolean(item.comentario) : !item.comentario));
+}
+
+export function filterActivityItems<T extends ActivityFilterItem>(items: T[], filters: ActivityFilterState) {
+    return items.filter((item) => matchesActivityFilters(item, filters));
+}
+
+export function getActivityCategories(items: Array<Pick<ActivityFilterItem, "categoria">>) {
+    return [...new Set(items.map((item) => item.categoria?.trim()).filter((category): category is string => Boolean(category)))]
+        .sort((a, b) => a.localeCompare(b, "pt-BR"));
+}
+
+export function paginateActivityItems<T>(items: T[], requestedPage: number, itemsPerPage: number) {
+    const pageCount = Math.max(1, Math.ceil(items.length / itemsPerPage));
+    const page = Math.min(Math.max(1, requestedPage), pageCount);
+    const start = (page - 1) * itemsPerPage;
+    return { page, pageCount, items: items.slice(start, start + itemsPerPage) };
+}

@@ -20,6 +20,7 @@ type RawProposal = {
     resumo: string;
     avaliador?: string | null;
     favoravel: number;
+    categoria?: string | null;
     relevancia?: number;
     autores?: Record<string, number>;
     legislatura: number;
@@ -61,6 +62,13 @@ import {
 } from "../lib/dashboard-utils";
 import { authorRoute } from "../lib/author-page";
 import { propositionRoute } from "../lib/proposition-utils";
+import {
+    activityAssessment,
+    filterActivityItems,
+    getActivityCategories,
+    paginateActivityItems,
+    type ActivityFilterState,
+} from "../lib/activity-filters";
 
 const normalize = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const escapeCsv = (value: unknown) => `"${String(value ?? "").replaceAll('"', '""')}"`;
@@ -100,6 +108,7 @@ function initActivity(root: HTMLElement) {
     let tableSort: TableSort = "updated";
     let tableSortDirection: "ascending" | "descending" = "descending";
     let panelAdvanced = false;
+    let panelSnapshot: Map<string, string> | null = null;
     let lastFocused: HTMLElement | null = null;
     let stateDashboard = new Map<string, DashboardRow>();
     let dataQuality: QualityCollector = createQualityCollector();
@@ -118,6 +127,19 @@ function initActivity(root: HTMLElement) {
 
     const field = (name: string) => filters.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null;
     const value = (name: string) => field(name)?.value ?? "";
+    const panelControls = () => [...filters.querySelectorAll<HTMLInputElement | HTMLSelectElement>("input[name], select[name]")];
+    const currentFilters = (): ActivityFilterState => ({
+        search: value("search"),
+        house: value("house"),
+        year: value("presented") || value("year"),
+        party: value("party"),
+        category: value("category"),
+        assessment: value("assessment") as ActivityFilterState["assessment"],
+        gender: value("gender"),
+        state: value("state"),
+        comments: value("comments"),
+        evaluator: value("evaluator"),
+    });
 
     function setupMobileAccordions() {
         if (mobileAccordionsReady || !window.matchMedia("(max-width: 767px)").matches) return;
@@ -224,32 +246,26 @@ function initActivity(root: HTMLElement) {
         };
         addOptions("year", [...years].sort((a, b) => b - a));
         addOptions("year-mobile", [...years].sort((a, b) => b - a));
+        addOptions("presented", [...years].sort((a, b) => b - a));
         addOptions("party", [...parties].sort((a, b) => a.localeCompare(b, "pt-BR")));
         addOptions("party-mobile", [...parties].sort((a, b) => a.localeCompare(b, "pt-BR")));
         addOptions("state", [...states].sort());
         addOptions("evaluator", [...evaluators].sort((a, b) => a.localeCompare(b, "pt-BR")));
+        const categories = getActivityCategories(proposals);
+        if (categories.length) {
+            addOptions("category", categories);
+            addOptions("category-mobile", categories);
+            [field("category"), field("category-mobile")].forEach((select) => {
+                if (!select) return;
+                select.disabled = false;
+                select.removeAttribute("title");
+            });
+        }
         all = proposals.sort((a, b) => b.year - a.year || b.i - a.i);
         const quality = dataQuality.summary();
         if (quality.total > 0) {
             console.warn("[atividade-legislativa] relatório de qualidade dos dados:", JSON.stringify(quality));
         }
-    }
-
-    function matches(item: Proposal) {
-        const query = normalize(value("search").trim());
-        const haystack = normalize([item.numero, item.resumo, item.avaliador, ...item.authors.map((author) => `${author.nome} ${author.partido} ${author.estado}`)].join(" "));
-        const stance = value("assessment");
-        const withComments = value("comments");
-        return (!query || haystack.includes(query))
-            && (!value("house") || normalize(item.casa).startsWith(normalize(value("house"))))
-            && (!value("year") || item.year === Number(value("year")))
-            && (!value("party") || item.parties.includes(value("party")))
-            && (!stance || (stance === "favorable" ? item.favoravel > 0 : stance === "unfavorable" ? item.favoravel < 0 : !item.avaliador))
-            && (!value("gender") || item.genders.includes(value("gender")))
-            && (!value("state") || item.states.includes(value("state")))
-            && (!value("evaluator") || item.avaliador === value("evaluator"))
-            && (!value("relevance") || Number(item.relevancia || 0) === Number(value("relevance")))
-            && (!withComments || (withComments === "yes" ? Boolean(item.comentario) : !item.comentario));
     }
 
     function sortItems(items: Proposal[]) {
@@ -276,13 +292,14 @@ function initActivity(root: HTMLElement) {
 
     function currentSlice() {
         const amount = Number(itemsSelect.value);
-        const start = (page - 1) * amount;
-        return visible.slice(start, start + amount);
+        const paginationState = paginateActivityItems(visible, page, amount);
+        page = paginationState.page;
+        return paginationState.items;
     }
 
     function stanceData(item: Proposal) {
-        if (!item.avaliador) return { label: "Sem avaliação", className: "neutral", icon: "" };
-        return item.favoravel > 0
+        if (activityAssessment(item.favoravel) === "unrated") return { label: "Sem avaliação", className: "neutral", icon: "" };
+        return activityAssessment(item.favoravel) === "favorable"
             ? { label: "Favorável", className: "favorable", icon: root.dataset.thumbsUp || "" }
             : { label: "Desfavorável", className: "unfavorable", icon: root.dataset.thumbsDown || "" };
     }
@@ -444,6 +461,14 @@ function initActivity(root: HTMLElement) {
     function renderDashboard() {
         if (!visible.length) {
             stateDashboard = new Map();
+            for (const uf of MAP_UF_CODES) {
+                const visualPath = mapVisualPaths.get(uf);
+                const hitArea = mapHitAreas.get(uf);
+                if (!visualPath || !hitArea) continue;
+                visualPath.style.fill = mapFavorableRateToColor(null);
+                hitArea.setAttribute("aria-label", `${uf}: sem proposições avaliadas nos filtros atuais`);
+                hitArea.setAttribute("aria-expanded", "false");
+            }
             dashboard.setAttribute("hidden", "");
             return;
         }
@@ -657,7 +682,7 @@ function initActivity(root: HTMLElement) {
         bar.classList.toggle("is-empty", visible.length === 0);
         const activeNames = new Set($$<HTMLInputElement | HTMLSelectElement>("input, select")
             .filter((control) => !control.disabled && control.name && !["items", "sort"].includes(control.name) && Boolean(control.value))
-            .map((control) => control.name.replace(/-mobile$/, "")));
+            .map((control) => control.name.replace(/-mobile$/, "").replace(/^presented$/, "year")));
         const activeCount = activeNames.size;
         $$<HTMLElement>("[data-filter-count]").forEach((badge) => {
             badge.textContent = String(activeCount);
@@ -707,19 +732,22 @@ function initActivity(root: HTMLElement) {
         renderPagination();
     }
 
-    function applyFilters() {
+    function applyFilters(closePanel = true) {
         page = 1;
-        visible = sortItems(all.filter(matches));
+        visible = sortItems(filterActivityItems(all, currentFilters()));
         renderResults();
-        closeFilters();
+        if (closePanel && !filterPanel.hasAttribute("hidden")) closeFilters(false);
     }
 
     function resetFilters() {
         filters.reset();
+        const authorMinimum = $<HTMLSelectElement>("[data-dashboard-author-filter]");
+        if (authorMinimum) authorMinimum.value = String(MIN_PROPOSICOES_POR_PARLAMENTAR);
+        $$<HTMLSelectElement>("[data-dashboard-sort]").forEach((select) => { select.value = DEFAULT_DASHBOARD_ORDER; });
         page = 1;
         visible = sortItems(all);
         renderResults();
-        closeFilters();
+        if (!filterPanel.hasAttribute("hidden")) closeFilters(false);
     }
 
     function openFilters(advanced = false) {
@@ -737,11 +765,24 @@ function initActivity(root: HTMLElement) {
             const mobile = field(`${name}-mobile`);
             if (desktop && mobile) mobile.value = desktop.value;
         });
+        const presented = field("presented");
+        if (presented) presented.value = value("year");
+        panelSnapshot = new Map(panelControls().map((control) => [control.name, control.value]));
         $$<HTMLButtonElement>("[data-open-filters]").forEach((button) => button.setAttribute("aria-expanded", "true"));
-        (filterPanel.querySelector(".activity-filter-panel__basic select, .activity-filter-panel__basic input, input, select, button") as HTMLElement | null)?.focus();
+        const focusSelector = window.matchMedia("(max-width: 1399px)").matches
+            ? ".activity-filter-panel__basic select:not([disabled])"
+            : ".activity-filter-panel__advanced select:not([disabled])";
+        (filterPanel.querySelector(focusSelector) as HTMLElement | null)?.focus();
     }
 
-    function closeFilters() {
+    function closeFilters(restoreDraft = true) {
+        if (restoreDraft && panelSnapshot) {
+            panelControls().forEach((control) => {
+                const previous = panelSnapshot?.get(control.name);
+                if (previous !== undefined) control.value = previous;
+            });
+        }
+        panelSnapshot = null;
         filterPanel.setAttribute("hidden", "");
         backdrop.setAttribute("hidden", "");
         root.classList.remove("has-overlay");
@@ -749,10 +790,22 @@ function initActivity(root: HTMLElement) {
         lastFocused?.focus();
     }
 
-    filters.addEventListener("submit", (event) => { event.preventDefault(); applyFilters(); });
+    filters.addEventListener("submit", (event) => { event.preventDefault(); applyFilters(true); });
     filters.addEventListener("input", (event) => {
         const target = event.target as HTMLInputElement;
-        if (target.name.endsWith("-mobile")) {
+        if (target.name === "presented") {
+            const desktopYear = field("year");
+            const mobileYear = field("year-mobile");
+            if (desktopYear) desktopYear.value = target.value;
+            if (mobileYear) mobileYear.value = target.value;
+        } else if (target.name === "year" || target.name === "year-mobile") {
+            const desktopYear = field("year");
+            const mobileYear = field("year-mobile");
+            const presented = field("presented");
+            if (desktopYear) desktopYear.value = target.value;
+            if (mobileYear) mobileYear.value = target.value;
+            if (presented) presented.value = target.value;
+        } else if (target.name.endsWith("-mobile")) {
             const desktop = field(target.name.replace(/-mobile$/, ""));
             if (desktop) desktop.value = target.value;
         } else if (target.name && !target.name.includes("-mobile")) {
@@ -761,7 +814,7 @@ function initActivity(root: HTMLElement) {
         }
         if (target.name === "search" && window.matchMedia("(min-width: 768px)").matches) {
             window.clearTimeout(Number(filters.dataset.searchTimer));
-            filters.dataset.searchTimer = String(window.setTimeout(applyFilters, 250));
+            filters.dataset.searchTimer = String(window.setTimeout(() => applyFilters(false), 250));
         }
     });
     itemsSelect.addEventListener("change", () => { itemsSelect.dataset.userSelected = "true"; page = 1; renderResults(); });
@@ -769,7 +822,10 @@ function initActivity(root: HTMLElement) {
     root.addEventListener("click", (event) => {
         const target = (event.target as HTMLElement).closest<HTMLElement>("button, a");
         if (!target) return;
-        if (target.matches("[data-open-filters]")) openFilters(target.dataset.openFilters === "advanced");
+        if (target.matches("[data-open-filters]")) {
+            if (filterPanel.hasAttribute("hidden")) openFilters(target.dataset.openFilters === "advanced");
+            else closeFilters();
+        }
         if (target.matches("[data-close-filters]")) closeFilters();
         if (target.matches("[data-toggle-advanced]")) {
             panelAdvanced = !panelAdvanced;
@@ -806,7 +862,7 @@ function initActivity(root: HTMLElement) {
         }
         if (target.matches("[data-retry]")) load();
     });
-    backdrop.addEventListener("click", closeFilters);
+    backdrop.addEventListener("click", () => closeFilters());
     filterPanel.addEventListener("keydown", (event) => {
         if (event.key !== "Tab" || filterPanel.hasAttribute("hidden")) return;
         const focusable = $$<HTMLElement>("button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href]")
@@ -828,6 +884,9 @@ function initActivity(root: HTMLElement) {
         const pairedName = target.name.endsWith("-mobile") ? target.name.replace(/-mobile$/, "") : `${target.name}-mobile`;
         const paired = field(pairedName);
         if (paired) paired.value = target.value;
+        if (["house", "year", "party", "category", "assessment"].includes(target.name) && filterPanel.hasAttribute("hidden")) {
+            applyFilters(false);
+        }
     });
     $$<HTMLSelectElement>("[data-dashboard-sort], [data-dashboard-author-filter]").forEach((select) => select.addEventListener("change", renderDashboard));
     const mapTooltip = $("[data-map-tooltip]");

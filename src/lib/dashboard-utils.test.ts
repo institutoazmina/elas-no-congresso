@@ -24,6 +24,7 @@ import {
     personKey,
     createQualityCollector,
     buildDashboardRow,
+    getSingleDashboardResultMessage,
     DEFAULT_DASHBOARD_ORDER,
     MIN_PROPOSICOES_POR_PARLAMENTAR,
     PARTY_COUNT_MODE,
@@ -48,6 +49,11 @@ assert.strictEqual(MIN_PROPOSICOES_POR_PARLAMENTAR, 5);
 assert.strictEqual(PARTY_COUNT_MODE, "all-unique-authorships");
 assert.strictEqual(GENDER_COUNT_MODE, "all-unique-authorships");
 assert.strictEqual(UF_COUNT_MODE, "all-unique-authorships");
+
+const singleRow = [makeRow("PT", "PT", 1, 0)];
+assert.strictEqual(getSingleDashboardResultMessage("party", singleRow), "Para ver mais partidos, tente remover filtros.");
+assert.strictEqual(getSingleDashboardResultMessage("author", singleRow), "Para ver mais parlamentares, tente remover filtros.");
+assert.strictEqual(getSingleDashboardResultMessage("party", []), null);
 
 // ---------------------------------------------------------------------------
 // Fixture determinística (valores esperados calculados à mão).
