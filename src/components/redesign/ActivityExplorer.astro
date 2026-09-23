@@ -7,14 +7,13 @@ import sortDown from "../../assets/images/redesign/activity/sort-down.svg";
 import sortUp from "../../assets/images/redesign/activity/sort-up.svg";
 import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
 import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
-import cardTop from "../../assets/images/redesign/activity/parliamentarian-card-top.svg";
-import cardHole from "../../assets/images/redesign/activity/parliamentarian-card-hole.svg";
 import infoTooltip from "../../assets/images/redesign/activity/info-tooltip.svg";
 import tooltipTip from "../../assets/images/redesign/activity/tooltip-tip.svg";
 import { DEFAULT_DASHBOARD_ORDER, MAP_UF_CODES, MIN_PROPOSICOES_POR_PARLAMENTAR } from "../../lib/dashboard-utils";
 import mapBase from "../../assets/images/redesign/activity/map/map-br-base@2.5x.png";
 import mapLegend from "../../assets/images/redesign/activity/map/legend-diverging-elas-palette.svg";
 import mapUfsVector from "../../assets/images/redesign/activity/map/ufs-vector-diverging-elas-palette.svg?raw";
+import "../../styles/activity-table.css";
 ---
 
 <section
@@ -22,7 +21,7 @@ import mapUfsVector from "../../assets/images/redesign/activity/map/ufs-vector-d
     data-activity-root
     data-thumbs-up={thumbsUp.src}
     data-thumbs-down={thumbsDown.src}
-    style={`--search-icon: url(${search.src}); --select-chevron: url(${chevron.src}); --sort-down: url(${sortDown.src}); --sort-up: url(${sortUp.src}); --arrow-back: url(${arrowBack.src}); --arrow-forward: url(${arrowForward.src}); --card-top: url(${cardTop.src}); --card-hole: url(${cardHole.src})`}
+    style={`--search-icon: url(${search.src}); --select-chevron: url(${chevron.src}); --sort-down: url(${sortDown.src}); --sort-up: url(${sortUp.src}); --arrow-back: url(${arrowBack.src}); --arrow-forward: url(${arrowForward.src})`}
     aria-labelledby="activity-results-title"
 >
     <form class="activity-filters" data-filters>
@@ -181,26 +180,6 @@ import mapUfsVector from "../../assets/images/redesign/activity/map/ufs-vector-d
         <label>Itens por página <select data-items-per-page name="items"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select></label>
     </nav>
 
-    <dialog class="parliamentarian-dialog" data-parliamentarian-dialog aria-labelledby="parliamentarian-dialog-name">
-        <article>
-            <header><span aria-hidden="true"></span><button type="button" data-dialog-close aria-label="Fechar informações">×</button></header>
-            <div class="parliamentarian-dialog__identity">
-                <strong data-dialog-house>Parlamentar</strong>
-                <div><img data-dialog-photo src="" alt="" /><p><b id="parliamentarian-dialog-name" data-dialog-name></b><span data-dialog-party></span></p></div>
-            </div>
-            <div class="parliamentarian-dialog__scores">
-                <span><img src={thumbsUp.src} alt="" /><b data-dialog-favorable>0</b><small>favoráveis</small></span>
-                <span><img src={thumbsDown.src} alt="" /><b data-dialog-unfavorable>0</b><small>desfavoráveis</small></span>
-            </div>
-            <dl>
-                <div><dt>Nascimento</dt><dd data-dialog-birth>—</dd></div>
-                <div><dt>Profissão</dt><dd data-dialog-profession>—</dd></div>
-                <div><dt>Escolaridade</dt><dd data-dialog-education>—</dd></div>
-                <div><dt>Raça/cor</dt><dd data-dialog-race>—</dd></div>
-                <div><dt>Religião</dt><dd data-dialog-religion>—</dd></div>
-            </dl>
-        </article>
-    </dialog>
 </section>
 
 <script>
@@ -322,8 +301,8 @@ import mapUfsVector from "../../assets/images/redesign/activity/map/ufs-vector-d
     .activity-dashboard-card--author .activity-dashboard-card__row { min-height: 32px; }
     .activity-dashboard-card--author .activity-dashboard-card__key { overflow-wrap: normal; }
     .activity-dashboard-card__author { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: center; gap: 6px; }
-    button.activity-dashboard-card__author { width: 100%; border: 0; background: transparent; padding: 0; color: inherit; text-align: left; cursor: pointer; }
-    button.activity-dashboard-card__author:hover span > span { color: #4242f6; text-decoration: underline; }
+    a.activity-dashboard-card__author { width: 100%; color: inherit; text-align: left; text-decoration: none; cursor: pointer; }
+    a.activity-dashboard-card__author:hover span > span { color: #4242f6; text-decoration: underline; }
     .activity-dashboard-card__author img { display: block; width: 24px; height: 32px; flex: none; border: 1px solid #998d96; object-fit: cover; object-position: top center; }
     .activity-dashboard-card__author span { display: flex; min-width: 0; flex-direction: column; }
     .activity-dashboard-card__author span > span { display: block; overflow: hidden; line-height: 16px; text-overflow: ellipsis; white-space: nowrap; }
@@ -371,10 +350,10 @@ import mapUfsVector from "../../assets/images/redesign/activity/map/ufs-vector-d
     .activity-table td > small, .activity-table td:nth-child(6) small { display: block; margin-top: 4px; color: rgb(11 15 94 / 65%); font-size: 12px; line-height: 16px; }
     .activity-table__comments { display: block; margin-top: 4px; color: #4242f6; font-size: 12px; line-height: 16px; }
     .activity-table td:nth-child(3) p { display: -webkit-box; margin: 0; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
-    .activity-author button { display: flex; width: 100%; align-items: center; gap: 8px; border: 0; background: none; padding: 0; color: inherit; text-align: left; cursor: pointer; }
-    .activity-author button:hover strong { color: #4242f6; text-decoration: underline; }
+    .activity-author > a { display: flex; width: 100%; align-items: center; gap: 8px; color: inherit; text-align: left; text-decoration: none; cursor: pointer; }
+    .activity-author > a:hover strong { color: #4242f6; text-decoration: underline; }
     .activity-author img { width: 30px; height: 40px; flex: none; border: 1px solid #998d96; border-radius: 0; object-fit: cover; object-position: top center; }
-    .activity-author button > span { display: flex; min-width: 0; flex-direction: column; }
+    .activity-author > a > span { display: flex; min-width: 0; flex-direction: column; }
     .activity-author strong { display: -webkit-box; overflow: hidden; font-size: 14px; line-height: 18px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
     .activity-author small { color: rgb(11 15 94 / 65%); font-size: 12px; line-height: 16px; }
     .activity-author__extra { display: block; margin-top: 4px; }
@@ -425,24 +404,6 @@ import mapUfsVector from "../../assets/images/redesign/activity/map/ufs-vector-d
     .activity-filter-panel__apply { width: 100%; height: 40px; flex: none; border: 0; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 16px; font-weight: 700; font-variation-settings: "wdth" 75; text-transform: uppercase; cursor: pointer; }
     .activity-filter-panel__apply:hover { background: #0b0f5e; }
 
-    .parliamentarian-dialog { position: fixed; inset: 0; width: 384px; max-width: calc(100% - 32px); max-height: calc(100dvh - 32px); margin: auto; border: 0; border-radius: 24px; background: transparent; padding: 0; color: #0b0f5e; overflow: visible; }
-    .parliamentarian-dialog::backdrop { background: rgb(255 255 255 / 75%); }
-    .parliamentarian-dialog article { position: relative; overflow: hidden; border: 1px solid #0b0f5e; border-radius: 24px; background: #fff; box-shadow: -4px 4px 0 #0b0f5e; }
-    .parliamentarian-dialog header { position: relative; height: 64px; background: #def279 var(--card-top) center top / 100% 64px no-repeat; }
-    .parliamentarian-dialog header > span { position: absolute; top: 8px; left: calc(50% - 48px); width: 96px; height: 16px; background: var(--card-hole) center / 96px 16px no-repeat; }
-    .parliamentarian-dialog header button { position: absolute; z-index: 1; top: 26px; right: 18px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: #fff; color: #4242f6; font-size: 24px; line-height: 1; cursor: pointer; }
-    .parliamentarian-dialog__identity { padding: 20px 32px 16px; }
-    .parliamentarian-dialog__identity > strong { color: #4242f6; font-family: "ETC Anybody", sans-serif; font-size: 20px; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
-    .parliamentarian-dialog__identity > div { display: flex; margin-top: 12px; align-items: flex-end; gap: 16px; }
-    .parliamentarian-dialog__identity img { width: 120px; height: 160px; border: 1px solid #0b0f5e; object-fit: cover; object-position: top center; }
-    .parliamentarian-dialog__identity p { display: flex; min-width: 0; margin: 0; flex: 1; flex-direction: column; font-size: 18px; line-height: 24px; }
-    .parliamentarian-dialog__identity p b { font-family: "ETC Anybody", sans-serif; font-variation-settings: "wdth" 75; text-transform: uppercase; }
-    .parliamentarian-dialog__scores { display: grid; margin: 0 32px; grid-template-columns: 1fr 1fr; border-top: 1px solid rgb(11 15 94 / 25%); border-bottom: 1px solid rgb(11 15 94 / 25%); }
-    .parliamentarian-dialog__scores span { display: grid; padding: 12px 0; grid-template-columns: 32px 1fr; grid-template-rows: 20px 16px; column-gap: 8px; }
-    .parliamentarian-dialog__scores span + span { border-left: 1px solid rgb(11 15 94 / 25%); padding-left: 16px; }
-    .parliamentarian-dialog__scores img { width: 32px; height: 32px; grid-row: 1 / 3; }.parliamentarian-dialog__scores b { font-family: "ETC Anybody", sans-serif; font-size: 18px; font-variation-settings: "wdth" 75; }.parliamentarian-dialog__scores small { font-size: 12px; }
-    .parliamentarian-dialog dl { display: flex; margin: 0; padding: 16px 32px 24px; flex-direction: column; gap: 8px; font-size: 14px; line-height: 18px; }
-    .parliamentarian-dialog dl div { display: grid; grid-template-columns: 110px 1fr; gap: 8px; }.parliamentarian-dialog dt { font-weight: 700; }.parliamentarian-dialog dd { margin: 0; overflow-wrap: anywhere; }
 
     @media (min-width: 768px) {
         .activity-filter-panel__basic { display: none; }
@@ -516,7 +477,7 @@ import mapUfsVector from "../../assets/images/redesign/activity/map/ufs-vector-d
         .activity-card > header { display: flex; min-height: 56px; padding: 8px 0; align-items: flex-start; justify-content: space-between; gap: 8px; }
         .activity-card > header > div { display: flex; flex-direction: column; }.activity-card > header a { color: #4242f6; font-family: "ETC Anybody", sans-serif; font-size: 18px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-decoration: none; text-transform: uppercase; }.activity-card > header small { font-size: 12px; line-height: 16px; }
         .activity-card__tag { align-self: flex-start; margin: 0 0 8px; border: 1px solid rgb(66 66 246 / 40%); padding: 1px 4px; color: rgb(11 15 94 / 65%); font-family: "ETC Anybody", sans-serif; font-size: 11px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 16px; text-transform: uppercase; }
-        .activity-card > .activity-author { margin: 8px 0; }.activity-card > .activity-author button { width: auto; }.activity-card > .activity-author img { width: 30px; height: 40px; }
+        .activity-card > .activity-author { margin: 8px 0; }.activity-card > .activity-author > a { width: auto; }.activity-card > .activity-author img { width: 30px; height: 40px; }
         .activity-card__summary { display: -webkit-box; margin: 8px 0 12px; overflow: hidden; color: rgb(11 15 94 / 72%); font-size: 14px; line-height: 16px; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
         .activity-card > footer { display: flex; min-height: 48px; padding: 8px 0; align-items: flex-start; justify-content: space-between; gap: 12px; }
         .activity-card > footer span { display: flex; flex-direction: column; font-size: 12px; line-height: 16px; }.activity-card > footer span + span { align-items: flex-end; text-align: right; }
@@ -540,7 +501,6 @@ import mapUfsVector from "../../assets/images/redesign/activity/map/ufs-vector-d
         .activity-filter-panel__toggle { margin-top: 0; }
         .activity-filter-panel__apply { height: 36px; margin-top: 12px; }
         .activity-filter-panel h2 { font-size: 20px; line-height: 24px; }
-        .parliamentarian-dialog { margin: auto; }.parliamentarian-dialog__identity { padding-right: 24px; padding-left: 24px; }.parliamentarian-dialog__scores { margin-right: 24px; margin-left: 24px; }.parliamentarian-dialog dl { padding-right: 24px; padding-left: 24px; }
     }
     @media (max-width: 359px) {
         .activity-dashboard-card h3 { padding-right: 8px; padding-left: 8px; }

@@ -90,9 +90,7 @@ function initActivity(root: HTMLElement) {
     }
     const filterPanel = $("[data-filter-panel]");
     const backdrop = $("[data-backdrop]");
-    const parliamentarianDialog = $("[data-parliamentarian-dialog]") as HTMLDialogElement;
     const itemsSelect = $("[data-items-per-page]") as HTMLSelectElement;
-    const apiBase = (import.meta.env.PUBLIC_API_BASE_URL || "https://api.elasnocongresso.com.br/api/v1").replace(/\/$/, "");
 
     let all: Proposal[] = [];
     let visible: Proposal[] = [];
@@ -311,10 +309,9 @@ function initActivity(root: HTMLElement) {
             wrapper.textContent = "Autoria não informada";
             return wrapper;
         }
-        const button = document.createElement("button");
-        button.type = "button";
-        button.dataset.parliamentarian = String(author.numero);
-        button.setAttribute("aria-label", `Ver informações de ${author.nome}`);
+        const button = document.createElement("a");
+        button.href = `/propostas-e-votacoes/autoria/${author.numero}`;
+        button.setAttribute("aria-label", `Ver página de autoria de ${author.nome}`);
         if (author.foto) {
             const photo = document.createElement("img");
             photo.src = author.foto.replace(/^http:/, "https:");
@@ -379,12 +376,11 @@ function initActivity(root: HTMLElement) {
         const key = document.createElement("div");
         key.className = "activity-dashboard-card__key";
         if (author) {
-            const control = document.createElement(row.key.startsWith("person:") ? "button" : "div");
+            const control = document.createElement(row.key.startsWith("person:num:") ? "a" : "div");
             control.className = "activity-dashboard-card__author";
-            if (control instanceof HTMLButtonElement) {
-                control.type = "button";
-                control.dataset.parliamentarian = row.key.slice(7);
-                control.setAttribute("aria-label", `Ver informações de ${row.label}`);
+            if (control instanceof HTMLAnchorElement) {
+                control.href = `/propostas-e-votacoes/autoria/${row.key.slice("person:num:".length)}`;
+                control.setAttribute("aria-label", `Ver página de autoria de ${row.label}`);
             }
             if (row.photo) {
                 const image = document.createElement("img");
@@ -751,48 +747,6 @@ function initActivity(root: HTMLElement) {
         lastFocused?.focus();
     }
 
-    async function openParliamentarian(id: string) {
-        const author = all.flatMap((item) => item.authors).find((person) => personKey(person) === id);
-        if (!author) return;
-        lastFocused = document.activeElement as HTMLElement;
-        const photo = $("[data-dialog-photo]") as HTMLImageElement;
-        photo.src = (author.foto || "").replace(/^http:/, "https:");
-        photo.alt = `Foto de ${author.nome}`;
-        photo.hidden = !author.foto;
-        photo.onerror = () => { photo.hidden = true; };
-        photo.onload = () => { photo.hidden = false; };
-        $("[data-dialog-house]").textContent = author.cargo || "Parlamentar";
-        $("[data-dialog-name]").textContent = author.nome;
-        $("[data-dialog-party]").textContent = [author.partido, author.estado].filter(Boolean).join("/");
-        $("[data-dialog-birth]").textContent = "Carregando…";
-        $("[data-dialog-profession]").textContent = "Carregando…";
-        $("[data-dialog-education]").textContent = "Carregando…";
-        $("[data-dialog-race]").textContent = "Carregando…";
-        $("[data-dialog-religion]").textContent = "Carregando…";
-        const authored = all.filter((item) => item.authors.some((person) => personKey(person) === personKey(author)));
-        $("[data-dialog-favorable]").textContent = formatNumber.format(authored.filter((item) => item.favoravel > 0).length);
-        $("[data-dialog-unfavorable]").textContent = formatNumber.format(authored.filter((item) => item.favoravel < 0).length);
-        parliamentarianDialog.showModal();
-        try {
-            const house = normalize(author.cargo).includes("sen") ? "senado" : "camara";
-            const response = await fetch(`${apiBase}/parliamentarians/?house=${house}&current=true&limit=1000&offset=0`);
-            if (!response.ok) throw new Error(String(response.status));
-            const body = await response.json();
-            const match = (body.items || []).find((person: { full_name?: string; social_name?: string }) => [person.full_name, person.social_name].some((name) => normalize(name) === normalize(author.nome)));
-            if (!match) throw new Error("not-found");
-            const detailResponse = await fetch(`${apiBase}/parliamentarians/${match.id}`);
-            if (!detailResponse.ok) throw new Error(String(detailResponse.status));
-            const detail = await detailResponse.json();
-            $("[data-dialog-birth]").textContent = detail.birth_date ? new Intl.DateTimeFormat("pt-BR").format(new Date(`${detail.birth_date}T12:00:00`)) : "Não informado";
-            $("[data-dialog-profession]").textContent = detail.profession || "Não informado";
-            $("[data-dialog-education]").textContent = detail.education || "Não informado";
-            $("[data-dialog-race]").textContent = detail.race || "Não informado";
-            $("[data-dialog-religion]").textContent = detail.religion || "Não informado";
-        } catch {
-            ["birth", "profession", "education", "race", "religion"].forEach((key) => { $( `[data-dialog-${key}]`).textContent = "Não informado"; });
-        }
-    }
-
     filters.addEventListener("submit", (event) => { event.preventDefault(); applyFilters(); });
     filters.addEventListener("input", (event) => {
         const target = event.target as HTMLInputElement;
@@ -848,8 +802,6 @@ function initActivity(root: HTMLElement) {
             anchor.click();
             URL.revokeObjectURL(url);
         }
-        if (target.matches("[data-parliamentarian]")) openParliamentarian(target.dataset.parliamentarian!);
-        if (target.matches("[data-dialog-close]")) parliamentarianDialog.close();
         if (target.matches("[data-retry]")) load();
     });
     backdrop.addEventListener("click", closeFilters);
@@ -944,8 +896,6 @@ function initActivity(root: HTMLElement) {
         if (isPinned) closeMapTooltip();
         else showMapTooltip(target, event as PointerEvent, true);
     });
-    parliamentarianDialog.addEventListener("close", () => lastFocused?.focus());
-    parliamentarianDialog.addEventListener("click", (event) => { if (event.target === parliamentarianDialog) parliamentarianDialog.close(); });
     document.addEventListener("click", (event) => {
         const target = event.target instanceof Element ? event.target : null;
         if (!target?.closest("[data-dashboard-tooltip-trigger]")) closeDashboardTooltip();

@@ -1,0 +1,277 @@
+---
+import thumbsUp from "../../assets/images/redesign/activity/thumbs-up.svg";
+import thumbsDown from "../../assets/images/redesign/activity/thumbs-down.svg";
+import circles from "../../assets/images/redesign/activity/parliamentarian-card-circles.svg";
+import paperclip from "../../assets/images/redesign/activity/author-paperclip.png";
+import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
+import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
+import chevronRight from "../../assets/images/redesign/reportagens/chevron-right.svg";
+import roughPaper from "../../assets/images/redesign/background/bg-pattern-rough-paper.png";
+import { formatApiDate, genderLabel, houseLabel, normalizePhotoUrl, partyForTerm, type AuthorInitialData } from "../../lib/author-page";
+import "../../styles/activity-table.css";
+
+interface Props { authorId: number; house: string; initial: AuthorInitialData | null; }
+const { authorId, house, initial } = Astro.props;
+const initialName = initial?.person.social_name || initial?.person.full_name || initial?.activity.author.nome || "Carregando…";
+const initialPhoto = normalizePhotoUrl(initial?.person.photo_url, initial?.activity.author.foto);
+const initialParty = initial ? partyForTerm(initial.parties, initial.term) : "";
+const initialState = initial?.term.state || initial?.activity.author.estado || "";
+const initialShare = initial && initial.activity.favorable + initial.activity.unfavorable > 0
+    ? `${initial.activity.favorabilityRate * 100}%`
+    : "0%";
+const initialPayload = initial ? JSON.stringify(initial).replace(/</g, "\\u003c") : "";
+---
+
+<main
+    class="author-page"
+    data-author-root
+    data-author-id={authorId}
+    data-author-house={house}
+    data-thumbs-up={thumbsUp.src}
+    data-thumbs-down={thumbsDown.src}
+    data-chevron={chevronRight.src}
+    style={`--author-paper: url(${roughPaper.src}); --author-paperclip: url(${paperclip.src}); --author-circles: url(${circles.src}); --author-arrow-back: url(${arrowBack.src}); --author-arrow-forward: url(${arrowForward.src})`}
+>
+    <section class="author-hero" aria-labelledby="author-page-title">
+        <a href="/propostas-e-votacoes">←&nbsp; Voltar ao painel</a>
+        <div>
+            <p>Autoria</p>
+            <h1 id="author-page-title" data-author-hero-name>{initialName}</h1>
+        </div>
+    </section>
+
+    <section class="author-status is-loading" data-author-status role="status" aria-live="polite" hidden={Boolean(initial)}>
+        <span aria-hidden="true"></span>
+        <p>Carregando informações da autoria…</p>
+    </section>
+
+    <div data-author-content hidden={!initial}>
+        <section class="author-profile" aria-label="Perfil e resumo da pessoa parlamentar">
+            <span class="author-profile__paperclip" aria-hidden="true"></span>
+            <div class="author-profile__inner">
+                <p class="author-profile__house"><span aria-hidden="true"></span><b data-author-house-label>{initial ? houseLabel(initial.term.house) : ""}</b></p>
+                <div class="author-profile__grid">
+                    <div class="author-identity">
+                        <div class="author-identity__photo">
+                            <img data-author-photo src={initialPhoto || undefined} alt={initialPhoto ? `Foto de ${initialName}` : ""} width="183" height="244" hidden={!initialPhoto} />
+                            <span data-author-photo-fallback aria-hidden="true"></span>
+                        </div>
+                        <div class="author-identity__name">
+                            <h2 data-author-name>{initial ? initialName : ""}</h2>
+                            <p data-author-party-state>{initial ? [initialParty, initialState].filter(Boolean).join("/") : ""}</p>
+                        </div>
+                        <dl class="author-identity__details">
+                            <div><dt>Nascimento</dt><dd data-author-birth>{initial ? formatApiDate(initial.person.birth_date) : ""}</dd></div>
+                            <div><dt>Naturalidade</dt><dd data-author-birthplace>{initial?.person.birthplace || "Indisponível"}</dd></div>
+                            <div><dt>Escolaridade</dt><dd data-author-education>{initial?.person.education || "Indisponível"}</dd></div>
+                            <div><dt>Cor/Raça</dt><dd data-author-race>{initial?.person.race || "Indisponível"}</dd></div>
+                            <div><dt>Gênero</dt><dd data-author-gender>{initial ? genderLabel(initial.person.gender || initial.activity.author.genero) : ""}</dd></div>
+                            <div><dt>Religião</dt><dd data-author-religion>{initial?.person.religion || "Indisponível"}</dd></div>
+                            <div><dt>Frentes que integra</dt><dd class="is-unavailable">Indisponível</dd></div>
+                            <div><dt>Comissões que integra</dt><dd class="is-unavailable">Indisponível</dd></div>
+                            <div><dt>Bancadas que integra</dt><dd class="is-unavailable">Indisponível</dd></div>
+                            <div><dt>Profissões</dt><dd data-author-profession>{initial?.person.profession || "Indisponível"}</dd></div>
+                            <div><dt>Cargos</dt><dd data-author-role>{initial?.term.role || initial?.activity.author.cargo || "Indisponível"}</dd></div>
+                        </dl>
+                    </div>
+
+                    <div class="author-dashboard">
+                        <section class="author-summary" aria-label="Resumo das avaliações">
+                            <div class="author-summary__bar" data-author-rating-bar style={`--favorable-share: ${initialShare}`}><span></span><span></span></div>
+                            <div class="author-summary__scores">
+                                <div><img class="author-summary__paper" src="/assets/papelada/proposicao-1-96w.png" alt="" /><img src={thumbsUp.src} alt="" /><b>Favorável</b><strong data-author-favorable>{initial?.activity.favorable || 0}</strong></div>
+                                <div><strong data-author-unfavorable>{initial?.activity.unfavorable || 0}</strong><b>Desfavorável</b><img src={thumbsDown.src} alt="" /><img class="author-summary__paper" src="/assets/papelada/proposicao-desfavoravel-9-96w.png" alt="" /></div>
+                            </div>
+                        </section>
+
+                        <div class="author-dashboard__cards">
+                            <article class="author-dashboard-card">
+                                <header><h3>Por categoria</h3><span title="Agrupamento por categoria informado na base">i</span></header>
+                                <div data-author-category-groups></div>
+                            </article>
+                            <article class="author-dashboard-card">
+                                <header><h3>Por tema</h3><span title="Agrupamento por tema informado na base">i</span></header>
+                                <div data-author-theme-groups></div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="author-proposals" aria-labelledby="author-proposals-title">
+            <h2 id="author-proposals-title" class="sr-only">Proposições desta autoria</h2>
+            <div class="author-table-wrap">
+                <table class="activity-table">
+                    <thead><tr>
+                        <th><button type="button" data-author-sort="number">Proposição</button></th>
+                        <th><button type="button" data-author-sort="author">Autoria</button></th>
+                        <th><button type="button" data-author-sort="summary">Ementa</button></th>
+                        <th><button type="button" data-author-sort="assessment">Avaliação</button></th>
+                        <th><button type="button" data-author-sort="evaluator">Quem avaliou?</button></th>
+                        <th><button type="button" data-author-sort="progress">Como está?</button></th>
+                        <th><button type="button" data-author-sort="category">Categoria</button></th>
+                        <th><button type="button" data-author-sort="updated">Atualização</button></th>
+                    </tr></thead>
+                    <tbody data-author-table></tbody>
+                </table>
+            </div>
+            <div class="author-proposal-cards" data-author-cards></div>
+            <div class="author-proposals__empty" data-author-empty hidden>
+                <strong>Nenhuma proposição encontrada</strong>
+                <p>Esta pessoa parlamentar não possui proposições compatíveis com a base da Atividade Legislativa.</p>
+            </div>
+            <nav class="author-pagination" data-author-pagination aria-label="Paginação das proposições" hidden>
+                <p data-author-page-label></p>
+                <div><button type="button" data-author-previous aria-label="Página anterior">Anterior</button><button type="button" data-author-next aria-label="Próxima página">Próxima</button></div>
+            </nav>
+        </section>
+
+        <section class="author-reports" data-author-reports aria-labelledby="author-reports-title">
+            <h2 id="author-reports-title"><span data-author-reports-related-title>Reportagens que citam<br /><span data-author-reports-name></span></span><span data-author-reports-latest-title hidden>Reportagens mais recentes</span></h2>
+            <div data-author-reports-grid></div>
+            <p data-author-reports-empty hidden>Nenhuma reportagem relacionada foi encontrada.</p>
+        </section>
+    </div>
+</main>
+
+{initialPayload && <script type="application/json" data-author-initial set:html={initialPayload}></script>}
+
+<script>
+    import "../../scripts/author-page";
+</script>
+
+<style is:global>
+    .author-page, .author-page * { box-sizing: border-box; }
+    .author-page { min-width: 320px; overflow-x: clip; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
+    .author-page [hidden] { display: none !important; }
+    .author-page .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .author-hero { position: relative; height: 209px; overflow: hidden; background-color: #4242f6; background-image: linear-gradient(rgb(66 66 246 / 82%), rgb(66 66 246 / 82%)), var(--author-paper); background-position: center; background-size: auto, 400px 400px; color: #fff; }
+    .author-hero > a { position: absolute; top: 12px; left: 48px; color: #d0d0fd; font-size: 16px; font-weight: 700; line-height: 24px; text-decoration: none; }
+    .author-hero > a:hover { color: #fff; text-decoration: underline; }
+    .author-hero > a:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+    .author-hero > div { display: flex; height: 100%; align-items: center; flex-direction: column; padding-top: 45px; }
+    .author-hero p, .author-hero h1 { margin: 0; font-family: "ETC Anybody", "Anybody", sans-serif; font-weight: 700; font-variation-settings: "wdth" 75; text-align: center; text-transform: uppercase; }
+    .author-hero p { font-size: 24px; line-height: 32px; }
+    .author-hero h1 { max-width: 720px; font-size: 72px; line-height: 72px; }
+
+    .author-status { display: flex; min-height: 556px; align-items: center; justify-content: center; flex-direction: column; gap: 16px; padding: 48px; text-align: center; }
+    .author-status.is-loading > span { width: 40px; height: 40px; border: 4px solid rgb(66 66 246 / 20%); border-top-color: #4242f6; border-radius: 50%; animation: author-spin .8s linear infinite; }
+    .author-status p { max-width: 540px; margin: 0; font-size: 16px; line-height: 24px; }
+    .author-status button { border: 0; background: #4242f6; padding: 10px 20px; color: #fff; font: 700 16px/24px "Plus Jakarta Sans", sans-serif; cursor: pointer; }
+    @keyframes author-spin { to { transform: rotate(360deg); } }
+
+    .author-profile { position: relative; min-height: 556px; border-bottom: 2px solid #4242f6; background: #fff; box-shadow: 0 -2px 9.8px rgb(0 0 0 / 27%); }
+    .author-profile__paperclip { position: absolute; z-index: 2; top: -20px; left: max(42px, calc(50% - 678px)); width: 47px; height: 85px; background: var(--author-paperclip) center / contain no-repeat; pointer-events: none; }
+    .author-profile__inner { width: 100%; max-width: 1440px; min-height: 556px; margin: 0 auto; padding: 0 81px 48px 101px; }
+    .author-profile__house { display: inline-flex; height: 36px; margin: 0; align-items: center; gap: 10px; background: #4242f6; padding: 5px 10px 3px; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 20px; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
+    .author-profile__house > span { width: 16px; height: 8px; background: var(--author-circles) center / 18px 10px no-repeat; }
+    .author-profile__grid { display: grid; margin-top: 50px; grid-template-columns: minmax(500px, 516px) minmax(0, 676px); gap: 66px; }
+    .author-identity { display: grid; grid-template-columns: 182px minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 23px; }
+    .author-identity__photo { position: relative; width: 182px; height: 244px; grid-row: 1 / 3; overflow: hidden; border: 1px solid #998d96; background: #4242f6; }
+    .author-identity__photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+    .author-identity__photo > span { display: grid; position: absolute; inset: 0; place-items: center; background: #f1f1ff; color: #4242f6; font-family: "ETC Anybody", sans-serif; font-size: 54px; font-weight: 700; font-variation-settings: "wdth" 75; }
+    .author-identity__name { padding-top: 8px; }
+    .author-identity__name h2 { margin: 0; font-family: "ETC Anybody", sans-serif; font-size: 36px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 42px; text-transform: uppercase; }
+    .author-identity__name p { margin: 10px 0 0; font-size: 18px; font-weight: 700; line-height: 24px; }
+    .author-identity__details { display: flex; width: 320px; margin: 18px 0 0; flex-direction: column; gap: 6px; font-size: 14px; line-height: 16px; }
+    .author-identity__details > div { display: grid; grid-template-columns: 144px minmax(0, 1fr); gap: 10px; }
+    .author-identity__details dt, .author-identity__details dd { margin: 0; }
+    .author-identity__details dd { overflow-wrap: anywhere; }
+    .author-identity__details dd.is-unavailable { color: #998d96; }
+
+    .author-dashboard { display: flex; flex-direction: column; gap: 48px; padding-top: 20px; }
+    .author-summary { padding-top: 24px; }
+    .author-summary__bar { display: flex; width: 100%; height: 12px; gap: 4px; overflow: hidden; background: #fff; }
+    .author-summary__bar span:first-child { width: var(--favorable-share, 0%); background: #c1e639; }
+    .author-summary__bar span:last-child { flex: 1; background: #ff5865; }
+    .author-summary__bar.is-empty span { background: #e8e8f4; }
+    .author-summary__scores { display: grid; margin-top: 8px; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .author-summary__scores > div { display: flex; height: 54px; align-items: center; gap: 8px; }
+    .author-summary__scores > div:last-child { justify-content: flex-end; }
+    .author-summary__scores img:not(.author-summary__paper) { width: 32px; height: 32px; }
+    .author-summary__paper { width: 36px; height: 51px; margin-right: -12px; object-fit: cover; transform: rotate(5deg); }
+    .author-summary__scores > div:last-child .author-summary__paper { margin-right: 0; margin-left: -12px; }
+    .author-summary__scores b, .author-summary__scores strong { font-family: "ETC Anybody", sans-serif; font-weight: 700; font-variation-settings: "wdth" 75; text-transform: uppercase; }
+    .author-summary__scores b { font-size: 18px; line-height: 24px; }
+    .author-summary__scores strong { font-size: 28px; line-height: 32px; }
+    .author-dashboard__cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+    .author-dashboard-card { min-width: 0; background: #fff; }
+    .author-dashboard-card > header { display: flex; height: 24px; align-items: center; border-bottom: 1px solid rgb(66 66 246 / 25%); }
+    .author-dashboard-card h3 { display: flex; height: 24px; margin: 0; align-items: center; border: 1px solid rgb(66 66 246 / 25%); border-bottom: 0; border-radius: 4px 4px 0 0; padding: 4px 4px 2px 12px; font-family: "ETC Anybody", sans-serif; font-size: 14px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 16px; text-transform: uppercase; }
+    .author-dashboard-card header span { width: 16px; height: 16px; margin-left: 4px; border: 1px solid #4242f6; border-radius: 50%; color: #4242f6; font-size: 10px; line-height: 14px; text-align: center; }
+    .author-dashboard-card > div { display: flex; min-height: 100px; border: 1px solid rgb(66 66 246 / 25%); border-top: 0; padding: 12px; flex-direction: column; gap: 12px; }
+    .author-dashboard-card__row { display: grid; min-height: 32px; grid-template-columns: minmax(0, 1fr) 38px 80px; align-items: center; gap: 6px; font-size: 14px; line-height: 16px; }
+    .author-dashboard-card__row > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .author-dashboard-card__values { display: flex; align-items: flex-end; flex-direction: column; color: rgb(11 15 94 / 75%); font-size: 12px; line-height: 12px; }
+    .author-dashboard-card__bars { display: flex; height: 20px; border-left: 1px solid #0b0f5e; padding: 2px 0; flex-direction: column; gap: 4px; }
+    .author-dashboard-card__bars span { display: block; height: 6px; width: var(--bar-width, 0%); }
+    .author-dashboard-card__bars span:first-child { background: #c1e639; }.author-dashboard-card__bars span:last-child { background: #ff5865; }
+    .author-dashboard-card__empty { justify-content: center; color: #998d96; font-size: 13px; line-height: 18px; }
+
+    .author-proposals { background: #fff; padding-top: 24px; }
+    .author-table-wrap { width: 100%; overflow-x: auto; padding: 0 38px; }
+    .author-table { width: 100%; min-width: 1344px; border-collapse: collapse; table-layout: fixed; }
+    .author-table th { height: 33px; padding: 0; border-bottom: 1px solid #0b0f5e; font-size: 14px; font-weight: 400; line-height: 16px; text-align: left; }
+    .author-table th button { display: flex; width: 100%; min-height: 32px; align-items: center; gap: 3px; border: 0; background: none; padding: 8px; color: inherit; font: inherit; cursor: pointer; }
+    .author-table th button::after { width: 8px; height: 8px; background: var(--select-chevron, none); opacity: .35; content: "◆"; color: #4242f6; font-size: 7px; line-height: 8px; }
+    .author-table th button.is-active::after { opacity: 1; }
+    .author-table th:nth-child(1) { width: 128px; }.author-table th:nth-child(2) { width: 192px; }.author-table th:nth-child(3) { width: 272px; }.author-table th:nth-child(4) { width: 144px; }.author-table th:nth-child(5) { width: 176px; }.author-table th:nth-child(6) { width: 128px; }.author-table th:nth-child(7) { width: 136px; }.author-table th:nth-child(8) { width: 112px; }
+    .author-table td { height: 81px; padding: 8px; border-bottom: 1px solid rgb(66 66 246 / 25%); vertical-align: top; font-size: 14px; line-height: 16px; }
+    .author-table td > a:first-child, .author-card__number { color: #4242f6; font-family: "ETC Anybody", sans-serif; font-size: 16px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-decoration: none; text-transform: uppercase; }
+    .author-table td > small { display: block; margin-top: 4px; color: rgb(11 15 94 / 65%); font-size: 12px; line-height: 16px; }
+    .author-table td:nth-child(3) p { display: -webkit-box; margin: 0; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
+    .author-table__author { display: flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; }
+    .author-table__author img, .author-table__author-fallback { width: 30px; height: 40px; flex: none; border: 1px solid #998d96; object-fit: cover; object-position: top center; }
+    .author-table__author-fallback { display: grid; place-items: center; background: #f1f1ff; color: #4242f6; font-weight: 700; }
+    .author-table__author > span { display: flex; min-width: 0; flex-direction: column; }
+    .author-table__author strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.author-table__author small { color: rgb(11 15 94 / 65%); font-size: 12px; line-height: 16px; }
+    .author-table__author:hover strong { color: #4242f6; text-decoration: underline; }
+    .author-table__stance { display: flex; align-items: center; gap: 6px; }.author-table__stance img { width: 24px; height: 24px; }.author-table__stance.is-unrated { color: #998d96; }
+    .author-proposal-cards { display: none; }
+    .author-proposals__empty { min-height: 280px; padding: 72px 24px; text-align: center; }.author-proposals__empty p { margin: 8px auto 0; max-width: 520px; }
+    .author-pagination { display: flex; min-height: 92px; align-items: center; justify-content: space-between; padding: 24px 48px; }
+    .author-pagination p { margin: 0; font-size: 14px; line-height: 20px; }
+    .author-pagination > div { display: flex; gap: 4px; }
+    .author-pagination button { width: 56px; height: 40px; overflow: hidden; border: 2px solid #4242f6; background: #fff center / 24px 16px no-repeat; color: transparent; cursor: pointer; }
+    .author-pagination button:first-child { background-image: var(--author-arrow-back); }.author-pagination button:last-child { background-image: var(--author-arrow-forward); }
+    .author-pagination button:disabled { opacity: .3; cursor: default; }
+
+    .author-reports { padding: 48px 48px 96px; background: #fff; }
+    .author-reports h2 { max-width: 820px; margin: 0 auto 32px; font-family: "ETC Anybody", sans-serif; font-size: 32px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 32px; text-align: center; text-transform: uppercase; }
+    .author-reports h2 [data-author-reports-name]::before { content: '“'; }.author-reports h2 [data-author-reports-name]::after { content: '”'; }
+    .author-reports > div { display: grid; max-width: 1248px; margin: 0 auto; grid-template-columns: repeat(3, minmax(0, 384px)); gap: 48px; }
+    .author-reports .reportagem-card { display: flex; min-width: 0; flex-direction: column; gap: 16px; }
+    .author-reports .reportagem-card__image { display: block; aspect-ratio: 384 / 216; overflow: hidden; border: 2px solid #4242f6; }
+    .author-reports .reportagem-card__image img { width: 100%; height: 100%; object-fit: cover; }
+    .author-reports .reportagem-card h3 { min-height: 64px; margin: 0; color: #0b0f5e; font-family: "ETC Anybody", sans-serif; font-size: 24px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 32px; text-transform: uppercase; }
+    .author-reports .reportagem-card__details { display: flex; flex-direction: column; gap: 16px; }
+    .author-reports .reportagem-card__link { display: inline-flex; align-self: flex-start; height: 38px; align-items: center; gap: 8px; background: #4242f6; padding: 8px 12px 6px 14px; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 18px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-decoration: none; text-transform: uppercase; }
+    .author-reports .reportagem-card__link img { width: 12px; height: 6px; transform: rotate(-90deg); }.author-reports .reportagem-card__date { color: #1e2546; font-size: 14px; line-height: 16px; }
+    .author-reports > p { margin: 0; color: #998d96; text-align: center; }
+
+    @media (max-width: 1100px) {
+        .author-profile__inner { padding-right: 48px; padding-left: 48px; }
+        .author-profile__grid { grid-template-columns: minmax(420px, 1fr) minmax(0, 1fr); gap: 36px; }
+        .author-identity { grid-template-columns: 150px minmax(0, 1fr); }.author-identity__photo { width: 150px; height: 200px; }
+        .author-identity__details { width: 100%; }.author-dashboard__cards { grid-template-columns: 1fr; }.author-dashboard-card:nth-child(2) { display: none; }
+    }
+
+    @media (max-width: 767px) {
+        .author-hero { height: 200px; }.author-hero > a { top: 12px; left: 16px; font-size: 14px; }.author-hero > div { justify-content: center; padding: 24px 16px 0; }.author-hero p { font-size: 16px; line-height: 24px; }.author-hero h1 { font-size: 36px; line-height: 42px; }
+        .author-status { min-height: 500px; padding: 32px 16px; }
+        .author-profile { border-bottom-width: 1px; box-shadow: 0 -2px 6px rgb(0 0 0 / 20%); }.author-profile__paperclip { left: 16px; width: 36px; height: 66px; }
+        .author-profile__inner { padding: 0 16px 40px; }.author-profile__house { margin-left: 42px; font-size: 16px; }
+        .author-profile__grid { display: flex; margin-top: 40px; flex-direction: column; gap: 40px; }
+        .author-identity { grid-template-columns: 112px minmax(0, 1fr); column-gap: 16px; }.author-identity__photo { width: 112px; height: 149px; }.author-identity__name h2 { font-size: 28px; line-height: 32px; }.author-identity__name p { font-size: 16px; line-height: 24px; }
+        .author-identity__details { grid-column: 1 / 3; width: 100%; margin-top: 24px; gap: 10px; }.author-identity__details > div { grid-template-columns: minmax(120px, 42%) minmax(0, 1fr); }
+        .author-dashboard { gap: 32px; padding: 0; }.author-summary__scores { gap: 4px; }.author-summary__scores b { font-size: 14px; line-height: 16px; }.author-summary__scores strong { font-size: 24px; }.author-summary__paper { display: none; }.author-summary__scores img:not(.author-summary__paper) { width: 28px; height: 28px; }
+        .author-dashboard__cards { display: flex; flex-direction: column; }.author-dashboard-card, .author-dashboard-card:nth-child(2) { display: block; width: 100%; }
+        .author-table-wrap { display: none; }.author-proposal-cards { display: flex; padding: 0 16px; flex-direction: column; }
+        .author-card { display: flex; border-bottom: 1px solid rgb(66 66 246 / 25%); padding: 16px 0; flex-direction: column; gap: 10px; }.author-card header { display: flex; justify-content: space-between; gap: 12px; }.author-card header > span { display: flex; flex-direction: column; }.author-card__number { font-size: 18px; }.author-card__summary { margin: 0; color: rgb(11 15 94 / 75%); font-size: 14px; line-height: 18px; }.author-card footer { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; line-height: 16px; }.author-card footer > span { display: flex; flex-direction: column; }.author-card footer > span:last-child { text-align: right; }
+        .author-pagination { padding: 20px 16px; }
+        .author-reports { padding: 48px 16px 72px; }.author-reports h2 { font-size: 28px; line-height: 32px; text-align: left; }.author-reports > div { display: flex; overflow-x: auto; gap: 24px; scroll-snap-type: x mandatory; }.author-reports .reportagem-card { flex: 0 0 min(320px, calc(100vw - 48px)); scroll-snap-align: start; }.author-reports .reportagem-card h3 { min-height: 0; font-size: 20px; line-height: 24px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) { .author-status.is-loading > span { animation-duration: 1.8s; } }
+</style>
