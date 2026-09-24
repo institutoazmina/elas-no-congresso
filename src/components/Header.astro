@@ -15,3 +15,76 @@ import { url } from '../lib/url';
         </ul>
     </nav>
 </header>
+
+<style>
+    /* Oculta no scroll para baixo, reexibe no scroll para cima.
+       Quando visível sobre o conteúdo, mantém a base sólida original
+       (#1e2546, opaca): sem blur, sem transparência. */
+    .top-bar {
+        transform: translateY(0);
+    }
+
+    .top-bar--hidden {
+        transform: translateY(-100%);
+    }
+
+    .top-bar--scrolled:not(.top-bar--menu-open) {
+        background-color: #1e2546;
+    }
+</style>
+
+<script>
+    // Header legado (BaseLayout): um único listener de scroll com
+    // tolerância de 8px para não piscar em movimentos mínimos.
+    (() => {
+        if ((window as any).__legacyTopBarScrollBound) return;
+        (window as any).__legacyTopBarScrollBound = true;
+
+        const threshold = 8;
+        let previousScroll = Math.max(window.scrollY, 0);
+        let ticking = false;
+
+        const updateHeader = (forceVisible = false) => {
+            const header = document.querySelector<HTMLElement>(".top-bar");
+            if (!header || !header.isConnected) return;
+            const currentScroll = Math.max(window.scrollY, 0);
+            const menuOpen = header.querySelector<HTMLInputElement>(".btn-menu:checked");
+            const isAtTop = currentScroll <= threshold;
+
+            header.classList.toggle("top-bar--menu-open", !!menuOpen);
+            header.classList.toggle("top-bar--scrolled", !isAtTop);
+
+            if (forceVisible || menuOpen || isAtTop) {
+                header.classList.remove("top-bar--hidden");
+                previousScroll = currentScroll;
+                return;
+            }
+
+            const delta = currentScroll - previousScroll;
+            if (Math.abs(delta) >= threshold) {
+                header.classList.toggle("top-bar--hidden", delta > 0);
+                previousScroll = currentScroll;
+            }
+        };
+
+        window.addEventListener(
+            "scroll",
+            () => {
+                if (!ticking) {
+                    ticking = true;
+                    window.requestAnimationFrame(() => {
+                        updateHeader();
+                        ticking = false;
+                    });
+                }
+            },
+            { passive: true },
+        );
+
+        document.querySelector(".top-bar .btn-menu")?.addEventListener("change", () => {
+            updateHeader(true);
+        });
+
+        updateHeader(true);
+    })();
+</script>

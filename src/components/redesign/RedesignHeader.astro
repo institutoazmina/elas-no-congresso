@@ -205,6 +205,20 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
         z-index: 12;
     }
 
+    /* Barra global: acompanha o topo em todas as páginas para que o
+       comportamento de ocultar/mostrar no scroll funcione em desktop,
+       tablet e mobile. No topo (sem --scrolled) mantém a aparência
+       original. */
+    .redesign-header.redesign-shared-background {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        width: 100%;
+        transition: transform 180ms ease, background-color 180ms ease;
+        transform: translateY(0);
+        will-change: transform;
+    }
+
     @media (max-width: 767px) {
         :global(html:has(.redesign-header__mobile-menu[open])),
         :global(body:has(.redesign-header__mobile-menu[open])) {
@@ -221,7 +235,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
             background-position: center top;
             background-repeat: repeat;
             background-size: 400px 400px;
-            transition: transform 180ms ease;
+            transition: transform 180ms ease, background-color 180ms ease;
             transform: translateY(0);
             will-change: transform;
         }
@@ -236,14 +250,31 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
             transform: translateY(-100%);
         }
 
-        .redesign-header.redesign-shared-background.redesign-header--scrolled:not(:has(.redesign-header__mobile-menu[open])) {
+        /* Fundo sólido SOMENTE subindo + visível + fora do Hero.
+           Descer nunca ativa este estado (evita flash branco na saída). */
+        .redesign-header.redesign-shared-background.redesign-header--scrolled.redesign-header--scrolling-up:not(.redesign-header--hidden):not(.redesign-header--over-hero):not(:has(.redesign-header__mobile-menu[open])),
+        .redesign-header.redesign-shared-background.redesign-header--scrolled.redesign-header--hidden:not(.redesign-header--over-hero):not(:has(.redesign-header__mobile-menu[open])) {
             border: 0;
-            background: transparent;
+            background-color: #fff;
+            background-image: none;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
             box-shadow: none;
         }
 
         .redesign-header--scrolled:not(:has(.redesign-header__mobile-menu[open])) :global(.highlighter-marks) {
             display: none;
+        }
+
+        /* Sobre o Hero, o header reassume a superfície do Hero em vez do
+           fundo sólido, para parecer uma superfície contínua. */
+        .redesign-header.redesign-shared-background.redesign-header--scrolled.redesign-header--over-hero:not(:has(.redesign-header__mobile-menu[open])) {
+            background-color: var(--header-hero-surface, #fff);
+            background-image: url("../../assets/images/redesign/background/bg-pattern-rough-paper.png");
+            background-position: center top;
+            background-repeat: repeat;
+            background-size: 400px 400px;
+            background-blend-mode: multiply;
         }
 
         .redesign-header__content {
@@ -313,28 +344,52 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
         }
     }
 
-    @media (min-width: 821px) {
-        :global(.redesign-home-background) .redesign-header.redesign-shared-background {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            width: 100%;
-            transition: transform 180ms ease, background-color 180ms ease, background-image 180ms ease;
+    @media (min-width: 768px) {
+        .redesign-header.redesign-shared-background {
+            transition: transform 180ms ease, background-color 180ms ease;
         }
 
-        :global(.redesign-home-background) .redesign-header.redesign-shared-background.redesign-header--desktop-hidden {
+        .redesign-header.redesign-shared-background.redesign-header--desktop-hidden {
             transform: translateY(-100%);
         }
 
-        :global(.redesign-home-background) .redesign-header.redesign-shared-background.redesign-header--desktop-scrolled {
-            background: transparent;
+        /* Fundo sólido SOMENTE subindo + visível + fora do Hero.
+           Descer nunca ativa este estado (evita flash branco na saída). */
+        .redesign-header.redesign-shared-background.redesign-header--desktop-scrolled.redesign-header--scrolling-up:not(.redesign-header--desktop-hidden):not(.redesign-header--over-hero),
+        .redesign-header.redesign-shared-background.redesign-header--desktop-scrolled.redesign-header--desktop-hidden:not(.redesign-header--over-hero) {
+            background-color: #fff;
+            background-image: none;
+            -webkit-backdrop-filter: none;
+            backdrop-filter: none;
             box-shadow: none;
         }
 
-        :global(.redesign-home-background) .redesign-header.redesign-header--desktop-scrolled :global(.highlighter-marks) {
+        .redesign-header.redesign-header--desktop-scrolled :global(.highlighter-marks) {
             display: none;
         }
 
+        /* Sobre o Hero, o header reassume a superfície do Hero em vez do
+           fundo sólido, para parecer uma superfície contínua. */
+        .redesign-header.redesign-shared-background.redesign-header--desktop-scrolled.redesign-header--over-hero {
+            background-color: var(--header-hero-surface, #fff);
+            background-image: url("../../assets/images/redesign/background/bg-pattern-rough-paper.png");
+            background-position: center top;
+            background-repeat: repeat;
+            background-size: 400px 400px;
+            background-blend-mode: multiply;
+        }
+
+        /* Páginas cujo header vive dentro de um wrapper da altura da
+           barra (ex.: alertas): o sticky não tem espaço para fixar, então
+           o estado scrolled usa fixed — mesmo padrão já usado no mobile.
+           (:global porque o wrapper é renderizado fora deste componente.) */
+        :global(.redesign-alerts-header-background) > .redesign-header.redesign-shared-background.redesign-header--desktop-scrolled {
+            position: fixed;
+            inset: 0 0 auto;
+        }
+    }
+
+    @media (min-width: 821px) {
         .redesign-header {
             min-height: 104px;
         }
@@ -393,6 +448,54 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     let mobileScrollBound = false;
     let desktopScrollBound = false;
     let highlighterLayoutObserver: ResizeObserver | null = null;
+    let heroCache: { element: Element | null; surface: string | null } | null = null;
+
+    // Superfície real do Hero ([data-page-hero]): primeira cor de fundo
+    // opaca do Hero ou de seus ancestrais. Resolve uma vez por página;
+    // se o Hero mudar de cor, o header acompanha sem hardcode por rota.
+    const resolveHeroSurface = (hero: Element): string => {
+        let node: Element | null = hero;
+        while (node && node !== document.documentElement) {
+            const bg = window.getComputedStyle(node).backgroundColor;
+            const match = bg.match(/rgba?\(([^)]+)\)/);
+            if (match) {
+                const parts = match[1].split(",").map((part) => part.trim());
+                const alpha = parts.length === 4 ? Number.parseFloat(parts[3]) : 1;
+                if (alpha > 0) return bg;
+            }
+            node = node.parentElement;
+        }
+        return "#fff";
+    };
+
+    // Liga/desliga .redesign-header--over-hero conforme a faixa do header
+    // ([0, altura real]) cruza a região real do Hero. Sem números mágicos.
+    const syncHeroState = (header: HTMLElement) => {
+        if (!heroCache || (heroCache.element && !heroCache.element.isConnected)) {
+            const hero = document.querySelector("[data-page-hero]");
+            heroCache = { element: hero, surface: hero ? resolveHeroSurface(hero) : null };
+        }
+        const hero = heroCache.element;
+        if (!hero || !heroCache.surface) {
+            header.classList.remove("redesign-header--over-hero");
+            header.style.removeProperty("--header-hero-surface");
+            return;
+        }
+        const heroBounds = hero.getBoundingClientRect();
+        const headerHeight = header.offsetHeight || 0;
+        const overHero = heroBounds.top <= headerHeight && heroBounds.bottom > headerHeight;
+        // Durante a animação de saída (escondido), congela a superfície de
+        // entrada: a troca hero<->sólido só volta a avaliar com ele visível,
+        // evitando qualquer flash no meio do movimento.
+        if (
+            header.classList.contains("redesign-header--hidden") ||
+            header.classList.contains("redesign-header--desktop-hidden")
+        ) {
+            return;
+        }
+        header.classList.toggle("redesign-header--over-hero", overHero);
+        if (overHero) header.style.setProperty("--header-hero-surface", heroCache.surface);
+    };
 
     const updateHighlighter = () => {
         const nav = document.querySelector(".redesign-header__content");
@@ -556,6 +659,12 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 
             if (forceVisible || mobileMenu?.open || isAtTop) {
                 header.classList.remove("redesign-header--hidden");
+                if (isAtTop) {
+                    header.classList.remove(
+                        "redesign-header--scrolling-up",
+                        "redesign-header--scrolling-down",
+                    );
+                }
                 header.dataset.mobilePreviousScroll = String(currentScroll);
                 return;
             }
@@ -563,8 +672,12 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
             const delta = currentScroll - previousScroll;
             if (Math.abs(delta) >= threshold) {
                 header.classList.toggle("redesign-header--hidden", delta > 0);
+                header.classList.toggle("redesign-header--scrolling-down", delta > 0);
+                header.classList.toggle("redesign-header--scrolling-up", delta < 0);
                 header.dataset.mobilePreviousScroll = String(currentScroll);
             }
+
+            syncHeroState(header);
         };
 
         if (!mobileScrollBound) {
@@ -587,24 +700,19 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     };
 
     const bindDesktopHeaderScroll = () => {
-        const desktopViewport = window.matchMedia("(min-width: 821px)");
+        const desktopViewport = window.matchMedia("(min-width: 768px)");
         const threshold = 8;
 
         const updateHeader = (forceVisible = false) => {
             const header = document.querySelector<HTMLElement>(".redesign-header");
             if (!header || !header.isConnected) return;
-            // O comportamento desktop de ocultar/transparecer o header existe
-            // somente na home. Avaliado a cada evento para que um listener
-            // registrado em outra rota nunca contamine o header atual.
-            if (!header.closest(".redesign-home-background")) {
-                header.classList.remove(
-                    "redesign-header--desktop-hidden",
-                    "redesign-header--desktop-scrolled",
-                );
-                return;
-            }
             const currentScroll = Math.max(window.scrollY, 0);
             const previousScroll = Number(header.dataset.desktopPreviousScroll ?? currentScroll);
+            const mobileMenu = header.querySelector<HTMLDetailsElement>(
+                ".redesign-header__mobile-menu",
+            );
+
+            syncHeroState(header);
 
             if (!desktopViewport.matches) {
                 header.classList.remove(
@@ -621,11 +729,15 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
                     "redesign-header--desktop-hidden",
                     "redesign-header--desktop-scrolled",
                 );
+                header.classList.remove(
+                    "redesign-header--scrolling-up",
+                    "redesign-header--scrolling-down",
+                );
                 header.dataset.desktopPreviousScroll = String(currentScroll);
                 return;
             }
 
-            if (forceVisible) {
+            if (forceVisible || mobileMenu?.open) {
                 header.classList.remove("redesign-header--desktop-hidden");
                 header.classList.add("redesign-header--desktop-scrolled");
                 header.dataset.desktopPreviousScroll = String(currentScroll);
@@ -636,9 +748,13 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
             if (Math.abs(delta) >= threshold) {
                 const isScrollingUp = delta < 0;
                 header.classList.toggle("redesign-header--desktop-hidden", !isScrollingUp);
+                header.classList.toggle("redesign-header--scrolling-down", !isScrollingUp);
+                header.classList.toggle("redesign-header--scrolling-up", isScrollingUp);
                 header.classList.add("redesign-header--desktop-scrolled");
                 header.dataset.desktopPreviousScroll = String(currentScroll);
             }
+
+            syncHeroState(header);
         };
 
         if (!desktopScrollBound) {
@@ -668,6 +784,12 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
             "redesign-header--desktop-hidden",
             "redesign-header--desktop-scrolled",
         );
+        header.classList.remove(
+            "redesign-header--scrolling-up",
+            "redesign-header--scrolling-down",
+        );
+        header.classList.remove("redesign-header--over-hero");
+        header.style.removeProperty("--header-hero-surface");
         header.dataset.desktopPreviousScroll = String(Math.max(window.scrollY, 0));
     };
 
@@ -680,6 +802,12 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 
         mobileMenu.open = false;
         header.classList.remove("redesign-header--hidden");
+        header.classList.remove(
+            "redesign-header--scrolling-up",
+            "redesign-header--scrolling-down",
+        );
+        header.classList.remove("redesign-header--over-hero");
+        header.style.removeProperty("--header-hero-surface");
         header.classList.toggle(
             "redesign-header--scrolled",
             window.matchMedia("(max-width: 767px)").matches && window.scrollY > 8,
@@ -705,6 +833,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     const refreshHighlighter = (resetState = false) => {
         if (resetState) resetMobileHeaderState();
         if (resetState) resetDesktopHeaderState();
+        heroCache = null;
         bindMobileMenu();
         bindMobileHeaderScroll();
         bindDesktopHeaderScroll();
