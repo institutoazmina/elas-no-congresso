@@ -6,7 +6,7 @@ body:has(.sobre-page) .sobre-page .partner-section{padding-bottom:41.2px}body:ha
 html:has(.sobre-page),body:has(.sobre-page){max-width:100%;overflow-x:clip}
 body:has(.sobre-page) .sobre-page{width:100%;overflow-x:clip}
 
-body:has(.sobre-page) .sobre-page .sobre-hero{height:465px;min-height:465px;overflow:hidden}
+body:has(.sobre-page) .sobre-page .sobre-hero{height:auto;min-height:465px;overflow:hidden}
 body:has(.sobre-page) .sobre-page .sobre-hero__top-row{align-items:flex-start;display:block;flex:1 1 auto;height:auto;padding:24px;position:relative}
 body:has(.sobre-page) .sobre-page .sobre-hero__copy{display:flex;flex:0 0 auto;gap:15px;width:100%}
 body:has(.sobre-page) .sobre-page .sobre-hero__attention{height:4px;object-fit:fill;width:32px}
