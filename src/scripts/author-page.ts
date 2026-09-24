@@ -382,6 +382,7 @@ function initAuthorPage() {
                 const imageLink = document.createElement("a");
                 imageLink.className = "reportagem-card__image";
                 imageLink.href = post.link;
+                imageLink.setAttribute("aria-label", `Ler: ${decodeHtml(post.title.rendered)}`);
                 if (imageSource) {
                     const image = document.createElement("img");
                     image.src = imageSource;
@@ -390,8 +391,12 @@ function initAuthorPage() {
                     imageLink.append(image);
                 }
                 const title = document.createElement("h3");
-                title.dataset.reportagemTitle = "";
-                title.textContent = decodeHtml(post.title.rendered);
+                const titleLink = document.createElement("a");
+                titleLink.className = "reportagem-card__title-link";
+                titleLink.href = post.link;
+                titleLink.setAttribute("aria-label", `Ler: ${decodeHtml(post.title.rendered)}`);
+                titleLink.textContent = decodeHtml(post.title.rendered);
+                title.append(titleLink);
                 const details = document.createElement("div");
                 details.className = "reportagem-card__details";
                 const link = document.createElement("a");

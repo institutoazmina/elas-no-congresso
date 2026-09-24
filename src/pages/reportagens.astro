@@ -151,6 +151,9 @@ const posts = allPage.posts;
 
             card.querySelectorAll<HTMLAnchorElement>("[data-reportagem-link]").forEach((link) => {
                 link.href = post.link;
+                if (link.classList.contains("reportagem-card__image") || link.classList.contains("reportagem-card__title-link")) {
+                    link.setAttribute("aria-label", `Ler: ${plainTitle}`);
+                }
             });
 
             if (title) title.innerHTML = post.title.rendered;
