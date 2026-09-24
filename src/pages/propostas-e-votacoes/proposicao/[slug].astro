@@ -197,9 +197,9 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     background-color: #3838d9;
     background-image: var(--proposition-paper);
     background-blend-mode: multiply;
-    background-position: center top;
+    background-position: center;
     background-repeat: no-repeat;
-    background-size: 1440px 960px;
+    background-size: cover;
     color: #fff;
   }
   .proposition-hero > a {
@@ -493,7 +493,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
   }
 
   @media (max-width: 767px) {
-    .proposition-hero { height: 220px; background-position: center, center top; background-size: auto, auto 480px; }
+    .proposition-hero { height: 220px; background-position: center; background-size: cover; }
     .proposition-hero > a { top: 12px; left: 16px; font-size: 14px; }
     .proposition-hero > div { top: 72px; }
     .proposition-hero p { font-size: 18px; line-height: 24px; }
