@@ -92,7 +92,7 @@ function initAuthorPage() {
         if (kind === "loading") {
             status.innerHTML = `<span aria-hidden="true"></span><p>${message || "Carregando informações da autoria…"}</p>`;
         } else if (kind === "not-found") {
-            status.innerHTML = `<p><strong>Parlamentar não encontrado.</strong><br />O identificador informado não está disponível na Atividade Legislativa.</p><a href="/propostas-e-votacoes">Voltar ao painel</a>`;
+            status.innerHTML = `<p><strong>Parlamentar não encontrado.</strong><br />O identificador informado não está disponível na Atividade Legislativa.</p><a href="/atividade-legislativa">Voltar ao painel</a>`;
         } else {
             status.innerHTML = `<p><strong>Não foi possível carregar as informações.</strong><br />Confira sua conexão e tente novamente.</p><button type="button" data-author-retry>Tentar novamente</button>`;
         }
@@ -173,7 +173,7 @@ function initAuthorPage() {
         const author = activity!.author;
         const link = document.createElement("a");
         link.className = "activity-table__author";
-        link.href = authorRoute(author.nome) || "/propostas-e-votacoes";
+        link.href = authorRoute(author.nome) || "/atividade-legislativa";
         link.setAttribute("aria-label", `Ver página de autoria de ${author.nome}`);
         if (author.foto) {
             const image = document.createElement("img");
@@ -208,7 +208,7 @@ function initAuthorPage() {
         const row = document.createElement("tr");
         const number = document.createElement("td");
         const proposalLink = document.createElement("a");
-        proposalLink.href = propositionRoute(proposal.numero) || "/propostas-e-votacoes";
+        proposalLink.href = propositionRoute(proposal.numero) || "/atividade-legislativa";
         proposalLink.textContent = proposal.numero;
         const house = document.createElement("small");
         house.textContent = normalize(proposal.casa).includes("sen") ? "Senado" : "Câmara";
@@ -248,7 +248,7 @@ function initAuthorPage() {
         const identity = document.createElement("span");
         const link = document.createElement("a");
         link.className = "author-card__number";
-        link.href = propositionRoute(proposal.numero) || "/propostas-e-votacoes";
+        link.href = propositionRoute(proposal.numero) || "/atividade-legislativa";
         link.textContent = proposal.numero;
         const house = document.createElement("small");
         house.textContent = normalize(proposal.casa).includes("sen") ? "Senado" : "Câmara";

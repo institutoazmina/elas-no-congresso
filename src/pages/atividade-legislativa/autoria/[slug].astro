@@ -1,0 +1,133 @@
+---
+import { ClientRouter } from "astro:transitions";
+import RedesignHeader from "../../../components/redesign/RedesignHeader.astro";
+import RedesignFooter from "../../../components/redesign/RedesignFooter.astro";
+import AuthorPage from "../../../components/redesign/AuthorPage.astro";
+import activityData from "../../../data/dados.json";
+import {
+    buildAuthorActivity,
+    authorSlug,
+    getActivityAuthorIds,
+    partyForTerm,
+    resolveApiParliamentarian,
+    type ActivityData,
+    type ApiParliamentarian,
+    type ApiParty,
+    type AuthorInitialData,
+} from "../../../lib/author-page";
+import "../../../styles/tailwind.css";
+
+export async function getStaticPaths() {
+    const data = activityData as unknown as ActivityData;
+    const houses = new Map<number, string>();
+    for (const legislature of Object.values(data.legislaturas)) {
+        for (const person of Object.values(legislature.parlamentares)) {
+            if (!houses.has(person.numero)) houses.set(person.numero, person.cargo || "Parlamentar");
+        }
+    }
+    let directory: { parliamentarians: ApiParliamentarian[]; parties: ApiParty[] } = { parliamentarians: [], parties: [] };
+    try {
+        const apiBase = (import.meta.env.PUBLIC_API_BASE_URL || "https://api.elasnocongresso.com.br/api/v1").replace(/\/$/, "");
+        const apiJson = async <T>(url: string): Promise<T> => {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`API ${response.status}: ${url}`);
+            return response.json() as Promise<T>;
+        };
+        const [parliamentarians, parties] = await Promise.all([
+            Promise.all(["camara", "senado"].map((house) => apiJson<{ items: ApiParliamentarian[] }>(`${apiBase}/legislatures/parliamentarians?house=${house}&limit=2000&offset=0`))),
+            apiJson<{ items: ApiParty[] }>(`${apiBase}/legislatures/parties?limit=100&offset=0`),
+        ]);
+        directory = {
+            parliamentarians: parliamentarians.flatMap((result) => result.items || []),
+            parties: parties.items || [],
+        };
+    } catch (error) {
+        console.warn("Não foi possível carregar o diretório de parlamentares durante o build:", error);
+    }
+
+    const paths = getActivityAuthorIds(data).map((id) => {
+        const localActivity = buildAuthorActivity(data, id);
+        const localAuthor = localActivity?.author;
+        const slug = authorSlug(localAuthor?.nome);
+        if (!slug) throw new Error(`Parlamentar ${id} não possui nome válido para slug público.`);
+        const resolved = resolveApiParliamentarian(directory.parliamentarians, id);
+        const fallbackTerm = {
+            id: null,
+            parliamentarian: 0,
+            legislature_number: Number(localAuthor?.legislatura?.at(-1) || 0),
+            party: 0,
+            house: localAuthor?.cargo?.toLowerCase().includes("sen") ? "senado" : "camara",
+            role: localAuthor?.cargo || "Parlamentar",
+            state: localAuthor?.estado || "",
+            external_id: id,
+            start_date: "",
+            end_date: null,
+        } as const;
+        const person = resolved?.person || {
+            id: null,
+            full_name: localAuthor?.nome || "Parlamentar",
+            social_name: localAuthor?.nome || null,
+            photo_url: localAuthor?.foto || null,
+            gender: localAuthor?.genero || null,
+            birth_date: null,
+            race: null,
+            education: null,
+            birthplace: null,
+            profession: null,
+            religion: null,
+            bio: null,
+            favorable_propositions_count: localActivity?.favorable || 0,
+            unfavorable_propositions_count: localActivity?.unfavorable || 0,
+            terms: [fallbackTerm],
+        } satisfies ApiParliamentarian;
+        const term = resolved?.term || fallbackTerm;
+        const parties = resolved ? directory.parties : localAuthor?.partido ? [{ id: 0, acronym: localAuthor.partido, name: localAuthor.partido }] : [];
+        const initial: AuthorInitialData | null = localActivity ? { person, term, parties, activity: localActivity } : null;
+        return {
+            params: { slug },
+            props: { authorId: id, house: houses.get(id) || "Parlamentar", initial },
+        };
+    });
+    const seen = new Map<string, number>();
+    for (const path of paths) {
+        const slug = path.params.slug;
+        const previous = seen.get(slug);
+        if (previous !== undefined) throw new Error(`Colisão de slug de autoria: ${slug} (${previous} e ${path.props.authorId})`);
+        seen.set(slug, path.props.authorId);
+    }
+    return paths;
+}
+
+interface Props { authorId: number; house: string; initial: AuthorInitialData | null; }
+const { authorId, house, initial } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Consulte o perfil e a atividade legislativa desta pessoa parlamentar." />
+        <title>Autoria | Atividade Legislativa | Elas no Congresso</title>
+        <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet" />
+        <ClientRouter fallback="swap" />
+    </head>
+    <body class="tw:!m-0 tw:!bg-white tw:!pt-0">
+        <div class="author-route-page">
+            <RedesignHeader />
+            <AuthorPage authorId={authorId} house={house} initial={initial} />
+            <RedesignFooter />
+        </div>
+    </body>
+</html>
+
+<style is:global>
+    @font-face { font-family: "ETC Anybody"; font-style: normal; font-weight: 50 1000; font-display: swap; src: url("/assets/fonts/ETCAnybodyVariable.woff2") format("woff2-variations"); }
+    body:has(.author-route-page) { margin: 0; background: #fff; }
+    .author-route-page { min-width: 320px; overflow-x: clip; }
+    .author-route-page .redesign-header, .author-route-page .redesign-header * { box-sizing: border-box; }
+    .author-route-page .redesign-header .container-fluid { width: 100%; }.author-route-page .redesign-header .wrap { max-width: 1310px; }.author-route-page .redesign-header .ff1 { font-family: "ETC Anybody", sans-serif; }
+</style>

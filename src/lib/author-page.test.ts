@@ -33,7 +33,7 @@ test("slugs públicos normalizam nomes sem acentos nem caracteres inválidos", (
     assert.equal(authorSlug("Fabiano Contarato"), "fabiano-contarato");
     assert.equal(authorSlug("  Jo\u00e3o   da Silva!! "), "joao-da-silva");
     assert.equal(authorSlug("Érica---Hilton"), "erica-hilton");
-    assert.equal(authorRoute("Erika Hilton"), "/propostas-e-votacoes/autoria/erika-hilton");
+    assert.equal(authorRoute("Erika Hilton"), "/atividade-legislativa/autoria/erika-hilton");
 });
 
 test("reportagens relacionadas são priorizadas, ordenadas e limitadas a três", () => {
@@ -79,7 +79,7 @@ test("a rota usa somente um ID numérico real", () => {
     assert.equal(parseAuthorId("101"), 101);
     assert.equal(parseAuthorId("ana"), null);
     assert.deepEqual(getActivityAuthorIds(data), [101, 202]);
-    assert.equal(authorRoute("Ana"), "/propostas-e-votacoes/autoria/ana");
+    assert.equal(authorRoute("Ana"), "/atividade-legislativa/autoria/ana");
     assert.equal(authorRoute(101), null);
 });
 

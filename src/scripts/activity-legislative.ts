@@ -329,7 +329,7 @@ function initActivity(root: HTMLElement) {
             return wrapper;
         }
         const button = document.createElement("a");
-        button.href = authorRoute(author.nome) || "/propostas-e-votacoes";
+        button.href = authorRoute(author.nome) || "/atividade-legislativa";
         button.setAttribute("aria-label", `Ver página de autoria de ${author.nome}`);
         if (author.foto) {
             const photo = document.createElement("img");
@@ -398,7 +398,7 @@ function initActivity(root: HTMLElement) {
             const control = document.createElement(row.key.startsWith("person:num:") ? "a" : "div");
             control.className = "activity-dashboard-card__author";
             if (control instanceof HTMLAnchorElement) {
-                control.href = authorRoute(row.label) || "/propostas-e-votacoes";
+                control.href = authorRoute(row.label) || "/atividade-legislativa";
                 control.setAttribute("aria-label", `Ver página de autoria de ${row.label}`);
             }
             if (row.photo) {
@@ -605,7 +605,7 @@ function initActivity(root: HTMLElement) {
         const row = document.createElement("tr");
         const number = document.createElement("td");
         const link = document.createElement("a");
-        link.href = propositionRoute(item.numero) || "/propostas-e-votacoes";
+        link.href = propositionRoute(item.numero) || "/atividade-legislativa";
         link.textContent = item.numero;
         const house = document.createElement("small");
         house.textContent = normalize(item.casa).startsWith("sen") ? "Senado" : "Câmara";
@@ -624,7 +624,7 @@ function initActivity(root: HTMLElement) {
         evaluator.textContent = item.avaliador || "—";
         if (item.comentario) {
             const comment = document.createElement("a");
-            comment.href = propositionRoute(item.numero) || "/propostas-e-votacoes";
+            comment.href = propositionRoute(item.numero) || "/atividade-legislativa";
             comment.className = "activity-table__comments";
             comment.textContent = "Ler comentários";
             evaluator.append(comment);
@@ -647,7 +647,7 @@ function initActivity(root: HTMLElement) {
         const header = document.createElement("header");
         const titleWrap = document.createElement("div");
         const title = document.createElement("a");
-        title.href = propositionRoute(item.numero) || "/propostas-e-votacoes";
+        title.href = propositionRoute(item.numero) || "/atividade-legislativa";
         title.textContent = item.numero;
         const house = document.createElement("small");
         house.textContent = normalize(item.casa).startsWith("sen") ? "Senado" : "Câmara";

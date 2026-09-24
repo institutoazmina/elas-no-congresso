@@ -1,0 +1,515 @@
+---
+import { ClientRouter } from "astro:transitions";
+import RedesignHeader from "../../../components/redesign/RedesignHeader.astro";
+import RedesignFooter from "../../../components/redesign/RedesignFooter.astro";
+import thumbsUp from "../../../assets/images/redesign/activity/thumbs-up.svg";
+import thumbsDown from "../../../assets/images/redesign/activity/thumbs-down.svg";
+import paper from "../../../assets/images/redesign/activity/author-hero-paper.png";
+import paperclip from "../../../assets/images/redesign/activity/author-paperclip.png";
+import statusLabel from "../../../assets/images/redesign/activity/proposition-status-label.svg";
+import { authorRoute, normalizePhotoUrl } from "../../../lib/author-page";
+import { getPropositionAuthors, getPropositionByPublicSlug } from "../../../lib/proposition-page";
+import { propositionAssessment, propositionSlug, propositionStatus } from "../../../lib/proposition-utils";
+import { legislaturas, legislaturasKeys } from "../../../lib/dados";
+import "../../../styles/tailwind.css";
+
+export function getStaticPaths() {
+  const paths = new Map<string, { params: { slug: string } }>();
+  for (const legislature of legislaturasKeys) {
+    for (const proposition of Object.values(legislaturas[legislature].proposicoes)) {
+      const slug = propositionSlug(proposition.numero);
+      if (slug && !paths.has(slug)) paths.set(slug, { params: { slug } });
+    }
+  }
+  return [...paths.values()];
+}
+
+type ExtendedProposition = {
+  categoria?: string | null;
+  tema?: string | string[] | null;
+  temas?: string[] | null;
+  tags?: string[] | null;
+  data_apresentacao?: string | null;
+  ultima_movimentacao?: string | null;
+};
+
+const slug = Astro.params.slug || "";
+const { proposition } = getPropositionByPublicSlug(slug);
+if (!proposition) return Astro.redirect("/404");
+
+const extended = proposition as typeof proposition & ExtendedProposition;
+const authors = getPropositionAuthors(proposition);
+const assessment = propositionAssessment(proposition.favoravel);
+const status = propositionStatus(proposition.quiteria_prob);
+const statusIcon = status === "Lenta" ? "🐢" : "";
+const house = /sen/i.test(proposition.casa)
+  ? "Senado Federal"
+  : /dep|câm|cam/i.test(proposition.casa)
+    ? "Câmara dos Deputados"
+    : proposition.casa?.trim() || "Indisponível";
+const officialLink = proposition.link?.trim().replace(/^http:/, "https:") || null;
+const fullTextLink = officialLink && /prop_mostrarintegra|\.pdf(?:$|\?)/i.test(officialLink) ? officialLink : null;
+const category = extended.categoria?.trim() || null;
+const themes = [
+  ...(Array.isArray(extended.temas) ? extended.temas : []),
+  ...(Array.isArray(extended.tags) ? extended.tags : []),
+  ...(Array.isArray(extended.tema) ? extended.tema : extended.tema ? [extended.tema] : []),
+].map((item) => item.trim()).filter(Boolean);
+const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso`;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={proposition.resumo} />
+    <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+    <ClientRouter fallback="swap" />
+  </head>
+  <body class="tw:!m-0 tw:!bg-white tw:!pt-0">
+    <div
+      class="proposition-page"
+      style={`--proposition-paper: url(${paper.src}); --proposition-paperclip: url(${paperclip.src}); --proposition-status-label: url(${statusLabel.src})`}
+    >
+      <RedesignHeader />
+      <main>
+        <section class="proposition-hero" aria-labelledby="proposition-title">
+          <a href="/atividade-legislativa">←&nbsp; Voltar ao painel</a>
+          <div>
+            <p>Proposição</p>
+            <h1 id="proposition-title">{proposition.numero}</h1>
+          </div>
+        </section>
+
+        <section class="proposition-overview" aria-label={`Detalhes de ${proposition.numero}`}>
+          <span class="proposition-overview__paperclip" aria-hidden="true"></span>
+          <div class="proposition-overview__grid">
+            <article class="proposition-column proposition-summary">
+              <h2>Ementa</h2>
+              <p>{proposition.resumo || "Indisponível"}</p>
+              <div class="proposition-summary__links">
+                {officialLink
+                  ? <a href={officialLink} target="_blank" rel="noopener noreferrer">Ver no site do Congresso</a>
+                  : <span>Indisponível</span>}
+                {fullTextLink
+                  ? <a href={fullTextLink} target="_blank" rel="noopener noreferrer">Ler Inteiro Teor</a>
+                  : <span>Indisponível</span>}
+              </div>
+            </article>
+
+            <article class="proposition-column proposition-assessment" aria-label="Avaliação da proposição">
+              <h2>Avaliação</h2>
+              <div class:list={[
+                "proposition-assessment__value",
+                { "is-favorable": assessment === "Favorável", "is-unfavorable": assessment === "Desfavorável", "is-unrated": assessment === "Sem avaliação" },
+              ]}>
+                {assessment === "Favorável" && <img src={thumbsUp.src} alt="" />}
+                {assessment === "Desfavorável" && <img src={thumbsDown.src} alt="" />}
+                <strong>{assessment}</strong>
+              </div>
+              <p class="proposition-assessment__comment">
+                {proposition.comentario ? `“${proposition.comentario}”` : "Indisponível"}
+              </p>
+              <p class="proposition-assessment__evaluator">
+                <span aria-hidden="true">— </span><strong>{proposition.avaliador?.trim() || "Indisponível"}</strong>
+              </p>
+            </article>
+
+            <article class="proposition-column proposition-authors" aria-labelledby="proposition-authors-title">
+              <h2 id="proposition-authors-title">Autoria</h2>
+              {authors.length > 0
+                ? <div class="proposition-authors__list">
+                    {authors.map((author) => {
+                      const photo = normalizePhotoUrl(author.foto);
+                      return <a class="proposition-author" href={authorRoute(author.nome) || "/atividade-legislativa"} aria-label={`Ver autoria de ${author.nome}`}>
+                        {photo
+                          ? <img src={photo} alt={`Foto de ${author.nome}`} loading="lazy" />
+                          : <span class="proposition-author__fallback" aria-hidden="true">{author.nome.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase()}</span>}
+                        <span>
+                          <strong>{author.nome}</strong>
+                          <small>{[author.partido, author.estado].filter(Boolean).join("/") || "Indisponível"}</small>
+                        </span>
+                      </a>;
+                    })}
+                  </div>
+                : <p class="proposition-unavailable">Indisponível</p>}
+            </article>
+
+            <aside class="proposition-details" aria-label="Informações complementares">
+              <strong class="proposition-details__tag">{category || "Indisponível"}</strong>
+              <div class="proposition-details__body">
+                <p>
+                  <span>Data de apresentação:</span>
+                  {extended.data_apresentacao?.trim() || "Indisponível"}<br />
+                  {house}
+                </p>
+                <p>
+                  <span>Última movimentação:</span>
+                  {extended.ultima_movimentacao?.trim() || "Indisponível"}
+                </p>
+                <p class="proposition-details__themes">
+                  {themes.length > 0 ? themes.map((theme) => <span>#{theme.replace(/^#/, "")}</span>) : "Indisponível"}
+                </p>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="proposition-progress" aria-labelledby="proposition-progress-title">
+          <div class="proposition-progress__bar">
+            <h2 id="proposition-progress-title">Como está?</h2>
+            <strong class="proposition-progress__status"><span aria-hidden="true">{statusIcon}</span>{status}</strong>
+            <span class="proposition-progress__summary">Indisponível</span>
+          </div>
+          <div class="proposition-timeline" role="status">
+            <p>Histórico de movimentações indisponível</p>
+          </div>
+        </section>
+      </main>
+      <RedesignFooter />
+    </div>
+  </body>
+</html>
+
+<style is="global">
+  @font-face {
+    font-family: "ETC Anybody";
+    font-style: normal;
+    font-weight: 50 1000;
+    font-display: swap;
+    src: url("/assets/fonts/ETCAnybodyVariable.woff2") format("woff2-variations");
+  }
+
+  .proposition-page,
+  .proposition-page * { box-sizing: border-box; }
+  .proposition-page { min-width: 320px; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
+  .proposition-page main { overflow: clip; }
+
+  .proposition-hero {
+    position: relative;
+    height: 212px;
+    overflow: hidden;
+    background-color: #3838d9;
+    background-image: var(--proposition-paper);
+    background-blend-mode: multiply;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+  }
+  .proposition-hero > a {
+    position: absolute;
+    z-index: 1;
+    top: 12px;
+    left: 48px;
+    color: #d0d0fd;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 24px;
+    text-decoration: none;
+  }
+  .proposition-hero > a:hover,
+  .proposition-hero > a:focus-visible { color: #fff; text-decoration: underline; }
+  .proposition-hero > div {
+    position: absolute;
+    top: 57.5px;
+    left: 50%;
+    display: flex;
+    width: min(720px, calc(100% - 32px));
+    transform: translateX(-50%);
+    align-items: center;
+    flex-direction: column;
+  }
+  .proposition-hero p,
+  .proposition-hero h1 {
+    margin: 0;
+    font-family: "ETC Anybody", sans-serif;
+    font-weight: 700;
+    font-variation-settings: "wdth" 75;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .proposition-hero p { font-size: 24px; line-height: 32px; }
+  .proposition-hero h1 { font-size: 72px; line-height: 72px; overflow-wrap: anywhere; }
+
+  .proposition-overview {
+    position: relative;
+    border-top: 1px solid rgb(153 141 150 / 28%);
+    background: #fff;
+    box-shadow: 0 -2px 9.8px rgb(0 0 0 / 27%);
+    padding: 88px 48px 40px;
+  }
+  .proposition-overview__paperclip {
+    position: absolute;
+    z-index: 2;
+    top: -20.933px;
+    left: max(42px, calc(50% - 678px));
+    width: 46.213px;
+    height: 84.412px;
+    background: var(--proposition-paperclip) center / contain no-repeat;
+    pointer-events: none;
+  }
+  .proposition-overview__grid {
+    display: grid;
+    width: min(1260px, 100%);
+    margin: 0 auto;
+    grid-template-columns: repeat(4, minmax(0, 300px));
+    gap: 20px;
+    align-items: start;
+    justify-content: center;
+  }
+  .proposition-column { min-width: 0; }
+  .proposition-column h2 {
+    margin: 0 0 23px;
+    color: #0b0f5e;
+    font-family: "ETC Anybody", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    font-variation-settings: "wdth" 75;
+    line-height: 32px;
+    text-box-edge: cap alphabetic;
+    text-box-trim: trim-both;
+    text-transform: uppercase;
+  }
+  .proposition-summary > p {
+    width: 268px;
+    max-width: 100%;
+    margin: 0 0 24px;
+    color: #4b5563;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+    white-space: pre-line;
+  }
+  .proposition-summary__links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: #4242f6;
+    font-size: 18px;
+    line-height: 24px;
+  }
+  .proposition-summary__links a { color: inherit; text-decoration: none; }
+  .proposition-summary__links a:hover,
+  .proposition-summary__links a:focus-visible { text-decoration: underline; }
+  .proposition-summary__links span { color: #998d96; }
+
+  .proposition-assessment { padding-top: 3px; }
+  .proposition-assessment__value {
+    display: flex;
+    min-height: 32px;
+    align-items: center;
+    gap: 8px;
+    color: #0b0f5e;
+  }
+  .proposition-assessment__value img { display: block; width: 32px; height: 32px; }
+  .proposition-assessment__value strong {
+    font-family: "ETC Anybody", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    font-variation-settings: "wdth" 75;
+    line-height: 24px;
+    text-transform: uppercase;
+  }
+  .proposition-assessment__value.is-unrated { color: #998d96; }
+  .proposition-assessment__comment,
+  .proposition-assessment__evaluator {
+    margin: 16px 8px 0 0;
+    color: #0b0f5e;
+    font-size: 18px;
+    line-height: 24px;
+  }
+  .proposition-assessment__evaluator { margin-top: 16px; }
+
+  .proposition-authors__list {
+    display: flex;
+    padding: 8px 0;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .proposition-author {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    align-items: flex-start;
+    gap: 8px;
+    color: #0b0f5e;
+    text-decoration: none;
+  }
+  .proposition-author img,
+  .proposition-author__fallback {
+    display: grid;
+    width: 30px;
+    height: 40px;
+    flex: 0 0 30px;
+    border: 1px solid #998d96;
+    place-items: center;
+    object-fit: cover;
+    object-position: top;
+  }
+  .proposition-author__fallback { background: #f1f1ff; color: #4242f6; font-size: 11px; font-weight: 700; }
+  .proposition-author > span:last-child { display: flex; min-width: 0; flex-direction: column; }
+  .proposition-author strong,
+  .proposition-author small {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 16px;
+  }
+  .proposition-author:hover strong,
+  .proposition-author:focus-visible strong { color: #4242f6; text-decoration: underline; }
+  .proposition-unavailable { margin: 0; color: #998d96; font-size: 18px; line-height: 24px; }
+
+  .proposition-details {
+    display: flex;
+    min-height: 296px;
+    padding: 23px;
+    border: 1px solid rgb(66 66 246 / 25%);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .proposition-details__tag {
+    display: inline-flex;
+    min-height: 40px;
+    padding: 5px 10px 3px;
+    align-items: center;
+    background: #4242f6;
+    color: #fff;
+    font-family: "ETC Anybody", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    font-variation-settings: "wdth" 75;
+    line-height: 24px;
+    text-transform: uppercase;
+  }
+  .proposition-details__body { width: 100%; color: #4b5563; font-size: 18px; line-height: 24px; }
+  .proposition-details__body p { margin: 0 0 24px; }
+  .proposition-details__body p:last-child { margin-bottom: 0; }
+  .proposition-details__body p > span:first-child {
+    display: block;
+    color: #998d96;
+    font-size: 14px;
+    line-height: 16px;
+  }
+  .proposition-details__themes { display: flex; flex-wrap: wrap; gap: 0 5px; color: #4242f6; }
+
+  .proposition-progress {
+    width: 100%;
+    padding: 100px 16px 40px;
+    background: #fff;
+  }
+  .proposition-progress__bar {
+    position: relative;
+    display: flex;
+    width: min(741px, 100%);
+    height: 65px;
+    margin: 0 auto;
+    padding: 0 25px 0 20px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #6262ff;
+    background-image: var(--proposition-paper);
+    background-blend-mode: multiply;
+    background-position: center -70px;
+    background-repeat: no-repeat;
+    background-size: 741px auto;
+  }
+  .proposition-progress__bar h2 {
+    position: absolute;
+    top: -46px;
+    left: 50%;
+    margin: 0;
+    transform: translateX(-50%);
+    color: #1e2546;
+    font-family: "ETC Anybody", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    font-variation-settings: "wdth" 75;
+    line-height: 32px;
+    text-align: center;
+    text-box-edge: cap alphabetic;
+    text-box-trim: trim-both;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .proposition-progress__status {
+    position: relative;
+    z-index: 0;
+    display: flex;
+    width: 108px;
+    height: 39px;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    color: #1e2546;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 39px;
+    white-space: nowrap;
+  }
+  .proposition-progress__status::before {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: -8px;
+    width: 118px;
+    height: 41px;
+    background: var(--proposition-status-label) center / 100% 100% no-repeat;
+    content: "";
+  }
+  .proposition-progress__status > span { font-size: 19px; line-height: 1; }
+  .proposition-progress__summary {
+    color: #fff;
+    font-size: 18px;
+    line-height: 24px;
+    text-shadow: 1px 2px 1px rgb(0 0 0 / 20%);
+  }
+  .proposition-timeline {
+    display: grid;
+    width: min(741px, 100%);
+    min-height: 296px;
+    margin: 0 auto;
+    padding: 25px;
+    border: 2px solid #1e2546;
+    place-items: center;
+    background: #fff;
+  }
+  .proposition-timeline p {
+    margin: 0;
+    color: #998d96;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+  }
+
+  @media (max-width: 1279px) {
+    .proposition-overview { padding-inline: 32px; }
+    .proposition-overview__grid { grid-template-columns: repeat(2, minmax(0, 300px)); row-gap: 48px; }
+  }
+
+  @media (max-width: 767px) {
+    .proposition-hero { height: 220px; background-position: center; background-size: cover; }
+    .proposition-hero > a { top: 12px; left: 16px; font-size: 14px; }
+    .proposition-hero > div { top: 72px; }
+    .proposition-hero p { font-size: 18px; line-height: 24px; }
+    .proposition-hero h1 { margin-top: 4px; font-size: clamp(36px, 12vw, 48px); line-height: 1; }
+    .proposition-overview { min-height: 0; padding: 72px 16px 56px; }
+    .proposition-overview__paperclip { left: 16px; width: 36px; height: 66px; }
+    .proposition-overview__grid { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+    .proposition-column h2 { margin-bottom: 20px; font-size: 28px; line-height: 32px; }
+    .proposition-summary > p { width: 100%; }
+    .proposition-details { width: 100%; }
+    .proposition-progress { padding: 88px 16px 96px; }
+    .proposition-progress__bar { height: 82px; padding: 0 14px; }
+    .proposition-progress__bar h2 { top: -43px; font-size: 28px; }
+    .proposition-progress__status { width: 101px; font-size: 20px; }
+    .proposition-progress__status::before { left: -6px; width: 112px; }
+    .proposition-progress__summary { max-width: 120px; font-size: 14px; line-height: 18px; text-align: right; }
+    .proposition-timeline { min-height: 156px; padding: 20px; }
+  }
+</style>

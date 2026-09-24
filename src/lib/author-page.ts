@@ -110,7 +110,7 @@ export function authorSlug(value: unknown): string | null {
 export function authorRoute(value: unknown): string | null {
     if (/^\d+$/.test(String(value ?? "").trim())) return null;
     const slug = authorSlug(value);
-    return slug === null ? null : `/propostas-e-votacoes/autoria/${slug}`;
+    return slug === null ? null : `/atividade-legislativa/autoria/${slug}`;
 }
 
 export function normalizePhotoUrl(primary: unknown, fallback?: unknown): string | null {

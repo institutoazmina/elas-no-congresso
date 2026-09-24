@@ -6,7 +6,7 @@ test("slug da proposição usa tipo, número e ano", () => {
   assert.equal(propositionSlug("PL 69/2025"), "pl-69-2025");
   assert.equal(propositionSlug("PEC 17/2025"), "pec-17-2025");
   assert.equal(propositionSlug(" PL  1338/2022 "), "pl-1338-2022");
-  assert.equal(propositionRoute("PRS 14/2023"), "/propostas-e-votacoes/proposicao/prs-14-2023");
+  assert.equal(propositionRoute("PRS 14/2023"), "/atividade-legislativa/proposicao/prs-14-2023");
 });
 
 test("avaliação e status preservam as regras da atividade", () => {
