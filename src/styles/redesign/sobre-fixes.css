@@ -127,7 +127,7 @@ body:has(.sobre-page) .sobre-page .timeline>small{bottom:auto;font-family:'Plus 
 
 body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section .sobre-narrow>aside:first-of-type{color:#998d96;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:400;line-height:16px}
 body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section .sobre-narrow>aside:first-of-type::before,body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section .sobre-narrow>aside:first-of-type::after{content:none}
-body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section .sobre-narrow>aside:first-of-type>a{color:#4242f6;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;line-height:16px;text-decoration:none}
+body:has(.sobre-page) .sobre-page .sobre-history+.sobre-section .sobre-narrow>aside:first-of-type>a{color:#4242f6;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;line-height:16px;text-decoration:underline;text-underline-offset:2px}
 }
 
 @media(max-width:359px){
