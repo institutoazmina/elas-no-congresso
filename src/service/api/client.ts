@@ -22,24 +22,28 @@ const localPreviewData = (path: string, params: Record<string, string | number |
   }
 
   if (path === '/stats/propositions/legislatures') {
-    return [
-      { number: 55, unfavorable: 160 },
-      { number: 56, unfavorable: 242 },
-      { number: 57, unfavorable: 460 },
-    ];
+    return {
+      legislatures: [
+        { number: 55, from: 2015, to: 2019, unfavorable: 160 },
+        { number: 56, from: 2019, to: 2023, unfavorable: 242 },
+        { number: 57, from: 2023, to: 2027, unfavorable: 460 },
+      ],
+    };
   }
 
   if (path === '/stats/propositions/categories') {
-    return [
-      { value: 'dignidade_sexual', label: 'Dignidade sexual', unfavorable: 136 },
-      { value: 'violencia_contra_a_mulher', label: 'Violência contra a mulher', unfavorable: 91 },
-      { value: 'direitos_sociais', label: 'Direitos sociais', unfavorable: 89 },
-      { value: 'genero', label: 'Gênero', unfavorable: 85 },
-      { value: 'direitos_sexuais_reprodutivos', label: 'Direitos sexuais e reprodutivos', unfavorable: 81 },
-      { value: 'lei_maria_da_penha', label: 'Lei Maria da Penha', unfavorable: 68 },
-      { value: 'maternidade', label: 'Maternidade', unfavorable: 52 },
-      { value: 'feminicidio', label: 'Feminicídio', unfavorable: 22 },
-    ];
+    return {
+      categories: [
+        { value: 'dignidade_sexual', label: 'Dignidade sexual', unfavorable: 136 },
+        { value: 'violencia_contra_a_mulher', label: 'Violência contra a mulher', unfavorable: 91 },
+        { value: 'direitos_sociais', label: 'Direitos sociais', unfavorable: 89 },
+        { value: 'genero', label: 'Gênero', unfavorable: 85 },
+        { value: 'direitos_sexuais_reprodutivos', label: 'Direitos sexuais e reprodutivos', unfavorable: 81 },
+        { value: 'lei_maria_da_penha', label: 'Lei Maria da Penha', unfavorable: 68 },
+        { value: 'maternidade', label: 'Maternidade', unfavorable: 52 },
+        { value: 'feminicidio', label: 'Feminicídio', unfavorable: 22 },
+      ],
+    };
   }
 
   if (path === '/legislatures/parliamentarians') {
