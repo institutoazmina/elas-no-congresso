@@ -15,17 +15,11 @@ Font paths in `_base.less`:
 + src: url(/assets/fonts/...);
 ```
 
-## dados.json Strategy
+## Data Strategy
 
-The proposals/votations table fetches data client-side:
-
-```js
-d3.json("/dados.json")
-```
-
-Two copies exist:
-- `public/dados.json` - Served to browser
-- `src/data/dados.json` - TypeScript source for static generation
+Legislative data is fetched from the public API. Static proposition and author routes
+are generated from `GET /api/v1/activity/?limit=5000`; the activity explorer fetches
+the same read model in the browser.
 
 ## ?legislatura= Limitation
 

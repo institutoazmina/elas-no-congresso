@@ -25,14 +25,13 @@ type RawProposal = {
     autores?: Record<string, number>;
     legislatura: number;
     quiteria_prob?: number;
+    celerity: {
+        label: string;
+        days_without_movement: number;
+        movements_last_90_days: number;
+    };
 };
 
-type RawLegislature = {
-    parlamentares: Record<string, RawParliamentarian>;
-    proposicoes: Record<string, RawProposal>;
-};
-
-type RawData = { legislaturas: Record<string, RawLegislature> };
 type Proposal = RawProposal & { year: number; authors: RawParliamentarian[]; parties: string[]; states: string[]; genders: string[]; situacao?: string | null; apresentadaEm?: string | null };
 type DashboardRow = { key: string; label: string; favorable: number; unfavorable: number; photo?: string; meta?: string };
 type TableSort = "number" | "author" | "summary" | "assessment" | "evaluator" | "progress" | "category" | "updated";
@@ -62,8 +61,9 @@ import {
 } from "../lib/dashboard-utils";
 import { authorRoute } from "../lib/author-page";
 import { propositionRoute } from "../lib/proposition-utils";
-import { canonicalPropositionKey, extractPropositionYear, formatPresentedDate, normalizeEvaluatorKey } from "../lib/canonical";
-import listaEnriquecida from "../data/categorias-proposicoes.json" with { type: "json" };
+import { extractPropositionYear, formatPresentedDate, normalizeEvaluatorKey } from "../lib/canonical";
+import { PUBLIC_API_BASE_URL } from "astro:env/client";
+import type { ActivityProposition } from "../lib/activity-api";
 import {
     activityAssessment,
     filterActivityItems,
@@ -184,85 +184,60 @@ function initActivity(root: HTMLElement) {
         });
     }
 
-    function hydrateOptions(data: RawData) {
-        const proposals: Proposal[] = [];
+    function hydrateOptions(data: ActivityProposition[]) {
         const parties = new Set<string>();
         const years = new Set<number>();
         const states = new Set<string>();
         const evaluatorDisplay = new Map<string, string>();
         dataQuality = createQualityCollector();
-        // Enriquecimento P0 (snapshot build-time da API oficial, mesmo origem,
-        // sem CORS). Chave canônica CASA|NUMERO; 88 sem match seguem só local.
-        const enrichment = (listaEnriquecida as unknown as { categorias: Record<string, { categoria: string | null; situacao: string | null; apresentada_em: string | null }> }).categorias;
-        // Conta chaves canônicas para ignorar as 11 variantes com espaço duplo
-        // (mesma proposição lógica; evita página/card/contagem duplicada).
-        const canonicalCounts = new Map<string, number>();
-        for (const legislature of Object.values(data.legislaturas)) {
-            for (const proposal of Object.values(legislature.proposicoes || {})) {
-                const key = canonicalPropositionKey(proposal.casa, proposal.numero);
-                canonicalCounts.set(key, (canonicalCounts.get(key) ?? 0) + 1);
-            }
-        }
-
-        Object.entries(data.legislaturas).forEach(([legislatureId, legislature]) => {
-            const people = legislature.parlamentares || {};
-            Object.values(legislature.proposicoes || {}).forEach((proposal) => {
-                const canonicalKey = canonicalPropositionKey(proposal.casa, proposal.numero);
-                if (/ {2,}/.test(proposal.numero ?? "") && (canonicalCounts.get(canonicalKey) ?? 0) > 1) {
-                    dataQuality.record("duplicata-espaco-duplo", `${proposal.numero}: variante não-canônica ignorada`);
-                    return;
-                }
-                const enrich = enrichment[canonicalKey];
-                const categoria = enrich?.categoria?.trim() || proposal.categoria?.trim() || null;
-                const rawAuthorIds = Object.keys(proposal.autores || {});
-                const authors = rawAuthorIds.map((id) => people[id]).filter(Boolean);
-                if (authors.length !== rawAuthorIds.length) {
-                    dataQuality.record("autoria-nao-resolvida", `${proposal.numero}: ${rawAuthorIds.length - authors.length} autoria(s) sem cadastro correspondente`);
-                }
-                const casa = normalizeCasa(proposal.casa);
-                if (!casa) {
-                    dataQuality.record("casa-desconhecida", `${proposal.numero}: casa=${JSON.stringify(proposal.casa)}`);
-                }
-                for (const author of authors) {
-                    if (author.numero === undefined || author.numero === null) {
-                        dataQuality.record("autor-sem-numero", `${author.nome || author.slug || "?"} em ${proposal.numero}`);
-                    }
-                    if (normalizeGenderCode(author.genero) === "U") {
-                        dataQuality.record("genero-invalido", `${author.nome} (num ${author.numero}): genero=${JSON.stringify(author.genero)}`);
-                    }
-                    if (normalizeUfCode(author.estado) === null) {
-                        dataQuality.record("uf-invalida", `${author.nome} (num ${author.numero}): estado=${JSON.stringify(author.estado)}`);
-                    }
-                    if (author.partido === undefined || author.partido === null || String(author.partido).trim() === "") {
-                        dataQuality.record("partido-ausente", `${author.nome} (num ${author.numero}) em ${proposal.numero}`);
-                    }
-                }
-                // Ano legislativo: presented_at da API tem prioridade; fallback
-                // ano do número (aproximação documentada). Nunca "Ano 0".
-                const year = extractPropositionYear(enrich?.apresentada_em, proposal.numero);
-                const item: Proposal = {
-                    ...proposal,
-                    categoria,
-                    situacao: enrich?.situacao?.trim() || null,
-                    apresentadaEm: enrich?.apresentada_em || null,
-                    legislatura: Number(proposal.legislatura || legislatureId),
-                    year,
-                    authors,
-                    parties: [...new Set(authors.map((author) => author.partido).filter(Boolean) as string[])],
-                    states: [...new Set(authors.map((author) => normalizeUfCode(author.estado)).filter((uf): uf is string => uf !== null))],
-                    genders: [...new Set(authors.map((author) => normalizeGenderCode(author.genero)).filter((code) => code === "F" || code === "M"))],
-                };
-                proposals.push(item);
-                if (year) years.add(year);
-                item.parties.forEach((party) => parties.add(party));
-                item.states.forEach((stateName) => states.add(stateName));
-                // Agrupa variantes de caixa do avaliador (Cfemea/CFEMEA) sem
-                // alterar o texto editorial; exibe a primeira forma vista.
-                if (proposal.avaliador) {
-                    const key = normalizeEvaluatorKey(proposal.avaliador);
-                    if (!evaluatorDisplay.has(key)) evaluatorDisplay.set(key, proposal.avaliador);
-                }
+        const proposals = data.map((proposal): Proposal => {
+            const authors = proposal.authors.map((author) => ({
+                nome: author.name,
+                numero: author.id ?? 0,
+                foto: author.photo_url || undefined,
+                genero: author.gender || undefined,
+                partido: author.party || undefined,
+                cargo: author.role || undefined,
+                estado: author.state || undefined,
+            }));
+            const year = extractPropositionYear(proposal.presented_at, proposal.number_label);
+            const casa = proposal.house === "senado" ? "Senador" : proposal.house === "camara" ? "Deputado" : proposal.house;
+            const item: Proposal = {
+                i: proposal.id,
+                casa,
+                numero: proposal.number_label,
+                link: proposal.tramitation_url || undefined,
+                comentario: proposal.assessment_comments,
+                slug: proposal.number_label,
+                resumo: proposal.ementa,
+                avaliador: proposal.assessment_organization,
+                favoravel: proposal.is_favorable === true ? 1 : proposal.is_favorable === false ? -1 : 0,
+                categoria: proposal.category,
+                legislatura: 0,
+                celerity: proposal.celerity,
+                situacao: proposal.current_status,
+                apresentadaEm: proposal.presented_at,
+                year,
+                authors,
+                parties: [...new Set(authors.map((author) => author.partido).filter((party): party is string => Boolean(party)))],
+                states: [...new Set(authors.map((author) => normalizeUfCode(author.estado)).filter((state): state is string => state !== null))],
+                genders: [...new Set(authors.map((author) => normalizeGenderCode(author.genero)).filter((gender) => gender === "F" || gender === "M"))],
+            };
+            if (!normalizeCasa(casa)) dataQuality.record("casa-desconhecida", `${item.numero}: casa=${JSON.stringify(casa)}`);
+            authors.forEach((author) => {
+                if (!author.numero) dataQuality.record("autor-sem-numero", `${author.nome} em ${item.numero}`);
+                if (normalizeGenderCode(author.genero) === "U") dataQuality.record("genero-invalido", `${author.nome}: genero=${JSON.stringify(author.genero)}`);
+                if (normalizeUfCode(author.estado) === null) dataQuality.record("uf-invalida", `${author.nome}: estado=${JSON.stringify(author.estado)}`);
+                if (!author.partido) dataQuality.record("partido-ausente", `${author.nome} em ${item.numero}`);
             });
+            if (year) years.add(year);
+            item.parties.forEach((party) => parties.add(party));
+            item.states.forEach((state) => states.add(state));
+            if (item.avaliador) {
+                const key = normalizeEvaluatorKey(item.avaliador);
+                if (!evaluatorDisplay.has(key)) evaluatorDisplay.set(key, item.avaliador);
+            }
+            return item;
         });
 
         const addOptions = (name: string, values: (string | number)[], label?: (item: string | number) => string) => {
@@ -310,7 +285,7 @@ function initActivity(root: HTMLElement) {
         };
         const number = (item: Proposal, key: TableSort) => {
             if (key === "assessment") return item.favoravel;
-            if (key === "progress") return item.quiteria_prob ?? -1;
+            if (key === "progress") return item.celerity.movements_last_90_days;
             if (key === "updated") return item.year * 1_000_000 + item.i;
             return 0;
         };
@@ -670,7 +645,7 @@ function initActivity(root: HTMLElement) {
             evaluator.append(comment);
         }
         const progress = document.createElement("td");
-        progress.innerHTML = `<strong>${(item.quiteria_prob ?? 0) >= .55 ? "Rápida" : "Lenta"}</strong><small>${Math.round((item.quiteria_prob ?? 0) * 100)}% de chance de avançar</small>`;
+        progress.innerHTML = `<strong>${item.celerity.label}</strong><small>${item.celerity.movements_last_90_days} movimentações em 3 meses</small>`;
         const theme = document.createElement("td");
         theme.textContent = item.categoria || "Não informada";
         theme.title = item.categoria ? `Categoria oficial: ${item.categoria}` : "Sem categoria no dataset oficial para esta proposição";
@@ -705,7 +680,7 @@ function initActivity(root: HTMLElement) {
         const evaluation = document.createElement("span");
         evaluation.innerHTML = `<strong>${item.avaliador || "Sem avaliação"}</strong><small>${item.comentario ? "Há parecer complementar" : "Sem parecer complementar"}</small>`;
         const speed = document.createElement("span");
-        speed.innerHTML = `<strong>${(item.quiteria_prob ?? 0) >= .55 ? "Rápida" : "Lenta"}</strong><small>Tramitação estimada</small>`;
+        speed.innerHTML = `<strong>${item.celerity.label}</strong><small>${item.celerity.movements_last_90_days} movimentações em 3 meses</small>`;
         footer.append(evaluation, speed);
         article.append(header, tag, createAuthor(item), summary, footer);
         return article;
@@ -1016,7 +991,10 @@ function initActivity(root: HTMLElement) {
         status.className = "activity-status is-loading";
         status.innerHTML = `<span aria-hidden="true"></span><p>Carregando atividade legislativa…</p>`;
         try {
-            const response = await fetch("/dados.json");
+            const apiBase = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)
+                ? `${location.origin}/api/v1`
+                : PUBLIC_API_BASE_URL;
+            const response = await fetch(`${apiBase}/activity?limit=5000`);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             hydrateOptions(await response.json());
             syncResponsivePageSize();

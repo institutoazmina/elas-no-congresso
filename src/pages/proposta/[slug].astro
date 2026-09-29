@@ -1,106 +1,16 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Share from '../../components/Share.astro';
-import { getAllProposicoesSlugs, getProposicaoBySlug } from '../../lib/parlamentar';
-import { artigoCasa, casa, avaliacao } from '../../lib/formatters';
-import { legislaturas, legislaturasKeys } from '../../lib/dados';
+import { fetchActivity } from "../../lib/activity-api";
+import { propositionSlug } from "../../lib/proposition-utils";
+import { API_BASE_URL } from "astro:env/server";
 
 export async function getStaticPaths() {
-  const slugs = getAllProposicoesSlugs();
-  return slugs.map(slug => ({ params: { slug } }));
-}
-
-const { slug } = Astro.params;
-const { proposicao, legislatureAtual } = getProposicaoBySlug(slug!);
-
-if (!proposicao) {
-  return Astro.redirect('/');
-}
-
-const autorias = proposicao.autores ? (Array.isArray(proposicao.autores) ? proposicao.autores : Object.values(proposicao.autores)) : [];
-const autores = autorias.map((numero: number) => {
-  for (const legKey of legislaturasKeys) {
-    const leg = legislaturas[legKey];
-    const found = Object.values(leg.parlamentares).find(p => p.numero === numero);
-    if (found) return found;
+  const paths = new Map<string, { params: { slug: string } }>();
+  for (const proposition of await fetchActivity(API_BASE_URL)) {
+    const slug = propositionSlug(proposition.number_label);
+    if (slug && !paths.has(slug)) paths.set(slug, { params: { slug } });
   }
-  return null;
-}).filter(Boolean);
+  return [...paths.values()];
+}
 
-const autorCount = autores.length;
+return Astro.redirect(`/atividade-legislativa/proposicao/${Astro.params.slug}`, 301);
 ---
-
-<BaseLayout title={proposicao.numero}>
-<main>
-    <header class="abertura-pl">
-        <Share />
-        <div class="container-fluid wrap">
-            <div class="row">
-                <div class="col-xs-12 col-md-5 col-md-offset-1">
-                    <p class="tcb t4 ff1 w300 uc wdth200 mb05">Proposta d{artigoCasa(proposicao.casa) + ' ' + casa(proposicao.casa)}</p>
-                    <h1 class="tcb t9 ff1 w900 uc wdth300 mb05">{proposicao.numero}</h1>
-                    <p class="tcb t4 ff1 w300 uc wdth200 mb1">{autorCount} {autorCount > 1 ? 'autores' : 'autor'}</p>
-                    <div class="grupo mb3 mb0-md">
-                        {autores.map(a => a && (
-                            <a title={`${a.nome} (${a.partido}-${a.estado})`} href={`/perfil/${a.slug}`} class={`thumbnail bgec${a.v ?? 0}`} style={`background-image:url(${a.foto})`} data-tip={encodeURIComponent(`<b>${a.nome}</b><br>${a.partido}-${a.estado}`)}></a>
-                        ))}
-                    </div>
-                </div>
-                <div class="col-xs-12 col-md-5">
-                    <p class="t2 tcb uc mb05 w400">Avaliado por</p>
-                    <p class="t6 tcb uc mb05 w300 ff1">{proposicao.avaliador}</p>
-                    <hr class="mt1 mb1">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <p class="t2 tcb uc mb05 w400">Classificação</p>
-                            <div class="flex middle-xs">
-                                <div class={`icone ${avaliacao(proposicao.favoravel).toLowerCase()}`}></div>
-                                <p class="ff1 t3 tcb w900 wdth350 m0 ml-1">{avaliacao(proposicao.favoravel)}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="mt1 mb1">
-                    <p class="t2 tcb uc mb05 w400">Quiteriômetro</p>
-                    {proposicao.quiteria_prob !== null && proposicao.quiteria_prob !== undefined ? (
-                    <div class="tw:w-24 tw:h-4 tw:bg-gradient-to-r tw:from-[#8cd89c] tw:via-[#f9df79] tw:to-[#ff808a] tw:relative">
-                        <div class="tw:absolute tw:-translate-x-1/2 tw:left-0 tw:-top-0.5 tw:h-[calc(100%+4px)] tw:w-1.5 tw:bg-black/15"
-                            style={`left: ${proposicao.quiteria_prob * 100}%`}></div>
-                    </div>
-                    <div class="tw:w-24 tw:relative">
-                        <div class="tw:absolute tw:-translate-x-1 tw:left-0 tw:-top-3"
-                            style={`left: ${proposicao.quiteria_prob * 100}%`}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mouse-pointer2-icon lucide-mouse-pointer-2 tw:fill-white tw:text-black">
-                                <path d="M4.037 4.688a.495.495 0 0 1 .651-.651l16 6.5a.5.5 0 0 1-.063.947l-6.124 1.58a2 2 0 0 0-1.438 1.435l-1.579 6.126a.5.5 0 0 1-.947.063z" />
-                            </svg>
-                            <div class="tw:text-xs tw:text-center tw:text-white">{proposicao.quiteria_prob}</div>
-                        </div>
-                    </div>
-                    ) : (
-                      <p class="tw:text-3xl tw:opacity-50 ff1 wdth400 tw:leading-[0.8]">-</p>
-                    )}
-                    <hr class="tw:!mt-8 mb1">
-                    <a href={proposicao.link} target="_blank" class="btn-seta t2 mb1">Tramitação no site da câmara</a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <article class="conteudo-pl">
-        <div class="container-fluid wrap">
-            <div class="row">
-                <div class="col-xs-12 col-md-10 col-md-offset-1 mb3">
-                    <h3 class="titulo-variavel tca"><span class="wdth300 w900">Resumo</span></h3>
-                    <p>{proposicao.resumo}</p>
-                </div>
-
-                {proposicao.comentario && (
-                    <div class="col-xs-12 col-md-10 col-md-offset-1">
-                        <h3 class="titulo-variavel tca"><span class="wdth300 w900">Comentário</span><span class="w300 wdth200"> do avaliador</span></h3>
-                        <p>{proposicao.comentario}</p>
-                    </div>
-                )}
-            </div>
-        </div>
-    </article>
-</main>
-</BaseLayout>

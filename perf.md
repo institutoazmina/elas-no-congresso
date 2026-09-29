@@ -42,7 +42,7 @@ arquivos hasheados em `_astro/`, `width`/`height` automáticos, `loading` corret
 ### 2. LCP 18,3 s ✅ (parcial)
 - [x] `fetchpriority="high"` + `loading="eager"` no hero (via `<Picture>`).
 - [x] Imagem do hero não depende de JS para renderizar.
-- ⏳ LCP real provavelmente dominado pelo carregamento de `dados.json` (2,6 MB) na home — ver item 8.
+- Histórico: o LCP era dominado pelo carregamento do dataset legislativo local (2,6 MB) na home — ver item 8.
 
 ### 3. JavaScript não usado — economia ~588 KiB ✅
 Scripts eram carregados em **todas** as páginas via `BaseLayout.astro`.
@@ -72,13 +72,13 @@ Scripts eram carregados em **todas** as páginas via `BaseLayout.astro`.
 
 ### 6. Cache ✅
 - [x] `build.yml`: imagens agora hasheadas (`_astro/`) → pegam corretamente `Cache-Control: immutable` 1 ano.
-- [x] **Bug corrigido**: `dados.json` (não-fingerprinted) pegava `immutable` 1 ano → updates nunca propagavam. Agora `json`/`xml`/`robots.txt` = `max-age=3600,must-revalidate`.
+- [x] **Bug corrigido**: o dataset local não-fingerprinted recebia `immutable` por 1 ano e impedia atualizações. Agora `json`/`xml`/`robots.txt` = `max-age=3600,must-revalidate`.
 
 ### 7. Forced reflow + TBT 440 ms ⏳
 - [ ] Auditar JS que lê/escreve layout no mesmo frame (`offsetWidth` etc.) — provável em `script.js`/dataviz d3.
 - [ ] Quebrar tarefas longas; usar `requestAnimationFrame` p/ DOM/tooltip.
 
-### 8. `dados.json` — 491 KiB transferidos (2,6 MB cru) ⏳
+### 8. Dataset legislativo local — 491 KiB transferidos (2,6 MB cru) ⏳
 - [ ] Maior asset da home, carregado p/ os contadores. Avaliar: carregar só na rota da dataviz, paginar, ou pré-agregar os números dos contadores em build (evita baixar o JSON inteiro na home).
 
 ### 9. JS não minificado — economia ~3 KiB ⏳
@@ -107,7 +107,7 @@ Scripts eram carregados em **todas** as páginas via `BaseLayout.astro`.
 ## Pendências (próximos passos)
 
 1. ⏳ **Re-rodar Unlighthouse** no build local/homologação p/ medir o ganho real.
-2. ⏳ **`dados.json` na home** (item 8) — provável maior alavanca restante p/ LCP/TTI.
+2. ⏳ **Dataset legislativo local na home** (item 8) — provável maior alavanca restante p/ LCP/TTI.
 3. ⏳ Forced reflow / TBT (item 7).
 4. ⏳ Fixar versão do `motion`; mover `script.js` p/ o build do Astro (item 9).
 5. ⏳ Best practices: erro de console, embed Substack sob interação, aba Issues.

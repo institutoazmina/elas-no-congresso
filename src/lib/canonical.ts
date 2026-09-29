@@ -1,7 +1,7 @@
 /**
- * Identidade canônica de proposições entre `dados.json` e a API oficial.
+ * Identidade canônica de proposições entre fontes legislativas e a API oficial.
  *
- * Etapa 4 (P0): a API e a base local usam convenções diferentes
+ * A API e fontes legadas usam convenções diferentes
  * (`Deputado` vs `camara`, espaços duplos vs simples). A chave canônica é:
  *
  *   CASA|NUMERO_NORMALIZADO
@@ -37,7 +37,7 @@ export function canonicalPropositionKey(casa: unknown, numero: unknown): string 
 }
 
 /**
- * 11 pares do dados.json diferem só por espaço duplo ("PL  1338/2022" vs
+ * Registros podem diferir só por espaço duplo ("PL  1338/2022" vs
  * "PL 1338/2022") e colidem no slug. A canônica é a forma sem espaço duplo:
  * preserva URL única, sem duplicar página/card/contagem.
  */

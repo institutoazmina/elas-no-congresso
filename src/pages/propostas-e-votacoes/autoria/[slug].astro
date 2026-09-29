@@ -1,23 +1,20 @@
 ---
-import activityData from "../../../data/dados.json";
-import {
-    authorSlug,
-    buildAuthorActivity,
-    getActivityAuthorIds,
-    type ActivityData,
-} from "../../../lib/author-page";
+import { authorSlug } from "../../../lib/author-page";
+import { fetchActivity } from "../../../lib/activity-api";
+import { API_BASE_URL } from "astro:env/server";
 
 // Compatibilidade: /propostas-e-votacoes/autoria/[slug] →
 /// /atividade-legislativa/autoria/[slug], preservando o slug.
-export function getStaticPaths() {
-    const data = activityData as unknown as ActivityData;
-    return getActivityAuthorIds(data)
-        .map((id) => {
-            const activity = buildAuthorActivity(data, id);
-            const slug = authorSlug(activity?.author.nome);
-            if (!slug) throw new Error(`Parlamentar ${id} não possui nome válido para slug público.`);
-            return { params: { slug } };
-        });
+export async function getStaticPaths() {
+    const paths = new Map<string, { params: { slug: string } }>();
+    for (const proposition of await fetchActivity(API_BASE_URL)) {
+        for (const author of proposition.authors) {
+            if (author.id === null) continue;
+            const slug = authorSlug(author.name);
+            if (slug && !paths.has(slug)) paths.set(slug, { params: { slug } });
+        }
+    }
+    return [...paths.values()];
 }
 
 const { slug } = Astro.params;

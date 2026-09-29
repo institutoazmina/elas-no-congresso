@@ -15,7 +15,7 @@ assert.equal(normalizeNumero("PL  1338/2022"), "PL 1338/2022");
 assert.equal(normalizeNumero("  pdl 176/2021 "), "PDL 176/2021");
 assert.equal(normalizeNumero(null), "");
 
-// Whitespace duplicado: mesma chave canônica (os 11 pares do dados.json).
+// Whitespace duplicado: a chave canônica deve permanecer a mesma.
 assert.equal(
     canonicalPropositionKey("Deputado", "PL  1338/2022"),
     canonicalPropositionKey("Deputado", "PL 1338/2022"),

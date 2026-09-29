@@ -70,13 +70,6 @@ const canonicalUrl = currentUrl ?? Astro.url.href;
         <RedesignHeader />
         <slot />
         <Footer />
-        <!-- tooltip anchor used by _base.js -->
-        <div id="tooltip"></div>
-        <script is:inline>
-            const home_url = "/";
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/d3@7" is:inline></script>
-        <script src="/build/script.js" is:inline></script>
         {
             hasForm && (
                 <script src="https://www.google.com/recaptcha/api.js" async defer />

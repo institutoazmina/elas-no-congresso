@@ -1,6 +1,6 @@
 import {
     assertSuccessfulApiStatus,
-    buildAuthorActivity,
+    buildAuthorActivityFromApi,
     formatApiDate,
     genderLabel,
     groupProposalRatings,
@@ -9,7 +9,6 @@ import {
     normalizePhotoUrl,
     paginateItems,
     partyForTerm,
-    type ActivityData,
     type ApiParliamentarian,
     type ApiParty,
     type AuthorActivity,
@@ -20,6 +19,8 @@ import {
     selectAuthorReports,
     type AuthorReport,
 } from "../lib/author-page";
+import { fetchActivity } from "../lib/activity-api";
+import { PUBLIC_API_BASE_URL } from "astro:env/client";
 import { resolveReportagemImage } from "../lib/wp";
 import { extractPropositionYear, formatPresentedDate } from "../lib/canonical";
 import { propositionRoute } from "../lib/proposition-utils";
@@ -432,8 +433,10 @@ function initAuthorPage() {
         showStatus("loading");
         try {
             if (!initialData) {
-                const data = await fetchJson<ActivityData>("/dados.json", signal);
-                activity = buildAuthorActivity(data, authorId);
+                const apiBase = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)
+                    ? `${location.origin}/api/v1`
+                    : PUBLIC_API_BASE_URL;
+                activity = buildAuthorActivityFromApi(await fetchActivity(apiBase, signal), authorId);
                 if (!activity) {
                     showStatus("not-found");
                     return;

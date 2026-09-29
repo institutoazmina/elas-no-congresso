@@ -8,64 +8,53 @@ import paper from "../../../assets/images/redesign/activity/author-hero-paper.pn
 import paperclip from "../../../assets/images/redesign/activity/author-paperclip.png";
 import statusLabel from "../../../assets/images/redesign/activity/proposition-status-label.svg";
 import { authorRoute, normalizePhotoUrl } from "../../../lib/author-page";
-import { getPropositionAuthors, getPropositionByPublicSlug } from "../../../lib/proposition-page";
-import { propositionAssessment, propositionSlug } from "../../../lib/proposition-utils";
-import { getApiDetail, getPropositionCategory } from "../../../lib/api-enrichment";
+import { propositionSlug } from "../../../lib/proposition-utils";
 import { formatPresentedDate } from "../../../lib/canonical";
-import { legislaturas, legislaturasKeys } from "../../../lib/dados";
+import { fetchActivity, fetchFastUnfavorable, type ActivityProposition } from "../../../lib/activity-api";
+import { API_BASE_URL } from "astro:env/server";
 import "../../../styles/tailwind.css";
 
-export function getStaticPaths() {
-  const paths = new Map<string, { params: { slug: string } }>();
-  for (const legislature of legislaturasKeys) {
-    for (const proposition of Object.values(legislaturas[legislature].proposicoes)) {
-      const slug = propositionSlug(proposition.numero);
-      if (slug && !paths.has(slug)) paths.set(slug, { params: { slug } });
-    }
+export async function getStaticPaths() {
+  const paths = new Map<string, { params: { slug: string }; props: { activity: ActivityProposition } }>();
+  const [activities, fastUnfavorable] = await Promise.all([
+    fetchActivity(API_BASE_URL),
+    fetchFastUnfavorable(API_BASE_URL),
+  ]);
+  for (const activity of [...activities, ...fastUnfavorable]) {
+    const slug = propositionSlug(activity.number_label);
+    if (slug && !paths.has(slug)) paths.set(slug, { params: { slug }, props: { activity } });
   }
   return [...paths.values()];
 }
 
-type ExtendedProposition = {
-  categoria?: string | null;
-  tema?: string | string[] | null;
-  temas?: string[] | null;
-  tags?: string[] | null;
-  data_apresentacao?: string | null;
-  ultima_movimentacao?: string | null;
-};
+const activityFromProps = (Astro.props as { activity?: ActivityProposition }).activity;
+const activity = activityFromProps ?? (await (async () => {
+  const [activities, fastUnfavorable] = await Promise.all([
+    fetchActivity(API_BASE_URL),
+    fetchFastUnfavorable(API_BASE_URL),
+  ]);
+  return [...activities, ...fastUnfavorable].find((candidate) => propositionSlug(candidate.number_label) === Astro.params.slug);
+})());
+if (!activity) throw new Error(`A API não retornou a proposição ${Astro.params.slug ?? "solicitada"}`);
 
-const slug = Astro.params.slug || "";
-const { proposition } = getPropositionByPublicSlug(slug);
-if (!proposition) return Astro.redirect("/404");
-
-const extended = proposition as typeof proposition & ExtendedProposition;
-const authors = getPropositionAuthors(proposition);
-const assessment = propositionAssessment(proposition.favoravel);
-// Enriquecimento P0 via API oficial (snapshot build-time). Fallback: dados.json.
-// `quiteria_prob` nunca define a celeridade, calculada da tramitação oficial.
-const api = getApiDetail(proposition.casa, proposition.numero);
-const house = /sen/i.test(proposition.casa)
+const authors = activity.authors.map((author) => ({
+  nome: author.name,
+  partido: author.party,
+  estado: author.state,
+  foto: author.photo_url,
+}));
+const assessment = activity.is_favorable === true ? "Favorável" : activity.is_favorable === false ? "Desfavorável" : "Sem avaliação";
+const house = /sen/i.test(activity.house)
   ? "Senado Federal"
-  : /dep|câm|cam/i.test(proposition.casa)
+  : /dep|câm|cam/i.test(activity.house)
     ? "Câmara dos Deputados"
-    : proposition.casa?.trim() || "Indisponível";
-const activityHouse = /sen/i.test(proposition.casa) ? "senado" : /dep|câm|cam/i.test(proposition.casa) ? "camara" : "";
-const officialLink = proposition.link?.trim().replace(/^http:/, "https:") || null;
-const fullTextLink = api?.url_texto?.trim() || (officialLink && /prop_mostrarintegra|\.pdf(?:$|\?)/i.test(officialLink) ? officialLink : null);
-const tramitationLink = api?.url_tramitacao?.trim() && api.url_tramitacao.trim() !== (officialLink || "") ? api.url_tramitacao.trim() : null;
-// Categoria editorial oficial (Categorias 2026 via /dataset); fallback: indisponível.
-const category = getPropositionCategory(proposition.casa, proposition.numero) || extended.categoria?.trim() || null;
-// Data legislativa de apresentação (presented_at); nunca created_at/updated_at.
-const presentedDate = api?.apresentada_em ? formatPresentedDate(api.apresentada_em) : (extended.data_apresentacao?.trim() || "Indisponível");
-const keywords = (api?.palavras_chave || "").split(",").map((item) => item.trim()).filter(Boolean);
-const themes = [
-  ...(Array.isArray(extended.temas) ? extended.temas : []),
-  ...(Array.isArray(extended.tags) ? extended.tags : []),
-  ...(Array.isArray(extended.tema) ? extended.tema : extended.tema ? [extended.tema] : []),
-  ...keywords,
-].map((item) => item.trim()).filter(Boolean);
-const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso`;
+    : activity.house?.trim() || "Indisponível";
+const activityHouse = activity.house === "senado" ? "senado" : activity.house === "camara" ? "camara" : "";
+const officialLink = activity.tramitation_url?.trim().replace(/^http:/, "https:") || null;
+const category = activity.category?.trim() || null;
+const presentedDate = formatPresentedDate(activity.presented_at);
+const themes = category ? [category] : [];
+const title = `${activity.number_label} | Atividade Legislativa | Elas no Congresso`;
 ---
 
 <!doctype html>
@@ -74,7 +63,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <meta name="description" content={proposition.resumo} />
+    <meta name="description" content={activity.ementa} />
     <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -92,26 +81,20 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
           <a href="/atividade-legislativa">←&nbsp; Voltar ao painel</a>
           <div>
             <p>Proposição</p>
-            <h1 id="proposition-title">{proposition.numero}</h1>
+            <h1 id="proposition-title">{activity.number_label}</h1>
           </div>
         </section>
 
-        <section class="proposition-overview" aria-label={`Detalhes de ${proposition.numero}`}>
+        <section class="proposition-overview" aria-label={`Detalhes de ${activity.number_label}`}>
           <span class="proposition-overview__paperclip" aria-hidden="true"></span>
           <div class="proposition-overview__grid">
             <article class="proposition-column proposition-summary">
               <h2>Ementa</h2>
-              <p>{proposition.resumo || "Indisponível"}</p>
+              <p>{activity.ementa || "Indisponível"}</p>
               <div class="proposition-summary__links">
                 {officialLink
                   ? <a href={officialLink} target="_blank" rel="noopener noreferrer">Ver no site do Congresso</a>
                   : <span>Indisponível</span>}
-                {fullTextLink
-                  ? <a href={fullTextLink} target="_blank" rel="noopener noreferrer">Ler Inteiro Teor</a>
-                  : <span>Indisponível</span>}
-                {tramitationLink
-                  ? <a href={tramitationLink} target="_blank" rel="noopener noreferrer">Acompanhar tramitação oficial</a>
-                  : null}
               </div>
             </article>
 
@@ -126,10 +109,10 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
                 <strong>{assessment}</strong>
               </div>
               <p class="proposition-assessment__comment">
-                {proposition.comentario ? `“${proposition.comentario}”` : "Indisponível"}
+                {activity.assessment_comments ? `“${activity.assessment_comments}”` : "Indisponível"}
               </p>
               <p class="proposition-assessment__evaluator">
-                <span aria-hidden="true">— </span><strong>{proposition.avaliador?.trim() || "Indisponível"}</strong>
+                <span aria-hidden="true">— </span><strong>{activity.assessment_organization?.trim() || "Indisponível"}</strong>
               </p>
             </article>
 
@@ -139,10 +122,14 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
                 ? <div class="proposition-authors__list">
                     {authors.map((author) => {
                       const photo = normalizePhotoUrl(author.foto);
+                      const initials = author.nome.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
                       return <a class="proposition-author" href={authorRoute(author.nome) || "/atividade-legislativa"} aria-label={`Ver autoria de ${author.nome}`}>
                         {photo
-                          ? <img src={photo} alt={`Foto de ${author.nome}`} loading="lazy" />
-                          : <span class="proposition-author__fallback" aria-hidden="true">{author.nome.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase()}</span>}
+                          ? <span class="proposition-author__photo">
+                              <img src={photo} alt={`Foto de ${author.nome}`} loading="lazy" onerror="this.hidden = true; this.nextElementSibling.hidden = false" />
+                              <span class="proposition-author__fallback" aria-hidden="true" hidden>{initials}</span>
+                            </span>
+                          : <span class="proposition-author__fallback" aria-hidden="true">{initials}</span>}
                         <span>
                           <strong>{author.nome}</strong>
                           <small>{[author.partido, author.estado].filter(Boolean).join("/") || "Indisponível"}</small>
@@ -163,7 +150,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
                 </p>
                 <p>
                   <span>Última movimentação:</span>
-                  {extended.ultima_movimentacao?.trim() || "Indisponível"}
+                  {activity.celerity.last_event_at ? formatPresentedDate(activity.celerity.last_event_at) : activity.current_status?.trim() || "Indisponível"}
                 </p>
                 <p class="proposition-details__themes">
                   {themes.length > 0 ? themes.map((theme) => <span>#{theme.replace(/^#/, "")}</span>) : "Indisponível"}
@@ -173,7 +160,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
           </div>
         </section>
 
-        <section class="proposition-progress" aria-labelledby="proposition-progress-title" data-proposition-progress data-proposition-number={proposition.numero} data-proposition-house={activityHouse}>
+        <section class="proposition-progress" aria-labelledby="proposition-progress-title" data-proposition-progress data-proposition-number={activity.number_label} data-proposition-house={activityHouse}>
           <div class="proposition-progress__bar">
             <h2 id="proposition-progress-title">Como está?</h2>
             <strong class="proposition-progress__status" data-progress-status>Carregando</strong>
@@ -193,6 +180,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
         event_at: string;
         title: string | null;
         description: string | null;
+        url: string | null;
         situation: string | null;
         committee_acronym: string | null;
         committee_name: string | null;
@@ -204,10 +192,10 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
           days_without_movement: number;
           movements_last_90_days: number;
         };
+        tramitation_url: string | null;
         events: ActivityEvent[];
       };
 
-      const normalizeText = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
       const formatEventDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
         day: "2-digit",
         month: "2-digit",
@@ -252,8 +240,8 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
             timeline.replaceChildren(Object.assign(document.createElement("p"), { textContent: "Histórico de movimentações indisponível" }));
           };
 
-          const renderEvents = (events: ActivityEvent[]) => {
-            if (!events.length) {
+          const renderEvents = (activity: Activity) => {
+            if (!activity.events.length) {
               timeline.classList.add("is-empty");
               timeline.replaceChildren(Object.assign(document.createElement("p"), { textContent: "Ainda não há movimentações registradas." }));
               return;
@@ -261,27 +249,32 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
 
             const list = document.createElement("ol");
             list.className = "proposition-timeline__events";
-            for (const event of events) {
+            for (const event of activity.events) {
               const item = document.createElement("li");
+              const destination = event.url || activity.tramitation_url;
+              const card = document.createElement("a");
+              card.className = "proposition-timeline__event-card";
+              if (destination) {
+                card.href = destination;
+                card.target = "_blank";
+                card.rel = "noopener noreferrer";
+              }
               const header = document.createElement("header");
-              const committee = document.createElement("strong");
-              committee.textContent = event.committee_acronym || event.committee_name || "Congresso Nacional";
+              const title = document.createElement("strong");
+              title.textContent = event.title || event.situation || "Movimentação legislativa";
               const date = document.createElement("time");
               date.dateTime = event.event_at;
               date.textContent = formatEventDate(event.event_at);
-              header.append(committee, date);
-
-              const title = event.title?.trim() || event.situation?.trim() || event.description?.trim() || "Movimentação legislativa";
-              const heading = document.createElement("h3");
-              heading.textContent = title;
-              item.append(header, heading);
+              header.append(title, date);
+              card.append(header);
 
               const description = event.description?.trim();
-              if (description && normalizeText(description) !== normalizeText(title)) {
+              if (description) {
                 const copy = document.createElement("p");
                 copy.textContent = description;
-                item.append(copy);
+                card.append(copy);
               }
+              item.append(card);
               list.append(item);
             }
             timeline.classList.remove("is-empty");
@@ -299,8 +292,15 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
             const activity = await activityResponse.json() as Activity;
             const presentation = celerityPresentation(activity.celerity);
             status.textContent = presentation.label;
-            summary.textContent = presentation.summary;
-            renderEvents(activity.events);
+            const summaryParts = presentation.summary.split(" em ");
+            if (summaryParts.length === 2) {
+              const connector = document.createElement("span");
+              connector.textContent = "em";
+              summary.replaceChildren(`${summaryParts[0]} `, connector, ` ${summaryParts[1]}`);
+            } else {
+              summary.textContent = presentation.summary;
+            }
+            renderEvents(activity);
           };
 
           const loadWhenVisible = () => {
@@ -333,7 +333,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
   </body>
 </html>
 
-<style is="global">
+<style is:global>
   @font-face {
     font-family: "ETC Anybody";
     font-style: normal;
@@ -498,7 +498,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     color: #0b0f5e;
     text-decoration: none;
   }
-  .proposition-author img,
+  .proposition-author__photo,
   .proposition-author__fallback {
     display: grid;
     width: 30px;
@@ -506,9 +506,16 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     flex: 0 0 30px;
     border: 1px solid #998d96;
     place-items: center;
+  }
+  .proposition-author__photo { overflow: hidden; }
+  .proposition-author__photo img,
+  .proposition-author__photo .proposition-author__fallback {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     object-position: top;
   }
+  .proposition-author__photo .proposition-author__fallback[hidden] { display: none; }
   .proposition-author__fallback { background: #f1f1ff; color: #4242f6; font-size: 11px; font-weight: 700; }
   .proposition-author > span:last-child { display: flex; min-width: 0; flex-direction: column; }
   .proposition-author strong,
@@ -600,14 +607,14 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     display: flex;
     min-width: 118px;
     padding: 0 6px;
-    height: 39px;
+    height: 44px;
     align-items: center;
     justify-content: center;
     gap: 5px;
     color: #1e2546;
     font-size: 24px;
     font-weight: 500;
-    line-height: 39px;
+    line-height: 44px;
     white-space: nowrap;
   }
   .proposition-progress__status::before {
@@ -616,7 +623,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     top: 0;
     right: -8px;
     left: -8px;
-    height: 41px;
+    height: 46px;
     background: var(--proposition-status-label) center / 100% 100% no-repeat;
     content: "";
   }
@@ -624,9 +631,11 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
   .proposition-progress__summary {
     color: #fff;
     font-size: 18px;
+    font-weight: 700;
     line-height: 24px;
     text-shadow: 1px 2px 1px rgb(0 0 0 / 20%);
   }
+  .proposition-progress__summary > span { font-weight: 400; }
   .proposition-timeline {
     width: min(741px, 100%);
     min-height: 296px;
@@ -644,23 +653,38 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     text-align: center;
   }
   .proposition-timeline__events { margin: 0; padding: 0; list-style: none; }
-  .proposition-timeline__events li { padding: 20px 16px 28px; border-bottom: 2px solid #1e2546; }
+  .proposition-timeline__events li { border-bottom: 2px solid #1e2546; }
   .proposition-timeline__events li:last-child { border-bottom: 0; }
+  .proposition-timeline__event-card {
+    display: block;
+    padding: 20px 16px 28px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .proposition-timeline__event-card[href]:hover { background: #f7f6f7; }
+  .proposition-timeline__event-card[href]:focus-visible { outline: 2px solid #4242f6; outline-offset: -2px; }
   .proposition-timeline__events header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   .proposition-timeline__events header strong,
-  .proposition-timeline__events time,
-  .proposition-timeline__events h3 {
+  .proposition-timeline__events time {
     color: #1e2546;
     font-family: "ETC Anybody", sans-serif;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 700;
     font-variation-settings: "wdth" 75;
-    line-height: 20px;
+    line-height: 24px;
     text-transform: uppercase;
   }
-  .proposition-timeline__events time { flex: 0 0 auto; }
-  .proposition-timeline__events h3 { margin: 24px 0 0; }
-  .proposition-timeline__events li > p { margin: 12px 0 0; color: #998d96; font-size: 16px; line-height: 20px; text-align: left; }
+  .proposition-timeline__events time { flex: 0 0 auto; text-align: right; }
+  .proposition-timeline__event-card > p {
+    margin: 12px 0 0;
+    color: #998d96;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    font-variant-numeric: lining-nums tabular-nums;
+    line-height: 24px;
+    text-align: left;
+  }
 
   @media (max-width: 1279px) {
     .proposition-overview { padding-inline: 32px; }
@@ -687,7 +711,6 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     .proposition-progress__summary { max-width: 120px; font-size: 14px; line-height: 18px; text-align: right; }
     .proposition-timeline { min-height: 156px; }
     .proposition-timeline.is-empty { padding: 20px; }
-    .proposition-timeline__events li { padding: 18px 14px 22px; }
-    .proposition-timeline__events h3 { margin-top: 20px; }
+    .proposition-timeline__event-card { padding: 18px 14px 22px; }
   }
 </style>

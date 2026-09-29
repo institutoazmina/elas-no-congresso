@@ -184,6 +184,68 @@ export function buildAuthorActivity(data: ActivityData, authorId: number): Autho
     };
 }
 
+export function buildAuthorActivityFromApi(data: ActivityProposition[], authorId: number): AuthorActivity | null {
+    const sourceAuthor = data.flatMap((proposal) => proposal.authors).find((author) => author.id === authorId);
+    if (!sourceAuthor) return null;
+
+    const author: ActivityParliamentarian = {
+        nome: sourceAuthor.name,
+        numero: authorId,
+        foto: sourceAuthor.photo_url || undefined,
+        genero: sourceAuthor.gender || undefined,
+        partido: sourceAuthor.party || undefined,
+        cargo: sourceAuthor.role || undefined,
+        estado: sourceAuthor.state || undefined,
+        slug: authorSlug(sourceAuthor.name) || undefined,
+    };
+    const proposals = new Map<string, AuthorProposal>();
+    for (const item of data) {
+        if (!item.authors.some((proposalAuthor) => proposalAuthor.id === authorId)) continue;
+        const authors = item.authors.map((proposalAuthor) => ({
+            nome: proposalAuthor.name,
+            numero: proposalAuthor.id ?? 0,
+            foto: proposalAuthor.photo_url || undefined,
+            genero: proposalAuthor.gender || undefined,
+            partido: proposalAuthor.party || undefined,
+            cargo: proposalAuthor.role || undefined,
+            estado: proposalAuthor.state || undefined,
+            slug: authorSlug(proposalAuthor.name) || undefined,
+        }));
+        const proposal: AuthorProposal = {
+            i: item.id,
+            casa: item.house === "senado" ? "Senador" : item.house === "camara" ? "Deputado" : item.house,
+            numero: item.number_label,
+            link: item.tramitation_url || undefined,
+            comentario: item.assessment_comments,
+            slug: item.number_label,
+            resumo: item.ementa,
+            avaliador: item.assessment_organization,
+            favoravel: item.is_favorable === true ? 1 : item.is_favorable === false ? -1 : 0,
+            legislatura: 0,
+            categoria: item.category,
+            situacao: item.current_status,
+            apresentadaEm: item.presented_at,
+            quiteria_prob: item.celerity.movements_last_90_days,
+            authors,
+        };
+        proposals.set(`${proposal.casa}:${proposal.numero}`, proposal);
+    }
+
+    const items = [...proposals.values()];
+    const favorable = items.filter((proposal) => proposal.favoravel > 0).length;
+    const unfavorable = items.filter((proposal) => proposal.favoravel < 0).length;
+    const unrated = items.length - favorable - unfavorable;
+    const rated = favorable + unfavorable;
+    return {
+        author,
+        proposals: items,
+        favorable,
+        unfavorable,
+        unrated,
+        favorabilityRate: rated === 0 ? 0 : favorable / rated,
+    };
+}
+
 export function resolveApiParliamentarian(items: ApiParliamentarian[], externalId: number) {
     for (const person of items) {
         const terms = (person.terms || []).filter((term) => term.external_id === externalId);
@@ -243,3 +305,4 @@ export function groupProposalRatings(proposals: AuthorProposal[], field: "catego
     }
     return [...groups.values()].sort((a, b) => (b.favorable + b.unfavorable) - (a.favorable + a.unfavorable) || a.label.localeCompare(b.label, "pt-BR"));
 }
+import type { ActivityProposition } from "./activity-api";

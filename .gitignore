@@ -27,3 +27,6 @@ pnpm-debug.log*
 reports/
 unlighthouse-reports/
 .unlighthouse/
+
+# local deepwork progress
+.slim/deepwork/

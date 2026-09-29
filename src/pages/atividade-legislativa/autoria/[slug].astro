@@ -3,32 +3,23 @@ import { ClientRouter } from "astro:transitions";
 import RedesignHeader from "../../../components/redesign/RedesignHeader.astro";
 import RedesignFooter from "../../../components/redesign/RedesignFooter.astro";
 import AuthorPage from "../../../components/redesign/AuthorPage.astro";
-import activityData from "../../../data/dados.json";
 import {
-    buildAuthorActivity,
+    buildAuthorActivityFromApi,
     authorSlug,
-    getActivityAuthorIds,
     partyForTerm,
-    resolveApiParliamentarian,
-    type ActivityData,
     type ApiParliamentarian,
     type ApiParty,
     type AuthorInitialData,
 } from "../../../lib/author-page";
-import { getApiDetail, getPropositionCategory } from "../../../lib/api-enrichment";
+import { fetchActivity } from "../../../lib/activity-api";
+import { API_BASE_URL } from "astro:env/server";
 import "../../../styles/tailwind.css";
 
 export async function getStaticPaths() {
-    const data = activityData as unknown as ActivityData;
-    const houses = new Map<number, string>();
-    for (const legislature of Object.values(data.legislaturas)) {
-        for (const person of Object.values(legislature.parlamentares)) {
-            if (!houses.has(person.numero)) houses.set(person.numero, person.cargo || "Parlamentar");
-        }
-    }
+    const activityData = await fetchActivity(API_BASE_URL);
     let directory: { parliamentarians: ApiParliamentarian[]; parties: ApiParty[] } = { parliamentarians: [], parties: [] };
     try {
-        const apiBase = (import.meta.env.PUBLIC_API_BASE_URL || "https://api.elasnocongresso.com.br/api/v1").replace(/\/$/, "");
+        const apiBase = API_BASE_URL.replace(/\/$/, "");
         const apiJson = async <T>(url: string): Promise<T> => {
             const response = await fetch(url);
             if (!response.ok) throw new Error(`API ${response.status}: ${url}`);
@@ -46,30 +37,47 @@ export async function getStaticPaths() {
         console.warn("Não foi possível carregar o diretório de parlamentares durante o build:", error);
     }
 
-    const paths = getActivityAuthorIds(data).map((id) => {
-        const localActivity = buildAuthorActivity(data, id);
-        const localAuthor = localActivity?.author;
-        const slug = authorSlug(localAuthor?.nome);
-        if (!slug) throw new Error(`Parlamentar ${id} não possui nome válido para slug público.`);
-        const resolved = resolveApiParliamentarian(directory.parliamentarians, id);
+    const authors = new Map<number, { name: string; party: string | null; state: string | null; gender: string | null; photoUrl: string | null; role: string | null; house: string }>();
+    for (const proposition of activityData) {
+        for (const author of proposition.authors) {
+            if (author.id === null || authors.has(author.id)) continue;
+            authors.set(author.id, {
+                name: author.name,
+                party: author.party,
+                state: author.state,
+                gender: author.gender,
+                photoUrl: author.photo_url,
+                role: author.role,
+                house: proposition.house,
+            });
+        }
+    }
+    const paths = new Map<string, { params: { slug: string }; props: Props }>();
+    for (const [authorId, author] of authors) {
+        const slug = authorSlug(author.name);
+        if (!slug || paths.has(slug)) continue;
+        const activity = buildAuthorActivityFromApi(activityData, authorId);
+        if (!activity) continue;
+        const person = directory.parliamentarians.find((item) => item.id === authorId);
         const fallbackTerm = {
             id: null,
-            parliamentarian: 0,
-            legislature_number: Number(localAuthor?.legislatura?.at(-1) || 0),
+            parliamentarian: authorId,
+            legislature_number: 0,
             party: 0,
-            house: localAuthor?.cargo?.toLowerCase().includes("sen") ? "senado" : "camara",
-            role: localAuthor?.cargo || "Parlamentar",
-            state: localAuthor?.estado || "",
-            external_id: id,
+            house: author.house,
+            role: author.role || "Parlamentar",
+            state: author.state || "",
+            external_id: authorId,
             start_date: "",
             end_date: null,
         } as const;
-        const person = resolved?.person || {
-            id: null,
-            full_name: localAuthor?.nome || "Parlamentar",
-            social_name: localAuthor?.nome || null,
-            photo_url: localAuthor?.foto || null,
-            gender: localAuthor?.genero || null,
+        const term = person?.terms.find((item) => item.end_date === null) ?? person?.terms[0] ?? fallbackTerm;
+        const initialPerson = person || {
+            id: authorId,
+            full_name: author.name,
+            social_name: author.name,
+            photo_url: author.photoUrl,
+            gender: author.gender,
             birth_date: null,
             race: null,
             education: null,
@@ -77,37 +85,17 @@ export async function getStaticPaths() {
             profession: null,
             religion: null,
             bio: null,
-            favorable_propositions_count: localActivity?.favorable || 0,
-            unfavorable_propositions_count: localActivity?.unfavorable || 0,
+            favorable_propositions_count: activity.favorable,
+            unfavorable_propositions_count: activity.unfavorable,
             terms: [fallbackTerm],
         } satisfies ApiParliamentarian;
-        const term = resolved?.term || fallbackTerm;
-        const parties = resolved ? directory.parties : localAuthor?.partido ? [{ id: 0, acronym: localAuthor.partido, name: localAuthor.partido }] : [];
-        // Enriquecimento P0 (snapshot build-time da API oficial): categoria
-        // editorial + situação + data de apresentação por proposição. Sem dado
-        // → null (fallbacks exibem "Não informada"/"Indisponível"/"—").
-        if (localActivity) {
-            for (const proposal of localActivity.proposals) {
-                proposal.categoria ??= getPropositionCategory(proposal.casa, proposal.numero);
-                const detail = getApiDetail(proposal.casa, proposal.numero);
-                (proposal as { situacao?: string | null }).situacao = detail?.situacao?.trim() || null;
-                proposal.apresentadaEm = detail?.apresentada_em || null;
-            }
-        }
-        const initial: AuthorInitialData | null = localActivity ? { person, term, parties, activity: localActivity } : null;
-        return {
+        const parties = person ? directory.parties : author.party ? [{ id: 0, acronym: author.party, name: author.party }] : [];
+        paths.set(slug, {
             params: { slug },
-            props: { authorId: id, house: houses.get(id) || "Parlamentar", initial },
-        };
-    });
-    const seen = new Map<string, number>();
-    for (const path of paths) {
-        const slug = path.params.slug;
-        const previous = seen.get(slug);
-        if (previous !== undefined) throw new Error(`Colisão de slug de autoria: ${slug} (${previous} e ${path.props.authorId})`);
-        seen.set(slug, path.props.authorId);
+            props: { authorId, house: author.role || "Parlamentar", initial: { person: initialPerson, term, parties, activity } },
+        });
     }
-    return paths;
+    return [...paths.values()];
 }
 
 interface Props { authorId: number; house: string; initial: AuthorInitialData | null; }

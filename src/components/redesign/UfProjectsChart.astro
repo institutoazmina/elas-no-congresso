@@ -76,7 +76,7 @@ const highlights = views.map((view) => {
 // unfavorable juntos em cada item, independente do stance usado na ordenação;
 // basta fundir os dois rankings num mapa único por sigla.
 // Quando a API passar a fornecer o total de parlamentares por UF, basta somar
-// o campo aqui (sem dados.json, sem derivação de /dataset, sem valores fixos).
+    // o campo aqui, sem derivação de outro endpoint ou valores fixos.
 type UfData = { favorable: number; unfavorable: number };
 const ufData: Record<string, UfData> = {};
 for (const state of [...favourableRanking, ...unfavourableRanking]) {

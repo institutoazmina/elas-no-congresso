@@ -15,13 +15,11 @@ npm run dev
 npm run build
 ```
 
-Output: `./dist/` (~3100 static HTML pages)
+Output: `./dist/` static HTML generated from the public API.
 
 ## Data
 
-- `public/dados.json` - Proposals/votations data (fetched client-side)
-- `src/data/dados.json` - Source for type safety
-- `src/data/parlamentares.csv` - Parliamentary data
+- `https://api.elasnocongresso.com.br/api/v1` - Legislative data for builds and browser interactions
 - `public/assets/` - Static assets (images, fonts)
 
 ## Known Limitations

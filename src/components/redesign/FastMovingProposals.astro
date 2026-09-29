@@ -6,10 +6,13 @@ import halftoneShadow from "../../assets/images/redesign/hero/halftone-shadow.pn
 import thumbsDown from "../../assets/images/thumbs-down.svg";
 import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
 import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
+import { fetchFastUnfavorable } from "../../lib/activity-api";
+import { API_BASE_URL } from "astro:env/server";
 
+const proposals = await fetchFastUnfavorable(API_BASE_URL);
 ---
 
-<section class="fast-moving-proposals" aria-labelledby="fast-moving-proposals-title" data-document-image={documentImage.src} data-thumbs-down={thumbsDown.src} style={`--fast-moving-proposals-background: url(${backgroundPattern.src}); --fast-moving-proposals-halftone-shadow: url(${halftoneShadow.src})`}>
+<section class="fast-moving-proposals" aria-labelledby="fast-moving-proposals-title" data-document-image={documentImage.src} data-thumbs-down={thumbsDown.src} data-proposals={JSON.stringify(proposals)} style={`--fast-moving-proposals-background: url(${backgroundPattern.src}); --fast-moving-proposals-halftone-shadow: url(${halftoneShadow.src})`}>
     <header class="fast-moving-proposals__header">
         <img src={attention.src} alt="" />
         <h2 id="fast-moving-proposals-title">Veja o que restringe nossos direitos<br />e tá tramitando rapidinho</h2>
@@ -27,8 +30,6 @@ import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-fo
 </section>
 
 <script>
-    import { PUBLIC_API_BASE_URL } from "astro:env/client";
-
     type Proposal = {
         number_label: string;
         ementa: string;
@@ -38,10 +39,18 @@ import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-fo
     };
 
     const formatCategory = (category: string | null) => category?.replaceAll("_", " ") || "Sem categoria";
+    const propositionRoute = (numberLabel: string) => `/atividade-legislativa/proposicao/${numberLabel
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")}`;
 
     const createCard = (proposal: Proposal, assets: DOMStringMap) => {
-        const card = document.createElement("article");
+        const card = document.createElement("a");
         card.className = "fast-moving-proposals__card";
+        card.href = propositionRoute(proposal.number_label);
+        card.setAttribute("aria-label", `Ver proposição ${proposal.number_label}`);
 
         const header = document.createElement("header");
         header.className = "fast-moving-proposals__card-header";
@@ -101,50 +110,44 @@ import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-fo
             const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
             if (!track || !previous || !next) return;
             const section = carousel.closest<HTMLElement>(".fast-moving-proposals");
-            const isLocal = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
-            const apiBase = isLocal ? `${location.origin}/api/v1` : PUBLIC_API_BASE_URL;
-
-            void fetch(`${apiBase}/activity/fast-unfavorable`)
-                .then((response) => response.ok ? response.json() as Promise<Proposal[]> : Promise.reject())
-                .then((proposals) => {
-                    if (!proposals.length || !section) {
-                        section?.remove();
-                        return;
-                    }
-                    track.replaceChildren(...[...proposals, ...proposals, ...proposals].map((proposal) => createCard(proposal, section.dataset)));
-                    const groupSize = proposals.length;
-                    let physicalIndex = groupSize + Math.floor(groupSize / 2);
-                    let isResetting = false;
-                    const cards = Array.from(track.querySelectorAll<HTMLElement>(".fast-moving-proposals__card"));
-                    const update = () => {
-                        track.style.transform = `translateX(${-192 - physicalIndex * 432}px)`;
-                        cards.forEach((card, cardIndex) => {
-                            const isActive = cardIndex === physicalIndex;
-                            card.classList.toggle("fast-moving-proposals__card--featured", isActive);
-                            card.setAttribute("aria-hidden", String(!isActive));
-                        });
-                    };
-                    const move = (direction: number) => {
-                        if (isResetting) return;
-                        physicalIndex += direction;
-                        update();
-                    };
-                    track.addEventListener("transitionend", (event) => {
-                        if (event.propertyName !== "transform" || (physicalIndex >= groupSize && physicalIndex < groupSize * 2)) return;
-                        isResetting = true;
-                        physicalIndex += physicalIndex < groupSize ? groupSize : -groupSize;
-                        track.style.transition = "none";
-                        update();
-                        requestAnimationFrame(() => requestAnimationFrame(() => {
-                            track.style.transition = "";
-                            isResetting = false;
-                        }));
-                    });
-                    previous.addEventListener("click", () => move(-1));
-                    next.addEventListener("click", () => move(1));
-                    update();
-                })
-                .catch(() => section?.remove());
+            const proposals = JSON.parse(section?.dataset.proposals || "[]") as Proposal[];
+            if (!proposals.length || !section) {
+                section?.remove();
+                return;
+            }
+            track.replaceChildren(...[...proposals, ...proposals, ...proposals].map((proposal) => createCard(proposal, section.dataset)));
+            const groupSize = proposals.length;
+            let physicalIndex = groupSize + Math.floor(groupSize / 2);
+            let isResetting = false;
+            const cards = Array.from(track.querySelectorAll<HTMLElement>(".fast-moving-proposals__card"));
+            const update = () => {
+                track.style.transform = `translateX(${-192 - physicalIndex * 432}px)`;
+                track.style.setProperty("--mobile-active-index", String(physicalIndex));
+                cards.forEach((card, cardIndex) => {
+                    const isActive = cardIndex === physicalIndex;
+                    card.classList.toggle("fast-moving-proposals__card--featured", isActive);
+                    card.setAttribute("aria-hidden", String(!isActive));
+                });
+            };
+            const move = (direction: number) => {
+                if (isResetting) return;
+                physicalIndex += direction;
+                update();
+            };
+            track.addEventListener("transitionend", (event) => {
+                if (event.propertyName !== "transform" || (physicalIndex >= groupSize && physicalIndex < groupSize * 2)) return;
+                isResetting = true;
+                physicalIndex += physicalIndex < groupSize ? groupSize : -groupSize;
+                track.style.transition = "none";
+                update();
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    track.style.transition = "";
+                    isResetting = false;
+                }));
+            });
+            previous.addEventListener("click", () => move(-1));
+            next.addEventListener("click", () => move(1));
+            update();
         });
     };
 
@@ -152,7 +155,7 @@ import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-fo
     document.addEventListener("astro:page-load", initializeFastMovingProposals);
 </script>
 
-<style>
+<style is:global>
     .fast-moving-proposals { width: 100%; height: 821.9435424804688px; overflow: hidden; background: #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
     .fast-moving-proposals *, .fast-moving-proposals *::before, .fast-moving-proposals *::after { box-sizing: border-box; }
     .fast-moving-proposals__header { display: flex; width: 816px; height: 174px; margin: 0 auto; padding: 48px; flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -169,20 +172,20 @@ import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-fo
     .fast-moving-proposals__controls img { display: block; width: 24px; height: 24px; }
     .fast-moving-proposals__viewport { position: absolute; z-index: 2; top: 112px; width: 100%; overflow-x: clip; overflow-y: visible; }
     .fast-moving-proposals__track { position: relative; left: 50%; display: flex; width: max-content; gap: 48px; transform: translateX(-3216px); transition: transform .2s ease; }
-    .fast-moving-proposals__card { display: flex; width: 384px; height: 381.94354248046875px; flex: none; flex-direction: column; overflow: hidden; border: 1px solid #a3a3a3; background: #fff; }
+    .fast-moving-proposals__card { display: flex; width: 384px; height: 381.94354248046875px; flex: none; flex-direction: column; overflow: hidden; border: 1px solid #a3a3a3; background: #fff; color: inherit; text-decoration: none; }
     .fast-moving-proposals__card--featured { border: 1px solid #0b0f5e; box-shadow: -4px 4px 0 #0b0f5e; }
-    .fast-moving-proposals__card-header { position: relative; display: flex; height: 69px; align-items: center; justify-content: space-between; border-bottom: 1px solid #a3a3a3; padding: 8px 16px; }
+    .fast-moving-proposals__card-header { position: relative; display: flex; height: 69px; flex: none; align-items: center; justify-content: space-between; border-bottom: 1px solid #a3a3a3; padding: 8px 16px; }
     .fast-moving-proposals__card-header > strong { font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; font-variation-settings: "wdth" 75; }
     .fast-moving-proposals__status { position: absolute; top: 8px; right: 16px; width: 168.30795288085938px; height: 53.94354248046875px; }
     .fast-moving-proposals__document { position: absolute; top: 0; left: 4.444942951202393px; width: 36px; height: 51px; transform: rotate(-5deg); object-fit: fill; }
     .fast-moving-proposals__thumb { position: absolute; top: 10.971768379211426px; left: 32.307952880859375px; display: block; width: 32px; height: 32px; overflow: hidden; border-radius: 50%; }
     .fast-moving-proposals__status b { position: absolute; top: 14.971768379211426px; left: 72.30795288085938px; width: 96px; height: 24px; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 16px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
-    .fast-moving-proposals__card-content { display: flex; height: 256px; flex-direction: column; align-items: flex-start; padding: 24px 16px; }
+    .fast-moving-proposals__card-content { display: flex; height: 256px; flex: none; flex-direction: column; align-items: flex-start; padding: 24px 16px; }
     .fast-moving-proposals__author { display: flex; width: 100%; justify-content: space-between; font-size: 18px; line-height: 24px; }
     .fast-moving-proposals__author strong { font-weight: 700; }
     .fast-moving-proposals__badge { margin-top: 16px; padding: 4px 8px; background: #4242f6; color: #fff; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 16px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
-    .fast-moving-proposals__description { margin-top: 16px !important; color: #62628f; font-size: 16px; line-height: 24px; }
-    .fast-moving-proposals__card-footer { display: flex; height: 56px; align-items: center; border-top: 1px solid #a3a3a3; padding: 8px 16px; font-size: 18px; line-height: 24px; white-space: nowrap; }
+    .fast-moving-proposals__description { display: -webkit-box; height: 120px; margin-top: 16px !important; overflow: hidden; color: #62628f; font-size: 16px; line-height: 24px; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
+    .fast-moving-proposals__card-footer { display: flex; height: 56px; flex: none; align-items: center; border-top: 1px solid #a3a3a3; padding: 8px 16px; font-size: 18px; line-height: 24px; white-space: nowrap; }
     .fast-moving-proposals__card-footer strong { margin: 0 4px; color: #ff5865; font-weight: 700; }
     .fast-moving-proposals__card-footer b { margin-left: 4px; font-weight: 700; }
     @media (max-width: 767px) {
