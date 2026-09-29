@@ -1,6 +1,7 @@
 ---
 import pattern from "../../assets/images/redesign/explore/bg-pattern-cutting-mat.svg";
 import chevron from "../../assets/images/redesign/explore/form-button-chevron.svg";
+import screenTool from "../../assets/images/redesign/explore/screen-tool-@3x.png";
 ---
 
 <section class="explore-congress" aria-labelledby="explore-congress-title" style={`--explore-pattern: url(${pattern.src})`}>
@@ -8,7 +9,7 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
         <h2 id="explore-congress-title">Explore</h2>
         <p class="explore-congress__subtitle">Quer saber mais sobre o que tá tramitando sobre<br />pautas de gênero, raça e LGBTQIAPN+?</p>
         <div class="explore-congress__screen-wrap">
-            <div class="explore-congress__screen" aria-hidden="true"></div>
+            <img class="explore-congress__screen" src={screenTool.src} alt="" />
         </div>
         <a class="explore-congress__button" href="/atividade-legislativa">Explore a produção do Congresso <img src={chevron.src} alt="" /></a>
     </div>
@@ -78,6 +79,7 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
     .explore-congress__screen-wrap {
         display: flex;
         width: 100%;
+        max-width: 720px;
         height: auto;
         padding: 24px 0;
         align-items: flex-start;
@@ -85,10 +87,9 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
     }
 
     .explore-congress__screen {
+        display: block;
         width: 100%;
-        max-width: 480px;
         height: auto;
-        aspect-ratio: 16 / 9;
         flex: none;
         border: 2px solid #4242f6;
         border-radius: 16px;
@@ -161,10 +162,6 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
             justify-content: flex-start;
         }
 
-        .explore-congress__screen {
-            max-width: none;
-        }
-
         .explore-congress__button {
             width: max-content;
             max-width: 100%;
@@ -177,14 +174,11 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
 
     @media (min-width: 768px) {
         .explore-congress {
-            height: 684px;
-            min-height: 0;
             padding: 96px max(24px, calc((100vw - 720px) / 2));
         }
 
         .explore-congress__content {
             width: 720px;
-            height: 492px;
             min-width: 720px;
         }
 
@@ -195,14 +189,6 @@ import chevron from "../../assets/images/redesign/explore/form-button-chevron.sv
 
         .explore-congress__screen-wrap {
             width: 720px;
-            height: 318px;
-        }
-
-        .explore-congress__screen {
-            width: 480px;
-            max-width: none;
-            height: 270px;
-            aspect-ratio: auto;
         }
 
         .explore-congress__button {
