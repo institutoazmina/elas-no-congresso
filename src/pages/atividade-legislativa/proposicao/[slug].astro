@@ -51,6 +51,7 @@ const house = /sen/i.test(proposition.casa)
   : /dep|câm|cam/i.test(proposition.casa)
     ? "Câmara dos Deputados"
     : proposition.casa?.trim() || "Indisponível";
+const activityHouse = /sen/i.test(proposition.casa) ? "senado" : /dep|câm|cam/i.test(proposition.casa) ? "camara" : "";
 const officialLink = proposition.link?.trim().replace(/^http:/, "https:") || null;
 const fullTextLink = api?.url_texto?.trim() || (officialLink && /prop_mostrarintegra|\.pdf(?:$|\?)/i.test(officialLink) ? officialLink : null);
 const tramitationLink = api?.url_tramitacao?.trim() && api.url_tramitacao.trim() !== (officialLink || "") ? api.url_tramitacao.trim() : null;
@@ -173,19 +174,131 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
           </div>
         </section>
 
-        <section class="proposition-progress" aria-labelledby="proposition-progress-title">
+        <section class="proposition-progress" aria-labelledby="proposition-progress-title" data-proposition-progress data-proposition-number={proposition.numero} data-proposition-house={activityHouse}>
           <div class="proposition-progress__bar">
             <h2 id="proposition-progress-title">Como está?</h2>
-            <strong class="proposition-progress__status">{status}</strong>
-            <span class="proposition-progress__summary">Indisponível</span>
+            <strong class="proposition-progress__status" data-progress-status>{status}</strong>
+            <span class="proposition-progress__summary" data-progress-summary>Histórico de movimentações indisponível</span>
           </div>
-          <div class="proposition-timeline" role="status">
+          <div class="proposition-timeline is-empty" aria-live="polite" data-progress-timeline>
             <p>Histórico de movimentações indisponível</p>
           </div>
         </section>
       </main>
       <RedesignFooter />
     </div>
+    <script>
+      import { PUBLIC_API_BASE_URL } from "astro:env/client";
+
+      type ActivityEvent = {
+        event_at: string;
+        title: string | null;
+        description: string | null;
+        situation: string | null;
+        committee_acronym: string | null;
+        committee_name: string | null;
+      };
+
+      type Activity = {
+        celerity: { label: string; movements_last_90_days: number };
+        events: ActivityEvent[];
+      };
+
+      type PropositionSearch = {
+        id: number;
+        house: string;
+        number_label: string;
+      };
+
+      const normalizeText = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      const formatEventDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "2-digit",
+        timeZone: "UTC",
+      }).format(new Date(value));
+
+      const initializePropositionProgress = () => {
+        document.querySelectorAll<HTMLElement>("[data-proposition-progress]:not([data-ready])").forEach((root) => {
+          root.dataset.ready = "true";
+          const number = root.dataset.propositionNumber || "";
+          const house = root.dataset.propositionHouse || "";
+          const status = root.querySelector<HTMLElement>("[data-progress-status]");
+          const summary = root.querySelector<HTMLElement>("[data-progress-summary]");
+          const timeline = root.querySelector<HTMLElement>("[data-progress-timeline]");
+          if (!number || !house || !status || !summary || !timeline) return;
+
+          const renderUnavailable = () => {
+            status.textContent = "Indisponível";
+            summary.textContent = "Histórico de movimentações indisponível";
+            timeline.classList.add("is-empty");
+            timeline.replaceChildren(Object.assign(document.createElement("p"), { textContent: "Histórico de movimentações indisponível" }));
+          };
+
+          const renderEvents = (events: ActivityEvent[]) => {
+            if (!events.length) {
+              timeline.classList.add("is-empty");
+              timeline.replaceChildren(Object.assign(document.createElement("p"), { textContent: "Ainda não há movimentações registradas." }));
+              return;
+            }
+
+            const list = document.createElement("ol");
+            list.className = "proposition-timeline__events";
+            for (const event of events) {
+              const item = document.createElement("li");
+              const header = document.createElement("header");
+              const committee = document.createElement("strong");
+              committee.textContent = event.committee_acronym || event.committee_name || "Congresso Nacional";
+              const date = document.createElement("time");
+              date.dateTime = event.event_at;
+              date.textContent = formatEventDate(event.event_at);
+              header.append(committee, date);
+
+              const title = event.title?.trim() || event.situation?.trim() || event.description?.trim() || "Movimentação legislativa";
+              const heading = document.createElement("h3");
+              heading.textContent = title;
+              item.append(header, heading);
+
+              const description = event.description?.trim();
+              if (description && normalizeText(description) !== normalizeText(title)) {
+                const copy = document.createElement("p");
+                copy.textContent = description;
+                item.append(copy);
+              }
+              list.append(item);
+            }
+            timeline.classList.remove("is-empty");
+            timeline.replaceChildren(list);
+          };
+
+          const load = async () => {
+            const isLocal = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
+            const apiBase = isLocal ? `${location.origin}/api/v1` : PUBLIC_API_BASE_URL;
+            const searchUrl = new URL(`${apiBase}/propositions/`);
+            searchUrl.searchParams.set("q", number);
+            searchUrl.searchParams.set("limit", "10");
+            const searchResponse = await fetch(searchUrl);
+            if (!searchResponse.ok) throw new Error(String(searchResponse.status));
+            const search = await searchResponse.json() as { items: PropositionSearch[] };
+            const proposition = search.items.find((item) => item.number_label === number && item.house === house);
+            if (!proposition) throw new Error("Proposição não encontrada");
+
+            const activityResponse = await fetch(`${apiBase}/activity/${proposition.id}`);
+            if (!activityResponse.ok) throw new Error(String(activityResponse.status));
+            const activity = await activityResponse.json() as Activity;
+            status.textContent = activity.celerity.label;
+            const movements = activity.celerity.movements_last_90_days;
+            summary.textContent = `${movements} ${movements === 1 ? "movimentação" : "movimentações"} em 3 meses`;
+            renderEvents(activity.events);
+          };
+
+          load().catch(renderUnavailable);
+        });
+      };
+
+      document.addEventListener("astro:page-load", initializePropositionProgress);
+      initializePropositionProgress();
+    </script>
   </body>
 </html>
 
@@ -483,15 +596,13 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     text-shadow: 1px 2px 1px rgb(0 0 0 / 20%);
   }
   .proposition-timeline {
-    display: grid;
     width: min(741px, 100%);
     min-height: 296px;
     margin: 0 auto;
-    padding: 25px;
     border: 2px solid #1e2546;
-    place-items: center;
     background: #fff;
   }
+  .proposition-timeline.is-empty { display: grid; padding: 25px; place-items: center; }
   .proposition-timeline p {
     margin: 0;
     color: #998d96;
@@ -499,6 +610,24 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     line-height: 24px;
     text-align: center;
   }
+  .proposition-timeline__events { margin: 0; padding: 0; list-style: none; }
+  .proposition-timeline__events li { padding: 20px 16px 28px; border-bottom: 2px solid #1e2546; }
+  .proposition-timeline__events li:last-child { border-bottom: 0; }
+  .proposition-timeline__events header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .proposition-timeline__events header strong,
+  .proposition-timeline__events time,
+  .proposition-timeline__events h3 {
+    color: #1e2546;
+    font-family: "ETC Anybody", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    font-variation-settings: "wdth" 75;
+    line-height: 20px;
+    text-transform: uppercase;
+  }
+  .proposition-timeline__events time { flex: 0 0 auto; }
+  .proposition-timeline__events h3 { margin: 24px 0 0; }
+  .proposition-timeline__events li > p { margin: 12px 0 0; color: #998d96; font-size: 16px; line-height: 20px; text-align: left; }
 
   @media (max-width: 1279px) {
     .proposition-overview { padding-inline: 32px; }
@@ -523,6 +652,9 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     .proposition-progress__status { width: 101px; font-size: 20px; }
     .proposition-progress__status::before { left: -6px; width: 112px; }
     .proposition-progress__summary { max-width: 120px; font-size: 14px; line-height: 18px; text-align: right; }
-    .proposition-timeline { min-height: 156px; padding: 20px; }
+    .proposition-timeline { min-height: 156px; }
+    .proposition-timeline.is-empty { padding: 20px; }
+    .proposition-timeline__events li { padding: 18px 14px 22px; }
+    .proposition-timeline__events h3 { margin-top: 20px; }
   }
 </style>
