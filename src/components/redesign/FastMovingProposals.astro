@@ -7,10 +7,9 @@ import thumbsDown from "../../assets/images/thumbs-down.svg";
 import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
 import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
 
-const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, featured: index === 7 }));
 ---
 
-<section class="fast-moving-proposals" aria-labelledby="fast-moving-proposals-title" style={`--fast-moving-proposals-background: url(${backgroundPattern.src}); --fast-moving-proposals-halftone-shadow: url(${halftoneShadow.src})`}>
+<section class="fast-moving-proposals" aria-labelledby="fast-moving-proposals-title" data-document-image={documentImage.src} data-thumbs-down={thumbsDown.src} style={`--fast-moving-proposals-background: url(${backgroundPattern.src}); --fast-moving-proposals-halftone-shadow: url(${halftoneShadow.src})`}>
     <header class="fast-moving-proposals__header">
         <img src={attention.src} alt="" />
         <h2 id="fast-moving-proposals-title">Veja o que restringe nossos direitos<br />e tá tramitando rapidinho</h2>
@@ -22,27 +21,77 @@ const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, fea
             <button type="button" aria-label="Próxima proposição" data-next><img src={arrowForward.src} alt="" /></button>
         </div>
         <div class="fast-moving-proposals__viewport">
-            <div class="fast-moving-proposals__track" data-track>
-                {carouselCards.map((proposal) => (
-                    <article class:list={["fast-moving-proposals__card", { "fast-moving-proposals__card--featured": proposal.featured }]} aria-hidden={proposal.id === 7 ? undefined : "true"}>
-                        <header class="fast-moving-proposals__card-header">
-                            <strong>PL 2104/2026</strong>
-                            <span class="fast-moving-proposals__status"><img class="fast-moving-proposals__document" src={documentImage.src} alt="" /><img class="fast-moving-proposals__thumb" src={thumbsDown.src} alt="" /><b>Desfavorável</b></span>
-                        </header>
-                        <div class="fast-moving-proposals__card-content">
-                            <p class="fast-moving-proposals__author"><span>Baleia Rossi</span><strong>MDB/SP</strong></p>
-                            <span class="fast-moving-proposals__badge">Saúde</span>
-                            <p class="fast-moving-proposals__description">Estabelece diretrizes para a atenção à saúde da mulher no climatério e na menopausa, no âmbito do Sistema Único de Saúde, e institui a Semana Nacional de Conscientização sobre o Climatério e a Menopausa</p>
-                        </div>
-                        <footer class="fast-moving-proposals__card-footer">Teve <strong>4 movimentações</strong> em <b>3 meses</b></footer>
-                    </article>
-                ))}
-            </div>
+            <div class="fast-moving-proposals__track" data-track></div>
         </div>
     </div>
 </section>
 
 <script>
+    import { PUBLIC_API_BASE_URL } from "astro:env/client";
+
+    type Proposal = {
+        number_label: string;
+        ementa: string;
+        category: string | null;
+        authors: { name: string; party: string | null; state: string | null }[];
+        celerity: { movements_last_90_days: number };
+    };
+
+    const formatCategory = (category: string | null) => category?.replaceAll("_", " ") || "Sem categoria";
+
+    const createCard = (proposal: Proposal, assets: DOMStringMap) => {
+        const card = document.createElement("article");
+        card.className = "fast-moving-proposals__card";
+
+        const header = document.createElement("header");
+        header.className = "fast-moving-proposals__card-header";
+        const number = document.createElement("strong");
+        number.textContent = proposal.number_label;
+        const status = document.createElement("span");
+        status.className = "fast-moving-proposals__status";
+        const documentIcon = document.createElement("img");
+        documentIcon.className = "fast-moving-proposals__document";
+        documentIcon.src = assets.documentImage || "";
+        documentIcon.alt = "";
+        const thumb = document.createElement("img");
+        thumb.className = "fast-moving-proposals__thumb";
+        thumb.src = assets.thumbsDown || "";
+        thumb.alt = "";
+        const assessment = document.createElement("b");
+        assessment.textContent = "Desfavorável";
+        status.append(documentIcon, thumb, assessment);
+        header.append(number, status);
+
+        const content = document.createElement("div");
+        content.className = "fast-moving-proposals__card-content";
+        const author = proposal.authors[0];
+        const authorLine = document.createElement("p");
+        authorLine.className = "fast-moving-proposals__author";
+        const name = document.createElement("span");
+        name.textContent = author?.name || "Autoria indisponível";
+        const party = document.createElement("strong");
+        party.textContent = [author?.party, author?.state].filter(Boolean).join("/");
+        authorLine.append(name, party);
+        const category = document.createElement("span");
+        category.className = "fast-moving-proposals__badge";
+        category.textContent = formatCategory(proposal.category);
+        const description = document.createElement("p");
+        description.className = "fast-moving-proposals__description";
+        description.textContent = proposal.ementa;
+        content.append(authorLine, category, description);
+
+        const footer = document.createElement("footer");
+        footer.className = "fast-moving-proposals__card-footer";
+        const movement = proposal.celerity.movements_last_90_days;
+        const count = document.createElement("strong");
+        count.textContent = `${movement} ${movement === 1 ? "movimentação" : "movimentações"}`;
+        const period = document.createElement("b");
+        period.textContent = "3 meses";
+        footer.append("Teve ", count, " em ", period);
+        card.append(header, content, footer);
+        return card;
+    };
+
     const initializeFastMovingProposals = () => {
         document.querySelectorAll<HTMLElement>("[data-carousel]").forEach((carousel) => {
             if (carousel.dataset.carouselInitialized) return;
@@ -51,35 +100,51 @@ const carouselCards = Array.from({ length: 15 }, (_, index) => ({ id: index, fea
             const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
             const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
             if (!track || !previous || !next) return;
-            let physicalIndex = 7;
-            let isResetting = false;
-            const cards = Array.from(track.querySelectorAll<HTMLElement>(".fast-moving-proposals__card"));
-            const update = () => {
-                track.style.transform = `translateX(${-192 - physicalIndex * 432}px)`;
-                cards.forEach((card, cardIndex) => {
-                    const isActive = cardIndex === physicalIndex;
-                    card.classList.toggle("fast-moving-proposals__card--featured", isActive);
-                    card.setAttribute("aria-hidden", String(!isActive));
-                });
-            };
-            const move = (direction: number) => {
-                if (isResetting) return;
-                physicalIndex += direction;
-                update();
-            };
-            track.addEventListener("transitionend", (event) => {
-                if (event.propertyName !== "transform" || (physicalIndex > 4 && physicalIndex < 10)) return;
-                isResetting = true;
-                physicalIndex += physicalIndex < 5 ? 5 : -5;
-                track.style.transition = "none";
-                update();
-                requestAnimationFrame(() => requestAnimationFrame(() => {
-                    track.style.transition = "";
-                    isResetting = false;
-                }));
-            });
-            previous.addEventListener("click", () => move(-1));
-            next.addEventListener("click", () => move(1));
+            const section = carousel.closest<HTMLElement>(".fast-moving-proposals");
+            const isLocal = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
+            const apiBase = isLocal ? `${location.origin}/api/v1` : PUBLIC_API_BASE_URL;
+
+            void fetch(`${apiBase}/activity/fast-unfavorable`)
+                .then((response) => response.ok ? response.json() as Promise<Proposal[]> : Promise.reject())
+                .then((proposals) => {
+                    if (!proposals.length || !section) {
+                        section?.remove();
+                        return;
+                    }
+                    track.replaceChildren(...[...proposals, ...proposals, ...proposals].map((proposal) => createCard(proposal, section.dataset)));
+                    const groupSize = proposals.length;
+                    let physicalIndex = groupSize + Math.floor(groupSize / 2);
+                    let isResetting = false;
+                    const cards = Array.from(track.querySelectorAll<HTMLElement>(".fast-moving-proposals__card"));
+                    const update = () => {
+                        track.style.transform = `translateX(${-192 - physicalIndex * 432}px)`;
+                        cards.forEach((card, cardIndex) => {
+                            const isActive = cardIndex === physicalIndex;
+                            card.classList.toggle("fast-moving-proposals__card--featured", isActive);
+                            card.setAttribute("aria-hidden", String(!isActive));
+                        });
+                    };
+                    const move = (direction: number) => {
+                        if (isResetting) return;
+                        physicalIndex += direction;
+                        update();
+                    };
+                    track.addEventListener("transitionend", (event) => {
+                        if (event.propertyName !== "transform" || (physicalIndex >= groupSize && physicalIndex < groupSize * 2)) return;
+                        isResetting = true;
+                        physicalIndex += physicalIndex < groupSize ? groupSize : -groupSize;
+                        track.style.transition = "none";
+                        update();
+                        requestAnimationFrame(() => requestAnimationFrame(() => {
+                            track.style.transition = "";
+                            isResetting = false;
+                        }));
+                    });
+                    previous.addEventListener("click", () => move(-1));
+                    next.addEventListener("click", () => move(1));
+                    update();
+                })
+                .catch(() => section?.remove());
         });
     };
 
