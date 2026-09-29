@@ -26,6 +26,10 @@ export type ActivityProposal = {
     quiteria_prob?: number | null;
     categoria?: string | null;
     tema?: string | null;
+    /** Situação oficial da API (current_status). Nunca derivado de quiteria_prob. */
+    situacao?: string | null;
+    /** Data de apresentação (presented_at da API, YYYY-MM-DD). Alimenta "Atualização". */
+    apresentadaEm?: string | null;
 };
 
 export type ActivityData = {

@@ -15,6 +15,7 @@ import {
     type ApiParty,
     type AuthorInitialData,
 } from "../../../lib/author-page";
+import { getApiDetail, getPropositionCategory } from "../../../lib/api-enrichment";
 import "../../../styles/tailwind.css";
 
 export async function getStaticPaths() {
@@ -82,6 +83,17 @@ export async function getStaticPaths() {
         } satisfies ApiParliamentarian;
         const term = resolved?.term || fallbackTerm;
         const parties = resolved ? directory.parties : localAuthor?.partido ? [{ id: 0, acronym: localAuthor.partido, name: localAuthor.partido }] : [];
+        // Enriquecimento P0 (snapshot build-time da API oficial): categoria
+        // editorial + situação + data de apresentação por proposição. Sem dado
+        // → null (fallbacks exibem "Não informada"/"Indisponível"/"—").
+        if (localActivity) {
+            for (const proposal of localActivity.proposals) {
+                proposal.categoria ??= getPropositionCategory(proposal.casa, proposal.numero);
+                const detail = getApiDetail(proposal.casa, proposal.numero);
+                (proposal as { situacao?: string | null }).situacao = detail?.situacao?.trim() || null;
+                proposal.apresentadaEm = detail?.apresentada_em || null;
+            }
+        }
         const initial: AuthorInitialData | null = localActivity ? { person, term, parties, activity: localActivity } : null;
         return {
             params: { slug },

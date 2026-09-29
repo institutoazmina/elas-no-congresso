@@ -9,7 +9,9 @@ import paperclip from "../../../assets/images/redesign/activity/author-paperclip
 import statusLabel from "../../../assets/images/redesign/activity/proposition-status-label.svg";
 import { authorRoute, normalizePhotoUrl } from "../../../lib/author-page";
 import { getPropositionAuthors, getPropositionByPublicSlug } from "../../../lib/proposition-page";
-import { propositionAssessment, propositionSlug, propositionStatus } from "../../../lib/proposition-utils";
+import { propositionAssessment, propositionSlug } from "../../../lib/proposition-utils";
+import { getApiDetail, getPropositionCategory } from "../../../lib/api-enrichment";
+import { formatPresentedDate } from "../../../lib/canonical";
 import { legislaturas, legislaturasKeys } from "../../../lib/dados";
 import "../../../styles/tailwind.css";
 
@@ -40,20 +42,28 @@ if (!proposition) return Astro.redirect("/404");
 const extended = proposition as typeof proposition & ExtendedProposition;
 const authors = getPropositionAuthors(proposition);
 const assessment = propositionAssessment(proposition.favoravel);
-const status = propositionStatus(proposition.quiteria_prob);
-const statusIcon = status === "Lenta" ? "🐢" : "";
+// Enriquecimento P0 via API oficial (snapshot build-time). Fallback: dados.json.
+// `quiteria_prob` NUNCA é usado como celeridade; "Como está?" = situação oficial.
+const api = getApiDetail(proposition.casa, proposition.numero);
+const status = api?.situacao?.trim() || "Indisponível";
 const house = /sen/i.test(proposition.casa)
   ? "Senado Federal"
   : /dep|câm|cam/i.test(proposition.casa)
     ? "Câmara dos Deputados"
     : proposition.casa?.trim() || "Indisponível";
 const officialLink = proposition.link?.trim().replace(/^http:/, "https:") || null;
-const fullTextLink = officialLink && /prop_mostrarintegra|\.pdf(?:$|\?)/i.test(officialLink) ? officialLink : null;
-const category = extended.categoria?.trim() || null;
+const fullTextLink = api?.url_texto?.trim() || (officialLink && /prop_mostrarintegra|\.pdf(?:$|\?)/i.test(officialLink) ? officialLink : null);
+const tramitationLink = api?.url_tramitacao?.trim() && api.url_tramitacao.trim() !== (officialLink || "") ? api.url_tramitacao.trim() : null;
+// Categoria editorial oficial (Categorias 2026 via /dataset); fallback: indisponível.
+const category = getPropositionCategory(proposition.casa, proposition.numero) || extended.categoria?.trim() || null;
+// Data legislativa de apresentação (presented_at); nunca created_at/updated_at.
+const presentedDate = api?.apresentada_em ? formatPresentedDate(api.apresentada_em) : (extended.data_apresentacao?.trim() || "Indisponível");
+const keywords = (api?.palavras_chave || "").split(",").map((item) => item.trim()).filter(Boolean);
 const themes = [
   ...(Array.isArray(extended.temas) ? extended.temas : []),
   ...(Array.isArray(extended.tags) ? extended.tags : []),
   ...(Array.isArray(extended.tema) ? extended.tema : extended.tema ? [extended.tema] : []),
+  ...keywords,
 ].map((item) => item.trim()).filter(Boolean);
 const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso`;
 ---
@@ -99,6 +109,9 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
                 {fullTextLink
                   ? <a href={fullTextLink} target="_blank" rel="noopener noreferrer">Ler Inteiro Teor</a>
                   : <span>Indisponível</span>}
+                {tramitationLink
+                  ? <a href={tramitationLink} target="_blank" rel="noopener noreferrer">Acompanhar tramitação oficial</a>
+                  : null}
               </div>
             </article>
 
@@ -145,7 +158,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
               <div class="proposition-details__body">
                 <p>
                   <span>Data de apresentação:</span>
-                  {extended.data_apresentacao?.trim() || "Indisponível"}<br />
+                  {presentedDate}<br />
                   {house}
                 </p>
                 <p>
@@ -163,7 +176,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
         <section class="proposition-progress" aria-labelledby="proposition-progress-title">
           <div class="proposition-progress__bar">
             <h2 id="proposition-progress-title">Como está?</h2>
-            <strong class="proposition-progress__status"><span aria-hidden="true">{statusIcon}</span>{status}</strong>
+            <strong class="proposition-progress__status">{status}</strong>
             <span class="proposition-progress__summary">Indisponível</span>
           </div>
           <div class="proposition-timeline" role="status">

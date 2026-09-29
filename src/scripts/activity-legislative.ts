@@ -33,7 +33,7 @@ type RawLegislature = {
 };
 
 type RawData = { legislaturas: Record<string, RawLegislature> };
-type Proposal = RawProposal & { year: number; authors: RawParliamentarian[]; parties: string[]; states: string[]; genders: string[] };
+type Proposal = RawProposal & { year: number; authors: RawParliamentarian[]; parties: string[]; states: string[]; genders: string[]; situacao?: string | null; apresentadaEm?: string | null };
 type DashboardRow = { key: string; label: string; favorable: number; unfavorable: number; photo?: string; meta?: string };
 type TableSort = "number" | "author" | "summary" | "assessment" | "evaluator" | "progress" | "category" | "updated";
 
@@ -62,6 +62,8 @@ import {
 } from "../lib/dashboard-utils";
 import { authorRoute } from "../lib/author-page";
 import { propositionRoute } from "../lib/proposition-utils";
+import { canonicalPropositionKey, extractPropositionYear, formatPresentedDate, normalizeEvaluatorKey } from "../lib/canonical";
+import listaEnriquecida from "../data/categorias-proposicoes.json" with { type: "json" };
 import {
     activityAssessment,
     filterActivityItems,
@@ -187,12 +189,31 @@ function initActivity(root: HTMLElement) {
         const parties = new Set<string>();
         const years = new Set<number>();
         const states = new Set<string>();
-        const evaluators = new Set<string>();
+        const evaluatorDisplay = new Map<string, string>();
         dataQuality = createQualityCollector();
+        // Enriquecimento P0 (snapshot build-time da API oficial, mesmo origem,
+        // sem CORS). Chave canônica CASA|NUMERO; 88 sem match seguem só local.
+        const enrichment = (listaEnriquecida as unknown as { categorias: Record<string, { categoria: string | null; situacao: string | null; apresentada_em: string | null }> }).categorias;
+        // Conta chaves canônicas para ignorar as 11 variantes com espaço duplo
+        // (mesma proposição lógica; evita página/card/contagem duplicada).
+        const canonicalCounts = new Map<string, number>();
+        for (const legislature of Object.values(data.legislaturas)) {
+            for (const proposal of Object.values(legislature.proposicoes || {})) {
+                const key = canonicalPropositionKey(proposal.casa, proposal.numero);
+                canonicalCounts.set(key, (canonicalCounts.get(key) ?? 0) + 1);
+            }
+        }
 
         Object.entries(data.legislaturas).forEach(([legislatureId, legislature]) => {
             const people = legislature.parlamentares || {};
             Object.values(legislature.proposicoes || {}).forEach((proposal) => {
+                const canonicalKey = canonicalPropositionKey(proposal.casa, proposal.numero);
+                if (/ {2,}/.test(proposal.numero ?? "") && (canonicalCounts.get(canonicalKey) ?? 0) > 1) {
+                    dataQuality.record("duplicata-espaco-duplo", `${proposal.numero}: variante não-canônica ignorada`);
+                    return;
+                }
+                const enrich = enrichment[canonicalKey];
+                const categoria = enrich?.categoria?.trim() || proposal.categoria?.trim() || null;
                 const rawAuthorIds = Object.keys(proposal.autores || {});
                 const authors = rawAuthorIds.map((id) => people[id]).filter(Boolean);
                 if (authors.length !== rawAuthorIds.length) {
@@ -216,9 +237,14 @@ function initActivity(root: HTMLElement) {
                         dataQuality.record("partido-ausente", `${author.nome} (num ${author.numero}) em ${proposal.numero}`);
                     }
                 }
-                const year = Number(proposal.numero?.match(/\/(\d{4})/)?.[1] || 0);
+                // Ano legislativo: presented_at da API tem prioridade; fallback
+                // ano do número (aproximação documentada). Nunca "Ano 0".
+                const year = extractPropositionYear(enrich?.apresentada_em, proposal.numero);
                 const item: Proposal = {
                     ...proposal,
+                    categoria,
+                    situacao: enrich?.situacao?.trim() || null,
+                    apresentadaEm: enrich?.apresentada_em || null,
                     legislatura: Number(proposal.legislatura || legislatureId),
                     year,
                     authors,
@@ -230,7 +256,12 @@ function initActivity(root: HTMLElement) {
                 if (year) years.add(year);
                 item.parties.forEach((party) => parties.add(party));
                 item.states.forEach((stateName) => states.add(stateName));
-                if (proposal.avaliador) evaluators.add(proposal.avaliador);
+                // Agrupa variantes de caixa do avaliador (Cfemea/CFEMEA) sem
+                // alterar o texto editorial; exibe a primeira forma vista.
+                if (proposal.avaliador) {
+                    const key = normalizeEvaluatorKey(proposal.avaliador);
+                    if (!evaluatorDisplay.has(key)) evaluatorDisplay.set(key, proposal.avaliador);
+                }
             });
         });
 
@@ -250,7 +281,7 @@ function initActivity(root: HTMLElement) {
         addOptions("party", [...parties].sort((a, b) => a.localeCompare(b, "pt-BR")));
         addOptions("party-mobile", [...parties].sort((a, b) => a.localeCompare(b, "pt-BR")));
         addOptions("state", [...states].sort());
-        addOptions("evaluator", [...evaluators].sort((a, b) => a.localeCompare(b, "pt-BR")));
+        addOptions("evaluator", [...evaluatorDisplay.values()].sort((a, b) => a.localeCompare(b, "pt-BR")));
         const categories = getActivityCategories(proposals);
         if (categories.length) {
             addOptions("category", categories);
@@ -274,6 +305,7 @@ function initActivity(root: HTMLElement) {
             if (key === "author") return item.authors[0]?.nome || "";
             if (key === "summary") return item.resumo;
             if (key === "evaluator") return item.avaliador || "";
+            if (key === "category") return item.categoria || "";
             return "";
         };
         const number = (item: Proposal, key: TableSort) => {
@@ -285,7 +317,6 @@ function initActivity(root: HTMLElement) {
         const direction = tableSortDirection === "ascending" ? 1 : -1;
         return [...items].sort((a, b) => {
             if (["assessment", "progress", "updated"].includes(tableSort)) return (number(a, tableSort) - number(b, tableSort)) * direction;
-            if (tableSort === "category") return (a.i - b.i) * direction;
             return text(a, tableSort).localeCompare(text(b, tableSort), "pt-BR", { numeric: true }) * direction;
         });
     }
@@ -523,7 +554,16 @@ function initActivity(root: HTMLElement) {
         fillDashboardRows("[data-dashboard-house]", displayedHouses);
         fillDashboardRows("[data-dashboard-party]", partyCanetadas, { sort: partySort, singleResultMessage: getSingleDashboardResultMessage("party", partyCanetadas) });
         fillDashboardRows("[data-dashboard-author]", authors, { sort: authorSort, author: true, singleResultMessage: getSingleDashboardResultMessage("author", authors) });
-        $("[data-dashboard-category]").textContent = "Categorias não estão disponíveis no arquivo de dados desta listagem.";
+        // Por categoria: proposições DISTINTAS por categoria oficial (Categorias
+        // 2026 via dataset). Regra editorial = mesma unidade dos demais cards
+        // de contagem simples (1 proposição = 1 voto), NÃO canetadas e NÃO o
+        // /stats (que conta só desfavoráveis). Ver relatório 1.3.
+        const categories = aggregateRows(visible, (item) => item.categoria ? [{ key: item.categoria, label: item.categoria }] : []);
+        fillDashboardRows("[data-dashboard-category]", categories);
+        $("[data-dashboard-category]")?.classList.toggle("activity-dashboard-card__empty", categories.length === 0);
+        if (categories.length === 0) {
+            $("[data-dashboard-category]").textContent = "Sem categoria oficial para os filtros selecionados.";
+        }
         $("[data-dashboard-status]").textContent = "Status legislativos completos não estão disponíveis no arquivo de dados desta listagem.";
 
         for (const uf of MAP_UF_CODES) {
@@ -632,11 +672,13 @@ function initActivity(root: HTMLElement) {
         const progress = document.createElement("td");
         progress.innerHTML = `<strong>${(item.quiteria_prob ?? 0) >= .55 ? "Rápida" : "Lenta"}</strong><small>${Math.round((item.quiteria_prob ?? 0) * 100)}% de chance de avançar</small>`;
         const theme = document.createElement("td");
-        theme.textContent = "Não informada";
-        theme.title = "A base desta listagem não fornece a categoria da proposição";
+        theme.textContent = item.categoria || "Não informada";
+        theme.title = item.categoria ? `Categoria oficial: ${item.categoria}` : "Sem categoria no dataset oficial para esta proposição";
         const updated = document.createElement("td");
-        updated.textContent = "—";
-        updated.title = "A base desta listagem não fornece a data de atualização";
+        // Coluna "Atualização": data de apresentação quando disponível; nunca
+        // created_at/updated_at técnicas do sistema.
+        updated.textContent = item.apresentadaEm ? formatPresentedDate(item.apresentadaEm) : "—";
+        updated.title = item.apresentadaEm ? "Data de apresentação (API oficial)" : "Sem data de apresentação na API oficial";
         row.append(number, author, summary, stance, evaluator, progress, theme, updated);
         return row;
     }
@@ -655,7 +697,7 @@ function initActivity(root: HTMLElement) {
         header.append(titleWrap, createStance(item));
         const tag = document.createElement("span");
         tag.className = "activity-card__tag";
-        tag.textContent = "Categoria não informada";
+        tag.textContent = item.categoria || "Categoria não informada";
         const summary = document.createElement("p");
         summary.className = "activity-card__summary";
         summary.textContent = item.resumo;
@@ -851,7 +893,7 @@ function initActivity(root: HTMLElement) {
         }
         if (target.matches("[data-download]")) {
             event.preventDefault();
-            const rows = [["Proposição", "Casa", "Ano", "Autoria", "Partido/UF", "Ementa", "Avaliação", "Quem avaliou", "Ressalvas"], ...visible.map((item) => [item.numero, item.casa, item.year, item.authors.map((author) => author.nome).join("; "), item.authors.map((author) => `${author.partido}/${author.estado}`).join("; "), item.resumo, stanceData(item).label, item.avaliador || "", item.comentario || ""])];
+            const rows = [["Proposição", "Casa", "Ano", "Autoria", "Partido/UF", "Ementa", "Avaliação", "Quem avaliou", "Ressalvas", "Categoria", "Situação"], ...visible.map((item) => [item.numero, item.casa, item.year, item.authors.map((author) => author.nome).join("; "), item.authors.map((author) => `${author.partido}/${author.estado}`).join("; "), item.resumo, stanceData(item).label, item.avaliador || "", item.comentario || "", item.categoria || "", item.situacao || ""])];
             const blob = new Blob(["\ufeff" + rows.map((row) => row.map(escapeCsv).join(";")).join("\r\n")], { type: "text/csv;charset=utf-8" });
             const url = URL.createObjectURL(blob);
             const anchor = document.createElement("a");

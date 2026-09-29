@@ -1,0 +1,46 @@
+{
+ "fonte": "GET /taxonomy/categories",
+ "obtido_em": "2026-09-28",
+ "categorias": [
+  {
+   "value": "violencias_de_genero",
+   "label": "Violências de Gênero"
+  },
+  {
+   "value": "trabalho_economia_cuidado",
+   "label": "Trabalho, Economia, Cuidado e Proteção Social"
+  },
+  {
+   "value": "direitos_sexuais_reprodutivos",
+   "label": "Direitos Sexuais e Reprodutivos"
+  },
+  {
+   "value": "participacao_politica",
+   "label": "Participação Política e Institucionalidade"
+  },
+  {
+   "value": "lgbtqiapn",
+   "label": "LGBTQIAPN+"
+  },
+  {
+   "value": "saude",
+   "label": "Saúde"
+  },
+  {
+   "value": "educacao_cultura",
+   "label": "Educação e Cultura"
+  },
+  {
+   "value": "familia_parentalidade",
+   "label": "Família, Parentalidade e Relações Civis"
+  },
+  {
+   "value": "infancia_adolescencia",
+   "label": "Infância e Adolescência"
+  },
+  {
+   "value": "igualdade_antidiscriminacao",
+   "label": "Igualdade e Antidiscriminação"
+  }
+ ]
+}

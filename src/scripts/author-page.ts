@@ -21,6 +21,7 @@ import {
     type AuthorReport,
 } from "../lib/author-page";
 import { resolveReportagemImage } from "../lib/wp";
+import { extractPropositionYear, formatPresentedDate } from "../lib/canonical";
 import { propositionRoute } from "../lib/proposition-utils";
 
 type AuthorSort = "number" | "author" | "summary" | "assessment" | "evaluator" | "progress" | "category" | "updated";
@@ -235,8 +236,10 @@ function initAuthorPage() {
         const category = document.createElement("td");
         category.textContent = proposal.categoria || "Não informada";
         const updated = document.createElement("td");
-        updated.textContent = "—";
-        updated.title = "A base da Atividade Legislativa não fornece a data de atualização";
+        // Coluna "Atualização": mesma origem/regra da tabela principal —
+        // data de apresentação (apresentadaEm); nunca updated_at técnico.
+        updated.textContent = proposal.apresentadaEm ? formatPresentedDate(proposal.apresentadaEm) : "—";
+        updated.title = proposal.apresentadaEm ? "Data de apresentação (API oficial)" : "Sem data de apresentação na API oficial";
         row.append(number, author, summary, assessment, evaluator, progress, category, updated);
         return row;
     }
@@ -283,7 +286,9 @@ function initAuthorPage() {
         const numeric = (item: AuthorProposal) => {
             if (sort === "assessment") return item.favoravel;
             if (sort === "progress") return item.quiteria_prob ?? 0;
-            if (sort === "updated") return item.i;
+            // "Atualização": mesma semântica da tabela principal — chave temporal
+            // (ano da apresentação × 1e6 + índice), nunca o texto DD/MM/AAAA.
+            if (sort === "updated") return extractPropositionYear(item.apresentadaEm, item.numero) * 1_000_000 + item.i;
             return 0;
         };
         const multiplier = direction === "ascending" ? 1 : -1;

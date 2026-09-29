@@ -1,3 +1,5 @@
+import { normalizeEvaluatorKey } from "./canonical.ts";
+
 export type ActivityAssessment = "favorable" | "unfavorable" | "unrated" | "";
 
 export type ActivityFilterState = {
@@ -69,7 +71,7 @@ export function matchesActivityFilters(item: ActivityFilterItem, filters: Activi
         && (!filters.assessment || activityAssessment(item.favoravel) === filters.assessment)
         && (!filters.gender || item.genders.includes(filters.gender))
         && (!filters.state || item.states.includes(filters.state))
-        && (!filters.evaluator || item.avaliador === filters.evaluator)
+        && (!filters.evaluator || normalizeEvaluatorKey(item.avaliador) === normalizeEvaluatorKey(filters.evaluator))
         && (!filters.comments || (filters.comments === "yes" ? Boolean(item.comentario) : !item.comentario));
 }
 
