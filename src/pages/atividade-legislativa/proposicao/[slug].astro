@@ -43,9 +43,8 @@ const extended = proposition as typeof proposition & ExtendedProposition;
 const authors = getPropositionAuthors(proposition);
 const assessment = propositionAssessment(proposition.favoravel);
 // Enriquecimento P0 via API oficial (snapshot build-time). Fallback: dados.json.
-// `quiteria_prob` NUNCA é usado como celeridade; "Como está?" = situação oficial.
+// `quiteria_prob` nunca define a celeridade, calculada da tramitação oficial.
 const api = getApiDetail(proposition.casa, proposition.numero);
-const status = api?.situacao?.trim() || "Indisponível";
 const house = /sen/i.test(proposition.casa)
   ? "Senado Federal"
   : /dep|câm|cam/i.test(proposition.casa)
@@ -177,8 +176,8 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
         <section class="proposition-progress" aria-labelledby="proposition-progress-title" data-proposition-progress data-proposition-number={proposition.numero} data-proposition-house={activityHouse}>
           <div class="proposition-progress__bar">
             <h2 id="proposition-progress-title">Como está?</h2>
-            <strong class="proposition-progress__status" data-progress-status>{status}</strong>
-            <span class="proposition-progress__summary" data-progress-summary>Histórico de movimentações indisponível</span>
+            <strong class="proposition-progress__status" data-progress-status>Carregando</strong>
+            <span class="proposition-progress__summary" data-progress-summary>Histórico carregado ao chegar nesta seção</span>
           </div>
           <div class="proposition-timeline is-empty" aria-live="polite" data-progress-timeline>
             <p>Histórico de movimentações indisponível</p>
@@ -200,14 +199,12 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
       };
 
       type Activity = {
-        celerity: { label: string; movements_last_90_days: number };
+        celerity: {
+          label: string;
+          days_without_movement: number;
+          movements_last_90_days: number;
+        };
         events: ActivityEvent[];
-      };
-
-      type PropositionSearch = {
-        id: number;
-        house: string;
-        number_label: string;
       };
 
       const normalizeText = (value: string) => value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -217,6 +214,26 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
         year: "2-digit",
         timeZone: "UTC",
       }).format(new Date(value));
+
+      const celerityPresentation = (celerity: Activity["celerity"]) => {
+        const labels = {
+          Esquecida: "⛔",
+          Travada: "🧱",
+          Lenta: "🐢",
+          Rápida: "⏫",
+          "Tá voando": "🚀",
+        } as const;
+        const emoji = labels[celerity.label as keyof typeof labels];
+        const inactive = ["Esquecida", "Travada", "Lenta"].includes(celerity.label);
+        const movement = celerity.movements_last_90_days;
+
+        return {
+          label: emoji ? `${emoji} ${celerity.label}` : celerity.label,
+          summary: inactive
+            ? `${celerity.days_without_movement} ${celerity.days_without_movement === 1 ? "dia" : "dias"} sem movimentação`
+            : `${movement} ${movement === 1 ? "movimentação" : "movimentações"} em 3 meses`,
+        };
+      };
 
       const initializePropositionProgress = () => {
         document.querySelectorAll<HTMLElement>("[data-proposition-progress]:not([data-ready])").forEach((root) => {
@@ -274,25 +291,39 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
           const load = async () => {
             const isLocal = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname);
             const apiBase = isLocal ? `${location.origin}/api/v1` : PUBLIC_API_BASE_URL;
-            const searchUrl = new URL(`${apiBase}/propositions/`);
-            searchUrl.searchParams.set("q", number);
-            searchUrl.searchParams.set("limit", "10");
-            const searchResponse = await fetch(searchUrl);
-            if (!searchResponse.ok) throw new Error(String(searchResponse.status));
-            const search = await searchResponse.json() as { items: PropositionSearch[] };
-            const proposition = search.items.find((item) => item.number_label === number && item.house === house);
-            if (!proposition) throw new Error("Proposição não encontrada");
-
-            const activityResponse = await fetch(`${apiBase}/activity/${proposition.id}`);
+            const activityUrl = new URL(`${apiBase}/activity/by-number`);
+            activityUrl.searchParams.set("house", house);
+            activityUrl.searchParams.set("number_label", number);
+            const activityResponse = await fetch(activityUrl);
             if (!activityResponse.ok) throw new Error(String(activityResponse.status));
             const activity = await activityResponse.json() as Activity;
-            status.textContent = activity.celerity.label;
-            const movements = activity.celerity.movements_last_90_days;
-            summary.textContent = `${movements} ${movements === 1 ? "movimentação" : "movimentações"} em 3 meses`;
+            const presentation = celerityPresentation(activity.celerity);
+            status.textContent = presentation.label;
+            summary.textContent = presentation.summary;
             renderEvents(activity.events);
           };
 
-          load().catch(renderUnavailable);
+          const loadWhenVisible = () => {
+            const startLoading = () => {
+              status.textContent = "Carregando";
+              summary.textContent = "Buscando movimentações oficiais";
+              load().catch(renderUnavailable);
+            };
+
+            if (!("IntersectionObserver" in window)) {
+              startLoading();
+              return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+              if (!entries.some((entry) => entry.isIntersecting)) return;
+              observer.disconnect();
+              startLoading();
+            }, { rootMargin: "240px 0px" });
+            observer.observe(root);
+          };
+
+          loadWhenVisible();
         });
       };
 
@@ -567,7 +598,8 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     position: relative;
     z-index: 0;
     display: flex;
-    width: 108px;
+    min-width: 118px;
+    padding: 0 6px;
     height: 39px;
     align-items: center;
     justify-content: center;
@@ -582,8 +614,8 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     position: absolute;
     z-index: -1;
     top: 0;
+    right: -8px;
     left: -8px;
-    width: 118px;
     height: 41px;
     background: var(--proposition-status-label) center / 100% 100% no-repeat;
     content: "";
@@ -603,6 +635,7 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     background: #fff;
   }
   .proposition-timeline.is-empty { display: grid; padding: 25px; place-items: center; }
+  .proposition-timeline:not(.is-empty) { min-height: 0; }
   .proposition-timeline p {
     margin: 0;
     color: #998d96;
@@ -649,8 +682,8 @@ const title = `${proposition.numero} | Atividade Legislativa | Elas no Congresso
     .proposition-progress { padding: 88px 16px 96px; }
     .proposition-progress__bar { height: 82px; padding: 0 14px; }
     .proposition-progress__bar h2 { top: -43px; font-size: 28px; }
-    .proposition-progress__status { width: 101px; font-size: 20px; }
-    .proposition-progress__status::before { left: -6px; width: 112px; }
+    .proposition-progress__status { min-width: 112px; font-size: 20px; }
+    .proposition-progress__status::before { right: -6px; left: -6px; }
     .proposition-progress__summary { max-width: 120px; font-size: 14px; line-height: 18px; text-align: right; }
     .proposition-timeline { min-height: 156px; }
     .proposition-timeline.is-empty { padding: 20px; }
