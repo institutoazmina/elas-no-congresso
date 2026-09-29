@@ -25,19 +25,6 @@ type RawProposal = {
     autores?: Record<string, number>;
     legislatura: number;
     quiteria_prob?: number;
-    celerity?: {
-        label: string;
-        days_without_movement: number;
-        movements_last_90_days: number;
-        last_event_at: string | null;
-    };
-    events?: Array<{
-        event_at: string;
-        title?: string | null;
-        description?: string | null;
-        committee_acronym?: string | null;
-        committee_name?: string | null;
-    }>;
 };
 
 type RawLegislature = {
@@ -76,7 +63,6 @@ import {
 import { authorRoute } from "../lib/author-page";
 import { propositionRoute } from "../lib/proposition-utils";
 import { canonicalPropositionKey, extractPropositionYear, formatPresentedDate, normalizeEvaluatorKey } from "../lib/canonical";
-import { PUBLIC_API_BASE_URL } from "astro:env/client";
 import listaEnriquecida from "../data/categorias-proposicoes.json" with { type: "json" };
 import {
     activityAssessment,
@@ -89,7 +75,6 @@ import {
 const normalize = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const escapeCsv = (value: unknown) => `"${String(value ?? "").replaceAll('"', '""')}"`;
 const formatNumber = new Intl.NumberFormat("pt-BR");
-const apiBase = PUBLIC_API_BASE_URL.replace(/\/$/, "");
 
 function initActivity(root: HTMLElement) {
     if (root.dataset.initialized) return;
@@ -660,7 +645,7 @@ function initActivity(root: HTMLElement) {
         const row = document.createElement("tr");
         const number = document.createElement("td");
         const link = document.createElement("a");
-        link.href = item.celerity ? `/atividade-legislativa/historico/?id=${item.i}` : propositionRoute(item.numero) || "/atividade-legislativa";
+        link.href = propositionRoute(item.numero) || "/atividade-legislativa";
         link.textContent = item.numero;
         const house = document.createElement("small");
         house.textContent = normalize(item.casa).startsWith("sen") ? "Senado" : "Câmara";
@@ -685,9 +670,7 @@ function initActivity(root: HTMLElement) {
             evaluator.append(comment);
         }
         const progress = document.createElement("td");
-        progress.innerHTML = item.celerity
-            ? `<strong>${item.celerity.label}</strong><small>${item.celerity.movements_last_90_days} movimentações em 3 meses</small>`
-            : `<strong>Indisponível</strong><small>Histórico ainda não importado</small>`;
+        progress.innerHTML = `<strong>${(item.quiteria_prob ?? 0) >= .55 ? "Rápida" : "Lenta"}</strong><small>${Math.round((item.quiteria_prob ?? 0) * 100)}% de chance de avançar</small>`;
         const theme = document.createElement("td");
         theme.textContent = item.categoria || "Não informada";
         theme.title = item.categoria ? `Categoria oficial: ${item.categoria}` : "Sem categoria no dataset oficial para esta proposição";
@@ -706,7 +689,7 @@ function initActivity(root: HTMLElement) {
         const header = document.createElement("header");
         const titleWrap = document.createElement("div");
         const title = document.createElement("a");
-        title.href = item.celerity ? `/atividade-legislativa/historico/?id=${item.i}` : propositionRoute(item.numero) || "/atividade-legislativa";
+        title.href = propositionRoute(item.numero) || "/atividade-legislativa";
         title.textContent = item.numero;
         const house = document.createElement("small");
         house.textContent = normalize(item.casa).startsWith("sen") ? "Senado" : "Câmara";
@@ -722,37 +705,9 @@ function initActivity(root: HTMLElement) {
         const evaluation = document.createElement("span");
         evaluation.innerHTML = `<strong>${item.avaliador || "Sem avaliação"}</strong><small>${item.comentario ? "Há parecer complementar" : "Sem parecer complementar"}</small>`;
         const speed = document.createElement("span");
-        speed.innerHTML = item.celerity
-            ? `<strong>${item.celerity.label}</strong><small>${item.celerity.movements_last_90_days} movimentações em 3 meses</small>`
-            : `<strong>Indisponível</strong><small>Histórico ainda não importado</small>`;
+        speed.innerHTML = `<strong>${(item.quiteria_prob ?? 0) >= .55 ? "Rápida" : "Lenta"}</strong><small>Tramitação estimada</small>`;
         footer.append(evaluation, speed);
-        if (item.events?.length) {
-            const history = document.createElement("details");
-            history.className = "activity-card__history";
-            const toggle = document.createElement("summary");
-            toggle.textContent = "Ver últimas movimentações";
-            const list = document.createElement("ol");
-            item.events.forEach((event) => {
-                const entry = document.createElement("li");
-                const eventHeader = document.createElement("span");
-                eventHeader.textContent = event.committee_acronym || event.committee_name || "Congresso Nacional";
-                const eventDate = document.createElement("time");
-                eventDate.textContent = new Intl.DateTimeFormat("pt-BR").format(new Date(event.event_at));
-                const eventTitle = document.createElement("strong");
-                eventTitle.textContent = event.title || "Movimentação legislativa";
-                const eventDescription = document.createElement("p");
-                eventDescription.textContent = event.description || "Sem descrição disponível.";
-                entry.append(eventHeader, eventDate, eventTitle, eventDescription);
-                list.append(entry);
-            });
-            const fullHistory = document.createElement("a");
-            fullHistory.href = `/atividade-legislativa/historico/?id=${item.i}`;
-            fullHistory.textContent = "Ver histórico completo";
-            history.append(toggle, list, fullHistory);
-            article.append(header, tag, createAuthor(item), summary, footer, history);
-        } else {
-            article.append(header, tag, createAuthor(item), summary, footer);
-        }
+        article.append(header, tag, createAuthor(item), summary, footer);
         return article;
     }
 
@@ -1061,65 +1016,9 @@ function initActivity(root: HTMLElement) {
         status.className = "activity-status is-loading";
         status.innerHTML = `<span aria-hidden="true"></span><p>Carregando atividade legislativa…</p>`;
         try {
-            const response = await fetch(`${apiBase}/activity/?limit=5000`);
+            const response = await fetch("/dados.json");
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const items = await response.json() as Array<{
-                id: number;
-                house: string;
-                number_label: string;
-                ementa: string;
-                tramitation_url?: string;
-                is_favorable?: boolean | null;
-                assessment_organization?: string | null;
-                assessment_comments?: string | null;
-                relevance?: string | null;
-                category?: string | null;
-                authors: Array<{
-                    id?: number | null;
-                    name: string;
-                    party?: string | null;
-                    state?: string | null;
-                    gender?: string | null;
-                    photo_url?: string | null;
-                }>;
-                celerity: RawProposal["celerity"];
-                events: RawProposal["events"];
-            }>;
-            const people: Record<string, RawParliamentarian> = {};
-            const propositions: Record<string, RawProposal> = {};
-            items.forEach((item) => {
-                const authors: Record<string, number> = {};
-                item.authors.forEach((author, index) => {
-                    const id = String(author.id ?? `${item.id}-${index}-${author.name}`);
-                    authors[id] = 1;
-                    people[id] = {
-                        nome: author.name,
-                        numero: author.id ?? -item.id * 1000 - index,
-                        foto: author.photo_url ?? undefined,
-                        genero: author.gender ?? undefined,
-                        partido: author.party ?? undefined,
-                        estado: author.state ?? undefined,
-                    };
-                });
-                propositions[String(item.id)] = {
-                    i: item.id,
-                    casa: item.house,
-                    numero: item.number_label,
-                    link: item.tramitation_url,
-                    comentario: item.assessment_comments,
-                    slug: String(item.id),
-                    resumo: item.ementa,
-                    avaliador: item.assessment_organization,
-                    favoravel: item.is_favorable === true ? 1 : item.is_favorable === false ? -1 : 0,
-                    categoria: item.category,
-                    relevancia: item.relevance === "muito_relevante" ? 1 : 0,
-                    autores: authors,
-                    legislatura: 0,
-                    celerity: item.celerity,
-                    events: item.events,
-                };
-            });
-            hydrateOptions({ legislaturas: { atual: { parlamentares: people, proposicoes } } });
+            hydrateOptions(await response.json());
             syncResponsivePageSize();
             visible = sortItems(all);
             status.hidden = true;
