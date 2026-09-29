@@ -112,8 +112,8 @@ import "../../styles/activity-table.css";
         <div class="activity-dashboard__grid">
             <div class="activity-dashboard__column">
                 <article class="activity-dashboard-card activity-dashboard-card--gender"><header><h3>Por gênero <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="gender" aria-describedby="activity-tooltip-gender" aria-expanded="false" aria-label="Saiba mais sobre o recorte por gênero"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content" data-dashboard-gender></div><footer>Não há dados sobre outros gêneros no Congresso</footer></article>
-                <article class="activity-dashboard-card activity-dashboard-card--house"><header><h3>Por casa <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="house" aria-describedby="activity-tooltip-house" aria-expanded="false" aria-label="Saiba mais sobre o recorte por casa"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content" data-dashboard-house></div></article>
-                <article class="activity-dashboard-card activity-dashboard-card--category"><header><h3>Por categoria <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="category" aria-describedby="activity-tooltip-category" aria-expanded="false" aria-label="Saiba mais sobre o recorte por categoria"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content activity-dashboard-card__empty" data-dashboard-category></div><footer>Classificação editorial oficial (Categorias 2026)</footer></article>
+                <article class="activity-dashboard-card activity-dashboard-card--house"><header><h3>Por casa <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="house" aria-describedby="activity-tooltip-house" aria-expanded="false" aria-label="Saiba mais sobre o recorte por casa"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content" data-dashboard-house></div><footer>* 'Presidência' e demais casas especiais são omitidas</footer></article>
+                <article class="activity-dashboard-card activity-dashboard-card--category"><header><h3>Por categoria <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="category" aria-describedby="activity-tooltip-category" aria-expanded="false" aria-label="Saiba mais sobre o recorte por categoria"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content"><div class="activity-dashboard-card__scrollbox activity-dashboard-card__scroll activity-dashboard-card__empty" data-dashboard-category></div></div><footer>Classificação editorial oficial (Categorias 2026)</footer></article>
             </div>
             <div class="activity-dashboard__column">
                 <article class="activity-dashboard-card activity-dashboard-card--state">
@@ -284,7 +284,7 @@ import "../../styles/activity-table.css";
     .activity-dashboard__grid { display: grid; width: 100%; height: 752px; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
     .activity-dashboard__column { display: flex; min-width: 0; height: 752px; flex-direction: column; gap: 8px; }
     .activity-dashboard-card { position: relative; display: flex; min-width: 0; overflow: hidden; flex-direction: column; color: #0b0f5e; }
-    .activity-dashboard-card--gender { height: 141px; }.activity-dashboard-card--house { height: 141px; }.activity-dashboard-card--category { height: 454px; }
+    .activity-dashboard-card--gender { height: 141px; }.activity-dashboard-card--house { height: auto; }.activity-dashboard-card--category { min-height: 0; flex: 1 1 0%; }
     .activity-dashboard-card--state { height: 415px; }.activity-dashboard-card--status { height: 329px; }.activity-dashboard-card--party, .activity-dashboard-card--author { height: 752px; }
     .activity-dashboard-card > header { display: flex; height: 23px; min-width: 0; flex: 0 0 23px; align-items: flex-start; justify-content: space-between; border-bottom: 1px solid rgb(66 66 246 / 25%); }
     .activity-dashboard-card h3 { position: relative; z-index: 1; display: flex; height: 23px; margin: 0 0 -1px; align-items: center; gap: 4px; border: 1px solid rgb(66 66 246 / 25%); border-bottom-color: #fff; background: #fff; padding: 4px 12px 2px; font-family: "ETC Anybody", sans-serif; font-size: 14px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 16px; text-transform: uppercase; white-space: nowrap; }
@@ -310,6 +310,9 @@ import "../../styles/activity-table.css";
     .activity-dashboard-card__scroll::-webkit-scrollbar-track { background: transparent; }
     .activity-dashboard-card__scroll::-webkit-scrollbar-thumb { border-radius: 999px; background: #aeb7ea; }
     .activity-dashboard-card__scroll::-webkit-scrollbar-thumb:hover { background: #8f9cdd; }
+    /* Por categoria: moldura externa estática; só a lista interna rola e o
+       footer fica isolado da scrollbar, fechando a base como os demais cards. */
+    .activity-dashboard-card--category .activity-dashboard-card__scrollbox { display: flex; min-width: 0; min-height: 0; flex: 1 1 auto; flex-direction: column; gap: 8px; overflow-x: hidden; }
     .activity-dashboard-card > footer { min-height: 26px; flex: none; padding: 4px 12px 6px; border: 1px solid rgb(66 66 246 / 25%); border-radius: 0 0 4px 4px; color: rgb(11 15 94 / 75%); font-size: 12px; line-height: 16px; }
     .activity-dashboard-card__row { display: grid; min-height: 32px; flex: 0 0 auto; grid-template-columns: minmax(176px, 1fr) 38px 80px; align-items: center; gap: 6px; font-size: 14px; line-height: 16px; }
     .activity-dashboard-card__key { min-width: 0; overflow-wrap: anywhere; }
@@ -466,6 +469,8 @@ import "../../styles/activity-table.css";
         .activity-summary, .activity-dashboard { padding-right: 24px; padding-left: 24px; }
         .activity-dashboard__grid { height: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); }
         .activity-dashboard__column { height: auto; }
+        /* Tablet: coluna com altura automática — trava na altura prevista (flex-basis manda em item flex). */
+        .activity-dashboard-card--category { flex: 0 0 454px; }
         .activity-dashboard-card--party, .activity-dashboard-card--author { height: 600px; }
         .activity-table-wrap { padding-right: 20px; padding-left: 20px; }.activity-pagination { padding: 24px; }
     }
