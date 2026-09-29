@@ -20,10 +20,10 @@ import screenTool from "../../assets/images/redesign/explore/screen-tool-@3x.png
         box-sizing: border-box;
         display: flex;
         width: 100%;
-        min-height: 684px;
+        min-height: 0;
         height: auto;
         margin-top: 48px;
-        padding: 96px 24px;
+        padding: 64px 24px;
         align-items: center;
         justify-content: center;
         overflow: clip;
@@ -46,15 +46,16 @@ import screenTool from "../../assets/images/redesign/explore/screen-tool-@3x.png
         min-width: 0;
         flex-direction: column;
         align-items: center;
-        gap: 16px;
+        gap: 0;
     }
 
     .explore-congress h2,
     .explore-congress p { margin: 0; }
 
     .explore-congress h2 {
-        width: 99px;
-        height: 22px;
+        width: auto;
+        height: auto;
+        margin: 0 0 12px;
         color: #fff;
         font-family: "ETC Anybody", sans-serif;
         font-size: 32px;
@@ -65,9 +66,10 @@ import screenTool from "../../assets/images/redesign/explore/screen-tool-@3x.png
         text-transform: uppercase;
     }
 
-    .explore-congress__subtitle {
+    .explore-congress p.explore-congress__subtitle {
         width: 100%;
         height: auto;
+        margin: 0 0 28px;
         color: #fff;
         font-family: "Plus Jakarta Sans", sans-serif;
         font-size: 18px;
@@ -79,9 +81,10 @@ import screenTool from "../../assets/images/redesign/explore/screen-tool-@3x.png
     .explore-congress__screen-wrap {
         display: flex;
         width: 100%;
-        max-width: 720px;
+        max-width: 660px;
         height: auto;
-        padding: 24px 0;
+        margin: 0 0 28px;
+        padding: 0;
         align-items: flex-start;
         justify-content: center;
     }
@@ -174,21 +177,21 @@ import screenTool from "../../assets/images/redesign/explore/screen-tool-@3x.png
 
     @media (min-width: 768px) {
         .explore-congress {
-            padding: 96px max(24px, calc((100vw - 720px) / 2));
+            padding: 64px max(24px, calc((100vw - 660px) / 2));
         }
 
         .explore-congress__content {
-            width: 720px;
-            min-width: 720px;
+            width: 660px;
+            min-width: 0;
         }
 
         .explore-congress__subtitle {
-            width: 720px;
-            height: 48px;
+            width: 660px;
+            height: auto;
         }
 
         .explore-congress__screen-wrap {
-            width: 720px;
+            width: 660px;
         }
 
         .explore-congress__button {
