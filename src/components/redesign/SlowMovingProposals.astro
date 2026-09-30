@@ -7,25 +7,112 @@ import favorableThumb from "../../assets/images/thumbs-up.svg";
 import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
 import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
 import turtleEmoji from "../../assets/images/redesign/home/turtle.png";
+import { fetchSlowFavorable } from "../../lib/activity-api";
+import { API_BASE_URL } from "astro:env/server";
 
-const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 }));
+let proposals = [];
+try {
+    proposals = await fetchSlowFavorable(API_BASE_URL);
+} catch {
+    // The homepage remains available while the API is being deployed or unavailable.
+}
 ---
 
-<section class="slow-moving-proposals" aria-labelledby="slow-moving-proposals-title" style={`--slow-moving-proposals-background: url(${backgroundPattern.src}); --slow-moving-proposals-halftone-shadow: url(${halftoneShadow.src})`}>
+{proposals.length > 0 && <section class="slow-moving-proposals" aria-labelledby="slow-moving-proposals-title" data-document-image={documentImage.src} data-favorable-thumb={favorableThumb.src} data-proposals={JSON.stringify(proposals)} style={`--slow-moving-proposals-background: url(${backgroundPattern.src}); --slow-moving-proposals-halftone-shadow: url(${halftoneShadow.src})`}>
     <header class="slow-moving-proposals__header"><img src={attention.src} alt="" /><h2 id="slow-moving-proposals-title">E o que é bom pra gente, mas<br />tá indo beeeem devagar: <img src={turtleEmoji.src} alt="" class="slow-moving-proposals__emoji" /></h2><p>Projetos favoráveis que ainda aguardam relatoria, parecer ou votação</p></header>
     <div class="slow-moving-proposals__carousel" data-slow-carousel>
         <div class="slow-moving-proposals__controls"><button type="button" aria-label="Proposição anterior" data-previous><img src={arrowBack.src} alt="" /></button><button type="button" aria-label="Próxima proposição" data-next><img src={arrowForward.src} alt="" /></button></div>
-        <div class="slow-moving-proposals__viewport"><div class="slow-moving-proposals__track" data-track>
-            {cards.map((card) => <article class:list={["slow-moving-proposals__card", { "slow-moving-proposals__card--featured": card.featured }]} aria-hidden={card.id === 7 ? undefined : "true"}>
-                <header class="slow-moving-proposals__card-header"><strong>PDL 176/2021</strong><span class="slow-moving-proposals__status"><img class="slow-moving-proposals__document" src={documentImage.src} alt="" /><span class="slow-moving-proposals__thumbs"><img class="slow-moving-proposals__thumb" src={favorableThumb.src} alt="" /><b>Favorável</b></span></span></header>
-                <div class="slow-moving-proposals__content"><div class="slow-moving-proposals__authors"><p>Jandira Feghali <strong>PCdoB/RJ</strong></p><p>Erika Kokay <strong>PT/DF</strong></p><p>Alice Portugal <strong>PCdoB/BA</strong></p><p class="slow-moving-proposals__more">+7 parlamentares</p></div><span class="slow-moving-proposals__badge">Saúde</span><p class="slow-moving-proposals__description">Susta a Portaria nº 13, de 19 de abril de 2021, que torna pública a decisão de incorporar o implante subdérmico de etonogestrel, condicionada à criação de programa específico, na prevenção da gravidez não planejada para mulheres em idade fértil: em situação de rua; com HIV/AIDS em uso de dolutegravir; em uso de talidomida; privadas de liberdade; trabalhadoras do sexo; e em tratamento de tuberculose em uso de aminoglicosídeos, no âmbito do Sistema Único de Saúde - SUS..</p></div>
-                <footer>Teve <strong>1 movimentação</strong> em <b>14 meses</b></footer>
-            </article>)}
-        </div></div>
+        <div class="slow-moving-proposals__viewport"><div class="slow-moving-proposals__track" data-track></div></div>
     </div>
 </section>
+}
 
 <script>
+    type Proposal = {
+        number_label: string;
+        ementa: string;
+        category: string | null;
+        authors: { name: string; party: string | null; state: string | null }[];
+        celerity: { days_without_movement: number };
+    };
+
+    const formatCategory = (category: string | null) => category?.replaceAll("_", " ") || "Sem categoria";
+    const propositionRoute = (numberLabel: string) => `/atividade-legislativa/proposicao/${numberLabel
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")}`;
+
+    const createCard = (proposal: Proposal, assets: DOMStringMap) => {
+        const card = document.createElement("a");
+        card.className = "slow-moving-proposals__card";
+        card.href = propositionRoute(proposal.number_label);
+        card.setAttribute("aria-label", `Ver proposição ${proposal.number_label}`);
+
+        const header = document.createElement("header");
+        header.className = "slow-moving-proposals__card-header";
+        const number = document.createElement("strong");
+        number.textContent = proposal.number_label;
+        const status = document.createElement("span");
+        status.className = "slow-moving-proposals__status";
+        const documentIcon = document.createElement("img");
+        documentIcon.className = "slow-moving-proposals__document";
+        documentIcon.src = assets.documentImage || "";
+        documentIcon.alt = "";
+        const thumbs = document.createElement("span");
+        thumbs.className = "slow-moving-proposals__thumbs";
+        const thumb = document.createElement("img");
+        thumb.className = "slow-moving-proposals__thumb";
+        thumb.src = assets.favorableThumb || "";
+        thumb.alt = "";
+        const assessment = document.createElement("b");
+        assessment.textContent = "Favorável";
+        thumbs.append(thumb, assessment);
+        status.append(documentIcon, thumbs);
+        header.append(number, status);
+
+        const content = document.createElement("div");
+        content.className = "slow-moving-proposals__content";
+        const authors = document.createElement("div");
+        authors.className = "slow-moving-proposals__authors";
+        const visibleAuthors = proposal.authors.slice(0, 3);
+        if (visibleAuthors.length) {
+            for (const author of visibleAuthors) {
+                const line = document.createElement("p");
+                const name = document.createElement("span");
+                name.textContent = author.name;
+                const party = document.createElement("strong");
+                party.textContent = [author.party, author.state].filter(Boolean).join("/");
+                line.append(name, party);
+                authors.append(line);
+            }
+        } else {
+            authors.append(Object.assign(document.createElement("p"), { textContent: "Autoria indisponível" }));
+        }
+        if (proposal.authors.length > visibleAuthors.length) {
+            const more = document.createElement("p");
+            more.className = "slow-moving-proposals__more";
+            more.textContent = `+${proposal.authors.length - visibleAuthors.length} parlamentares`;
+            authors.append(more);
+        }
+        const category = document.createElement("span");
+        category.className = "slow-moving-proposals__badge";
+        category.textContent = formatCategory(proposal.category);
+        const description = document.createElement("p");
+        description.className = "slow-moving-proposals__description";
+        description.textContent = proposal.ementa;
+        content.append(authors, category, description);
+
+        const footer = document.createElement("footer");
+        const months = Math.max(1, Math.floor(proposal.celerity.days_without_movement / 30));
+        const count = document.createElement("strong");
+        count.textContent = `${months} ${months === 1 ? "mês" : "meses"}`;
+        footer.append("Está há ", count, " sem movimentação");
+        card.append(header, content, footer);
+        return card;
+    };
+
     const initializeSlowMovingProposals = () => {
         document.querySelectorAll<HTMLElement>("[data-slow-carousel]").forEach((carousel) => {
             if (carousel.dataset.slowCarouselInitialized) return;
@@ -34,11 +121,20 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
             const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
             const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
             if (!track || !previous || !next) return;
+            const section = carousel.closest<HTMLElement>(".slow-moving-proposals");
+            const proposals = JSON.parse(section?.dataset.proposals || "[]") as Proposal[];
+            if (!proposals.length || !section) {
+                section?.remove();
+                return;
+            }
+            track.replaceChildren(...[...proposals, ...proposals, ...proposals].map((proposal) => createCard(proposal, section.dataset)));
+            const groupSize = proposals.length;
             const cards = Array.from(track.querySelectorAll<HTMLElement>(".slow-moving-proposals__card"));
-            let physical = 7;
+            let physical = groupSize + Math.floor(groupSize / 2);
             let resetting = false;
             const update = () => {
                 track.style.transform = `translateX(${-192 - physical * 432}px)`;
+                track.style.setProperty("--mobile-active-index", String(physical));
                 cards.forEach((card, index) => {
                     const active = index === physical;
                     card.classList.toggle("slow-moving-proposals__card--featured", active);
@@ -52,9 +148,9 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
                 }
             };
             track.addEventListener("transitionend", (event) => {
-                if (event.propertyName !== "transform" || (physical > 4 && physical < 10)) return;
+                if (event.propertyName !== "transform" || (physical >= groupSize && physical < groupSize * 2)) return;
                 resetting = true;
-                physical += physical < 5 ? 5 : -5;
+                physical += physical < groupSize ? groupSize : -groupSize;
                 track.style.transition = "none";
                 update();
                 requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -64,6 +160,7 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
             });
             previous.addEventListener("click", () => move(-1));
             next.addEventListener("click", () => move(1));
+            update();
         });
     };
 
@@ -71,7 +168,7 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
     document.addEventListener("astro:page-load", initializeSlowMovingProposals);
 </script>
 
-<style>
+<style is:global>
     .slow-moving-proposals { height: 923.9435424804688px; overflow: hidden; background: #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
     .slow-moving-proposals * { box-sizing: border-box; }
     .slow-moving-proposals__header { display: flex; width: 816px; height: 174px; margin: auto; padding: 48px; flex-direction: column; gap: 16px; }
@@ -85,7 +182,7 @@ const cards = Array.from({ length: 15 }, (_, id) => ({ id, featured: id === 7 })
     .slow-moving-proposals__controls button { width: 56px; height: 40px; border: 2px solid #4242f6; background: #fff; color: #4242f6; font: 32px/1 Arial; }
     .slow-moving-proposals__viewport { position: absolute; top: 112px; width: 100%; overflow: hidden; }
     .slow-moving-proposals__track { display: flex; width: max-content; gap: 48px; transform: translateX(-2496px); transition: transform .2s ease; }
-    .slow-moving-proposals__card { display: flex; width: 384px; height: 483.94354248046875px; flex: none; flex-direction: column; overflow: visible; border: 1px solid #998d96; background: #fff; }
+    .slow-moving-proposals__card { display: flex; width: 384px; height: 483.94354248046875px; flex: none; flex-direction: column; overflow: visible; border: 1px solid #998d96; background: #fff; color: inherit; text-decoration: none; }
     .slow-moving-proposals__card--featured { border-color: #0b0f5e; box-shadow: -4px 4px 0 #0b0f5e; }
     .slow-moving-proposals__card-header { position: relative; display: flex; height: 69.94354248046875px; align-items: center; border-bottom: 1px solid #998d96; padding: 8px 16px; }
     .slow-moving-proposals__card-header > strong { font-family: "ETC Anybody", sans-serif; font-size: 20px; line-height: 24px; font-variation-settings: "wdth" 75; }

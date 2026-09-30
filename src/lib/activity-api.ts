@@ -52,3 +52,9 @@ export async function fetchFastUnfavorable(baseUrl: string, signal?: AbortSignal
   if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
   return response.json() as Promise<ActivityProposition[]>;
 }
+
+export async function fetchSlowFavorable(baseUrl: string, signal?: AbortSignal): Promise<ActivityProposition[]> {
+  const response = await fetch(`${baseUrl.replace(/\/$/, "")}/activity/slow-favorable`, { signal });
+  if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
+  return response.json() as Promise<ActivityProposition[]>;
+}
