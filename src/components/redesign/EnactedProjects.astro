@@ -51,7 +51,7 @@ const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
             <div class="enacted-projects__viewport"><div class="enacted-projects__track" data-track>
                 {cards.map(({ project, physical }) => <a
                     class:list={["enacted-projects__card", `enacted-projects__card--${project.assessment_label}`, { "enacted-projects__card--featured": physical === initialPhysical }]}
-                    href={propositionRoute(project.number_label) || "/atividade-legislativa"}
+                    href={propositionRoute({ numero: project.number_label, house: project.house }) || "/atividade-legislativa"}
                     data-approved={String(project.assessment_label === "favorável")}
                     aria-label={`Ver proposição ${project.number_label}`}
                     aria-hidden={physical === initialPhysical ? undefined : "true"}

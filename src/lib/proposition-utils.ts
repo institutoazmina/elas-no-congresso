@@ -8,10 +8,15 @@ export function propositionSlug(value: unknown): string | null {
   return slug || null;
 }
 
-export function propositionRoute(proposition: { numero: string } | string): string | null {
+export function propositionRoute(
+  proposition: { numero: string; house?: string } | string,
+  house?: string,
+): string | null {
   const number = typeof proposition === "string" ? proposition : proposition.numero;
   const slug = propositionSlug(number);
-  return slug ? `/atividade-legislativa/proposicao/${slug}` : null;
+  const propositionHouse = typeof proposition === "string" ? house : proposition.house;
+  const houseSlug = propositionSlug(propositionHouse);
+  return slug ? `/atividade-legislativa/proposicao/${houseSlug ? `${houseSlug}-` : ""}${slug}` : null;
 }
 
 export function propositionStatus(probability: number | null | undefined): string {

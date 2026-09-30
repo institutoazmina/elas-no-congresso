@@ -22,18 +22,28 @@ export async function getStaticPaths() {
   ]);
   for (const activity of [...activities, ...fastUnfavorable]) {
     const slug = propositionSlug(activity.number_label);
-    if (slug && !paths.has(slug)) paths.set(slug, { params: { slug }, props: { activity } });
+    const houseSlug = propositionSlug(activity.house);
+    if (!slug) continue;
+    if (houseSlug) paths.set(`${houseSlug}-${slug}`, { params: { slug: `${houseSlug}-${slug}` }, props: { activity } });
+    if (!paths.has(slug)) paths.set(slug, { params: { slug }, props: { activity } });
   }
   return [...paths.values()];
 }
 
 const activityFromProps = (Astro.props as { activity?: ActivityProposition }).activity;
+const routeHouse = Astro.params.slug?.match(/^(camara|senado)-/)?.[1] || null;
+const routeNumberSlug = routeHouse
+  ? Astro.params.slug?.slice(routeHouse.length + 1)
+  : Astro.params.slug;
 const activity = activityFromProps ?? (await (async () => {
   const [activities, fastUnfavorable] = await Promise.all([
     fetchActivity(API_BASE_URL),
     fetchFastUnfavorable(API_BASE_URL),
   ]);
-  return [...activities, ...fastUnfavorable].find((candidate) => propositionSlug(candidate.number_label) === Astro.params.slug);
+  return [...activities, ...fastUnfavorable].find((candidate) =>
+    propositionSlug(candidate.number_label) === routeNumberSlug
+    && (!routeHouse || candidate.house === routeHouse)
+  );
 })());
 if (!activity) throw new Error(`A API não retornou a proposição ${Astro.params.slug ?? "solicitada"}`);
 
