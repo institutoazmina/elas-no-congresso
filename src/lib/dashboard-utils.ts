@@ -156,7 +156,10 @@ const normalizeToken = (value: unknown): string =>
         .replace(/\s+/g, " ");
 
 export function personKey(author: AuthorLike): string {
-    if (author.numero !== undefined && author.numero !== null && String(author.numero).trim() !== "") {
+    // A API representa autores institucionais sem parlamentar com `id: null`.
+    // Na hidratação legada esse valor vira 0; PKs Django são sempre positivos,
+    // portanto 0 não pode ser usado como identidade estável.
+    if (author.numero !== undefined && author.numero !== null && Number(author.numero) > 0) {
         return `num:${author.numero}`;
     }
     const slug = normalizeToken(author.slug);

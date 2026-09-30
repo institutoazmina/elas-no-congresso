@@ -32,7 +32,7 @@ type RawProposal = {
     };
 };
 
-type Proposal = RawProposal & { year: number; authors: RawParliamentarian[]; parties: string[]; states: string[]; genders: string[]; situacao?: string | null; apresentadaEm?: string | null };
+type Proposal = RawProposal & { year: number; authors: RawParliamentarian[]; parties: string[]; states: string[]; genders: string[]; situacao?: string | null; apresentadaEm?: string | null; movementsLast90Days: number };
 type DashboardRow = { key: string; label: string; favorable: number; unfavorable: number; photo?: string; meta?: string };
 type TableSort = "number" | "author" | "summary" | "assessment" | "evaluator" | "progress" | "category" | "updated";
 
@@ -61,13 +61,15 @@ import {
 } from "../lib/dashboard-utils";
 import { authorRoute } from "../lib/author-page";
 import { propositionRoute } from "../lib/proposition-utils";
-import { extractPropositionYear, formatPresentedDate, normalizeEvaluatorKey } from "../lib/canonical";
+import { extractPropositionYear, formatPresentedDate, normalizeEvaluatorKey, presentedAtSortValue } from "../lib/canonical";
 import { PUBLIC_API_BASE_URL } from "astro:env/client";
 import type { ActivityProposition } from "../lib/activity-api";
 import {
     activityAssessment,
     filterActivityItems,
     getActivityCategories,
+    getActivityStatuses,
+    normalizeActivityStatus,
     paginateActivityItems,
     type ActivityFilterState,
 } from "../lib/activity-filters";
@@ -137,6 +139,8 @@ function initActivity(root: HTMLElement) {
         party: value("party"),
         category: value("category"),
         assessment: value("assessment") as ActivityFilterState["assessment"],
+        status: value("status"),
+        movements: value("movements") as ActivityFilterState["movements"],
         gender: value("gender"),
         state: value("state"),
         comments: value("comments"),
@@ -217,6 +221,7 @@ function initActivity(root: HTMLElement) {
                 celerity: proposal.celerity,
                 situacao: proposal.current_status,
                 apresentadaEm: proposal.presented_at,
+                movementsLast90Days: proposal.celerity.movements_last_90_days,
                 year,
                 authors,
                 parties: [...new Set(authors.map((author) => author.partido).filter((party): party is string => Boolean(party)))],
@@ -257,6 +262,7 @@ function initActivity(root: HTMLElement) {
         addOptions("party-mobile", [...parties].sort((a, b) => a.localeCompare(b, "pt-BR")));
         addOptions("state", [...states].sort());
         addOptions("evaluator", [...evaluatorDisplay.values()].sort((a, b) => a.localeCompare(b, "pt-BR")));
+        addOptions("status", getActivityStatuses(proposals));
         const categories = getActivityCategories(proposals);
         if (categories.length) {
             addOptions("category", categories);
@@ -286,7 +292,7 @@ function initActivity(root: HTMLElement) {
         const number = (item: Proposal, key: TableSort) => {
             if (key === "assessment") return item.favoravel;
             if (key === "progress") return item.celerity.movements_last_90_days;
-            if (key === "updated") return item.year * 1_000_000 + item.i;
+            if (key === "updated") return presentedAtSortValue(item.apresentadaEm);
             return 0;
         };
         const direction = tableSortDirection === "ascending" ? 1 : -1;
@@ -539,7 +545,11 @@ function initActivity(root: HTMLElement) {
         if (categories.length === 0) {
             $("[data-dashboard-category]").textContent = "Sem categoria oficial para os filtros selecionados.";
         }
-        $("[data-dashboard-status]").textContent = "Status legislativos completos não estão disponíveis no arquivo de dados desta listagem.";
+        const statuses = aggregateRows(visible, (item) => {
+            const status = normalizeActivityStatus(item.situacao);
+            return [{ key: status || "unavailable", label: status || "Não informado" }];
+        });
+        fillDashboardRows("[data-dashboard-status]", statuses);
 
         for (const uf of MAP_UF_CODES) {
             const visualPath = mapVisualPaths.get(uf);
@@ -994,7 +1004,9 @@ function initActivity(root: HTMLElement) {
             const apiBase = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)
                 ? `${location.origin}/api/v1`
                 : PUBLIC_API_BASE_URL;
-            const response = await fetch(`${apiBase}/activity?limit=5000`);
+            // A listagem não exibe histórico de eventos; omiti-lo reduz vários
+            // megabytes sem alterar os campos usados em filtros e painéis.
+            const response = await fetch(`${apiBase}/activity?limit=5000&include_events=false`);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             hydrateOptions(await response.json());
             syncResponsivePageSize();

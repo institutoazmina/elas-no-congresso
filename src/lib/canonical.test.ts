@@ -8,6 +8,7 @@ import {
     normalizeCasaKey,
     normalizeEvaluatorKey,
     normalizeNumero,
+    presentedAtSortValue,
 } from "./canonical.ts";
 
 // Normalização de número: trim + colapso de whitespace + uppercase.
@@ -53,6 +54,10 @@ assert.equal(extractPropositionYear(null, "SBT 2/0"), 0);
 assert.equal(formatPresentedDate("2021-04-26"), "26/04/2021");
 assert.equal(formatPresentedDate(null), "Indisponível");
 assert.equal(formatPresentedDate("não-data"), "Indisponível");
+
+// Ordenação da coluna "Atualização" usa a data apresentada, não o id interno.
+assert.ok(presentedAtSortValue("2026-09-25") > presentedAtSortValue("2026-06-01"));
+assert.equal(presentedAtSortValue("não-data"), 0);
 
 // Colisões: forma sem espaço duplo é a canônica (URL única).
 assert.equal(isCanonicalNumero("PL 1338/2022"), true);

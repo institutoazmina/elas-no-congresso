@@ -9,6 +9,8 @@ export type ActivityFilterState = {
     party: string;
     category: string;
     assessment: ActivityAssessment;
+    status: string;
+    movements: "" | "with" | "without";
     gender: string;
     state: string;
     comments: string;
@@ -21,6 +23,8 @@ export type ActivityFilterItem = {
     casa: string;
     year: number;
     favoravel: number;
+    situacao?: string | null;
+    movementsLast90Days?: number | null;
     avaliador?: string | null;
     comentario?: string | null;
     categoria?: string | null;
@@ -37,6 +41,8 @@ export const EMPTY_ACTIVITY_FILTERS: Readonly<ActivityFilterState> = Object.free
     party: "",
     category: "",
     assessment: "",
+    status: "",
+    movements: "",
     gender: "",
     state: "",
     comments: "",
@@ -47,6 +53,9 @@ export const normalizeActivitySearch = (value: unknown) => String(value ?? "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
+
+/** Status oficial, preservado para exibição e comparado sem espaços acidentais. */
+export const normalizeActivityStatus = (value: unknown) => String(value ?? "").trim();
 
 export function activityAssessment(value: number): Exclude<ActivityAssessment, ""> {
     if (value > 0) return "favorable";
@@ -69,6 +78,10 @@ export function matchesActivityFilters(item: ActivityFilterItem, filters: Activi
         && (!filters.party || item.parties.includes(filters.party))
         && (!filters.category || normalizeActivitySearch(item.categoria) === normalizeActivitySearch(filters.category))
         && (!filters.assessment || activityAssessment(item.favoravel) === filters.assessment)
+        && (!filters.status || normalizeActivityStatus(item.situacao) === normalizeActivityStatus(filters.status))
+        && (!filters.movements || (filters.movements === "with"
+            ? (item.movementsLast90Days ?? 0) > 0
+            : (item.movementsLast90Days ?? 0) === 0))
         && (!filters.gender || item.genders.includes(filters.gender))
         && (!filters.state || item.states.includes(filters.state))
         && (!filters.evaluator || normalizeEvaluatorKey(item.avaliador) === normalizeEvaluatorKey(filters.evaluator))
@@ -81,6 +94,11 @@ export function filterActivityItems<T extends ActivityFilterItem>(items: T[], fi
 
 export function getActivityCategories(items: Array<Pick<ActivityFilterItem, "categoria">>) {
     return [...new Set(items.map((item) => item.categoria?.trim()).filter((category): category is string => Boolean(category)))]
+        .sort((a, b) => a.localeCompare(b, "pt-BR"));
+}
+
+export function getActivityStatuses(items: Array<Pick<ActivityFilterItem, "situacao">>) {
+    return [...new Set(items.map((item) => normalizeActivityStatus(item.situacao)).filter(Boolean))]
         .sort((a, b) => a.localeCompare(b, "pt-BR"));
 }
 

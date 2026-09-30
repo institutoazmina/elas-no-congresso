@@ -4,6 +4,7 @@ import {
     activityAssessment,
     filterActivityItems,
     getActivityCategories,
+    getActivityStatuses,
     paginateActivityItems,
     type ActivityFilterItem,
     type ActivityFilterState,
@@ -15,6 +16,8 @@ const proposal = ({ numero, ...overrides }: Partial<ActivityFilterItem> & Pick<A
     casa: "Deputado",
     year: 2024,
     favoravel: 1,
+    situacao: "Em tramitação",
+    movementsLast90Days: 2,
     avaliador: "Anis",
     comentario: "Parecer com ressalvas",
     categoria: null,
@@ -33,6 +36,8 @@ const ITEMS: ActivityFilterItem[] = [
         casa: "Senador",
         year: 2023,
         favoravel: -1,
+        situacao: "Arquivada",
+        movementsLast90Days: 0,
         avaliador: "Themis",
         comentario: "",
         parties: ["PSD", "PVB"],
@@ -48,6 +53,8 @@ const ITEMS: ActivityFilterItem[] = [
         resumo: "Cria política de educação inclusiva",
         year: 2022,
         favoravel: 0,
+        situacao: null,
+        movementsLast90Days: 0,
         avaliador: "Organização cadastrada",
         comentario: null,
         parties: ["PSOL"],
@@ -71,6 +78,10 @@ assert.strictEqual(filterActivityItems(ITEMS, withFilters({ assessment: "favorab
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ assessment: "unfavorable" })).length, 1);
 assert.deepStrictEqual(filterActivityItems(ITEMS, withFilters({ assessment: "unrated" })).map((item) => item.numero), ["PLP 9/2022"]);
 assert.strictEqual(activityAssessment(0), "unrated");
+assert.deepStrictEqual(filterActivityItems(ITEMS, withFilters({ status: "Arquivada" })).map((item) => item.numero), ["PEC 20/2023"]);
+assert.deepStrictEqual(filterActivityItems(ITEMS, withFilters({ movements: "with" })).map((item) => item.numero), ["PL 1/2024"]);
+assert.deepStrictEqual(filterActivityItems(ITEMS, withFilters({ movements: "without" })).map((item) => item.numero), ["PEC 20/2023", "PLP 9/2022"]);
+assert.deepStrictEqual(getActivityStatuses([{ situacao: " Arquivada " }, { situacao: "Arquivada" }, { situacao: null }]), ["Arquivada"]);
 
 // Avançados e combinações.
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ gender: "M" })).length, 1);

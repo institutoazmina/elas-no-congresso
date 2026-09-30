@@ -298,8 +298,15 @@ const FIXTURE: FxItem[] = [
 
 // personKey: numero prevalece; fallback determinístico sem agrupar estranhos.
 {
-    assert.strictEqual(personKey({ numero: 1, nome: "Ana" }), "num:1");
-    assert.strictEqual(personKey(GILDA), personKey({ nome: "Gilda Santos", partido: "PT" }));
+assert.strictEqual(personKey({ numero: 1, nome: "Ana" }), "num:1");
+// `0` é sentinela de autor sem id na resposta da API; não é identidade estável.
+// Autores institucionais distintos devem cair no fallback pelo nome.
+assert.strictEqual(personKey({ numero: 0, nome: "Câmara dos Deputados" }), "nome:camara dos deputados");
+assert.notStrictEqual(
+    personKey({ numero: 0, nome: "Câmara dos Deputados" }),
+    personKey({ numero: 0, nome: "Senado Federal" }),
+);
+assert.strictEqual(personKey(GILDA), personKey({ nome: "Gilda Santos", partido: "PT" }));
     assert.notStrictEqual(personKey(GILDA), personKey(HELENA)); // duas pessoas distintas sem numero
     assert.strictEqual(personKey({ nome: "Gilda  Santos" }), personKey(GILDA)); // normalizado
     assert.strictEqual(personKey({ slug: "gilda_santos" }), "slug:gilda_santos"); // slug antes do nome

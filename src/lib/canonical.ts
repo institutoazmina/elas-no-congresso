@@ -82,3 +82,16 @@ export function formatPresentedDate(value: unknown): string {
     if (!match || !isValidLegislativeYear(Number(match[1]))) return "Indisponível";
     return `${match[3]}/${match[2]}/${match[1]}`;
 }
+
+/** Chave cronológica de `presented_at`; datas ausentes/invalidas ficam no fim. */
+export function presentedAtSortValue(value: unknown): number {
+    const match = String(value ?? "").match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (!match || !isValidLegislativeYear(Number(match[1]))) return 0;
+    const timestamp = Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    const date = new Date(timestamp);
+    return date.getUTCFullYear() === Number(match[1])
+        && date.getUTCMonth() === Number(match[2]) - 1
+        && date.getUTCDate() === Number(match[3])
+        ? timestamp
+        : 0;
+}

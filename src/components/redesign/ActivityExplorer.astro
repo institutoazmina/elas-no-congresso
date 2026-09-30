@@ -58,8 +58,8 @@ import "../../styles/activity-table.css";
                     <fieldset>
                         <legend>Proposição</legend>
                         <label class="activity-field activity-field--presented"><span>Apresentada em</span><select name="presented"><option value="">Qualquer ano</option></select></label>
-                        <label class="activity-field activity-field--status"><span>Como está?</span><select disabled><option>Qualquer status</option></select></label>
-                        <label class="activity-field activity-field--movements"><span>Movimentações</span><select disabled><option>Dados indisponíveis</option></select></label>
+                        <label class="activity-field activity-field--status"><span>Como está?</span><select name="status"><option value="">Qualquer status</option></select></label>
+                        <label class="activity-field activity-field--movements"><span>Movimentações (últimos 90 dias)</span><select name="movements"><option value="">Qualquer volume</option><option value="with">Com movimentações</option><option value="without">Sem movimentações</option></select></label>
                         <label class="activity-field activity-field--markers"><span>Marcadores analíticos</span><select disabled><option>Dados indisponíveis</option></select></label>
                     </fieldset>
                     <fieldset>
@@ -70,7 +70,7 @@ import "../../styles/activity-table.css";
                     </fieldset>
                     <fieldset>
                         <legend>Avaliação</legend>
-                        <label class="activity-field activity-field--comments"><span>Com ressalvas?</span><select name="comments"><option value="">Tanto faz</option><option value="yes">Com ressalvas</option><option value="no">Sem ressalvas</option></select></label>
+                        <label class="activity-field activity-field--comments"><span>Possui comentário técnico?</span><select name="comments"><option value="">Tanto faz</option><option value="yes">Com comentário</option><option value="no">Sem comentário</option></select></label>
                         <label class="activity-field activity-field--evaluator"><span>Quem avaliou?</span><select name="evaluator"><option value="">Qualquer organização</option></select></label>
                     </fieldset>
                 </div>
@@ -135,7 +135,7 @@ import "../../styles/activity-table.css";
                         </div>
                     </div>
                 </article>
-                <article class="activity-dashboard-card activity-dashboard-card--status"><header><h3>Por status <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="status" aria-describedby="activity-tooltip-status" aria-expanded="false" aria-label="Saiba mais sobre o recorte por status"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content activity-dashboard-card__empty" data-dashboard-status></div><footer>A base não fornece os status completos do design</footer></article>
+                <article class="activity-dashboard-card activity-dashboard-card--status"><header><h3>Por status <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="status" aria-describedby="activity-tooltip-status" aria-expanded="false" aria-label="Saiba mais sobre o recorte por status"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content activity-dashboard-card__scroll" data-dashboard-status></div><footer>Usa o último status oficial disponível</footer></article>
             </div>
             <div class="activity-dashboard__column">
                 <article class="activity-dashboard-card activity-dashboard-card--party"><header><h3>Por partido <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="party" aria-describedby="activity-tooltip-party" aria-expanded="false" aria-label="Saiba mais sobre o recorte por partido"><img src={infoTooltip.src} alt="" /></button></h3><label>Ordem <select data-dashboard-sort="party"><option value={DEFAULT_DASHBOARD_ORDER}>Mais Desfavorável (%)</option><option value="favorable">Mais Favorável (%)</option><option value="total">Mais proposições</option></select></label></header><div class="activity-dashboard-card__content activity-dashboard-card__scroll" data-dashboard-party></div><footer>Usamos o nome atual de partidos renomeados</footer></article>
@@ -149,7 +149,7 @@ import "../../styles/activity-table.css";
             <div class="activity-dashboard-tooltip" data-dashboard-tooltip="house" id="activity-tooltip-house" role="tooltip" hidden><div><strong>Por casa</strong><p>Conta cada proposição uma vez na casa em que foi apresentada.</p><small>O Poder Executivo não entra neste recorte.</small></div><img src={tooltipTip.src} alt="" /></div>
             <div class="activity-dashboard-tooltip" data-dashboard-tooltip="category" id="activity-tooltip-category" role="tooltip" hidden><div><strong>Por categoria</strong><p>Conta cada proposição uma vez na sua categoria oficial.</p></div><img src={tooltipTip.src} alt="" /></div>
             <div class="activity-dashboard-tooltip" data-dashboard-tooltip="uf" id="activity-tooltip-uf" role="tooltip" hidden><div><strong>Por unidade federativa</strong><p>Considera a UF de cada parlamentar que assina a proposição.</p></div><img src={tooltipTip.src} alt="" /></div>
-            <div class="activity-dashboard-tooltip" data-dashboard-tooltip="status" id="activity-tooltip-status" role="tooltip" hidden><div><strong>Por status</strong><p>Os status legislativos completos não estão disponíveis nesta base.</p></div><img src={tooltipTip.src} alt="" /></div>
+            <div class="activity-dashboard-tooltip" data-dashboard-tooltip="status" id="activity-tooltip-status" role="tooltip" hidden><div><strong>Por status</strong><p>Conta cada proposição uma vez pelo último status oficial disponível.</p><small>Proposições sem status aparecem como “Não informado”.</small></div><img src={tooltipTip.src} alt="" /></div>
             <div class="activity-dashboard-tooltip" data-dashboard-tooltip="party" id="activity-tooltip-party" role="tooltip" hidden><div><strong>Por partido</strong><p>Considera as autorias únicas de cada proposição.</p><small>Usamos o nome atual de partidos renomeados.</small></div><img src={tooltipTip.src} alt="" /></div>
             <div class="activity-dashboard-tooltip" data-dashboard-tooltip="authorship" id="activity-tooltip-authorship" role="tooltip" hidden><div><strong>Por autoria</strong><p>Mostra parlamentares com {MIN_PROPOSICOES_POR_PARLAMENTAR} ou mais proposições relacionadas a gênero.</p><small>Inclui autorias institucionais.</small></div><img src={tooltipTip.src} alt="" /></div>
         </div>
