@@ -41,6 +41,19 @@ export type ActivityProposition = {
   events: ActivityEvent[];
 };
 
+export type EnactedProject = ActivityProposition & {
+  assessment_label: "favorável" | "desfavorável";
+  enactment: {
+    status_code: number;
+    status: string;
+    law_label: string;
+    law_type: string;
+    law_number: number;
+    law_year: number;
+    enacted_at: string;
+  };
+};
+
 export async function fetchActivity(baseUrl: string, signal?: AbortSignal): Promise<ActivityProposition[]> {
   const response = await fetch(`${baseUrl.replace(/\/$/, "")}/activity?limit=5000`, { signal });
   if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
@@ -57,4 +70,10 @@ export async function fetchSlowFavorable(baseUrl: string, signal?: AbortSignal):
   const response = await fetch(`${baseUrl.replace(/\/$/, "")}/activity/slow-favorable`, { signal });
   if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
   return response.json() as Promise<ActivityProposition[]>;
+}
+
+export async function fetchEnactedProjects(baseUrl: string, signal?: AbortSignal): Promise<EnactedProject[]> {
+  const response = await fetch(`${baseUrl.replace(/\/$/, "")}/activity/enacted-projects?limit=50`, { signal });
+  if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
+  return response.json() as Promise<EnactedProject[]>;
 }

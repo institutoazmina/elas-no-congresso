@@ -9,23 +9,22 @@ import backgroundPattern from "../../assets/images/redesign/parliamentarians/bg-
 import halftoneShadow from "../../assets/images/redesign/hero/halftone-shadow.png";
 import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
 import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
+import { fetchEnactedProjects } from "../../lib/activity-api";
+import { API_BASE_URL } from "astro:env/server";
 
-const sourceCards = [
-    { approved: false, rating: "favorável", proposal: "PDL 176/2021", authors: [["Jandira Feghali", "PCdoB/RJ"], ["Erika Kokay", "PT/DF"], ["Alice Portugal", "PCdoB/BA"]], more: "+7 parlamentares", description: "Susta a Portaria nº 13, de 19 de abril de 2021, que torna pública a decisão de incorporar o implante subdérmico de etonogestrel, condicionada à criação de programa específico, na prevenção da gravidez não planejada para mulheres em idade fértil: em situação de rua; com HIV/AIDS em uso de dolutegravir; em uso de talidomida; privadas de liberdade; trabalhadoras do sexo; e em tratamento de tuberculose em uso de aminoglicosídeos, no âmbito do Sistema Único de Saúde - SUS.." },
-    { approved: true, rating: "favorável", proposal: "PDL 176/2021", authors: [["Jandira Feghali", "PCdoB/RJ"], ["Erika Kokay", "PT/DF"], ["Alice Portugal", "PCdoB/BA"]], more: "+7 parlamentares", description: "Susta a Portaria nº 13, de 19 de abril de 2021, que torna pública a decisão de incorporar o implante subdérmico de etonogestrel, condicionada à criação de programa específico, na prevenção da gravidez não planejada para mulheres em idade fértil." },
-    { approved: false, rating: "desfavorável", proposal: "PL 2104/2026", authors: [["Baleia Rossi", "MDB/SP"]], description: "Estabelece diretrizes para a atenção à saúde da mulher no climatério e na menopausa, no âmbito do Sistema Único de Saúde, e institui a Semana Nacional de Conscientização sobre o Climatério e a Menopausa" },
-    { approved: true, rating: "favorável", proposal: "PDL 176/2021", authors: [["Jandira Feghali", "PCdoB/RJ"], ["Erika Kokay", "PT/DF"], ["Alice Portugal", "PCdoB/BA"]], more: "+7 parlamentares", description: "Susta a Portaria nº 13, de 19 de abril de 2021, que torna pública a decisão de incorporar o implante subdérmico de etonogestrel." },
-    { approved: true, rating: "desfavorável", proposal: "PL 2104/2026", authors: [["Baleia Rossi", "MDB/SP"]], description: "Estabelece diretrizes para a atenção à saúde da mulher no climatério e na menopausa, no âmbito do Sistema Único de Saúde, e institui a Semana Nacional de Conscientização sobre o Climatério e a Menopausa" },
-];
-
-const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[physical % sourceCards.length], physical }));
+let projects = [];
+try {
+    projects = await fetchEnactedProjects(API_BASE_URL);
+} catch {
+    // The homepage remains available while the API is being deployed or unavailable.
+}
 ---
 
-<section class="enacted-projects" aria-labelledby="enacted-projects-title">
+{projects.length > 0 && <section class="enacted-projects" aria-labelledby="enacted-projects-title" data-document-image={documentImage.src} data-favorable-thumb={favorableThumb.src} data-unfavorable-thumb={unfavorableThumb.src} data-book-icon={bookIcon.src} data-projects={JSON.stringify(projects)} style={`--enacted-projects-background: url(${backgroundPattern.src}); --enacted-projects-mobile-background: url(${mobileBackgroundPattern.src}); --enacted-projects-halftone-shadow: url(${halftoneShadow.src})`}>
     <header class="enacted-projects__header">
         <img src={attention.src} alt="" />
         <h2 id="enacted-projects-title">Projetos que viraram lei</h2>
-        <p>Projetos desfavoráveis que estão avançando nas comissões e no Plenário<span class="enacted-projects__desktop-period"></span></p>
+        <p>Projetos favoráveis e desfavoráveis que viraram lei<span class="enacted-projects__desktop-period"></span></p>
     </header>
 
     <div class="enacted-projects__figure" data-enacted-carousel>
@@ -34,37 +33,119 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
                 <button type="button" aria-label="Projeto anterior" data-previous><img src={arrowBack.src} alt="" /></button>
                 <button type="button" aria-label="Próximo projeto" data-next><img src={arrowForward.src} alt="" /></button>
             </div>
-            <div class="enacted-projects__viewport"><div class="enacted-projects__track" data-track>
-                {cards.map((card) => <article class:list={["enacted-projects__card", `enacted-projects__card--${card.rating}`, { "enacted-projects__card--featured": card.physical === 7 }]} data-approved={String(card.approved)} aria-hidden={card.physical === 7 ? undefined : "true"}>
-                    <header class="enacted-projects__card-header">
-                        <strong>{card.proposal}</strong>
-                        <span class="enacted-projects__status">
-                            <img class="enacted-projects__document" src={documentImage.src} alt="" />
-                            <span class="enacted-projects__rating">
-                                <span class="enacted-projects__rating-icon"><img src={card.rating === "favorável" ? favorableThumb.src : unfavorableThumb.src} alt="" /></span>
-                                <b>{card.rating}</b>
-                            </span>
-                        </span>
-                    </header>
-                    <div class="enacted-projects__details">
-                        <div class="enacted-projects__authors">
-                            {card.authors.map(([name, party]) => <p><span>{name}</span><strong>{party}</strong></p>)}
-                            {card.more && <p class="enacted-projects__more">{card.more}</p>}
-                        </div>
-                        <span class="enacted-projects__theme">Saúde</span>
-                        <p class="enacted-projects__description">{card.description}</p>
-                    </div>
-                    <footer class="enacted-projects__law-footer">
-                        <div><p><span class="enacted-projects__law-icon"><img src={bookIcon.src} alt="" /></span><strong>Lei 11.340/2026</strong></p><small>Aprovada em 7 de agosto de 2026</small></div>
-                        <span aria-hidden="true">›</span>
-                    </footer>
-                </article>)}
-            </div></div>
+            <div class="enacted-projects__viewport"><div class="enacted-projects__track" data-track></div></div>
         </div>
     </div>
 </section>
+}
 
 <script>
+    import { propositionRoute } from "../../lib/proposition-utils";
+
+    type Project = {
+        number_label: string;
+        ementa: string;
+        category: string | null;
+        assessment_label: "favorável" | "desfavorável";
+        authors: { name: string; party: string | null; state: string | null }[];
+        enactment: { law_label: string; enacted_at: string };
+    };
+
+    const formatCategory = (category: string | null) => category?.replaceAll("_", " ") || "Sem categoria";
+    const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        timeZone: "UTC",
+    }).format(new Date(`${value}T00:00:00Z`));
+
+    const createCard = (project: Project, assets: DOMStringMap) => {
+        const card = document.createElement("a");
+        card.className = `enacted-projects__card enacted-projects__card--${project.assessment_label}`;
+        card.href = propositionRoute(project.number_label) || "/atividade-legislativa";
+        card.setAttribute("aria-label", `Ver proposição ${project.number_label}`);
+
+        const header = document.createElement("header");
+        header.className = "enacted-projects__card-header";
+        const number = document.createElement("strong");
+        number.textContent = project.number_label;
+        const status = document.createElement("span");
+        status.className = "enacted-projects__status";
+        const documentIcon = document.createElement("img");
+        documentIcon.className = "enacted-projects__document";
+        documentIcon.src = assets.documentImage || "";
+        documentIcon.alt = "";
+        const rating = document.createElement("span");
+        rating.className = "enacted-projects__rating";
+        const ratingIcon = document.createElement("span");
+        ratingIcon.className = "enacted-projects__rating-icon";
+        const thumb = document.createElement("img");
+        thumb.src = project.assessment_label === "favorável"
+            ? assets.favorableThumb || ""
+            : assets.unfavorableThumb || "";
+        thumb.alt = "";
+        ratingIcon.append(thumb);
+        const label = document.createElement("b");
+        label.textContent = project.assessment_label;
+        rating.append(ratingIcon, label);
+        status.append(documentIcon, rating);
+        header.append(number, status);
+
+        const details = document.createElement("div");
+        details.className = "enacted-projects__details";
+        const authors = document.createElement("div");
+        authors.className = "enacted-projects__authors";
+        const visibleAuthors = project.authors.slice(0, 3);
+        for (const author of visibleAuthors) {
+            const line = document.createElement("p");
+            const name = document.createElement("span");
+            name.textContent = author.name;
+            const party = document.createElement("strong");
+            party.textContent = [author.party, author.state].filter(Boolean).join("/");
+            line.append(name, party);
+            authors.append(line);
+        }
+        if (!visibleAuthors.length) {
+            authors.append(Object.assign(document.createElement("p"), { textContent: "Autoria indisponível" }));
+        }
+        if (project.authors.length > visibleAuthors.length) {
+            const more = document.createElement("p");
+            more.className = "enacted-projects__more";
+            more.textContent = `+${project.authors.length - visibleAuthors.length} parlamentares`;
+            authors.append(more);
+        }
+        const category = document.createElement("span");
+        category.className = "enacted-projects__theme";
+        category.textContent = formatCategory(project.category);
+        const description = document.createElement("p");
+        description.className = "enacted-projects__description";
+        description.textContent = project.ementa;
+        details.append(authors, category, description);
+
+        const footer = document.createElement("footer");
+        footer.className = "enacted-projects__law-footer";
+        const law = document.createElement("div");
+        const lawTitle = document.createElement("p");
+        const lawIcon = document.createElement("span");
+        lawIcon.className = "enacted-projects__law-icon";
+        const book = document.createElement("img");
+        book.src = assets.bookIcon || "";
+        book.alt = "";
+        lawIcon.append(book);
+        const lawLabel = document.createElement("strong");
+        lawLabel.textContent = project.enactment.law_label;
+        lawTitle.append(lawIcon, lawLabel);
+        const date = document.createElement("small");
+        date.textContent = `Aprovada em ${formatEnactedDate(project.enactment.enacted_at)}`;
+        law.append(lawTitle, date);
+        const arrow = document.createElement("span");
+        arrow.setAttribute("aria-hidden", "true");
+        arrow.textContent = "›";
+        footer.append(law, arrow);
+        card.append(header, details, footer);
+        return card;
+    };
+
     const initializeEnactedProjects = () => {
         document.querySelectorAll<HTMLElement>("[data-enacted-carousel]").forEach((carousel) => {
             if (carousel.dataset.enactedCarouselInitialized) return;
@@ -73,8 +154,16 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
             const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
             const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
             if (!track || !previous || !next) return;
+            const section = carousel.closest<HTMLElement>(".enacted-projects");
+            const projects = JSON.parse(section?.dataset.projects || "[]") as Project[];
+            if (!section || !projects.length) {
+                section?.remove();
+                return;
+            }
+            track.replaceChildren(...[...projects, ...projects, ...projects].map((project) => createCard(project, section.dataset)));
+            const groupSize = projects.length;
             const cards = Array.from(track.querySelectorAll<HTMLElement>(".enacted-projects__card"));
-            let physical = 7;
+            let physical = groupSize + Math.floor(groupSize / 2);
             let resetting = false;
             const update = () => {
                 const activeCard = cards[physical];
@@ -94,9 +183,9 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
                 }
             };
             track.addEventListener("transitionend", (event) => {
-                if (event.propertyName !== "transform" || (physical > 4 && physical < 10)) return;
+                if (event.propertyName !== "transform" || (physical >= groupSize && physical < groupSize * 2)) return;
                 resetting = true;
-                physical += physical < 5 ? 5 : -5;
+                physical += physical < groupSize ? groupSize : -groupSize;
                 track.style.transition = "none";
                 update();
                 requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -130,7 +219,7 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
     .enacted-projects__controls button:focus-visible { outline: 2px solid #0b0f5e; outline-offset: 2px; }
     .enacted-projects__viewport { position: absolute; top: 112px; left: 0; width: 100%; overflow: hidden; }
     .enacted-projects__track { display: flex; width: max-content; gap: 48px; transform: translateX(-2496px); transition: transform .2s ease; }
-    .enacted-projects__card { display: flex; width: 384px; height: 509.94354248046875px; flex: none; flex-direction: column; border: 1px solid #998d96; background: #fff; overflow: visible; }
+    .enacted-projects__card { display: flex; width: 384px; height: 509.94354248046875px; flex: none; flex-direction: column; border: 1px solid #998d96; background: #fff; color: inherit; overflow: visible; text-decoration: none; }
     .enacted-projects__card--desfavorável { height: 407.94354248046875px; }
     .enacted-projects__card--featured { border-color: #0b0f5e; box-shadow: -4px 4px 0 #0b0f5e; }
     .enacted-projects__card-header { position: relative; height: 69.94354248046875px; flex: none; padding: 8px 16px; border-bottom: 1px solid #998d96; }
@@ -148,7 +237,7 @@ const cards = Array.from({ length: 15 }, (_, physical) => ({ ...sourceCards[phys
     .enacted-projects__authors p span, .enacted-projects__authors p strong { min-width: 0; }
     .enacted-projects__authors p strong { font-weight: 700; }
     .enacted-projects__more { display: block !important; color: #4242f6; }
-    .enacted-projects__theme { width: 64px; height: 32px; padding: 4px 8px; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 16px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
+    .enacted-projects__theme { width: max-content; max-width: 100%; height: 32px; padding: 4px 8px; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 16px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
     .enacted-projects__description { height: 120px; color: #0b0f5e; font-size: 16px; line-height: 24px; opacity: .66; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; text-overflow: ellipsis; }
     .enacted-projects__card footer { height: 82px; flex: none; padding: 16px; display: flex; justify-content: space-between; border-top: 1px solid #998d96; background: #4242f6; color: #fff; }
     .enacted-projects__card footer > div { display: flex; flex-direction: column; gap: 10px; }
