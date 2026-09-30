@@ -9,143 +9,84 @@ import backgroundPattern from "../../assets/images/redesign/parliamentarians/bg-
 import halftoneShadow from "../../assets/images/redesign/hero/halftone-shadow.png";
 import arrowBack from "../../assets/images/redesign/parliamentarians/arrow-back.svg";
 import arrowForward from "../../assets/images/redesign/parliamentarians/arrow-forward.svg";
-import { fetchEnactedProjects } from "../../lib/activity-api";
+import { fetchEnactedProjects, type EnactedProject } from "../../lib/activity-api";
+import { propositionRoute } from "../../lib/proposition-utils";
 import { API_BASE_URL } from "astro:env/server";
 
-let projects = [];
+let projects: EnactedProject[] = [];
 try {
     projects = await fetchEnactedProjects(API_BASE_URL);
 } catch {
     // The homepage remains available while the API is being deployed or unavailable.
 }
+
+const groupSize = projects.length;
+const initialPhysical = groupSize + Math.floor(groupSize / 2);
+const cards = Array.from({ length: groupSize * 3 }, (_, physical) => ({
+    project: projects[physical % groupSize],
+    physical,
+}));
+const formatCategory = (category: string | null) => category?.replaceAll("_", " ") || "Sem categoria";
+const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+}).format(new Date(`${value}T00:00:00Z`));
 ---
 
-{projects.length > 0 && <section class="enacted-projects" aria-labelledby="enacted-projects-title" data-document-image={documentImage.src} data-favorable-thumb={favorableThumb.src} data-unfavorable-thumb={unfavorableThumb.src} data-book-icon={bookIcon.src} data-projects={JSON.stringify(projects)} style={`--enacted-projects-background: url(${backgroundPattern.src}); --enacted-projects-mobile-background: url(${mobileBackgroundPattern.src}); --enacted-projects-halftone-shadow: url(${halftoneShadow.src})`}>
+{projects.length > 0 && <section class="enacted-projects" aria-labelledby="enacted-projects-title" style={`--enacted-projects-background: url(${backgroundPattern.src}); --enacted-projects-mobile-background: url(${mobileBackgroundPattern.src}); --enacted-projects-halftone-shadow: url(${halftoneShadow.src})`}>
     <header class="enacted-projects__header">
         <img src={attention.src} alt="" />
         <h2 id="enacted-projects-title">Projetos que viraram lei</h2>
         <p>Projetos favoráveis e desfavoráveis que viraram lei<span class="enacted-projects__desktop-period"></span></p>
     </header>
 
-    <div class="enacted-projects__figure" data-enacted-carousel>
+    <div class="enacted-projects__figure" data-enacted-carousel data-group-size={String(groupSize)}>
         <div class="enacted-projects__carousel" style={`--enacted-projects-background: url(${backgroundPattern.src}); --enacted-projects-mobile-background: url(${mobileBackgroundPattern.src}); --enacted-projects-halftone-shadow: url(${halftoneShadow.src}); background-image: url(${backgroundPattern.src})`} aria-label="Projetos que viraram lei">
             <div class="enacted-projects__controls">
                 <button type="button" aria-label="Projeto anterior" data-previous><img src={arrowBack.src} alt="" /></button>
                 <button type="button" aria-label="Próximo projeto" data-next><img src={arrowForward.src} alt="" /></button>
             </div>
-            <div class="enacted-projects__viewport"><div class="enacted-projects__track" data-track></div></div>
+            <div class="enacted-projects__viewport"><div class="enacted-projects__track" data-track>
+                {cards.map(({ project, physical }) => <a
+                    class:list={["enacted-projects__card", `enacted-projects__card--${project.assessment_label}`, { "enacted-projects__card--featured": physical === initialPhysical }]}
+                    href={propositionRoute(project.number_label) || "/atividade-legislativa"}
+                    data-approved={String(project.assessment_label === "favorável")}
+                    aria-label={`Ver proposição ${project.number_label}`}
+                    aria-hidden={physical === initialPhysical ? undefined : "true"}
+                >
+                    <header class="enacted-projects__card-header">
+                        <strong>{project.number_label}</strong>
+                        <span class="enacted-projects__status">
+                            <img class="enacted-projects__document" src={documentImage.src} alt="" />
+                            <span class="enacted-projects__rating">
+                                <span class="enacted-projects__rating-icon"><img src={project.assessment_label === "favorável" ? favorableThumb.src : unfavorableThumb.src} alt="" /></span>
+                                <b>{project.assessment_label}</b>
+                            </span>
+                        </span>
+                    </header>
+                    <div class="enacted-projects__details">
+                        <div class="enacted-projects__authors">
+                            {project.authors.slice(0, 3).map((author) => <p><span>{author.name}</span><strong>{[author.party, author.state].filter(Boolean).join("/")}</strong></p>)}
+                            {!project.authors.length && <p>Autoria indisponível</p>}
+                            {project.authors.length > 3 && <p class="enacted-projects__more">+{project.authors.length - 3} parlamentares</p>}
+                        </div>
+                        <span class="enacted-projects__theme">{formatCategory(project.category)}</span>
+                        <p class="enacted-projects__description">{project.ementa}</p>
+                    </div>
+                    <footer class="enacted-projects__law-footer">
+                        <div><p><span class="enacted-projects__law-icon"><img src={bookIcon.src} alt="" /></span><strong>{project.enactment.law_label}</strong></p><small>Aprovada em {formatEnactedDate(project.enactment.enacted_at)}</small></div>
+                        <span aria-hidden="true">›</span>
+                    </footer>
+                </a>)}
+            </div></div>
         </div>
     </div>
 </section>
 }
 
 <script>
-    import { propositionRoute } from "../../lib/proposition-utils";
-
-    type Project = {
-        number_label: string;
-        ementa: string;
-        category: string | null;
-        assessment_label: "favorável" | "desfavorável";
-        authors: { name: string; party: string | null; state: string | null }[];
-        enactment: { law_label: string; enacted_at: string };
-    };
-
-    const formatCategory = (category: string | null) => category?.replaceAll("_", " ") || "Sem categoria";
-    const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-        timeZone: "UTC",
-    }).format(new Date(`${value}T00:00:00Z`));
-
-    const createCard = (project: Project, assets: DOMStringMap) => {
-        const card = document.createElement("a");
-        card.className = `enacted-projects__card enacted-projects__card--${project.assessment_label}`;
-        card.href = propositionRoute(project.number_label) || "/atividade-legislativa";
-        card.setAttribute("aria-label", `Ver proposição ${project.number_label}`);
-
-        const header = document.createElement("header");
-        header.className = "enacted-projects__card-header";
-        const number = document.createElement("strong");
-        number.textContent = project.number_label;
-        const status = document.createElement("span");
-        status.className = "enacted-projects__status";
-        const documentIcon = document.createElement("img");
-        documentIcon.className = "enacted-projects__document";
-        documentIcon.src = assets.documentImage || "";
-        documentIcon.alt = "";
-        const rating = document.createElement("span");
-        rating.className = "enacted-projects__rating";
-        const ratingIcon = document.createElement("span");
-        ratingIcon.className = "enacted-projects__rating-icon";
-        const thumb = document.createElement("img");
-        thumb.src = project.assessment_label === "favorável"
-            ? assets.favorableThumb || ""
-            : assets.unfavorableThumb || "";
-        thumb.alt = "";
-        ratingIcon.append(thumb);
-        const label = document.createElement("b");
-        label.textContent = project.assessment_label;
-        rating.append(ratingIcon, label);
-        status.append(documentIcon, rating);
-        header.append(number, status);
-
-        const details = document.createElement("div");
-        details.className = "enacted-projects__details";
-        const authors = document.createElement("div");
-        authors.className = "enacted-projects__authors";
-        const visibleAuthors = project.authors.slice(0, 3);
-        for (const author of visibleAuthors) {
-            const line = document.createElement("p");
-            const name = document.createElement("span");
-            name.textContent = author.name;
-            const party = document.createElement("strong");
-            party.textContent = [author.party, author.state].filter(Boolean).join("/");
-            line.append(name, party);
-            authors.append(line);
-        }
-        if (!visibleAuthors.length) {
-            authors.append(Object.assign(document.createElement("p"), { textContent: "Autoria indisponível" }));
-        }
-        if (project.authors.length > visibleAuthors.length) {
-            const more = document.createElement("p");
-            more.className = "enacted-projects__more";
-            more.textContent = `+${project.authors.length - visibleAuthors.length} parlamentares`;
-            authors.append(more);
-        }
-        const category = document.createElement("span");
-        category.className = "enacted-projects__theme";
-        category.textContent = formatCategory(project.category);
-        const description = document.createElement("p");
-        description.className = "enacted-projects__description";
-        description.textContent = project.ementa;
-        details.append(authors, category, description);
-
-        const footer = document.createElement("footer");
-        footer.className = "enacted-projects__law-footer";
-        const law = document.createElement("div");
-        const lawTitle = document.createElement("p");
-        const lawIcon = document.createElement("span");
-        lawIcon.className = "enacted-projects__law-icon";
-        const book = document.createElement("img");
-        book.src = assets.bookIcon || "";
-        book.alt = "";
-        lawIcon.append(book);
-        const lawLabel = document.createElement("strong");
-        lawLabel.textContent = project.enactment.law_label;
-        lawTitle.append(lawIcon, lawLabel);
-        const date = document.createElement("small");
-        date.textContent = `Aprovada em ${formatEnactedDate(project.enactment.enacted_at)}`;
-        law.append(lawTitle, date);
-        const arrow = document.createElement("span");
-        arrow.setAttribute("aria-hidden", "true");
-        arrow.textContent = "›";
-        footer.append(law, arrow);
-        card.append(header, details, footer);
-        return card;
-    };
-
     const initializeEnactedProjects = () => {
         document.querySelectorAll<HTMLElement>("[data-enacted-carousel]").forEach((carousel) => {
             if (carousel.dataset.enactedCarouselInitialized) return;
@@ -154,14 +95,8 @@ try {
             const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
             const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
             if (!track || !previous || !next) return;
-            const section = carousel.closest<HTMLElement>(".enacted-projects");
-            const projects = JSON.parse(section?.dataset.projects || "[]") as Project[];
-            if (!section || !projects.length) {
-                section?.remove();
-                return;
-            }
-            track.replaceChildren(...[...projects, ...projects, ...projects].map((project) => createCard(project, section.dataset)));
-            const groupSize = projects.length;
+            const groupSize = Number(carousel.dataset.groupSize);
+            if (!groupSize) return;
             const cards = Array.from(track.querySelectorAll<HTMLElement>(".enacted-projects__card"));
             let physical = groupSize + Math.floor(groupSize / 2);
             let resetting = false;
@@ -258,13 +193,13 @@ try {
     .enacted-projects__card footer { background: transparent; color: #0b0f5e; }
     .enacted-projects__card footer p { color: #4242f6; }
     .enacted-projects__card footer > span { opacity: 0; }
-    .enacted-projects__card--desfavorável footer { background: #4242f6; color: #fff; }
-    .enacted-projects__card--desfavorável footer p { color: #fff; }
-    .enacted-projects__card--desfavorável footer p img { filter: brightness(0) invert(1); }
-    .enacted-projects__card--desfavorável footer > span { opacity: 1; }
+    .enacted-projects__card--featured footer { background: #4242f6; color: #fff; }
+    .enacted-projects__card--featured footer p { color: #fff; }
+    .enacted-projects__card--featured footer p img { filter: brightness(0) invert(1); }
+    .enacted-projects__card--featured footer > span { opacity: 1; }
     .enacted-projects__law-icon { display: block; position: relative; width: 24px; height: 24px; flex: none; }
 .enacted-projects__law-icon img { position: absolute; top: 2px; left: 4px; width: 16px !important; height: 20px !important; }
-    .enacted-projects__card--desfavorável .enacted-projects__law-icon img { filter: brightness(0) invert(1); }
+    .enacted-projects__card--featured .enacted-projects__law-icon img { filter: brightness(0) invert(1); }
     @media (max-width: 767px) {
         .enacted-projects {
             width: 100%;
@@ -517,27 +452,17 @@ try {
             opacity: 0;
         }
 
-        .enacted-projects__card--desfavorável footer.enacted-projects__law-footer,
-        .enacted-projects__card--desfavorável footer.enacted-projects__law-footer p {
-            background: transparent;
-            color: #4242f6;
-        }
-
-        .enacted-projects__card--desfavorável .enacted-projects__law-icon img {
-            filter: none;
-        }
-
-        .enacted-projects__card--desfavorável footer.enacted-projects__law-footer,
-        .enacted-projects__card--desfavorável footer.enacted-projects__law-footer p {
+        .enacted-projects__card--featured footer.enacted-projects__law-footer,
+        .enacted-projects__card--featured footer.enacted-projects__law-footer p {
             background: #4242f6;
             color: #fff;
         }
 
-        .enacted-projects__card--desfavorável .enacted-projects__law-icon img {
+        .enacted-projects__card--featured .enacted-projects__law-icon img {
             filter: brightness(0) invert(1);
         }
 
-        .enacted-projects__card--desfavorável footer.enacted-projects__law-footer > span {
+        .enacted-projects__card--featured footer.enacted-projects__law-footer > span {
             opacity: 1;
         }
 
