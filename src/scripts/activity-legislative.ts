@@ -21,6 +21,7 @@ type RawProposal = {
     avaliador?: string | null;
     favoravel: number;
     categoria?: string | null;
+    categoriaLabel?: string | null;
     relevancia?: number;
     autores?: Record<string, number>;
     legislatura: number;
@@ -66,6 +67,7 @@ import { PUBLIC_API_BASE_URL } from "astro:env/client";
 import type { ActivityProposition } from "../lib/activity-api";
 import {
     activityAssessment,
+    filterDashboardAuthors,
     filterActivityItems,
     getActivityCategories,
     getActivityStatuses,
@@ -77,6 +79,30 @@ import {
 const normalize = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const escapeCsv = (value: unknown) => `"${String(value ?? "").replaceAll('"', '""')}"`;
 const formatNumber = new Intl.NumberFormat("pt-BR");
+const QUITERIA_EVALUATOR = "QuitérIA";
+const ACTIVITY_CACHE_KEY = "elas:activity:v2";
+const ACTIVITY_CACHE_TTL = 5 * 60 * 1000;
+
+function initials(name: string) {
+    return name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+}
+
+function readActivityCache(): ActivityProposition[] | null {
+    try {
+        const cached = JSON.parse(sessionStorage.getItem(ACTIVITY_CACHE_KEY) || "null") as { expiresAt?: number; items?: ActivityProposition[] } | null;
+        return cached && cached.expiresAt && cached.expiresAt > Date.now() && Array.isArray(cached.items) ? cached.items : null;
+    } catch {
+        return null;
+    }
+}
+
+function writeActivityCache(items: ActivityProposition[]) {
+    try {
+        sessionStorage.setItem(ACTIVITY_CACHE_KEY, JSON.stringify({ expiresAt: Date.now() + ACTIVITY_CACHE_TTL, items }));
+    } catch {
+        // Cache é só uma otimização; quota/privacy mode não deve impedir a tela.
+    }
+}
 
 function initActivity(root: HTMLElement) {
     if (root.dataset.initialized) return;
@@ -118,6 +144,7 @@ function initActivity(root: HTMLElement) {
     let dataQuality: QualityCollector = createQualityCollector();
     let mobileAccordionsReady = false;
     let mobileViewport = window.matchMedia("(max-width: 767px)");
+    let resultsRenderVersion = 0;
 
     function syncResponsivePageSize(render = false) {
         if (!itemsSelect.dataset.userSelected && mobileViewport.matches && itemsSelect.value !== String(MOBILE_ITEMS_PER_PAGE)) {
@@ -193,6 +220,7 @@ function initActivity(root: HTMLElement) {
         const years = new Set<number>();
         const states = new Set<string>();
         const evaluatorDisplay = new Map<string, string>();
+        evaluatorDisplay.set(normalizeEvaluatorKey(QUITERIA_EVALUATOR), QUITERIA_EVALUATOR);
         dataQuality = createQualityCollector();
         const proposals = data.map((proposal): Proposal => {
             const authors = proposal.authors.map((author) => ({
@@ -217,6 +245,7 @@ function initActivity(root: HTMLElement) {
                 avaliador: proposal.assessment_organization,
                 favoravel: proposal.is_favorable === true ? 1 : proposal.is_favorable === false ? -1 : 0,
                 categoria: proposal.category,
+                categoriaLabel: proposal.category_label || proposal.category,
                 legislatura: 0,
                 celerity: proposal.celerity,
                 situacao: proposal.current_status,
@@ -265,8 +294,12 @@ function initActivity(root: HTMLElement) {
         addOptions("status", getActivityStatuses(proposals));
         const categories = getActivityCategories(proposals);
         if (categories.length) {
-            addOptions("category", categories);
-            addOptions("category-mobile", categories);
+            const categoryLabel = (category: string | number) => {
+                const proposal = proposals.find((item) => item.categoria === category);
+                return proposal?.categoriaLabel || String(category);
+            };
+            addOptions("category", categories, categoryLabel);
+            addOptions("category-mobile", categories, categoryLabel);
             [field("category"), field("category-mobile")].forEach((select) => {
                 if (!select) return;
                 select.disabled = false;
@@ -343,13 +376,18 @@ function initActivity(root: HTMLElement) {
         const button = document.createElement("a");
         button.href = authorRoute(author.nome) || "/atividade-legislativa";
         button.setAttribute("aria-label", `Ver página de autoria de ${author.nome}`);
+        const fallback = document.createElement("span");
+        fallback.className = "activity-author__fallback";
+        fallback.textContent = initials(author.nome);
         if (author.foto) {
             const photo = document.createElement("img");
             photo.src = author.foto.replace(/^http:/, "https:");
             photo.alt = "";
             photo.loading = "lazy";
-            photo.addEventListener("error", () => photo.remove(), { once: true });
+            photo.addEventListener("error", () => photo.replaceWith(fallback), { once: true });
             button.append(photo);
+        } else {
+            button.append(fallback);
         }
         const copy = document.createElement("span");
         const name = document.createElement("strong");
@@ -413,13 +451,18 @@ function initActivity(root: HTMLElement) {
                 control.href = authorRoute(row.label) || "/atividade-legislativa";
                 control.setAttribute("aria-label", `Ver página de autoria de ${row.label}`);
             }
+            const fallback = document.createElement("span");
+            fallback.className = "activity-dashboard-card__author-fallback";
+            fallback.textContent = initials(row.label);
             if (row.photo) {
                 const image = document.createElement("img");
                 image.src = row.photo.replace(/^http:/, "https:");
                 image.alt = "";
                 image.loading = "lazy";
-                image.addEventListener("error", () => image.remove(), { once: true });
+                image.addEventListener("error", () => image.replaceWith(fallback), { once: true });
                 control.append(image);
+            } else {
+                control.append(fallback);
             }
             const copy = document.createElement("span");
             const name = document.createElement("span");
@@ -487,7 +530,12 @@ function initActivity(root: HTMLElement) {
         dashboard.removeAttribute("hidden");
         // Visão por autorias: cada item carrega os autores resolvidos e a
         // avaliação da proposição. Usado pelos painéis de canetadas.
-        const authorshipItems = visible.map((item) => ({ authors: item.authors, favorable: item.favoravel }));
+        const authorshipFilters = currentFilters();
+        const dashboardAuthorshipItems = visible.map((item) => ({
+            ...item,
+            authors: filterDashboardAuthors(item, authorshipFilters),
+        }));
+        const authorshipItems = dashboardAuthorshipItems.map((item) => ({ authors: item.authors, favorable: item.favoravel }));
         // Por gênero: autorias únicas por proposição (GENDER_COUNT_MODE, provisório).
         // Valores inválidos (ex.: nome próprio no campo `genero`) viram "Não informado".
         const genders = aggregateAuthorships(authorshipItems, (author) => {
@@ -502,20 +550,20 @@ function initActivity(root: HTMLElement) {
             if (!casa || casa === "executivo") return [];
             return [{ key: casa, label: CASA_LABELS[casa] }];
         });
-        const partyCanetadas = aggregatePartyCanetadas(visible);
+        const partyCanetadas = aggregatePartyCanetadas(dashboardAuthorshipItems);
         // Por UF: UF de cada autoria única (UF_COUNT_MODE, provisório).
         // Siglas inválidas/ausentes vão ao relatório; sem inferência.
         const states = aggregateAuthorships(authorshipItems, (author) => {
             const uf = normalizeUfCode(author.estado);
             return uf ? { key: uf, label: uf } : null;
         });
-        const allAuthors = aggregateRows(visible, (item) => item.authors.map((author) => ({
+        const allAuthors = aggregateRows(dashboardAuthorshipItems, (item) => item.authors.map((author) => ({
             key: `person:${personKey(author)}`,
             label: author.nome,
             photo: author.foto,
             meta: [author.partido, author.estado].filter(Boolean).join("/"),
         })));
-        const authorProposalCounts = countAuthorProposals(visible);
+        const authorProposalCounts = countAuthorProposals(dashboardAuthorshipItems);
         // O limite é aplicado depois dos filtros gerais e da contagem de
         // proposições únicas por parlamentar, antes da ordenação/renderização.
         const authorMinimum = Number($<HTMLSelectElement>("[data-dashboard-author-filter]")?.value || MIN_PROPOSICOES_POR_PARLAMENTAR);
@@ -539,7 +587,7 @@ function initActivity(root: HTMLElement) {
         // 2026 via dataset). Regra editorial = mesma unidade dos demais cards
         // de contagem simples (1 proposição = 1 voto), NÃO canetadas e NÃO o
         // /stats (que conta só desfavoráveis). Ver relatório 1.3.
-        const categories = aggregateRows(visible, (item) => item.categoria ? [{ key: item.categoria, label: item.categoria }] : []);
+        const categories = aggregateRows(visible, (item) => item.categoria ? [{ key: item.categoria, label: item.categoriaLabel || item.categoria }] : []);
         fillDashboardRows("[data-dashboard-category]", categories);
         $("[data-dashboard-category]")?.classList.toggle("activity-dashboard-card__empty", categories.length === 0);
         if (categories.length === 0) {
@@ -657,8 +705,8 @@ function initActivity(root: HTMLElement) {
         const progress = document.createElement("td");
         progress.innerHTML = `<strong>${item.celerity.label}</strong><small>${item.celerity.movements_last_90_days} movimentações em 3 meses</small>`;
         const theme = document.createElement("td");
-        theme.textContent = item.categoria || "Não informada";
-        theme.title = item.categoria ? `Categoria oficial: ${item.categoria}` : "Sem categoria no dataset oficial para esta proposição";
+        theme.textContent = item.categoriaLabel || item.categoria || "Não informada";
+        theme.title = item.categoria ? `Categoria oficial: ${item.categoriaLabel || item.categoria}` : "Sem categoria no dataset oficial para esta proposição";
         const updated = document.createElement("td");
         // Coluna "Atualização": data de apresentação quando disponível; nunca
         // created_at/updated_at técnicas do sistema.
@@ -682,7 +730,7 @@ function initActivity(root: HTMLElement) {
         header.append(titleWrap, createStance(item));
         const tag = document.createElement("span");
         tag.className = "activity-card__tag";
-        tag.textContent = item.categoria || "Categoria não informada";
+        tag.textContent = item.categoriaLabel || item.categoria || "Categoria não informada";
         const summary = document.createElement("p");
         summary.className = "activity-card__summary";
         summary.textContent = item.resumo;
@@ -750,13 +798,23 @@ function initActivity(root: HTMLElement) {
 
     function renderResults() {
         const slice = currentSlice();
-        tableBody.replaceChildren(...slice.map(createTableRow));
-        cards.replaceChildren(...slice.map(createCard));
         empty.hidden = visible.length !== 0;
         $("[data-results]").toggleAttribute("hidden", visible.length === 0);
         renderSummary();
         renderDashboard();
         renderPagination();
+        // Prioriza os painéis que estão acima da tabela. A construção das
+        // linhas e dos cards ocorre no próximo frame, mantendo a mudança de
+        // filtro responsiva mesmo em respostas grandes.
+        const renderVersion = ++resultsRenderVersion;
+        const results = $("[data-results]");
+        results.setAttribute("aria-busy", "true");
+        requestAnimationFrame(() => {
+            if (renderVersion !== resultsRenderVersion) return;
+            tableBody.replaceChildren(...slice.map(createTableRow));
+            cards.replaceChildren(...slice.map(createCard));
+            results.removeAttribute("aria-busy");
+        });
     }
 
     function applyFilters(closePanel = true) {
@@ -1001,6 +1059,15 @@ function initActivity(root: HTMLElement) {
         status.className = "activity-status is-loading";
         status.innerHTML = `<span aria-hidden="true"></span><p>Carregando atividade legislativa…</p>`;
         try {
+            const cached = readActivityCache();
+            if (cached) {
+                hydrateOptions(cached);
+                syncResponsivePageSize();
+                visible = sortItems(all);
+                status.hidden = true;
+                renderResults();
+                return;
+            }
             const apiBase = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)
                 ? `${location.origin}/api/v1`
                 : PUBLIC_API_BASE_URL;
@@ -1008,7 +1075,9 @@ function initActivity(root: HTMLElement) {
             // megabytes sem alterar os campos usados em filtros e painéis.
             const response = await fetch(`${apiBase}/activity?limit=5000&include_events=false`);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            hydrateOptions(await response.json());
+            const activity = await response.json() as ActivityProposition[];
+            writeActivityCache(activity);
+            hydrateOptions(activity);
             syncResponsivePageSize();
             visible = sortItems(all);
             status.hidden = true;

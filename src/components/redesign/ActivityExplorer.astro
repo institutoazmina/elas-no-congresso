@@ -329,9 +329,10 @@ import "../../styles/activity-table.css";
     .activity-dashboard-card__author { display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: center; gap: 6px; }
     a.activity-dashboard-card__author { width: 100%; color: inherit; text-align: left; text-decoration: none; cursor: pointer; }
     a.activity-dashboard-card__author:hover span > span { color: #4242f6; text-decoration: underline; }
-    .activity-dashboard-card__author img { display: block; width: 24px; height: 32px; flex: none; border: 1px solid #998d96; object-fit: cover; object-position: top center; }
+    .activity-dashboard-card__author img, .activity-dashboard-card__author-fallback { display: block; width: 24px; height: 32px; flex: none; border: 1px solid #998d96; object-fit: cover; object-position: top center; }
+    .activity-dashboard-card__author-fallback { display: grid; place-items: center; background: #f1f1ff; color: #4242f6; font-size: 9px; font-weight: 700; line-height: 1; }
     .activity-dashboard-card__author span { display: flex; min-width: 0; flex-direction: column; }
-    .activity-dashboard-card__author span > span { display: block; overflow: hidden; line-height: 16px; text-overflow: ellipsis; white-space: nowrap; }
+    .activity-dashboard-card__author span > span { display: block; overflow-wrap: anywhere; line-height: 16px; }
     .activity-dashboard-card__author small { color: rgb(11 15 94 / 65%); font-size: 11px; line-height: 12px; }
     .activity-dashboard-card__single-result { margin: 4px 0 0; color: rgb(11 15 94 / 65%); font-size: 12px; line-height: 16px; }
     .activity-dashboard-card__empty { align-items: center; justify-content: center; padding: 24px; color: rgb(11 15 94 / 65%); font-size: 14px; line-height: 20px; text-align: center; text-wrap: balance; }
@@ -378,9 +379,10 @@ import "../../styles/activity-table.css";
     .activity-table td:nth-child(3) p { display: -webkit-box; margin: 0; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
     .activity-author > a { display: flex; width: 100%; align-items: center; gap: 8px; color: inherit; text-align: left; text-decoration: none; cursor: pointer; }
     .activity-author > a:hover strong { color: #4242f6; text-decoration: underline; }
-    .activity-author img { width: 30px; height: 40px; flex: none; border: 1px solid #998d96; border-radius: 0; object-fit: cover; object-position: top center; }
+    .activity-author img, .activity-author__fallback { width: 30px; height: 40px; flex: none; border: 1px solid #998d96; border-radius: 0; object-fit: cover; object-position: top center; }
+    .activity-author__fallback { display: grid; place-items: center; background: #f1f1ff; color: #4242f6; font-size: 11px; font-weight: 700; }
     .activity-author > a > span { display: flex; min-width: 0; flex-direction: column; }
-    .activity-author strong { display: -webkit-box; overflow: hidden; font-size: 14px; line-height: 18px; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+    .activity-author strong { display: block; overflow-wrap: anywhere; font-size: 14px; line-height: 18px; }
     .activity-author small { color: rgb(11 15 94 / 65%); font-size: 12px; line-height: 16px; }
     .activity-author__extra { display: block; margin-top: 4px; }
     .activity-stance { display: flex; align-items: center; gap: 4px; font-size: 14px; line-height: 16px; }

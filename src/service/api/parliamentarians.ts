@@ -19,6 +19,7 @@ export type ParliamentarianRecord = {
   education: string | null;
   race: string | null;
   religion: string | null;
+  public_propositions_count: number;
   favorable_propositions_count: number;
   unfavorable_propositions_count: number;
   terms: ParliamentarianTerm[];
@@ -45,6 +46,7 @@ export type ParliamentarianViewModel = {
   education: string;
   race: string;
   religion: string;
+  publicPropositionsCount: number;
   favorablePropositionsCount: number;
   unfavorablePropositionsCount: number;
 };
@@ -88,6 +90,8 @@ export async function getCurrentParliamentarians(limit = 5): Promise<Parliamenta
   const [{ items: parliamentarians }, { items: partyRecords }] = await Promise.all([
     apiGet<ParliamentariansResponse>('/legislatures/parliamentarians', {
       current: 'true',
+      rank: 'unfavorable',
+      min_propositions: 5,
       limit,
       offset: 0,
     }),
@@ -118,6 +122,7 @@ export async function getCurrentParliamentarians(limit = 5): Promise<Parliamenta
         education: textOrUnavailable(person.education),
         race: textOrUnavailable(person.race),
         religion: textOrUnavailable(person.religion),
+        publicPropositionsCount: person.public_propositions_count,
         favorablePropositionsCount: person.favorable_propositions_count,
         unfavorablePropositionsCount: person.unfavorable_propositions_count,
       };

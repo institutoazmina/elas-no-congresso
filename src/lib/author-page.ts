@@ -25,7 +25,7 @@ export type ActivityProposal = {
     legislatura: number;
     quiteria_prob?: number | null;
     categoria?: string | null;
-    tema?: string | null;
+    tema?: string | string[] | null;
     /** Situação oficial da API (current_status). Nunca derivado de quiteria_prob. */
     situacao?: string | null;
     /** Data de apresentação (presented_at da API, YYYY-MM-DD). Alimenta "Atualização". */
@@ -222,7 +222,8 @@ export function buildAuthorActivityFromApi(data: ActivityProposition[], authorId
             avaliador: item.assessment_organization,
             favoravel: item.is_favorable === true ? 1 : item.is_favorable === false ? -1 : 0,
             legislatura: 0,
-            categoria: item.category,
+            categoria: item.category_label || item.category,
+            tema: item.themes?.length ? item.themes : item.category_label || item.category,
             situacao: item.current_status,
             apresentadaEm: item.presented_at,
             quiteria_prob: item.celerity.movements_last_90_days,
@@ -296,12 +297,16 @@ export function selectAuthorReports<T extends { date?: string; modified?: string
 export function groupProposalRatings(proposals: AuthorProposal[], field: "categoria" | "tema"): RatingGroup[] {
     const groups = new Map<string, RatingGroup>();
     for (const proposal of proposals) {
-        const label = proposal[field]?.trim();
-        if (!label) continue;
-        const group = groups.get(label) || { label, favorable: 0, unfavorable: 0 };
-        if (proposal.favoravel > 0) group.favorable += 1;
-        if (proposal.favoravel < 0) group.unfavorable += 1;
-        groups.set(label, group);
+        const source = proposal[field];
+        const labels = Array.isArray(source) ? source : [source];
+        for (const rawLabel of labels) {
+            const label = rawLabel?.trim();
+            if (!label) continue;
+            const group = groups.get(label) || { label, favorable: 0, unfavorable: 0 };
+            if (proposal.favoravel > 0) group.favorable += 1;
+            if (proposal.favoravel < 0) group.unfavorable += 1;
+            groups.set(label, group);
+        }
     }
     return [...groups.values()].sort((a, b) => (b.favorable + b.unfavorable) - (a.favorable + a.unfavorable) || a.label.localeCompare(b.label, "pt-BR"));
 }

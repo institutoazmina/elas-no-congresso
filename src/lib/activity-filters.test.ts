@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import {
     EMPTY_ACTIVITY_FILTERS,
     activityAssessment,
+    filterDashboardAuthors,
     filterActivityItems,
     getActivityCategories,
     getActivityStatuses,
@@ -95,6 +96,21 @@ assert.strictEqual(filterActivityItems(ITEMS, withFilters({ year: "2023", assess
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ party: "PVB", assessment: "unfavorable" })).length, 1);
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ search: "Bruno", house: "Senador" })).length, 1);
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ gender: "F", state: "BA", evaluator: "Themis", comments: "no" })).length, 1);
+
+// O filtro de UF restringe também a autoria usada pelos painéis: uma
+// coautoria de outra UF não pode reaparecer em "Por autoria" nem no mapa.
+const proposalWithCoauthorStates = proposal({
+    numero: "PL 99/2024",
+    states: ["BA", "SP"],
+    authors: [
+        { nome: "Carla Nunes", partido: "PVB", estado: "BA", genero: "F" },
+        { nome: "Ana Souza", partido: "PT", estado: "SP", genero: "F" },
+    ],
+});
+assert.deepStrictEqual(
+    filterDashboardAuthors(proposalWithCoauthorStates, withFilters({ state: "BA" })).map((author) => author.nome),
+    ["Carla Nunes"],
+);
 
 // Resultado único, zero resultados e reset para o estado integral.
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ year: "2022" })).length, 1);

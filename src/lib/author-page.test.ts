@@ -146,6 +146,16 @@ test("agrupamentos usam apenas categorias/temas reais presentes nas proposiçõe
     assert.deepEqual(groupProposalRatings(activity.proposals, "categoria"), [{ label: "Saúde", favorable: 1, unfavorable: 1 }]);
 });
 
+test("agrupamento por tema aceita todos os temas fornecidos pela API", () => {
+    const activity = buildAuthorActivity(data, 101)!;
+    activity.proposals[0].tema = ["Violência Doméstica", "Proteção Integral"];
+    activity.proposals[1].tema = ["Violência Doméstica"];
+    assert.deepEqual(groupProposalRatings(activity.proposals, "tema"), [
+        { label: "Violência Doméstica", favorable: 1, unfavorable: 1 },
+        { label: "Proteção Integral", favorable: 1, unfavorable: 0 },
+    ]);
+});
+
 test("P0: fallbacks da API nunca inventam dado biográfico ou partidário", () => {
     assert.equal(partyForTerm([], undefined), "Indisponível");
     assert.equal(partyForTerm([{ id: 4, acronym: "PX", name: "Partido X" }], undefined), "Indisponível");

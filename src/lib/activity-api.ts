@@ -27,6 +27,8 @@ export type ActivityProposition = {
   current_status: string | null;
   tramitation_url: string | null;
   category: string | null;
+  category_label?: string | null;
+  themes?: string[];
   is_favorable: boolean | null;
   assessment_organization: string | null;
   assessment_comments: string | null;

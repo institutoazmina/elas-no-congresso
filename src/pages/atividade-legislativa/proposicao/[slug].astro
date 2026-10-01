@@ -61,9 +61,9 @@ const house = /sen/i.test(activity.house)
     : activity.house?.trim() || "Indisponível";
 const activityHouse = activity.house === "senado" ? "senado" : activity.house === "camara" ? "camara" : "";
 const officialLink = activity.tramitation_url?.trim().replace(/^http:/, "https:") || null;
-const category = activity.category?.trim() || null;
+const category = activity.category_label?.trim() || activity.category?.trim() || null;
 const presentedDate = formatPresentedDate(activity.presented_at);
-const themes = category ? [category] : [];
+const themes = activity.themes?.filter(Boolean) || (category ? [category] : []);
 const title = `${activity.number_label} | Atividade Legislativa | Elas no Congresso`;
 ---
 
@@ -163,7 +163,7 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
                   {activity.celerity.last_event_at ? formatPresentedDate(activity.celerity.last_event_at) : activity.current_status?.trim() || "Indisponível"}
                 </p>
                 <p class="proposition-details__themes">
-                  {themes.length > 0 ? themes.map((theme) => <span>#{theme.replace(/^#/, "")}</span>) : "Indisponível"}
+                  {themes.length > 0 ? themes.map((theme) => <span>{theme.replace(/^#/, "")}</span>) : "Indisponível"}
                 </p>
               </div>
             </aside>

@@ -31,7 +31,7 @@ export type ActivityFilterItem = {
     parties: string[];
     states: string[];
     genders: string[];
-    authors: Array<{ nome?: string | null; partido?: string | null; estado?: string | null }>;
+    authors: Array<{ nome?: string | null; partido?: string | null; estado?: string | null; genero?: string | null }>;
 };
 
 export const EMPTY_ACTIVITY_FILTERS: Readonly<ActivityFilterState> = Object.freeze({
@@ -90,6 +90,18 @@ export function matchesActivityFilters(item: ActivityFilterItem, filters: Activi
 
 export function filterActivityItems<T extends ActivityFilterItem>(items: T[], filters: ActivityFilterState) {
     return items.filter((item) => matchesActivityFilters(item, filters));
+}
+
+/**
+ * Nos painéis baseados em autoria, o recorte de UF/gênero precisa ser aplicado
+ * à pessoa que assina — e não apenas à proposição que ela coassinou. Os demais
+ * filtros já foram aplicados em `filterActivityItems`.
+ */
+export function filterDashboardAuthors<T extends ActivityFilterItem>(item: T, filters: Pick<ActivityFilterState, "state" | "gender">) {
+    return item.authors.filter((author) =>
+        (!filters.state || String(author.estado ?? "").trim().toUpperCase() === filters.state)
+        && (!filters.gender || String(author.genero ?? "").trim().toUpperCase() === filters.gender),
+    );
 }
 
 export function getActivityCategories(items: Array<Pick<ActivityFilterItem, "categoria">>) {
