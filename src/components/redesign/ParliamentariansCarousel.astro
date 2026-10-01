@@ -9,7 +9,7 @@ import favorableProposal from "../../assets/images/proposicao-favoravel.svg";
 import unfavorableProposal from "../../assets/images/proposicao-desfavoravel.svg";
 import { getCurrentParliamentarians } from "../../service/api/parliamentarians";
 
-const people = await getCurrentParliamentarians(100);
+const people = await getCurrentParliamentarians(50);
 const itemCount = people.length;
 const propositionCountLabel = (count: number) =>
     `${count} ${count === 1 ? "proposição" : "proposições"}`;
@@ -25,7 +25,7 @@ const propositionCountLabel = (count: number) =>
     <header class="parliamentarians__header">
         <span class="parliamentarians__attention" aria-hidden="true"></span>
         <h2 id="parliamentarians-title">Parlamentares que jogam contra</h2>
-        <p>Esses são os políticos que mais apresentam projetos desfavoráveis aos direitos de meninas, mulheres e pessoas LGBTQIAPN+</p>
+        <p>Esses são os políticos que mais apresentam projetos desfavoráveis aos direitos de meninas, mulheres e pessoas LGBTQIAPN+. Consideramos parlamentares com cinco ou mais proposições, das quais 40% ou mais são desfavoráveis.</p>
     </header>
 
     <div

@@ -90,9 +90,10 @@ export async function getCurrentParliamentarians(limit = 5): Promise<Parliamenta
   const [{ items: parliamentarians }, { items: partyRecords }] = await Promise.all([
     apiGet<ParliamentariansResponse>('/legislatures/parliamentarians', {
       current: 'true',
-      rank: 'unfavorable',
+      rank: 'unfavorable_rate',
       min_propositions: 5,
-      limit,
+      min_unfavorable_rate: 0.4,
+      limit: Math.min(limit, 50),
       offset: 0,
     }),
     apiGet<PartiesResponse>('/legislatures/parties', { limit: 100, offset: 0 }),
