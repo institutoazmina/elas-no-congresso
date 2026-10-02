@@ -122,7 +122,7 @@ export async function getCurrentParliamentarians(limit = 5): Promise<Parliamenta
         profession: textOrUnavailable(person.profession),
         education: textOrUnavailable(person.education),
         race: textOrUnavailable(person.race),
-        religion: textOrUnavailable(person.religion),
+        religion: person.religion?.trim() || 'Não informada',
         publicPropositionsCount: person.public_propositions_count,
         favorablePropositionsCount: person.favorable_propositions_count,
         unfavorablePropositionsCount: person.unfavorable_propositions_count,
