@@ -176,7 +176,14 @@ const propositionCountLabel = (count: number) =>
                                     <!-- <div><dt>Cor/Raça</dt><dd>{person.race}</dd></div> -->
                                     <div>
                                         <dt>Religião</dt>
-                                        <dd>{person.religion}</dd>
+                                        <dd
+                                            class:list={{
+                                                "parliamentarians__detail--unavailable":
+                                                    person.religion === "Não informada",
+                                            }}
+                                        >
+                                            {person.religion}
+                                        </dd>
                                     </div>
                                 </dl>
                             </div>
@@ -661,7 +668,7 @@ const propositionCountLabel = (count: number) =>
     .parliamentarians__details dd {
         text-align: right;
     }
-    .parliamentarians__details div:last-child dd {
+    .parliamentarians__detail--unavailable {
         color: #998d96;
     }
     .parliamentarians__card--active {
