@@ -49,13 +49,13 @@ const categories = await getCategoryOptions();
                         </label>
                     </div>
                     <section class="alerts-email-modal__daily-options" hidden aria-label="Filtros para alertas diários">
-                        <p class="alerts-email-modal__daily-intro">Escolha uma proposição para filtrar seus alertas diários.</p>
+                        <p class="alerts-email-modal__daily-intro">Você pode filtrar os alertas diários por uma proposição específica. Se não escolher nenhuma, receberá alertas de todas as proposições dos temas selecionados.</p>
                         <section class="alerts-email-modal__daily-control" aria-label="Proposição">
                             <h3>Proposição</h3>
                             <div class="alerts-email-modal__daily-select-wrap">
                                 <AlertsProposalCombobox client:load />
                             </div>
-                            <p class="alerts-email-modal__daily-helper">Opcional. Deixe em branco para receber alertas de todas as proposições dos temas selecionados.</p>
+                            <p class="alerts-email-modal__daily-helper">Opcional: escolha uma PL somente se quiser restringir os alertas a ela.</p>
                         </section>
                     </section>
                 </fieldset>
