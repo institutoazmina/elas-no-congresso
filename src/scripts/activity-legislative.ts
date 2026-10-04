@@ -749,7 +749,9 @@ function initActivity(root: HTMLElement) {
         const unfavorable = visible.filter((item) => item.favoravel < 0).length;
         const totalRated = favorable + unfavorable || 1;
         root.classList.toggle("is-empty-results", visible.length === 0);
-        $("[data-total]").textContent = visible.length ? `${formatNumber.format(visible.length)} proposições` : "Nenhuma proposição encontrada";
+        const total = $("[data-total]");
+        total.hidden = false;
+        total.textContent = visible.length ? `${formatNumber.format(visible.length)} proposições` : "Nenhuma proposição encontrada";
         $("[data-favorable-count]").textContent = formatNumber.format(favorable);
         $("[data-unfavorable-count]").textContent = formatNumber.format(unfavorable);
         const bar = $("[data-result-bar]") as HTMLElement;

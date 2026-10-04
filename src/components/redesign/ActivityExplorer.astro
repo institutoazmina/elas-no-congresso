@@ -39,7 +39,7 @@ import "../../styles/activity-table.css";
             <label class="activity-field"><span>Ano</span><select name="year"><option value="">Todos</option></select></label>
             <label class="activity-field"><span>Partido</span><select name="party"><option value="">Todos</option></select></label>
             <label class="activity-field activity-field--wide"><span>Categoria</span><select name="category" disabled title="A base atual ainda não fornece esta classificação"><option value="">Todas as categorias</option></select></label>
-            <label class="activity-field activity-field--assessment"><span>Avaliação</span><select name="assessment"><option value="">Todas</option><option value="favorable">Favorável</option><option value="unfavorable">Desfavorável</option><option value="unrated">Sem avaliação</option></select></label>
+            <label class="activity-field activity-field--assessment"><span>Avaliação</span><select name="assessment"><option value="">Todas</option><option value="favorable">Favorável</option><option value="unfavorable">Desfavorável</option></select></label>
             <button class="activity-more-filters" type="button" data-open-filters="advanced" aria-expanded="false" aria-controls="activity-filter-panel">Mais filtros <span data-filter-count hidden>0</span></button>
         </div>
 
@@ -51,7 +51,7 @@ import "../../styles/activity-table.css";
                     <label class="activity-field"><span>Ano</span><select name="year-mobile"><option value="">Todos</option></select></label>
                     <label class="activity-field"><span>Partido</span><select name="party-mobile"><option value="">Todos</option></select></label>
                     <label class="activity-field"><span>Categoria</span><select name="category-mobile" disabled><option value="">Todas as categorias</option></select></label>
-                    <label class="activity-field"><span>Avaliação</span><select name="assessment-mobile"><option value="">Todas</option><option value="favorable">Favorável</option><option value="unfavorable">Desfavorável</option><option value="unrated">Sem avaliação</option></select></label>
+                    <label class="activity-field"><span>Avaliação</span><select name="assessment-mobile"><option value="">Todas</option><option value="favorable">Favorável</option><option value="unfavorable">Desfavorável</option></select></label>
                 </div>
                 <button class="activity-filter-panel__toggle" type="button" data-toggle-advanced aria-expanded="false" aria-controls="activity-filter-panel-advanced">Mais filtros</button>
                 <div class="activity-filter-panel__advanced" id="activity-filter-panel-advanced">
@@ -60,7 +60,7 @@ import "../../styles/activity-table.css";
                         <label class="activity-field activity-field--presented"><span>Apresentada em</span><select name="presented"><option value="">Qualquer ano</option></select></label>
                         <label class="activity-field activity-field--status"><span>Como está?</span><select name="status"><option value="">Qualquer status</option></select></label>
                         <label class="activity-field activity-field--movements"><span>Movimentações (últimos 90 dias)</span><select name="movements"><option value="">Qualquer volume</option><option value="with">Com movimentações</option><option value="without">Sem movimentações</option></select></label>
-                        <label class="activity-field activity-field--markers"><span>Marcadores analíticos</span><select disabled><option>Dados indisponíveis</option></select></label>
+                        <label class="activity-field activity-field--markers"><span>Marcadores analíticos</span><select disabled><option>Em breve</option></select></label>
                     </fieldset>
                     <fieldset>
                         <legend>Autoria</legend>
@@ -85,7 +85,7 @@ import "../../styles/activity-table.css";
 
     <div class="activity-summary">
         <div class="activity-summary__heading">
-            <h2 id="activity-results-title" data-total>Carregando proposições…</h2>
+            <h2 id="activity-results-title" data-total hidden></h2>
             <div>
                 <button type="button" data-download>Baixar planilha</button>
                 <button type="button" data-clear-filters>Remover filtros</button>
@@ -433,7 +433,7 @@ import "../../styles/activity-table.css";
     .activity-filter-panel__advanced .activity-field { flex: none; }
     .activity-filter-panel__advanced .activity-field--presented { width: 154px; }
     .activity-filter-panel__advanced .activity-field--status { width: 210px; }
-    .activity-filter-panel__advanced .activity-field--movements { width: 150px; }
+    .activity-filter-panel__advanced .activity-field--movements { width: 192px; }
     .activity-filter-panel__advanced .activity-field--markers { width: 100%; }
     .activity-filter-panel__advanced .activity-field--markers select { width: 192px; }
     .activity-filter-panel__advanced .activity-field--gender, .activity-filter-panel__advanced .activity-field--religion, .activity-filter-panel__advanced .activity-field--state { width: 100%; }
