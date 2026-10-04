@@ -171,7 +171,7 @@ const proposals = await fetchFastUnfavorable(API_BASE_URL);
     .fast-moving-proposals__carousel::before { top: 0; left: 0; transform: scaleY(-1); }
     .fast-moving-proposals__carousel::after { bottom: 0; left: 0; }
     .fast-moving-proposals__controls { position: absolute; z-index: 3; top: 48px; left: calc(50% - 58px); display: flex; width: 116px; height: 40px; gap: 4px; }
-    .fast-moving-proposals__controls button { display: grid; width: 56px; height: 40px; padding: 8px 16px; place-items: center; border: 2px solid #4242f6; border-radius: 0; background: #fff; }
+    .fast-moving-proposals__controls button { display: grid; width: 56px; height: 40px; padding: 8px 16px; place-items: center; border: 2px solid #4242f6; border-radius: 0; background: #fff; cursor: pointer; }
     .fast-moving-proposals__controls img { display: block; width: 24px; height: 24px; }
     .fast-moving-proposals__viewport { position: absolute; z-index: 2; top: 112px; width: 100%; overflow-x: clip; overflow-y: visible; }
     .fast-moving-proposals__track { position: relative; left: 50%; display: flex; width: max-content; gap: 48px; transform: translateX(-3216px); transition: transform .2s ease; }
