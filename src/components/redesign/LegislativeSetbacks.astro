@@ -6,6 +6,7 @@ import thumbsDown from "../../assets/images/thumbs-down.svg";
 import info from "../../assets/images/redesign/home-chart/info.svg";
 import attention from "../../assets/images/redesign/hero/attention.svg";
 import { getUnfavorableByCategory } from "../../service/api/stats";
+import { SetbackInfoTooltip } from "./SetbackInfoTooltip";
 
 // A API devolve 10 categorias; o gráfico do design tem 8 colunas.
 const COLUMNS = 7;
@@ -119,7 +120,7 @@ const themes = categories.map((category, index) => {
                                 />
                             </div>
                             <div class="tw:absolute tw:top-[227px] tw:flex tw:h-[92px] tw:w-full tw:flex-col tw:items-center tw:justify-center tw:gap-1 tw:py-2">
-                                <img class="tw:size-6" src={info.src} alt="" />
+                                <SetbackInfoTooltip client:load count={theme.count} iconSrc={info.src} title={theme.title} />
                                 <h3 class="tw:m-0 tw:text-center tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">
                                     {theme.title}
                                 </h3>
@@ -139,6 +140,10 @@ const themes = categories.map((category, index) => {
 </div>
 
 <style>
+    :global(.setback-info-tooltip__trigger) { display: grid; width: 24px; height: 24px; place-items: center; border: 0; background: transparent; padding: 0; cursor: help; }
+    :global(.setback-info-tooltip__trigger:focus-visible) { outline: 2px solid #4242f6; outline-offset: 2px; }
+    :global(.setback-info-tooltip__trigger img) { width: 24px; height: 24px; }
+    :global(.setback-info-tooltip__popup) { display: flex; z-index: 20; max-width: 220px; flex-direction: column; gap: 4px; background: #0b0f5e; padding: 10px 12px; color: #fff; font: 14px/18px "Plus Jakarta Sans", sans-serif; box-shadow: 2px 2px 0 #4242f6; }
     /* This extra element only participates in the mobile indicator layout. */
     .legislative-setbacks__mobile-unfavorable { display: none; }
     section[aria-labelledby="legislative-setbacks-title"] footer :global(span) { padding-top: 4px; }

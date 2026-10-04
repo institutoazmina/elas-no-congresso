@@ -8,7 +8,7 @@
 [x] Na página ia-feminista, "O que a QuitérIA não faz" deixar em bold "não faz"
 [x] Na página de alertas deixar a data na listagem no formato DD/MM/AAAA
 [x] Botão “o que descobrimos?” está levando para a página de reportagens, Ele deveria rolar para o infográfico , da secção abaixo.
-[] Em “Estes são Os temas com mais retrocesso no legislativo”, Os “i” abaixo dos gráficos de temas não estão funcionando - deveria ser mouse over com explicação da informação. Use o Base-UI.
+[x] Em “Estes são Os temas com mais retrocesso no legislativo”, Os “i” abaixo dos gráficos de temas não estão funcionando - deveria ser mouse over com explicação da informação. Use o Base-UI.
 [] No rodapé da secção Estes são Os temas com mais
 retrocesso no legislativo, o texto "Acesse a aba Atividade de Legislativa para ver em detalhes
 " deve se parecer com um link e redirecionar para /atividade-legislativa
