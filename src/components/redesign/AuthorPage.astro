@@ -33,7 +33,7 @@ const initialPayload = initial ? JSON.stringify(initial).replace(/</g, "\\u003c"
     style={`--author-paper: url(${heroPaper.src}); --author-paperclip: url(${paperclip.src}); --author-circles: url(${circles.src}); --author-arrow-back: url(${arrowBack.src}); --author-arrow-forward: url(${arrowForward.src})`}
 >
     <section class="author-hero" data-page-hero aria-labelledby="author-page-title">
-        <a href="/atividade-legislativa">←&nbsp; Voltar ao painel</a>
+        <a href="/atividade-legislativa" data-history-back>←&nbsp; Voltar ao painel</a>
         <div>
             <p>Autoria</p>
             <h1 id="author-page-title" data-author-hero-name>{initialName}</h1>
@@ -139,6 +139,20 @@ const initialPayload = initial ? JSON.stringify(initial).replace(/</g, "\\u003c"
 
 <script>
     import "../../scripts/author-page";
+
+    const initializeHistoryBackLinks = () => {
+        document.querySelectorAll<HTMLAnchorElement>("[data-history-back]:not([data-history-back-ready])").forEach((link) => {
+            link.dataset.historyBackReady = "true";
+            link.addEventListener("click", (event) => {
+                if (window.history.length < 2) return;
+                event.preventDefault();
+                window.history.back();
+            });
+        });
+    };
+
+    initializeHistoryBackLinks();
+    document.addEventListener("astro:page-load", initializeHistoryBackLinks);
 </script>
 
 <style is:global>

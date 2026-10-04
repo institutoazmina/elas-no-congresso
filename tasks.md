@@ -2,7 +2,7 @@
 [x] O filtro COMO ESTÁ? deveria trazer a análise de celeridade
 [x] Falta filtro que identifique se HÁ RESSALVAS
 [x] No rodapé da visualização POR STATUS, colocar “Usamos” ao invés de “Usa” para padronizar
-[] Quando estamos em uma proposição/candidato o botão voltar deve usar o browser history para voltar à tela anterior, e não para a tela inicial do site
+[x] Quando estamos em uma proposição/candidato o botão voltar deve usar o browser history para voltar à tela anterior, e não para a tela inicial do site
 [] Os textos nas caixas azuis nos cards estão sem acentuação, ex: VIOLENCIAS DE GENERO, deveria ser VIOLÊNCIAS DE GÊNERO
 [] Nos cards de cada parlamentar em "Parlamentares que jogam contra", o ícone da cúpula do Congresso Nacional na TAG Senado Federal tem estar de cabeça para baixo como representando a arquitetura do congresso. 
 [] Na página ia-feminista, "O que a QuitérIA não faz" deixar em bold "não faz"

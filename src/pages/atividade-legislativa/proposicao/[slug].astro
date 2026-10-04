@@ -88,7 +88,7 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
       <RedesignHeader />
       <main>
         <section class="proposition-hero" data-page-hero aria-labelledby="proposition-title">
-          <a href="/atividade-legislativa">←&nbsp; Voltar ao painel</a>
+          <a href="/atividade-legislativa" data-history-back>←&nbsp; Voltar ao painel</a>
           <div>
             <p>Proposição</p>
             <h1 id="proposition-title">{activity.number_label}</h1>
@@ -337,7 +337,20 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
         });
       };
 
+      const initializeHistoryBackLinks = () => {
+        document.querySelectorAll<HTMLAnchorElement>("[data-history-back]:not([data-history-back-ready])").forEach((link) => {
+          link.dataset.historyBackReady = "true";
+          link.addEventListener("click", (event) => {
+            if (window.history.length < 2) return;
+            event.preventDefault();
+            window.history.back();
+          });
+        });
+      };
+
+      initializeHistoryBackLinks();
       document.addEventListener("astro:page-load", initializePropositionProgress);
+      document.addEventListener("astro:page-load", initializeHistoryBackLinks);
       initializePropositionProgress();
     </script>
   </body>
