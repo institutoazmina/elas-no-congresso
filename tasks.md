@@ -20,7 +20,7 @@ retrocesso no legislativo, o texto "Acesse a aba Atividade de Legislativa para v
 e tá tramitando rapidinho, faça um smoke test com a API e valide a celeridade, todos estão como 1 movimentação em 3 meses.
 [x] no bloco, E o que é bom pra gente, mas
 tá indo beeeem devagar, faça o mesmo do item acima.
-[] no bloco, explore, transforme a secção toda num link para /atividade-legislativa.
+[x] no bloco, explore, transforme a secção toda num link para /atividade-legislativa.
 [] No rodapé, “Receba nossos alertas” deixe a secção toda clicável e redirecione para /alertas.
 [] Ao selecionar alerta diário, ajuste o copy/ux para que o usuário entenda que PODE filtrar por uma PL mas que se NÃO escolher uma, receberá todas dos/do tema escolhido.
 [] Na pagina de reportagens tem um bloco com as 3 mais recentes, elas não devem aparecer no bloco abaixo "Todas as Reportagens", faça um split.
