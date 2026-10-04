@@ -18,7 +18,7 @@ retrocesso no legislativo, o texto "Acesse a aba Atividade de Legislativa para v
 [x] As setas do carrousel devem trocar o mouse para pointer.
 [x] No bloco, Veja o que restringe nossos direitos
 e tá tramitando rapidinho, faça um smoke test com a API e valide a celeridade, todos estão como 1 movimentação em 3 meses.
-[] no bloco, E o que é bom pra gente, mas
+[x] no bloco, E o que é bom pra gente, mas
 tá indo beeeem devagar, faça o mesmo do item acima.
 [] no bloco, explore, transforme a secção toda num link para /atividade-legislativa.
 [] No rodapé, “Receba nossos alertas” deixe a secção toda clicável e redirecione para /alertas.
