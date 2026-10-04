@@ -14,12 +14,15 @@ import "../styles/tailwind.css";
 import "../styles/redesign-shared-background.css";
 
 const POSTS_PER_PAGE = 9;
+const RECENT_POST_COUNT = 3;
 const [recentPage, allPage] = await Promise.all([
-    fetchReportagensPage(undefined, 3, 1, true),
-    fetchReportagensPage(undefined, POSTS_PER_PAGE, 1, true),
+    fetchReportagensPage(undefined, RECENT_POST_COUNT, 1, true),
+    fetchReportagensPage(undefined, POSTS_PER_PAGE + RECENT_POST_COUNT, 1, true),
 ]);
 const recentPosts = recentPage.posts;
-const posts = allPage.posts;
+const posts = allPage.posts.slice(RECENT_POST_COUNT);
+const allPostsTotal = Math.max(allPage.total - RECENT_POST_COUNT, 0);
+const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
 ---
 
 <!doctype html>
@@ -64,13 +67,13 @@ const posts = allPage.posts;
                     aria-labelledby="todas-reportagens-title"
                     data-reportagens-pagination
                     data-pagination-endpoint={WP_REPORTAGENS_ENDPOINT}
-                    data-pagination-total-pages={allPage.totalPages}
+                    data-pagination-total-pages={allPostsTotalPages}
                 >
                     <div class="reportagens-all__content">
                         <h2 id="todas-reportagens-title"><span>Todas as reportagens</span></h2>
                         {posts.length > 0 ? <div class="reportagens-all__grid">{posts.map((post) => <div data-reportagem-pagination-card><ReportagemCard post={post} /></div>)}</div> : <p class="reportagens-feedback reportagens-feedback--light" role="status">N&atilde;o foi poss&iacute;vel carregar as reportagens.</p>}
                     </div>
-                    {allPage.totalPages > 1 && <div class="reportagens-pagination-region" style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}><div class="reportagens-pagination-region__texture redesign-shared-background" aria-hidden="true"></div><nav class="reportagens-pagination" aria-label="Pagina&#231;&#227;o das reportagens"><button class="reportagens-pagination__button" type="button" data-pagination-previous aria-label="P&#225;gina anterior" disabled><span><img src={paginationPrevious.src} alt="" /></span></button><button class="reportagens-pagination__button" type="button" data-pagination-next aria-label="Pr&#243;xima p&#225;gina"><span><img src={paginationNext.src} alt="" /></span></button><span class="reportagens-pagination__status" aria-live="polite" data-pagination-status>P&aacute;gina 1 de {allPage.totalPages}</span></nav></div>}
+                    {allPostsTotalPages > 1 && <div class="reportagens-pagination-region" style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}><div class="reportagens-pagination-region__texture redesign-shared-background" aria-hidden="true"></div><nav class="reportagens-pagination" aria-label="Pagina&#231;&#227;o das reportagens"><button class="reportagens-pagination__button" type="button" data-pagination-previous aria-label="P&#225;gina anterior" disabled><span><img src={paginationPrevious.src} alt="" /></span></button><button class="reportagens-pagination__button" type="button" data-pagination-next aria-label="Pr&oacute;xima p&aacute;gina"><span><img src={paginationNext.src} alt="" /></span></button><span class="reportagens-pagination__status" aria-live="polite" data-pagination-status>P&aacute;gina 1 de {allPostsTotalPages}</span></nav></div>}
                 </section>
             </main>
             <RedesignFooter />
@@ -96,6 +99,7 @@ const posts = allPage.posts;
     };
 
     const POSTS_PER_PAGE = 9;
+    const RECENT_POST_COUNT = 3;
     const paginationWindow = window as PaginationWindow;
 
     function initialiseReportagensPagination() {
@@ -227,7 +231,7 @@ const posts = allPage.posts;
                 const url = new URL(endpoint);
                 url.searchParams.set("_embed", "wp:featuredmedia");
                 url.searchParams.set("per_page", String(POSTS_PER_PAGE));
-                url.searchParams.set("page", String(requestedPage));
+                url.searchParams.set("offset", String(RECENT_POST_COUNT + (requestedPage - 1) * POSTS_PER_PAGE));
                 url.searchParams.set("orderby", "date");
                 url.searchParams.set("order", "desc");
 
@@ -235,8 +239,8 @@ const posts = allPage.posts;
                 if (!response.ok) throw new Error(`WordPress respondeu com ${response.status}`);
 
                 const posts = await response.json() as ClientPost[];
-                const responseTotalPages = Number(response.headers.get("x-wp-totalpages"));
-                if (responseTotalPages > 0) totalPages = responseTotalPages;
+                const responseTotal = Number(response.headers.get("x-wp-total"));
+                if (responseTotal > 0) totalPages = Math.ceil(Math.max(responseTotal - RECENT_POST_COUNT, 0) / POSTS_PER_PAGE);
                 if (posts.length === 0) throw new Error("A pagina solicitada nao possui reportagens.");
 
                 cards.forEach((card, index) => updateCard(card, posts[index]));
