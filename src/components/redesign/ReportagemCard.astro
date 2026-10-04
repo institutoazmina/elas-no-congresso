@@ -11,10 +11,10 @@ const imageAlt = media?.alt_text?.trim() || plainTitle;
 const updatedAt = post.modified ? new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", year: "numeric", timeZone: "America/Sao_Paulo" }).format(new Date(post.modified)) : undefined;
 ---
 <article class:list={["reportagem-card", { "reportagem-card--dark": dark }]}>
-    <a href={post.link} class="reportagem-card__image" data-reportagem-link aria-label={`Ler: ${plainTitle}`}>{image && <img src={image} alt={imageAlt} width="384" height="216" loading="lazy" decoding="async" data-reportagem-image />}</a>
-    <h3><a href={post.link} class="reportagem-card__title-link" data-reportagem-link aria-label={`Ler: ${plainTitle}`}><span data-reportagem-title set:html={post.title.rendered} /></a></h3>
+    <a href={post.link} class="reportagem-card__image" data-reportagem-link target="_blank" rel="noopener noreferrer" aria-label={`Ler: ${plainTitle}`}>{image && <img src={image} alt={imageAlt} width="384" height="216" loading="lazy" decoding="async" data-reportagem-image />}</a>
+    <h3><a href={post.link} class="reportagem-card__title-link" data-reportagem-link target="_blank" rel="noopener noreferrer" aria-label={`Ler: ${plainTitle}`}><span data-reportagem-title set:html={post.title.rendered} /></a></h3>
     <div class="reportagem-card__details">
-        <a href={post.link} class="reportagem-card__link" data-reportagem-link><span>Ler reportagem</span><span aria-hidden="true"><img src={chevronRight.src} alt="" /></span></a>
+        <a href={post.link} class="reportagem-card__link" data-reportagem-link target="_blank" rel="noopener noreferrer"><span>Ler reportagem</span><span aria-hidden="true"><img src={chevronRight.src} alt="" /></span></a>
         <time class="reportagem-card__date" datetime={post.modified} data-reportagem-date hidden={!updatedAt}>{updatedAt && <>Atualizada em {updatedAt}</>}</time>
     </div>
 </article>

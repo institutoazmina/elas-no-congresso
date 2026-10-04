@@ -24,4 +24,4 @@ tá indo beeeem devagar, faça o mesmo do item acima.
 [x] No rodapé, “Receba nossos alertas” deixe a secção toda clicável e redirecione para /alertas.
 [x] Ao selecionar alerta diário, ajuste o copy/ux para que o usuário entenda que PODE filtrar por uma PL mas que se NÃO escolher uma, receberá todas dos/do tema escolhido.
 [x] Na pagina de reportagens tem um bloco com as 3 mais recentes, elas não devem aparecer no bloco abaixo "Todas as Reportagens", faça um split.
-[] As reportagens devem abrir em uma nova aba, e não na mesma aba.
+[x] As reportagens devem abrir em uma nova aba, e não na mesma aba.

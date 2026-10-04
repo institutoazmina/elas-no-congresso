@@ -34,18 +34,18 @@ function formatDate(date: string) {
 
                 return (
                 <article class="tw:flex tw:w-[min(384px,calc(100vw-72px))] tw:shrink-0 tw:flex-col tw:gap-4 tw:lg:w-96">
-                    <a href={report.link} class="home-reportagem-image-link tw:block tw:w-full" aria-label={`Ler: ${report.title.rendered.replace(/<[^>]*>/g, "").trim()}`}>
+                    <a href={report.link} class="home-reportagem-image-link tw:block tw:w-full" target="_blank" rel="noopener noreferrer" aria-label={`Ler: ${report.title.rendered.replace(/<[^>]*>/g, "").trim()}`}>
                         <figure class="tw:m-0 tw:w-full tw:border-2 tw:border-[#4242F6]">
                             {imageUrl && <img class="tw:block tw:aspect-[384/216] tw:w-full tw:object-cover" src={imageUrl} alt={image?.alt_text ?? ""} loading="lazy" decoding="async" />}
                         </figure>
                     </a>
                     <h3 class="tw:m-0 tw:font-[ETC_Anybody] tw:text-[24px] tw:font-bold tw:leading-8 tw:uppercase tw:[font-variation-settings:'wdth'_75]">
-                        <a href={report.link} class="home-reportagem-title-link" aria-label={`Ler: ${report.title.rendered.replace(/<[^>]*>/g, "").trim()}`}>
+                        <a href={report.link} class="home-reportagem-title-link" target="_blank" rel="noopener noreferrer" aria-label={`Ler: ${report.title.rendered.replace(/<[^>]*>/g, "").trim()}`}>
                             <Fragment set:html={report.title.rendered} />
                         </a>
                     </h3>
                     <div class="tw:mt-auto tw:flex tw:h-[70px] tw:flex-col tw:items-start tw:gap-4">
-                        <a class="tw:flex tw:h-[38px] tw:items-center tw:gap-2 tw:bg-[#4242F6] tw:pb-1.5 tw:pl-[14px] tw:pr-3 tw:pt-2 tw:font-[ETC_Anybody] tw:text-[18px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]" href={report.link}>
+                        <a class="tw:flex tw:h-[38px] tw:items-center tw:gap-2 tw:bg-[#4242F6] tw:pb-1.5 tw:pl-[14px] tw:pr-3 tw:pt-2 tw:font-[ETC_Anybody] tw:text-[18px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]" href={report.link} target="_blank" rel="noopener noreferrer">
                             <span>Ler reportagem</span>
                             <span class="tw:flex tw:h-6 tw:w-3 tw:items-center tw:justify-end" aria-hidden="true">
                                 <img class="tw:h-[6px] tw:w-3 tw:rotate-[-90deg]" src={chevronRight.src} alt="" />
