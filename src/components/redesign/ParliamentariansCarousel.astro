@@ -75,7 +75,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                                     aria-hidden="true"
                                 ></span>
                                 <header class="parliamentarians__card-header">
-                                    <span class="parliamentarians__tag">
+                                    <span class:list={["parliamentarians__tag", { "parliamentarians__tag--senate": person.house === "Senado Federal" }]}>
                                         <i aria-hidden="true"></i>
                                         {person.house}
                                     </span>
@@ -539,6 +539,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
         border-top: 2px solid #fff;
         content: "";
     }
+    .parliamentarians__tag--senate i { transform: rotate(180deg); }
     .parliamentarians__identity {
         display: grid;
         grid-template-columns: 120px minmax(0, 1fr);
