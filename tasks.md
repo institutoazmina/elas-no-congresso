@@ -12,7 +12,7 @@
 [x] No rodapé da secção Estes são Os temas com mais
 retrocesso no legislativo, o texto "Acesse a aba Atividade de Legislativa para ver em detalhes
 " deve se parecer com um link e redirecionar para /atividade-legislativa
-[] Bloco dos partidos - “Acesse a aba Atividade de Legislativa para ver em detalhes” está sem o link, mesmo do item acima.
+[x] Bloco dos partidos - “Acesse a aba Atividade de Legislativa para ver em detalhes” está sem o link, mesmo do item acima.
 [] Em “Estas são as UFs dos parlamentares que apresentam mais projetos” a tabela tá invertida. Quando seleciona favoráveis, ela mostra os desfavoráveis e vice-versa. Além disso, os favoráveis tão pintados de amarelo. (o mapa está ok, o erro é só na tabela)
 [] A secção a gente te avisa, reduzir o padding do container, transforme em flex e deixe um padding de 32px.
 [] As setas do carrousel devem trocar o mouse para pointer.
