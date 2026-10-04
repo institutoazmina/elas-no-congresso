@@ -155,8 +155,8 @@ const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
     .enacted-projects__controls button { width: 56px; height: 40px; border: 1px solid #4242f6; background: #fff; color: #4242f6; font: 32px/1 Arial; cursor: pointer; }
     .enacted-projects__controls button:focus-visible { outline: 2px solid #0b0f5e; outline-offset: 2px; }
     .enacted-projects__viewport { position: absolute; top: 112px; left: 0; width: 100%; overflow: hidden; }
-    .enacted-projects__track { display: flex; width: max-content; align-items: flex-end; gap: 48px; transform: translateX(-2496px); transition: transform .2s ease; }
-    .enacted-projects__card { display: flex; width: 384px; height: auto; min-height: 0; flex: none; flex-direction: column; align-self: flex-end; border: 1px solid #998d96; background: #fff; color: inherit; overflow: visible; text-decoration: none; cursor: pointer; }
+    .enacted-projects__track { display: flex; width: max-content; align-items: flex-start; gap: 48px; transform: translateX(-2496px); transition: transform .2s ease; }
+    .enacted-projects__card { display: flex; width: 384px; height: auto; min-height: 0; flex: none; flex-direction: column; align-self: flex-start; border: 1px solid #998d96; background: #fff; color: inherit; overflow: visible; text-decoration: none; cursor: pointer; }
     .enacted-projects__card--desfavorável { height: auto; }
     .enacted-projects__card--featured { border-color: #0b0f5e; box-shadow: -4px 4px 0 #0b0f5e; }
     .enacted-projects__card-header { display: flex; min-height: 69.94354248046875px; flex: none; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 16px; border-bottom: 1px solid #998d96; }
@@ -302,7 +302,7 @@ const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
 
         .enacted-projects__track {
             left: 50%;
-            align-items: flex-end;
+            align-items: flex-start;
             gap: 25px;
         }
 
