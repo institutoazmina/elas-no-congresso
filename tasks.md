@@ -16,7 +16,7 @@ retrocesso no legislativo, o texto "Acesse a aba Atividade de Legislativa para v
 [x] Em “Estas são as UFs dos parlamentares que apresentam mais projetos” a tabela tá invertida. Quando seleciona favoráveis, ela mostra os desfavoráveis e vice-versa. Além disso, os favoráveis tão pintados de amarelo. (o mapa está ok, o erro é só na tabela)
 [x] A secção a gente te avisa, reduzir o padding do container, transforme em flex e deixe um padding de 32px.
 [x] As setas do carrousel devem trocar o mouse para pointer.
-[] No bloco, Veja o que restringe nossos direitos
+[x] No bloco, Veja o que restringe nossos direitos
 e tá tramitando rapidinho, faça um smoke test com a API e valide a celeridade, todos estão como 1 movimentação em 3 meses.
 [] no bloco, E o que é bom pra gente, mas
 tá indo beeeem devagar, faça o mesmo do item acima.
