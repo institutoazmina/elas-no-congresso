@@ -12,8 +12,8 @@ const pageSize = 5;
 const pageCount = Math.ceil(total / pageSize);
 const serializedPropositions = JSON.stringify(propositions).replaceAll("<", "\\u003c");
 const formatDate = (date: string) => {
-    const [, month, day] = date.split("-").map(Number);
-    return `${day}/${month}`;
+    const [year, month, day] = date.split("-");
+    return `${day}/${month}/${year}`;
 };
 ---
 
@@ -104,7 +104,7 @@ const formatDate = (date: string) => {
                 if (!list || !template) return;
                 const cards = items.map((item, index) => {
                     const card = template.content.firstElementChild?.cloneNode(true) as HTMLElement;
-                    const [, month, day] = item.presentedAt.split("-").map(Number);
+                    const [year, month, day] = item.presentedAt.split("-");
                     const article = card.querySelector("article");
                     if (currentPage === 0 && index === 0) article?.classList.add("alert-card--featured");
                     const category = card.querySelector<HTMLElement>("[data-alert-category]");
@@ -113,7 +113,7 @@ const formatDate = (date: string) => {
                     const description = card.querySelector<HTMLElement>("[data-alert-description]");
                     const link = card.querySelector<HTMLAnchorElement>("[data-alert-link]");
                     if (category) category.textContent = item.typeCode;
-                    if (date) { date.textContent = `${day}/${month}`; date.dateTime = item.presentedAt; }
+                    if (date) { date.textContent = `${day}/${month}/${year}`; date.dateTime = item.presentedAt; }
                     if (title) title.textContent = item.numberLabel;
                     if (description) description.textContent = item.summary;
                     if (link) link.href = item.url;
