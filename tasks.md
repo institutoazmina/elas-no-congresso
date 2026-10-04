@@ -5,7 +5,7 @@
 [x] Quando estamos em uma proposição/candidato o botão voltar deve usar o browser history para voltar à tela anterior, e não para a tela inicial do site
 [x] Os textos nas caixas azuis nos cards estão sem acentuação, ex: VIOLENCIAS DE GENERO, deveria ser VIOLÊNCIAS DE GÊNERO
 [x] Nos cards de cada parlamentar em "Parlamentares que jogam contra", o ícone da cúpula do Congresso Nacional na TAG Senado Federal tem estar de cabeça para baixo como representando a arquitetura do congresso.
-[] Na página ia-feminista, "O que a QuitérIA não faz" deixar em bold "não faz"
+[x] Na página ia-feminista, "O que a QuitérIA não faz" deixar em bold "não faz"
 [] Na página de alertas deixar a data na listagem no formato DD/MM/AAAA
 [] Botão “o que descobrimos?” está levando para a página de reportagens, Ele deveria rolar para o infográfico , da secção abaixo.
 [] Em “Estes são Os temas com mais retrocesso no legislativo”, Os “i” abaixo dos gráficos de temas não estão funcionando - deveria ser mouse over com explicação da informação. Use o Base-UI.
