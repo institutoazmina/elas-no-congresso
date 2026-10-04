@@ -26,7 +26,9 @@ const cards = Array.from({ length: groupSize * 3 }, (_, physical) => ({
     project: projects[physical % groupSize],
     physical,
 }));
-const formatCategory = (category: string | null) => category?.replaceAll("_", " ") || "Sem categoria";
+const formatCategory = (project: EnactedProject) => project.category_label?.trim()
+    || project.category?.replaceAll("_", " ")
+    || "Sem categoria";
 const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
     day: "numeric",
     month: "long",
@@ -72,7 +74,7 @@ const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
                             {!project.authors.length && <p>Autoria indisponível</p>}
                             {project.authors.length > 3 && <p class="enacted-projects__more">+{project.authors.length - 3} parlamentares</p>}
                         </div>
-                        <span class="enacted-projects__theme">{formatCategory(project.category)}</span>
+                        <span class="enacted-projects__theme">{formatCategory(project)}</span>
                         <p class="enacted-projects__description">{project.ementa}</p>
                     </div>
                     <footer class="enacted-projects__law-footer">
@@ -154,26 +156,26 @@ const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
     .enacted-projects__controls button:focus-visible { outline: 2px solid #0b0f5e; outline-offset: 2px; }
     .enacted-projects__viewport { position: absolute; top: 112px; left: 0; width: 100%; overflow: hidden; }
     .enacted-projects__track { display: flex; width: max-content; gap: 48px; transform: translateX(-2496px); transition: transform .2s ease; }
-    .enacted-projects__card { display: flex; width: 384px; height: 509.94354248046875px; flex: none; flex-direction: column; border: 1px solid #998d96; background: #fff; color: inherit; overflow: visible; text-decoration: none; }
-    .enacted-projects__card--desfavorável { height: 407.94354248046875px; }
+    .enacted-projects__card { display: flex; width: 384px; height: auto; min-height: 0; flex: none; flex-direction: column; border: 1px solid #998d96; background: #fff; color: inherit; overflow: visible; text-decoration: none; cursor: pointer; }
+    .enacted-projects__card--desfavorável { height: auto; }
     .enacted-projects__card--featured { border-color: #0b0f5e; box-shadow: -4px 4px 0 #0b0f5e; }
-    .enacted-projects__card-header { position: relative; height: 69.94354248046875px; flex: none; padding: 8px 16px; border-bottom: 1px solid #998d96; }
-    .enacted-projects__card-header > strong { position: absolute; top: 18.971769332885742px; left: 16px; font-family: "ETC Anybody", sans-serif; font-size: 20px; line-height: 24px; font-variation-settings: "wdth" 75; }
-    .enacted-projects__status { position: absolute; top: 8px; right: 16px; width: 168.30795288085938px; height: 53.94354248046875px; }
-    .enacted-projects__document { position: absolute; top: 0; left: 4.444942951202393px; width: 36px; height: 51px; transform: rotate(-5deg); }
-    .enacted-projects__rating { position: absolute; top: 10.971768379211426px; left: 32.307952880859375px; display: flex; height: 32px; align-items: center; gap: 8px; }
+    .enacted-projects__card-header { display: flex; min-height: 69.94354248046875px; flex: none; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 16px; border-bottom: 1px solid #998d96; }
+    .enacted-projects__card-header > strong { font-family: "ETC Anybody", sans-serif; font-size: 20px; line-height: 24px; font-variation-settings: "wdth" 75; }
+    .enacted-projects__status { display: flex; flex: none; align-items: center; gap: 0; }
+    .enacted-projects__document { width: 36px; height: 51px; margin-right: -8px; transform: rotate(-5deg); }
+    .enacted-projects__rating { display: flex; align-items: center; gap: 8px; }
     .enacted-projects__rating-icon { display: block; width: 32px; height: 32px; border-radius: 50%; overflow: hidden; }
     .enacted-projects__rating-icon img { display: block; width: 32px; height: 32px; }
     .enacted-projects__rating b { font-family: "ETC Anybody", sans-serif; font-size: 16px; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
-    .enacted-projects__details { height: 358px; padding: 24px 16px; overflow: hidden; display: flex; flex-direction: column; gap: 16px; }
-    .enacted-projects__card--desfavorável .enacted-projects__details { height: 256px; }
+    .enacted-projects__details { min-height: 0; padding: 24px 16px; overflow: hidden; display: flex; flex-direction: column; gap: 16px; }
+    .enacted-projects__card--desfavorável .enacted-projects__details { height: auto; }
     .enacted-projects__authors { display: flex; min-height: 24px; flex-direction: column; gap: 10px; }
     .enacted-projects__authors p { height: 24px; display: flex; justify-content: space-between; font-size: 18px; line-height: 24px; min-width: 0; }
     .enacted-projects__authors p span, .enacted-projects__authors p strong { min-width: 0; }
     .enacted-projects__authors p strong { font-weight: 700; }
     .enacted-projects__more { display: block !important; color: #4242f6; }
     .enacted-projects__theme { width: max-content; max-width: 100%; height: 32px; padding: 4px 8px; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 16px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; }
-    .enacted-projects__description { height: 120px; color: #0b0f5e; font-size: 16px; line-height: 24px; opacity: .66; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; text-overflow: ellipsis; }
+    .enacted-projects__description { color: #0b0f5e; font-size: 16px; line-height: 24px; opacity: .66; overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; text-overflow: ellipsis; }
     .enacted-projects__card footer { height: 82px; flex: none; padding: 16px; display: flex; justify-content: space-between; border-top: 1px solid #998d96; background: #4242f6; color: #fff; }
     .enacted-projects__card footer > div { display: flex; flex-direction: column; gap: 10px; }
     .enacted-projects__card footer p { height: 24px; display: flex; align-items: center; gap: 10px; font-size: 18px; line-height: 24px; }
@@ -305,15 +307,14 @@ const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
 
         .enacted-projects__card {
             width: 224.345px;
-            height: 302.818px;
+            height: auto;
+            min-height: 0;
             border-color: #998d96;
             border-width: 1px;
             box-shadow: none;
         }
 
-        .enacted-projects__card--desfavorável {
-            height: 240.291px;
-        }
+        .enacted-projects__card--desfavorável { height: auto; }
 
         .enacted-projects__card--featured {
             border-color: #0b0f5e;
@@ -321,36 +322,24 @@ const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
         }
 
         .enacted-projects__card-header {
-            height: 40.863px;
+            min-height: 40.863px;
             padding: 4.674px 9.348px;
             border-bottom-width: .584px;
         }
 
         .enacted-projects__card-header > strong {
-            top: 10.932px;
-            left: 9.348px;
             font-size: 14.022px;
             line-height: 18.695px;
         }
 
-        .enacted-projects__status {
-            top: 4.674px;
-            right: 9.348px;
-            width: 98.331px;
-            height: 31.516px;
-        }
+        .enacted-projects__status { gap: 0; }
 
         .enacted-projects__document {
-            top: 0;
-            left: 2.597px;
             width: 21.032px;
             height: 29.796px;
         }
 
         .enacted-projects__rating {
-            top: 6.41px;
-            left: 18.875px;
-            height: 18.695px;
             gap: 4.674px;
         }
 
@@ -367,14 +356,12 @@ const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
 
         .enacted-projects__details,
         .enacted-projects__card--desfavorável .enacted-projects__details {
-            height: 151.52px;
+            height: auto;
             padding: 14.022px 9.348px;
             gap: 9.348px;
         }
 
-        .enacted-projects__card--favorável .enacted-projects__details {
-            height: 214.047px;
-        }
+        .enacted-projects__card--favorável .enacted-projects__details { height: auto; }
 
         .enacted-projects__authors {
             min-height: 15px;
@@ -397,7 +384,6 @@ const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
 
         .enacted-projects__description {
             width: 205.65px;
-            height: 70.108px;
             flex: none;
             font-size: 9.348px;
             line-height: 14.022px;

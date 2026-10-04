@@ -64,6 +64,12 @@ import "../styles/redesign-shared-background.css";
 </html>
 
 <style is:global>
+    @media (prefers-reduced-motion: no-preference) {
+        html {
+            scroll-behavior: smooth;
+        }
+    }
+
     @font-face {
         font-family: "ETC Anybody";
         font-style: normal;
