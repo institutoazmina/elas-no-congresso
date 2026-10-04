@@ -32,6 +32,7 @@ try {
         number_label: string;
         ementa: string;
         category: string | null;
+        category_label?: string | null;
         authors: { name: string; party: string | null; state: string | null }[];
         celerity: { days_without_movement: number };
     };
@@ -98,7 +99,7 @@ try {
         }
         const category = document.createElement("span");
         category.className = "slow-moving-proposals__badge";
-        category.textContent = formatCategory(proposal.category);
+        category.textContent = proposal.category_label?.trim() || formatCategory(proposal.category);
         const description = document.createElement("p");
         description.className = "slow-moving-proposals__description";
         description.textContent = proposal.ementa;
