@@ -33,7 +33,7 @@ type RawProposal = {
     };
 };
 
-type Proposal = RawProposal & { year: number; authors: RawParliamentarian[]; parties: string[]; states: string[]; genders: string[]; situacao?: string | null; apresentadaEm?: string | null; movementsLast90Days: number };
+type Proposal = RawProposal & { year: number; authors: RawParliamentarian[]; parties: string[]; states: string[]; genders: string[]; situacao?: string | null; celerityLabel?: string | null; apresentadaEm?: string | null; movementsLast90Days: number };
 type DashboardRow = { key: string; label: string; favorable: number; unfavorable: number; photo?: string; meta?: string };
 type TableSort = "number" | "author" | "summary" | "assessment" | "evaluator" | "progress" | "category" | "updated";
 
@@ -70,7 +70,7 @@ import {
     filterDashboardAuthors,
     filterActivityItems,
     getActivityCategories,
-    getActivityStatuses,
+    getActivityCelerityLabels,
     normalizeActivityStatus,
     paginateActivityItems,
     type ActivityFilterState,
@@ -166,7 +166,7 @@ function initActivity(root: HTMLElement) {
         party: value("party"),
         category: value("category"),
         assessment: value("assessment") as ActivityFilterState["assessment"],
-        status: value("status"),
+        celerity: value("celerity"),
         movements: value("movements") as ActivityFilterState["movements"],
         gender: value("gender"),
         state: value("state"),
@@ -248,6 +248,7 @@ function initActivity(root: HTMLElement) {
                 categoriaLabel: proposal.category_label || proposal.category,
                 legislatura: 0,
                 celerity: proposal.celerity,
+                celerityLabel: proposal.celerity.label,
                 situacao: proposal.current_status,
                 apresentadaEm: proposal.presented_at,
                 movementsLast90Days: proposal.celerity.movements_last_90_days,
@@ -291,7 +292,7 @@ function initActivity(root: HTMLElement) {
         addOptions("party-mobile", [...parties].sort((a, b) => a.localeCompare(b, "pt-BR")));
         addOptions("state", [...states].sort());
         addOptions("evaluator", [...evaluatorDisplay.values()].sort((a, b) => a.localeCompare(b, "pt-BR")));
-        addOptions("status", getActivityStatuses(proposals));
+        addOptions("celerity", getActivityCelerityLabels(proposals));
         const categories = getActivityCategories(proposals);
         if (categories.length) {
             const categoryLabel = (category: string | number) => {

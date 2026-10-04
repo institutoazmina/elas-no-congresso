@@ -9,7 +9,7 @@ export type ActivityFilterState = {
     party: string;
     category: string;
     assessment: ActivityAssessment;
-    status: string;
+    celerity: string;
     movements: "" | "with" | "without";
     gender: string;
     state: string;
@@ -24,6 +24,7 @@ export type ActivityFilterItem = {
     year: number;
     favoravel: number;
     situacao?: string | null;
+    celerityLabel?: string | null;
     movementsLast90Days?: number | null;
     avaliador?: string | null;
     comentario?: string | null;
@@ -41,7 +42,7 @@ export const EMPTY_ACTIVITY_FILTERS: Readonly<ActivityFilterState> = Object.free
     party: "",
     category: "",
     assessment: "",
-    status: "",
+    celerity: "",
     movements: "",
     gender: "",
     state: "",
@@ -78,7 +79,7 @@ export function matchesActivityFilters(item: ActivityFilterItem, filters: Activi
         && (!filters.party || item.parties.includes(filters.party))
         && (!filters.category || normalizeActivitySearch(item.categoria) === normalizeActivitySearch(filters.category))
         && (!filters.assessment || activityAssessment(item.favoravel) === filters.assessment)
-        && (!filters.status || normalizeActivityStatus(item.situacao) === normalizeActivityStatus(filters.status))
+        && (!filters.celerity || normalizeActivityStatus(item.celerityLabel) === normalizeActivityStatus(filters.celerity))
         && (!filters.movements || (filters.movements === "with"
             ? (item.movementsLast90Days ?? 0) > 0
             : (item.movementsLast90Days ?? 0) === 0))
@@ -111,6 +112,11 @@ export function getActivityCategories(items: Array<Pick<ActivityFilterItem, "cat
 
 export function getActivityStatuses(items: Array<Pick<ActivityFilterItem, "situacao">>) {
     return [...new Set(items.map((item) => normalizeActivityStatus(item.situacao)).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, "pt-BR"));
+}
+
+export function getActivityCelerityLabels(items: Array<Pick<ActivityFilterItem, "celerityLabel">>) {
+    return [...new Set(items.map((item) => normalizeActivityStatus(item.celerityLabel)).filter(Boolean))]
         .sort((a, b) => a.localeCompare(b, "pt-BR"));
 }
 

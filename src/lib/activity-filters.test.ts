@@ -5,7 +5,7 @@ import {
     filterDashboardAuthors,
     filterActivityItems,
     getActivityCategories,
-    getActivityStatuses,
+    getActivityCelerityLabels,
     paginateActivityItems,
     type ActivityFilterItem,
     type ActivityFilterState,
@@ -18,6 +18,7 @@ const proposal = ({ numero, ...overrides }: Partial<ActivityFilterItem> & Pick<A
     year: 2024,
     favoravel: 1,
     situacao: "Em tramitação",
+    celerityLabel: "Rápida",
     movementsLast90Days: 2,
     avaliador: "Anis",
     comentario: "Parecer com ressalvas",
@@ -38,6 +39,7 @@ const ITEMS: ActivityFilterItem[] = [
         year: 2023,
         favoravel: -1,
         situacao: "Arquivada",
+        celerityLabel: "Travada",
         movementsLast90Days: 0,
         avaliador: "Themis",
         comentario: "",
@@ -55,6 +57,7 @@ const ITEMS: ActivityFilterItem[] = [
         year: 2022,
         favoravel: 0,
         situacao: null,
+        celerityLabel: "Esquecida",
         movementsLast90Days: 0,
         avaliador: "Organização cadastrada",
         comentario: null,
@@ -79,10 +82,10 @@ assert.strictEqual(filterActivityItems(ITEMS, withFilters({ assessment: "favorab
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ assessment: "unfavorable" })).length, 1);
 assert.deepStrictEqual(filterActivityItems(ITEMS, withFilters({ assessment: "unrated" })).map((item) => item.numero), ["PLP 9/2022"]);
 assert.strictEqual(activityAssessment(0), "unrated");
-assert.deepStrictEqual(filterActivityItems(ITEMS, withFilters({ status: "Arquivada" })).map((item) => item.numero), ["PEC 20/2023"]);
+assert.deepStrictEqual(filterActivityItems(ITEMS, withFilters({ celerity: "Travada" })).map((item) => item.numero), ["PEC 20/2023"]);
 assert.deepStrictEqual(filterActivityItems(ITEMS, withFilters({ movements: "with" })).map((item) => item.numero), ["PL 1/2024"]);
 assert.deepStrictEqual(filterActivityItems(ITEMS, withFilters({ movements: "without" })).map((item) => item.numero), ["PEC 20/2023", "PLP 9/2022"]);
-assert.deepStrictEqual(getActivityStatuses([{ situacao: " Arquivada " }, { situacao: "Arquivada" }, { situacao: null }]), ["Arquivada"]);
+assert.deepStrictEqual(getActivityCelerityLabels([{ celerityLabel: " Travada " }, { celerityLabel: "Travada" }, { celerityLabel: null }]), ["Travada"]);
 
 // Avançados e combinações.
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ gender: "M" })).length, 1);
