@@ -91,8 +91,8 @@ assert.deepStrictEqual(getActivityCelerityLabels([{ celerityLabel: " Travada " }
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ gender: "M" })).length, 1);
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ state: "BA" })).length, 1);
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ evaluator: "Themis" })).length, 1);
-assert.strictEqual(filterActivityItems(ITEMS, withFilters({ comments: "yes" })).length, 1);
-assert.strictEqual(filterActivityItems(ITEMS, withFilters({ comments: "no" })).length, 2);
+assert.strictEqual(filterActivityItems(ITEMS, withFilters({ comments: "yes" })).length, 1, "com ressalvas seleciona pareceres técnicos preenchidos");
+assert.strictEqual(filterActivityItems(ITEMS, withFilters({ comments: "no" })).length, 2, "sem ressalvas exclui pareceres técnicos preenchidos");
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ house: "Senador", year: "2023" })).length, 1);
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ year: "2024", party: "PT" })).length, 1);
 assert.strictEqual(filterActivityItems(ITEMS, withFilters({ year: "2023", assessment: "unfavorable" })).length, 1);
