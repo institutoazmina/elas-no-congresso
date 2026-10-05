@@ -15,21 +15,6 @@ const categories = await getCategoryOptions();
             </header>
 
             <form class="alerts-email-modal__form">
-                <div class="alerts-email-modal__email-field">
-                    <label for="alerts-email">E-mail</label>
-                    <input id="alerts-email" type="email" placeholder="seu@email.com" autocomplete="email" />
-                </div>
-
-                <fieldset class="alerts-email-modal__section" data-alerts-themes>
-                    <legend>Temas</legend>
-                    <p>Selecione os temas sobre os quais quer receber alertas.<br />Valem para alertas semanais e diários.</p>
-                    <div class="alerts-email-modal__topics">
-                        {categories.map((category) => (
-                            <label><input type="checkbox" name="tema" value={category.value} /><span>{category.label}</span></label>
-                        ))}
-                    </div>
-                </fieldset>
-
                 <fieldset class="alerts-email-modal__section alerts-email-modal__frequency-section">
                     <legend>Frequência</legend>
                     <p>Escolha uma das opções.<br />Cada frequência tem regras diferentes — leia antes de selecionar.</p>
@@ -37,25 +22,48 @@ const categories = await getCategoryOptions();
                         <div class="alerts-email-modal__weekly-card">
                             <label class="alerts-email-modal__frequency-card">
                                 <span class="alerts-email-modal__frequency-heading"><strong>Semanal</strong><input type="radio" name="frequencia" value="semanal" /></span>
-                                <span>Um resumo semanal dos temas selecionados que acompanha a newsletter do Elas no Congresso.</span>
+                                <span>A newsletter do Elas no Congresso reúne, contextualiza e analisa os impactos políticos das tramitações.</span>
                             </label>
-                            <aside class="alerts-email-modal__weekly-note" hidden aria-label="Informação sobre a newsletter">
-                                <p>A newsletter do Elas no Congresso reúne, contextualiza e analisa os impactos políticos das tramitações.</p>
-                            </aside>
                         </div>
                         <label class="alerts-email-modal__frequency-card alerts-email-modal__daily-card">
                             <span class="alerts-email-modal__frequency-heading"><strong>Diário</strong><input type="radio" name="frequencia" value="diario" /></span>
                             <span>Alertas enviados assim que uma movimentação acontecer.</span>
                         </label>
                     </div>
-                    <section class="alerts-email-modal__daily-options" hidden aria-label="Filtros para alertas diários">
-                        <p class="alerts-email-modal__daily-intro">Você pode filtrar os alertas diários por casa e por proposição. Se não escolher uma proposição, receberá alertas dos temas selecionados na casa escolhida.</p>
-                        <AlertsProposalCombobox client:load />
+                    <section class="alerts-email-modal__newsletter" hidden aria-labelledby="alerts-newsletter-title">
+                        <h3 id="alerts-newsletter-title">Assine a newsletter do Elas no Congresso</h3>
+                        <iframe
+                            data-src="https://elasnocongresso.substack.com/embed"
+                            width="480"
+                            height="320"
+                            title="Assine a newsletter Elas no Congresso"
+                        ></iframe>
+                        <a href="https://elasnocongresso.substack.com/subscribe" target="_blank" rel="noopener noreferrer">Abrir inscrição no Substack</a>
                     </section>
                 </fieldset>
 
-                <label class="alerts-email-modal__terms"><input type="checkbox" name="termos" /><span>Li e aceito os <a href="/termos-de-uso">Termos de Uso</a> e a <a href="/politica-de-privacidade">Política de Privacidade</a> do Elas no Congresso.</span></label>
-                <button class="alerts-email-modal__submit" type="submit" disabled>Quero me inscrever <img src={chevron.src} alt="" /></button>
+                <div class="alerts-email-modal__email-field" hidden>
+                    <label for="alerts-email">E-mail</label>
+                    <input id="alerts-email" type="email" placeholder="seu@email.com" autocomplete="email" />
+                </div>
+
+                <fieldset class="alerts-email-modal__section" data-alerts-themes hidden>
+                    <legend>Temas</legend>
+                    <p>Selecione os temas sobre os quais quer receber alertas diários.</p>
+                    <div class="alerts-email-modal__topics">
+                        {categories.map((category) => (
+                            <label><input type="checkbox" name="tema" value={category.value} /><span>{category.label}</span></label>
+                        ))}
+                    </div>
+                </fieldset>
+
+                <section class="alerts-email-modal__daily-options" hidden aria-label="Filtros para alertas diários">
+                    <p class="alerts-email-modal__daily-intro">Você pode filtrar os alertas diários por casa e por proposição. Se não escolher uma proposição, receberá alertas dos temas selecionados na casa escolhida.</p>
+                    <AlertsProposalCombobox client:load />
+                </section>
+
+                <label class="alerts-email-modal__terms" hidden><input type="checkbox" name="termos" /><span>Li e aceito os <a href="/termos-de-uso">Termos de Uso</a> e a <a href="/politica-de-privacidade">Política de Privacidade</a> do Elas no Congresso.</span></label>
+                <button class="alerts-email-modal__submit" type="submit" disabled hidden>Quero me inscrever <img src={chevron.src} alt="" /></button>
             </form>
             <p class="alerts-email-modal__status" data-alerts-status role="status" aria-live="polite" hidden></p>
         </div>
@@ -87,9 +95,17 @@ const categories = await getCategoryOptions();
     const terms = dialog?.querySelector<HTMLInputElement>('input[name="termos"]');
     const submit = dialog?.querySelector<HTMLButtonElement>(".alerts-email-modal__submit");
     const status = dialog?.querySelector<HTMLElement>("[data-alerts-status]");
-    const weeklyNote = dialog?.querySelector<HTMLElement>(".alerts-email-modal__weekly-note");
+    const newsletter = dialog.querySelector<HTMLElement>(".alerts-email-modal__newsletter");
+    const newsletterFrame = newsletter?.querySelector<HTMLIFrameElement>("iframe");
+    const dailyFields = [
+        dialog.querySelector<HTMLElement>(".alerts-email-modal__email-field"),
+        dialog.querySelector<HTMLElement>("[data-alerts-themes]"),
+        dialog.querySelector<HTMLElement>(".alerts-email-modal__terms"),
+        submit,
+    ];
     const daily = dialog?.querySelector<HTMLInputElement>('input[name="frequencia"][value="diario"]');
     const dailyOptions = dialog?.querySelector<HTMLElement>(".alerts-email-modal__daily-options");
+    let submitting = false;
     const proposalIds = () => Array.from(dialog?.querySelectorAll<HTMLInputElement>("[data-alerts-proposal-id]") ?? [])
         .map((input) => Number(input.value));
 
@@ -103,9 +119,8 @@ const categories = await getCategoryOptions();
     const updateSubmitState = () => {
         if (!submit || !email || !weekly || !daily || !terms) return;
         const temTema = topics.some((topic) => topic.checked);
-        const temFrequencia = weekly.checked || daily.checked;
         submit.disabled = !(
-            email.validity.valid && email.value && temTema && temFrequencia && terms.checked
+            !submitting && email.validity.valid && email.value && temTema && daily.checked && terms.checked
         );
     };
 
@@ -124,7 +139,7 @@ const categories = await getCategoryOptions();
         if (isDesktopModal()) setModalState(true);
     };
     const syncModalState = () => {
-        setModalState(Boolean(email?.value.trim()));
+        setModalState(Boolean(weekly?.checked || daily?.checked));
     };
 
     opener?.addEventListener("click", () => {
@@ -155,10 +170,20 @@ const categories = await getCategoryOptions();
 
     const updateFrequency = () => {
         if (!weekly || !daily) return;
-        if (weeklyNote) weeklyNote.hidden = !weekly.checked;
+        dailyFields.forEach((field) => {
+            if (field) field.hidden = !daily.checked;
+        });
+        if (newsletter) newsletter.hidden = !weekly.checked;
+        // Keep the iframe unloaded until weekly signup is requested, and retain
+        // it when switching frequencies so an in-progress signup isn't reset.
+        if (weekly.checked && newsletterFrame && !newsletterFrame.hasAttribute("src")) {
+            newsletterFrame.src = newsletterFrame.dataset.src!;
+        }
         if (dailyOptions) dailyOptions.hidden = !daily.checked;
         dialog?.classList.toggle("alerts-email-modal--weekly-open", weekly.checked);
         dialog?.classList.toggle("alerts-email-modal--daily-open", daily.checked);
+        say("");
+        syncModalState();
         updateSubmitState();
     };
     weekly?.addEventListener("change", updateFrequency);
@@ -167,21 +192,22 @@ const categories = await getCategoryOptions();
     form?.addEventListener("submit", async (event) => {
         event.preventDefault();
         if (!submit || !email || !weekly || !daily || !terms) return;
+        if (!daily.checked || submitting) return;
+        updateSubmitState();
+        if (submit.disabled) return;
 
         const categorias = topics.filter((topic) => topic.checked).map((topic) => topic.value);
-        const alerts: { frequency: string; ast: unknown }[] = [];
-        if (weekly.checked) alerts.push({ frequency: "weekly", ast: buildAst({ categorias }) });
-        if (daily.checked) {
-            alerts.push({
-                frequency: "daily",
-                ast: buildAst({
-                    categorias,
-                    casa: dialog.querySelector<HTMLSelectElement>('[name="casa"]')?.value,
-                    proposicoes: proposalIds(),
-                }),
-            });
-        }
+        const alerts = [{
+            frequency: "daily",
+            ast: buildAst({
+                categorias,
+                casa: dialog.querySelector<HTMLSelectElement>('[name="casa"]')?.value,
+                proposicoes: proposalIds(),
+            }),
+        }];
 
+        submitting = true;
+        weekly.disabled = daily.disabled = true;
         submit.disabled = true;
         say("Enviando…");
         try {
@@ -203,12 +229,13 @@ const categories = await getCategoryOptions();
         } catch {
             say("Não conseguimos concluir a inscrição. Tente novamente em alguns minutos.", "erro");
         } finally {
+            submitting = false;
+            weekly.disabled = daily.disabled = false;
             updateSubmitState();
         }
     });
 
-    syncModalState();
-    updateSubmitState();
+    updateFrequency();
     };
 
     initializeAlertsEmailModal();
@@ -223,6 +250,7 @@ const categories = await getCategoryOptions();
     :global(body.alerts-email-modal-open) { overflow: auto; }
     .alerts-email-dialog-host, .alerts-email-dialog-portal, .alerts-email-dialog-viewport { width: 100%; background: #fff; }
     .alerts-email-modal, .alerts-email-modal * { box-sizing: border-box; }
+    .alerts-email-modal [hidden] { display: none !important; }
     .alerts-email-modal { position: relative; width: min(672px, calc(100vw - 48px)); margin: 0 auto; padding: 0; border: 0; background: #fff; color: #1e2546; }
     .alerts-email-modal__shell { min-height: 100%; }
     .alerts-email-modal__close-row { display: flex; width: 624px; max-width: calc(100% - 48px); height: 92px; margin: 0 auto; padding-top: 50px; justify-content: flex-end; }
@@ -237,7 +265,7 @@ const categories = await getCategoryOptions();
     .alerts-email-modal__intro p, .alerts-email-modal__section > p { color: #998d96; font-family: "Plus Jakarta Sans", sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; }
     .alerts-email-modal__intro p { padding-top: 16px; }
     .alerts-email-modal__form { display: flex; width: 624px; max-width: 100%; padding-top: 40px; flex-direction: column; align-items: flex-start; }
-    .alerts-email-modal__email-field { display: flex; width: 100%; flex-direction: column; gap: 5px; }
+    .alerts-email-modal__email-field { display: flex; width: 100%; margin-top: 36px; flex-direction: column; gap: 5px; }
     .alerts-email-modal__email-field label, .alerts-email-modal fieldset > legend, .alerts-email-modal__daily-options legend, .alerts-email-modal__select-label { padding: 0; color: #1e2546; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
     .alerts-email-modal input, .alerts-email-modal select { accent-color: #def279; }
     .alerts-email-modal__email-field input { width: 100%; height: 50px; padding: 12px 16px; border: 1px solid #998d96; border-radius: 0; color: #1e2546; font: 400 18px/24px "Plus Jakarta Sans", sans-serif; }
@@ -261,11 +289,12 @@ const categories = await getCategoryOptions();
     .alerts-email-modal__frequency-card input[type="radio"]:checked::after { top: 3px; left: 3px; width: 10px; height: 7px; }
     .alerts-email-modal__frequency-heading { display: flex; align-items: center; justify-content: space-between; color: #1e2546; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
     .alerts-email-modal__frequency-card > span:last-child { padding-top: 12px; }
-    .alerts-email-modal__frequency-section { position: relative; }
-    .alerts-email-modal__weekly-note { display: flex; width: 180.232px; min-height: 110.229px; align-items: center; justify-content: center; align-self: flex-end; padding: 12.614px 18.716px; background: #def279; color: #0b0f5e; filter: drop-shadow(0 3.119px 0 #0b0f5e); font-family: "Plus Jakarta Sans", sans-serif; font-size: 12px; font-weight: 500; line-height: 17px; text-align: center; transform: rotate(-3.215deg); transform-origin: center; }
-    .alerts-email-modal__weekly-note p { width: 142.801px; }
+    .alerts-email-modal .alerts-email-modal__frequency-section { position: relative; margin-top: 0; }
+    .alerts-email-modal__newsletter { display: flex; width: 100%; margin-top: 24px; flex-direction: column; gap: 16px; }
+    .alerts-email-modal__newsletter h3 { margin: 0; color: #1e2546; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 28px; }
+    .alerts-email-modal__newsletter iframe { display: block; width: 100%; height: 320px; border: 1px solid #eee; background: #fff; }
+    .alerts-email-modal__newsletter a { align-self: flex-start; color: #0b0f5e; font: 700 14px/20px "Plus Jakarta Sans", sans-serif; text-decoration: underline; }
     .alerts-email-modal__daily-options { position: relative; z-index: 2; width: 624px; margin-top: 16px; padding: 21px; border: 1px solid rgba(30, 37, 70, .12); background: #0b0f5e; color: #fff; }
-    .alerts-email-modal__daily-options::before { position: absolute; top: -8px; left: 458px; width: 12px; height: 12px; background: #0b0f5e; content: ""; transform: rotate(45deg); }
     .alerts-email-modal__daily-options h3, .alerts-email-modal__daily-options p { margin: 0; }
     .alerts-email-modal__daily-intro { display: flex; width: 100%; min-height: 46px; align-items: center; padding: 15px 17px; background: #2b65d9; color: #fff; font: 400 12px/16px "Plus Jakarta Sans", sans-serif; }
     .alerts-email-modal__daily-control { width: 582px; padding-top: 20px; }
@@ -291,7 +320,6 @@ const categories = await getCategoryOptions();
     .alerts-email-modal__proposal-remove:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
     .alerts-email-modal__daily-helper { width: 582px; padding-top: 6px; color: rgba(30, 37, 70, .35); font: 400 14px/20px "Plus Jakarta Sans", sans-serif; }
     .alerts-email-modal__terms { padding-top: 28px; color: #998d96; font-size: 14px; line-height: 20px; }
-    .alerts-email-modal--weekly-open .alerts-email-modal__terms { padding-top: 28px; }
     .alerts-email-modal--daily-open .alerts-email-modal__terms { padding-top: 28px; }
     .alerts-email-modal .alerts-email-modal__status { width: 100%; margin-top: 24px; padding: 12px 16px; background: #f4f2f4; color: #1e2546; font: 400 15px/22px "Plus Jakarta Sans", sans-serif; }
     .alerts-email-modal__status[data-kind="ok"] { background: #def279; color: #0b0f5e; }
@@ -337,15 +365,8 @@ const categories = await getCategoryOptions();
         .alerts-email-modal__section > p { margin: 0; padding: 5px 0 0; }
         .alerts-email-modal__frequencies { padding-top: 25px; }
         .alerts-email-modal__weekly-card { position: relative; gap: 0; }
-        .alerts-email-modal__weekly-note {
-            position: absolute;
-            z-index: 1;
-            right: -9.052px;
-            bottom: -76.97px;
-        }
         .alerts-email-modal__frequency-card input[type="radio"] { width: 22px; height: 22px; flex-basis: 22px; }
         .alerts-email-modal__terms { padding-top: 36px; }
-        .alerts-email-modal--weekly-open .alerts-email-modal__terms { padding-top: 125px; }
         .alerts-email-modal--daily-open .alerts-email-modal__terms { padding-top: 36px; }
         .alerts-email-modal__form > .alerts-email-modal__submit { margin-top: 44px; white-space: nowrap; }
         .alerts-email-modal__submit:disabled { opacity: .3; background: #4242f6; }
@@ -388,12 +409,6 @@ const categories = await getCategoryOptions();
         .alerts-email-modal__frequency-card input[type="radio"]:checked::after { top: 4px; left: 4px; }
         .alerts-email-modal__weekly-card .alerts-email-modal__frequency-card > span:last-child { width: min(262px, 100%); }
         .alerts-email-modal__daily-card > span:last-child { width: min(262px, 100%); }
-        .alerts-email-modal__weekly-note {
-            width: 158.897px;
-            min-height: 104.604px;
-            padding: 9.802px 8px;
-        }
-        .alerts-email-modal__weekly-note p { width: auto; height: auto; }
         @media (max-width: 339px) {
             .alerts-email-modal__weekly-card {
                 min-height: 0;
@@ -405,10 +420,8 @@ const categories = await getCategoryOptions();
             }
         }
         .alerts-email-modal__terms,
-        .alerts-email-modal--weekly-open .alerts-email-modal__terms,
         .alerts-email-modal--daily-open .alerts-email-modal__terms { padding-top: 20px; gap: 12px; line-height: 22.75px; }
         .alerts-email-modal__daily-options { width: 100%; height: auto; margin-top: 16px; padding: 21px 16px; }
-        .alerts-email-modal__daily-options::before { right: 44px; left: auto; }
         .alerts-email-modal__daily-intro { width: 100%; height: auto; }
         .alerts-email-modal__daily-control { width: 100%; height: auto; }
         .alerts-email-modal__daily-select-wrap { width: 100%; }
