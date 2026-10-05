@@ -48,6 +48,13 @@ export type GroupStat = {
   unfavorable: number;
 };
 
+/** Ranking canônico de UFs, calculado e ordenado pela API. */
+export type StateStat = GroupStat & {
+  total: number;
+  favorable_percentage: number;
+  unfavorable_percentage: number;
+};
+
 type RankingOptions = {
   /** métrica que ordena o ranking (padrão: `unfavorable`) */
   stance?: Stance;
@@ -81,11 +88,11 @@ export async function getStanceByParty({
   return data.parties;
 }
 
-/** Top N estados (UF do parlamentar na autoria), ranqueados pela métrica de `stance`. */
+/** Top N UFs, ranqueadas pela porcentagem da métrica de `stance` na API. */
 export async function getStanceByState({
   stance = 'unfavorable',
   limit = 5,
-}: RankingOptions = {}): Promise<GroupStat[]> {
-  const data = await apiGet<{ states: GroupStat[] }>(`${BASE}/states`, { stance, limit });
+}: RankingOptions = {}): Promise<StateStat[]> {
+  const data = await apiGet<{ states: StateStat[] }>(`${BASE}/states`, { stance, limit });
   return data.states;
 }

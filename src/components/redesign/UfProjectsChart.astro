@@ -17,7 +17,7 @@ import rankingHighlighter5a from "./assets/table-ranking-highlighter-5-a.svg?url
 import rankingHighlighter5b from "./assets/table-ranking-highlighter-5-b.svg?url";
 import StanceToggle from "./StanceToggle.astro";
 import SectionDivider from "./SectionDivider.astro";
-import { getStanceByState, type GroupStat, type Stance } from "../../service/api/stats";
+import { getStanceByState, type StateStat, type Stance } from "../../service/api/stats";
 
 // A tabela lista as 27 UFs; o mapa destaca só o topo do mesmo ranking, então
 // uma busca por stance serve os dois — a ordem já vem da API.
@@ -36,17 +36,16 @@ const [unfavourableRanking, favourableRanking] = await Promise.all([
     getStanceByState({ stance: "favorable", limit: UF_COUNT }),
 ]);
 
-const toRows = (ranking: GroupStat[], stance: Stance) =>
-    ranking.map((state) => {
-        const total = state.favorable + state.unfavorable;
-        return {
-            uf: state.label,
-            unfavorable: state.unfavorable,
-            favorable: state.favorable,
-            total,
-            share: total ? Math.round((state[stance] / total) * 100) : 0,
-        };
-    });
+// Percentual, total e ordenação são todos responsabilidade da API. O componente
+// só adapta os nomes para renderizar a mesma lista no mapa e na tabela.
+const toRows = (ranking: StateStat[], stance: Stance) =>
+    ranking.map((state) => ({
+        uf: state.label,
+        unfavorable: state.unfavorable,
+        favorable: state.favorable,
+        total: state.total,
+        share: state[`${stance}_percentage`],
+    }));
 
 const views = [
     { stance: "unfavorable" as const, heading: "Desfavoráveis", rows: toRows(unfavourableRanking, "unfavorable") },
@@ -131,7 +130,7 @@ const ufLabels: Record<string, string> = {
 
                 <div class="uf-projects-chart__panel" id="uf-panel-table" role="tabpanel" data-panel-view="table">
                     {views.map((view) => {
-                        const tableRows = [...view.rows].sort((a, b) => b.share - a.share);
+                        const tableRows = view.rows;
                         const isFavorable = view.stance === "favorable";
                         const stanceLabel = isFavorable ? "Favoráveis" : "Desfavoráveis";
                         return (
@@ -150,10 +149,10 @@ const ufLabels: Record<string, string> = {
                                     <tr>
                                         <th scope="row">
                                             <span class="uf-projects-chart__state">
-                                                {!isFavorable && index < MAP_HIGHLIGHTS && (
-                                                    <span class={`uf-projects-chart__ranking-highlighter uf-projects-chart__ranking-highlighter--${index + 1}`} aria-hidden="true">
-                                                        <span class="uf-projects-chart__ranking-highlighter-layer uf-projects-chart__ranking-highlighter-layer--one"><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--one"><img src={tableRankingHighlighters[index][0]} alt="" /></span></span>
-                                                        <span class="uf-projects-chart__ranking-highlighter-layer uf-projects-chart__ranking-highlighter-layer--two"><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--two"><img src={tableRankingHighlighters[index][1]} alt="" /></span></span>
+                                                {index < MAP_HIGHLIGHTS && (
+                                                    <span class={`uf-projects-chart__ranking-highlighter uf-projects-chart__ranking-highlighter--${index + 1}${isFavorable ? " uf-projects-chart__ranking-highlighter--favorable" : ""}`} aria-hidden="true">
+                                                        <span class="uf-projects-chart__ranking-highlighter-layer uf-projects-chart__ranking-highlighter-layer--one"><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--one" style={isFavorable ? `--ranking-highlighter-image: url(${tableRankingHighlighters[index][0]})` : undefined}><img src={tableRankingHighlighters[index][0]} alt="" /></span></span>
+                                                        <span class="uf-projects-chart__ranking-highlighter-layer uf-projects-chart__ranking-highlighter-layer--two"><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--two" style={isFavorable ? `--ranking-highlighter-image: url(${tableRankingHighlighters[index][1]})` : undefined}><img src={tableRankingHighlighters[index][1]} alt="" /></span></span>
                                                     </span>
                                                 )}
                                                 <span class="uf-projects-chart__state-label">{ufLabels[row.uf.trim().toUpperCase()] ?? row.uf}</span>
@@ -318,6 +317,8 @@ const ufLabels: Record<string, string> = {
     .uf-projects-chart__ranking-highlighter-layer { mix-blend-mode: darken; }
     .uf-projects-chart__ranking-highlighter-image { inset: 0; }
     .uf-projects-chart__ranking-highlighter img { width: 100%; height: 100%; }
+    .uf-projects-chart__ranking-highlighter--favorable .uf-projects-chart__ranking-highlighter-image { background: #def279; -webkit-mask-image: var(--ranking-highlighter-image); -webkit-mask-position: center; -webkit-mask-repeat: no-repeat; -webkit-mask-size: 100% 100%; mask-image: var(--ranking-highlighter-image); mask-position: center; mask-repeat: no-repeat; mask-size: 100% 100%; }
+    .uf-projects-chart__ranking-highlighter--favorable .uf-projects-chart__ranking-highlighter-image img { opacity: 0; }
     .uf-projects-chart__ranking-highlighter-layer--one { left: 5.7326%; width: 94.2675%; }
     .uf-projects-chart__ranking-highlighter-layer--two { left: 1.9109%; width: 98.0892%; }
     .uf-projects-chart__ranking-highlighter--1 .uf-projects-chart__ranking-highlighter-layer--one { top: 1.333px; height: 24.667px; }
