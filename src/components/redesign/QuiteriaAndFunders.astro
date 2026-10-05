@@ -1,39 +1,158 @@
 ---
-import quiteria from "../../assets/images/redesign/quiteria/quiteria.png";
+import quiteria from "../../../public/assets/images/quiteria.png";
 import chevron from "../../assets/images/redesign/quiteria/chevron-right.svg";
 ---
 
 <section class="quiteria-funders" aria-label="QuitérIA">
     <div class="quiteria-funders__quiteria">
-        <img class="quiteria-funders__image" src={quiteria.src} alt="QuitérIA, inteligência artificial feminista" />
+        <img
+            class="quiteria-funders__image"
+            src={quiteria.src}
+            alt="QuitérIA, inteligência artificial feminista"
+        />
         <div class="quiteria-funders__explanation-frame">
             <div class="quiteria-funders__explanation-rotation">
                 <div class="quiteria-funders__explanation-flow">
-                    <p><span>Esses levantamentos foram feitos com base em análises da </span><span class="quiteria-funders__explanation-quiteria">QuitérIA</span><span>, a </span><span class="quiteria-funders__explanation-ia">IA feminista</span><span> que monitora pautas de gênero no Congresso Nacional diariamente, e com validação humana.</span></p>
+                    <p>
+                        <span>
+                            Esses levantamentos foram feitos com base em
+                            análises da{" "}
+                        </span>
+                        <span class="quiteria-funders__explanation-quiteria">
+                            QuitérIA
+                        </span>
+                        <span>, a </span>
+                        <span class="quiteria-funders__explanation-ia">
+                            IA feminista
+                        </span>
+                        <span>
+                            {" "}
+                            que monitora pautas de gênero no Congresso Nacional
+                            diariamente, e com validação humana.
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>
-        <a class="quiteria-funders__button" href="/ia-feminista">Entenda a metodologia <img src={chevron.src} alt="" /></a>
+        <a class="quiteria-funders__button" href="/ia-feminista">
+            Entenda a metodologia <img src={chevron.src} alt="" />
+        </a>
     </div>
-
 </section>
 
 <style>
-    .quiteria-funders { background: #fff; box-shadow: 0 -24px 0 #fff, 0 48px 0 #fff; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
-    .quiteria-funders *, .quiteria-funders *::before, .quiteria-funders *::after { box-sizing: border-box; }
-    .quiteria-funders__quiteria { display: flex; width: 100%; max-width: 720px; height: auto; margin: 24px auto 48px; flex-direction: column; align-items: center; gap: 32px; overflow: hidden; }
-    .quiteria-funders__image { display: block; width: 100%; height: auto; flex: none; }
-    .quiteria-funders__explanation-frame { display: flex; width: 100%; height: auto; min-width: 0; flex: none; align-items: center; justify-content: center; }
-    .quiteria-funders__explanation-rotation { width: 100%; flex: none; transform: rotate(-0.18deg); }
-    .quiteria-funders__explanation-flow { display: flex; width: 100%; flex-direction: column; justify-content: center; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; font-size: 0; font-weight: 400; line-height: 0; }
-    .quiteria-funders__explanation-flow p { margin: 0; font-size: 18px; font-weight: 400; line-height: 0; letter-spacing: 0; text-align: left; }
-    .quiteria-funders__explanation-flow p span { line-height: 24px; }
-    .quiteria-funders__explanation-quiteria { color: #4242f6; font-family: "Plus Jakarta Sans", sans-serif; font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0; }
-    .quiteria-funders__explanation-ia { font-family: "Plus Jakarta Sans", sans-serif; font-weight: 700; }
-    .quiteria-funders__button { display: flex; width: 255px; height: 56px; padding: 18px 24px 14px; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 0; background: #4242f6; color: #fff; font-family: "ETC Anybody", sans-serif; font-size: 20px; font-weight: 700; line-height: 24px; text-transform: uppercase; font-variation-settings: "wdth" 75; cursor: pointer; text-decoration: none; transition: background-color 220ms ease-out; }
-    .quiteria-funders__button img { display: block; width: 13.4142px; height: 8.12132px; transform: rotate(-90deg); }
-    .quiteria-funders__button:hover { background-color: #0b0f5e; }
-    .quiteria-funders__button:focus-visible { outline: 2px solid #0b0f5e; outline-offset: 4px; }
+    .quiteria-funders {
+        background: #fff;
+        box-shadow:
+            0 -24px 0 #fff,
+            0 48px 0 #fff;
+        color: #0b0f5e;
+        font-family: "Plus Jakarta Sans", sans-serif;
+    }
+    .quiteria-funders *,
+    .quiteria-funders *::before,
+    .quiteria-funders *::after {
+        box-sizing: border-box;
+    }
+    .quiteria-funders__quiteria {
+        display: flex;
+        width: 100%;
+        max-width: 720px;
+        height: auto;
+        margin: 24px auto 48px;
+        flex-direction: column;
+        align-items: center;
+        gap: 32px;
+        overflow: hidden;
+    }
+    .quiteria-funders__image {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+    }
+    .quiteria-funders__explanation-frame {
+        display: flex;
+        width: 100%;
+        height: auto;
+        min-width: 0;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+    }
+    .quiteria-funders__explanation-rotation {
+        width: 100%;
+        flex: none;
+        transform: rotate(-0.18deg);
+    }
+    .quiteria-funders__explanation-flow {
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        color: #0b0f5e;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-size: 0;
+        font-weight: 400;
+        line-height: 0;
+    }
+    .quiteria-funders__explanation-flow p {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 0;
+        letter-spacing: 0;
+        text-align: left;
+    }
+    .quiteria-funders__explanation-flow p span {
+        line-height: 24px;
+    }
+    .quiteria-funders__explanation-quiteria {
+        color: #4242f6;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 700;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0;
+    }
+    .quiteria-funders__explanation-ia {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 700;
+    }
+    .quiteria-funders__button {
+        display: flex;
+        width: 255px;
+        height: 56px;
+        padding: 18px 24px 14px;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 0;
+        border-radius: 0;
+        background: #4242f6;
+        color: #fff;
+        font-family: "ETC Anybody", sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 24px;
+        text-transform: uppercase;
+        font-variation-settings: "wdth" 75;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 220ms ease-out;
+    }
+    .quiteria-funders__button img {
+        display: block;
+        width: 13.4142px;
+        height: 8.12132px;
+        transform: rotate(-90deg);
+    }
+    .quiteria-funders__button:hover {
+        background-color: #0b0f5e;
+    }
+    .quiteria-funders__button:focus-visible {
+        outline: 2px solid #0b0f5e;
+        outline-offset: 4px;
+    }
 
     @media (max-width: 767px) {
         .quiteria-funders__quiteria {
@@ -43,7 +162,7 @@ import chevron from "../../assets/images/redesign/quiteria/chevron-right.svg";
 
         .quiteria-funders__image {
             aspect-ratio: 2 / 1;
-            object-fit: cover;
+            object-fit: contain;
         }
 
         .quiteria-funders__explanation-frame {
@@ -73,7 +192,7 @@ import chevron from "../../assets/images/redesign/quiteria/chevron-right.svg";
         .quiteria-funders__image {
             width: 720px;
             height: 360px;
-            object-fit: cover;
+            object-fit: contain;
         }
 
         .quiteria-funders__explanation-frame {

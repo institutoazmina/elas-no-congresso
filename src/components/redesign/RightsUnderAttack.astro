@@ -13,7 +13,10 @@ const legislatures = await getUnfavorableByLegislature();
 const gap = pileGap({
     width: PILE_WIDTH,
     height: PILE_PEAK,
-    peak: Math.max(...legislatures.map((legislature) => legislature.unfavorable), 1),
+    peak: Math.max(
+        ...legislatures.map((legislature) => legislature.unfavorable),
+        1,
+    ),
 });
 ---
 
@@ -29,10 +32,14 @@ const gap = pileGap({
                 id="rights-under-attack-title"
                 class="tw:m-0 tw:w-full tw:font-[ETC_Anybody] tw:text-[clamp(28px,7vw,36px)] tw:font-bold tw:leading-[1.1667] tw:uppercase tw:[font-variation-settings:'wdth'_75] tw:text-[36px] tw:leading-[42px]"
             >
-                Os direitos das mulheres e pessoas LGBTQIA+ nunca foram tão atacados
+                Os direitos das mulheres e pessoas LGBTQIA+ nunca foram tão
+                atacados
             </h2>
             <p class="tw:m-0 tw:w-full tw:font-[Plus_Jakarta_Sans] tw:text-[18px] tw:leading-6 tw:lg:h-[72px]">
-                Legislar sobre nossos direitos não é sinônimo de fortalecê-los. Muito do trabalho legislativo faz o contrário: retrocesso e restrição de direitos já conquistados. E o atual Congresso tem sido campeão nos ataques:
+                Legislar sobre nossos direitos não é sinônimo de fortalecê-los.
+                Muito do trabalho legislativo faz o contrário: retrocesso e
+                restrição de direitos já conquistados. E o atual Congresso tem
+                sido campeão nos ataques:
             </p>
         </header>
 
@@ -42,34 +49,72 @@ const gap = pileGap({
                     <div class="rights-under-attack__tower tw:flex tw:w-[113px] tw:flex-col tw:items-center tw:justify-end tw:gap-2">
                         <div class="rights-under-attack__value tw:flex tw:flex-col tw:items-center tw:gap-1">
                             <div class="tw:flex tw:h-8 tw:items-center tw:justify-center tw:gap-2">
-                                <span class="tw:font-[ETC_Anybody] tw:text-[36px] tw:font-bold tw:leading-[42px] tw:uppercase tw:[font-variation-settings:'wdth'_75]">{legislature.unfavorable}</span>
+                                <span class="tw:font-[ETC_Anybody] tw:text-[36px] tw:font-bold tw:leading-[42px] tw:uppercase tw:[font-variation-settings:'wdth'_75]">
+                                    {legislature.unfavorable}
+                                </span>
                                 <span class="tw:relative tw:block tw:size-8 tw:rounded-full">
-                                    <img class="tw:block tw:size-full" src={thumbsDown.src} alt="" />
+                                    <img
+                                        class="tw:block tw:size-full"
+                                        src={thumbsDown.src}
+                                        alt=""
+                                    />
                                 </span>
                             </div>
-                            <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">Desfavoráveis</span>
+                            <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">
+                                Desfavoráveis
+                            </span>
                         </div>
-                        <Papelada class="rights-under-attack__papers tw:w-[92.5px]" arrangement="pile" category="desfavoravel" size="a4" gap={gap} amount={legislature.unfavorable} alt={`${legislature.unfavorable} proposições desfavoráveis na ${legislature.number}ª Legislatura`} />
+                        <Papelada
+                            class="rights-under-attack__papers tw:w-[92.5px]"
+                            arrangement="pile"
+                            category="desfavoravel"
+                            size="a4"
+                            gap={gap}
+                            amount={legislature.unfavorable}
+                            alt={`${legislature.unfavorable} proposições desfavoráveis na ${legislature.number}ª Legislatura`}
+                        />
                     </div>
                     <div class="rights-under-attack__caption tw:flex tw:h-16 tw:w-[113px] tw:flex-col tw:items-center tw:justify-center tw:py-2">
-                        <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">{legislature.from} a {legislature.to}{index === legislatures.length - 1 ? "*" : ""}</span>
-                        <span class="tw:font-[Plus_Jakarta_Sans] tw:text-[16px] tw:leading-6">{legislature.number}ª Legislatura</span>
+                        <span class="tw:font-[ETC_Anybody] tw:text-[20px] tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75]">
+                            {legislature.from} a {legislature.to}
+                            {index === legislatures.length - 1 ? "*" : ""}
+                        </span>
+                        <span class="tw:font-[Plus_Jakarta_Sans] tw:text-[16px] tw:leading-6">
+                            {legislature.number}ª Legislatura
+                        </span>
                     </div>
                 </div>
             ))}
         </figure>
 
-        <a href="https://azmina.com.br/reportagens/ataques-direitos-lgbtqia-aborto-congresso/" target="_blank" rel="noopener noreferrer" class="rights-under-attack__note--mobile tw:cursor-pointer tw:no-underline" aria-label="Contexto">
-            <p>Em 2023 começou o mandato da bancada mais conservadora desde 1964</p>
+        <a
+            href="https://azmina.com.br/reportagens/ataques-direitos-lgbtqia-aborto-congresso/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rights-under-attack__note--mobile tw:cursor-pointer tw:no-underline"
+            aria-label="Contexto"
+        >
+            <p>
+                Em 2023 começou o mandato da bancada mais conservadora desde
+                1964
+            </p>
             <span>Ler mais →</span>
         </a>
 
         <footer class="tw:relative tw:flex tw:w-full tw:flex-col tw:gap-3 tw:border-t tw:border-[#0B0F5E] tw:pt-2 tw:font-[Plus_Jakarta_Sans] tw:text-[14px] tw:leading-4 tw:lg:block tw:lg:h-[74.972px]">
             <div class="tw:flex tw:h-[26.972px] tw:items-center tw:gap-2 tw:lg:absolute tw:lg:left-0 tw:lg:top-3">
-                <span class="tw:flex tw:h-[26.972px] tw:w-[20.154px] tw:items-center tw:justify-center"><img class="tw:h-[25.5px] tw:w-[18px] tw:rotate-[5deg] tw:border-[0.5px] tw:border-[#4242F6] tw:object-cover" src="/assets/papelada/proposicao-desfavoravel-9-192w.png" alt="" /></span>
+                <span class="tw:flex tw:h-[26.972px] tw:w-[20.154px] tw:items-center tw:justify-center">
+                    <img
+                        class="tw:h-[25.5px] tw:w-[18px] tw:rotate-[5deg] tw:border-[0.5px] tw:border-[#4242F6] tw:object-cover"
+                        src="/assets/papelada/proposicao-desfavoravel-9-192w.png"
+                        alt=""
+                    />
+                </span>
                 <span>Cada folha representa 1 proposição</span>
             </div>
-            <span class="tw:lg:absolute tw:lg:left-0 tw:lg:top-[54.972px]">*Foram avaliadas proposições até março de 2026</span>
+            <span class="tw:lg:absolute tw:lg:left-0 tw:lg:top-[54.972px]">
+                *Foram avaliadas proposições até março de 2026
+            </span>
             <span
                 class="tw:h-3 tw:w-[113.217px] tw:self-end tw:bg-[#0B0F5E] tw:lg:absolute tw:lg:right-0 tw:lg:top-2"
                 style="mask: url('/assets/images/logo-header.svg') center / contain no-repeat; -webkit-mask: url('/assets/images/logo-header.svg') center / contain no-repeat;"
@@ -78,9 +123,20 @@ const gap = pileGap({
             ></span>
         </footer>
 
-        <a href="https://azmina.com.br/reportagens/ataques-direitos-lgbtqia-aborto-congresso/" target="_blank" rel="noopener noreferrer" class="rights-under-attack__note--desktop tw:mx-auto tw:mt-0 tw:flex tw:h-[180px] tw:w-60 tw:rotate-[-5deg] tw:cursor-pointer tw:flex-col tw:items-center tw:justify-center tw:gap-2 tw:bg-[#FF808A] tw:px-6 tw:py-12 tw:text-center tw:no-underline tw:shadow-[0_4px_0_#0B0F5E] tw:lg:absolute tw:lg:right-[-15.775px] tw:lg:bottom-[173.268px] tw:lg:mt-0" aria-label="Contexto">
-            <p class="tw:m-0 tw:w-48 tw:font-[Plus_Jakarta_Sans] tw:text-[18px] tw:font-bold tw:leading-6">Em 2023 começou o mandato da bancada mais conservadora desde 1964</p>
-            <span class="tw:w-48 tw:font-[Plus_Jakarta_Sans] tw:text-[14px] tw:leading-4">Ler mais →</span>
+        <a
+            href="https://azmina.com.br/reportagens/ataques-direitos-lgbtqia-aborto-congresso/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rights-under-attack__note--desktop tw:mx-auto tw:mt-0 tw:flex tw:h-[180px] tw:w-60 tw:rotate-[-5deg] tw:cursor-pointer tw:flex-col tw:items-center tw:justify-center tw:gap-2 tw:bg-[#FF808A] tw:px-6 tw:py-12 tw:text-center tw:no-underline tw:shadow-[0_4px_0_#0B0F5E] tw:lg:absolute tw:lg:right-[-15.775px] tw:lg:bottom-[173.268px] tw:lg:mt-0"
+            aria-label="Contexto"
+        >
+            <p class="tw:m-0 tw:w-48 tw:font-[Plus_Jakarta_Sans] tw:text-[18px] tw:font-bold tw:leading-6">
+                Em 2023 começou o mandato da bancada mais conservadora desde
+                1964
+            </p>
+            <span class="tw:w-48 tw:font-[Plus_Jakarta_Sans] tw:text-[14px] tw:leading-4">
+                Ler mais →
+            </span>
         </a>
     </div>
 </section>
@@ -98,23 +154,41 @@ const gap = pileGap({
             background-image: none;
         }
         section[aria-labelledby="rights-under-attack-title"] > div {
-            width: 100%; max-width: none; height: auto; padding: 24px 16px;
+            width: 100%;
+            max-width: none;
+            height: auto;
+            padding: 24px 16px;
             gap: 10px;
         }
         section[aria-labelledby="rights-under-attack-title"] > div > header {
-            width: 100%; height: auto; gap: 16px;
+            width: 100%;
+            height: auto;
+            gap: 16px;
         }
-        section[aria-labelledby="rights-under-attack-title"] > div > header > h2 {
-            font-size: 28px; line-height: 32px;
+        section[aria-labelledby="rights-under-attack-title"]
+            > div
+            > header
+            > h2 {
+            font-size: 28px;
+            line-height: 32px;
         }
-        section[aria-labelledby="rights-under-attack-title"] > div > header > p {
+        section[aria-labelledby="rights-under-attack-title"]
+            > div
+            > header
+            > p {
             font-size: 14px;
             line-height: 24px;
         }
         section[aria-labelledby="rights-under-attack-title"] > div > figure {
-            width: 100%; height: auto; min-height: 192px; margin: 0;
+            width: 100%;
+            height: auto;
+            min-height: 192px;
+            margin: 0;
             padding: 24px 0 14px;
-            flex-direction: row; align-items: end; justify-content: center; gap: 24px;
+            flex-direction: row;
+            align-items: end;
+            justify-content: center;
+            gap: 24px;
         }
         /* Node 947:7442 — column width is 72px; the paper canvas has its own
            measured width. Keeping these dimensions separate preserves the
@@ -179,39 +253,62 @@ const gap = pileGap({
             gap: 10.196px !important;
             padding: 10.196px 0 !important;
         }
-        .rights-under-attack__column:nth-child(2) .rights-under-attack__tower { gap: 3.223px !important; }
+        .rights-under-attack__column:nth-child(2) .rights-under-attack__tower {
+            gap: 3.223px !important;
+        }
         .rights-under-attack__column:nth-child(2) .rights-under-attack__value {
             height: auto;
             gap: 1.622px !important;
         }
-        .rights-under-attack__column:nth-child(2) .rights-under-attack__value > div { gap: 3.244px !important; }
-        .rights-under-attack__column:nth-child(2) .rights-under-attack__value > div > span:first-child {
+        .rights-under-attack__column:nth-child(2)
+            .rights-under-attack__value
+            > div {
+            gap: 3.244px !important;
+        }
+        .rights-under-attack__column:nth-child(2)
+            .rights-under-attack__value
+            > div
+            > span:first-child {
             font-size: 22.909px !important;
             line-height: 26.728px !important;
         }
-        .rights-under-attack__column:nth-child(2) .rights-under-attack__value > div > span:nth-child(2) {
+        .rights-under-attack__column:nth-child(2)
+            .rights-under-attack__value
+            > div
+            > span:nth-child(2) {
             width: 20.364px !important;
             height: 20.364px !important;
         }
-        .rights-under-attack__column:nth-child(2) .rights-under-attack__value > span {
+        .rights-under-attack__column:nth-child(2)
+            .rights-under-attack__value
+            > span {
             font-size: 12.727px !important;
             line-height: 15.273px !important;
         }
-        .rights-under-attack__column:nth-child(2) .rights-under-attack__papers { width: 58.864px !important; }
-        .rights-under-attack__column:nth-child(2) .rights-under-attack__caption {
+        .rights-under-attack__column:nth-child(2) .rights-under-attack__papers {
+            width: 58.864px !important;
+        }
+        .rights-under-attack__column:nth-child(2)
+            .rights-under-attack__caption {
             height: auto !important;
             padding: 10.169px 0 !important;
             gap: 10.169px !important;
         }
-        .rights-under-attack__column:nth-child(2) .rights-under-attack__caption > span:first-child {
+        .rights-under-attack__column:nth-child(2)
+            .rights-under-attack__caption
+            > span:first-child {
             font-size: 12.75px !important;
             line-height: 15.295px !important;
         }
-        .rights-under-attack__column:nth-child(2) .rights-under-attack__caption > span:last-child {
+        .rights-under-attack__column:nth-child(2)
+            .rights-under-attack__caption
+            > span:last-child {
             font-size: 10.169px !important;
             line-height: 15.254px !important;
         }
-        .rights-under-attack__note--desktop { display: none; }
+        .rights-under-attack__note--desktop {
+            display: none;
+        }
         .rights-under-attack__note--mobile {
             display: flex;
             width: 227.492px;
@@ -229,8 +326,16 @@ const gap = pileGap({
             font-family: "Plus Jakarta Sans", sans-serif;
             text-align: center;
         }
-        .rights-under-attack__note--mobile p { margin: 0; font-size: 14px; font-weight: 700; line-height: 24px; }
-        .rights-under-attack__note--mobile span { font-size: 14px; line-height: 16px; }
+        .rights-under-attack__note--mobile p {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 24px;
+        }
+        .rights-under-attack__note--mobile span {
+            font-size: 14px;
+            line-height: 16px;
+        }
         section[aria-labelledby="rights-under-attack-title"] > div > footer {
             position: static;
             width: min(251px, 100%);
@@ -243,8 +348,16 @@ const gap = pileGap({
             padding-top: 8px;
             text-align: center;
         }
-        section[aria-labelledby="rights-under-attack-title"] > div > footer > div { display: none; }
-        section[aria-labelledby="rights-under-attack-title"] > div > footer > span:nth-of-type(1) {
+        section[aria-labelledby="rights-under-attack-title"]
+            > div
+            > footer
+            > div {
+            display: none;
+        }
+        section[aria-labelledby="rights-under-attack-title"]
+            > div
+            > footer
+            > span:nth-of-type(1) {
             display: flex;
             width: 100%;
             height: 40px;
@@ -255,7 +368,10 @@ const gap = pileGap({
             font-size: 14px;
             line-height: 16px;
         }
-        section[aria-labelledby="rights-under-attack-title"] > div > footer > span:nth-of-type(2) {
+        section[aria-labelledby="rights-under-attack-title"]
+            > div
+            > footer
+            > span:nth-of-type(2) {
             width: 113.217px;
             height: 24px;
             align-self: center;
@@ -264,14 +380,22 @@ const gap = pileGap({
         }
     }
     @media (min-width: 768px) {
-        .rights-under-attack__note--mobile { display: none; }
-        section[aria-labelledby="rights-under-attack-title"] > div > header > h2 {
+        .rights-under-attack__note--mobile {
+            display: none;
+        }
+        section[aria-labelledby="rights-under-attack-title"]
+            > div
+            > header
+            > h2 {
             height: auto;
             text-box-trim: trim-both;
             text-box-edge: cap alphabetic;
         }
         @supports not (text-box-trim: trim-both) {
-            section[aria-labelledby="rights-under-attack-title"] > div > header > h2 {
+            section[aria-labelledby="rights-under-attack-title"]
+                > div
+                > header
+                > h2 {
                 height: 76px;
             }
         }

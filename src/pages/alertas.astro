@@ -19,10 +19,19 @@ const propositionPage = await getAlertPropositions();
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Alertas | Elas no Congresso</title>
-        <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
+        <link
+            rel="preload"
+            href="/assets/fonts/ETCAnybodyVariable.woff2"
+            as="font"
+            type="font/woff2"
+            crossorigin
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
         <ClientRouter fallback="swap" />
     </head>
     <body class="tw:!pt-0 tw:!bg-white">
@@ -34,7 +43,10 @@ const propositionPage = await getAlertPropositions();
                 <AlertsHero />
                 <section class="alerts-content" aria-label="Alertas recentes">
                     <AlertsToolbar />
-                    <AlertsList propositions={propositionPage.items} total={propositionPage.count} />
+                    <AlertsList
+                        propositions={propositionPage.items}
+                        total={propositionPage.count}
+                    />
                 </section>
             </main>
             <AlertsEmailModal />
@@ -44,45 +56,137 @@ const propositionPage = await getAlertPropositions();
 </html>
 
 <style is:global>
-    @font-face { font-family: "ETC Anybody"; font-style: normal; font-weight: 50 1000; font-display: swap; src: url("/assets/fonts/ETCAnybodyVariable.woff2") format("woff2-variations"); }
-    body:has(.redesign-header) { margin: 0; }
-    .redesign-header .container-fluid { width: 100%; }
-    .redesign-header .wrap { max-width: 1310px; }
-    .redesign-header .ff1 { font-family: "ETC Anybody", sans-serif; }
-    .redesign-alerts-header-background { position: relative; z-index: 12; }
-    .redesign-alerts-main { background: #fff; }
-    body.alerts-email-modal-open .redesign-alerts-main { display: none; }
-    .alerts-content { box-sizing: border-box; display: flex; flex-direction: column; gap: 32px; margin: 0 auto; padding: 100px 40px 56px; width: 896px; }
-    @media (max-width: 940px) { .alerts-content { padding: 64px 32px; width: 100%; } }
+    @font-face {
+        font-family: "ETC Anybody";
+        font-style: normal;
+        font-weight: 50 1000;
+        font-display: swap;
+        src: url("/assets/fonts/ETCAnybodyVariable.woff2")
+            format("woff2-variations");
+    }
+    body:has(.redesign-header) {
+        margin: 0;
+    }
+    .redesign-header .container-fluid {
+        width: 100%;
+    }
+    .redesign-header .wrap {
+        max-width: 1310px;
+    }
+    .redesign-header .ff1 {
+        font-family: "ETC Anybody", sans-serif;
+    }
+    .redesign-alerts-header-background {
+        position: relative;
+        z-index: 12;
+    }
+    .redesign-alerts-main {
+        background: #fff;
+    }
+    body.alerts-email-modal-open .redesign-alerts-main {
+        display: none;
+    }
+    .alerts-content {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
+        margin: 0 auto;
+        padding: 100px 40px 56px;
+        width: 896px;
+    }
+    @media (max-width: 940px) {
+        .alerts-content {
+            padding: 64px 32px;
+            width: 100%;
+        }
+    }
     @media (max-width: 767px) {
-        .alerts-content { gap: 32px; padding: 48px 24px; }
+        .alerts-content {
+            gap: 32px;
+            padding: 48px 24px;
+        }
         body.alerts-email-modal-open .redesign-alerts-page {
             display: flex;
             flex-direction: column;
         }
-        body.alerts-email-modal-open .redesign-alerts-header-background { order: 0; }
-        body.alerts-email-modal-open .alerts-email-modal { order: 1; }
-        body.alerts-email-modal-open .redesign-footer { margin-top: 30px; order: 2; }
+        body.alerts-email-modal-open .redesign-alerts-header-background {
+            order: 0;
+        }
+        body.alerts-email-modal-open .alerts-email-modal {
+            order: 1;
+        }
+        body.alerts-email-modal-open .redesign-footer {
+            margin-top: 30px;
+            order: 2;
+        }
         body.alerts-email-modal-open .redesign-header__mobile-menu summary {
             width: 28px;
             height: 22px;
         }
-        body.alerts-email-modal-open .redesign-header__mobile-menu summary span {
+        body.alerts-email-modal-open
+            .redesign-header__mobile-menu
+            summary
+            span {
             left: 4px;
             width: 20px;
         }
-        body.alerts-email-modal-open .redesign-header__mobile-menu summary span:nth-child(1) { top: 4px; }
-        body.alerts-email-modal-open .redesign-header__mobile-menu summary span:nth-child(2) { top: 10px; }
-        body.alerts-email-modal-open .redesign-header__mobile-menu summary span:nth-child(3) { top: 16px; }
-        body.alerts-email-modal-open .redesign-header__mobile-menu[open] summary span:nth-child(1),
-        body.alerts-email-modal-open .redesign-header__mobile-menu[open] summary span:nth-child(3) { top: 10px; }
-        body.alerts-email-modal-open .redesign-footer__alerts { padding-bottom: 32px; }
-        body.alerts-email-modal-open .redesign-footer__identity { gap: 72px; }
-        body.alerts-email-modal-open .redesign-footer__funders h2 { font-size: 18px !important; line-height: 24px !important; white-space: nowrap; }
-        body.alerts-email-modal-open .redesign-footer__funder-logos { height: 48px; }
-        body.alerts-email-modal-open .redesign-footer__elas-funder { height: 48px !important; }
-        body.alerts-email-modal-open .redesign-footer__banner p { font-size: 14px !important; line-height: 16px !important; }
-        body.alerts-email-modal-open .redesign-footer__banner > .redesign-footer__azmina { width: 50px !important; height: 34px !important; object-fit: contain; }
+        body.alerts-email-modal-open
+            .redesign-header__mobile-menu
+            summary
+            span:nth-child(1) {
+            top: 4px;
+        }
+        body.alerts-email-modal-open
+            .redesign-header__mobile-menu
+            summary
+            span:nth-child(2) {
+            top: 10px;
+        }
+        body.alerts-email-modal-open
+            .redesign-header__mobile-menu
+            summary
+            span:nth-child(3) {
+            top: 16px;
+        }
+        body.alerts-email-modal-open
+            .redesign-header__mobile-menu[open]
+            summary
+            span:nth-child(1),
+        body.alerts-email-modal-open
+            .redesign-header__mobile-menu[open]
+            summary
+            span:nth-child(3) {
+            top: 10px;
+        }
+        body.alerts-email-modal-open .redesign-footer__alerts {
+            padding-bottom: 32px;
+        }
+        body.alerts-email-modal-open .redesign-footer__identity {
+            gap: 72px;
+        }
+        body.alerts-email-modal-open .redesign-footer__funders h2 {
+            font-size: 18px !important;
+            line-height: 24px !important;
+            white-space: nowrap;
+        }
+        body.alerts-email-modal-open .redesign-footer__funder-logos {
+            height: 48px;
+        }
+        body.alerts-email-modal-open .redesign-footer__elas-funder {
+            height: 48px !important;
+        }
+        body.alerts-email-modal-open .redesign-footer__banner p {
+            font-size: 14px !important;
+            line-height: 16px !important;
+        }
+        body.alerts-email-modal-open
+            .redesign-footer__banner
+            > .redesign-footer__azmina {
+            width: 50px !important;
+            height: 34px !important;
+            object-fit: contain;
+        }
         .redesign-alerts-page .redesign-header.redesign-header--scrolled {
             inset: 0 0 auto;
             position: fixed;
@@ -90,15 +194,21 @@ const propositionPage = await getAlertPropositions();
         .redesign-alerts-page .redesign-header .highlighter-marks {
             display: none !important;
         }
-        .redesign-alerts-page .redesign-header:not(.redesign-header--scrolled):has(.redesign-header__mobile-menu[open]) {
+        .redesign-alerts-page
+            .redesign-header:not(.redesign-header--scrolled):has(
+                .redesign-header__mobile-menu[open]
+            ) {
             inset: auto;
             position: relative;
         }
-        .redesign-alerts-page .redesign-header__content:has(.redesign-header__mobile-menu[open]) {
+        .redesign-alerts-page
+            .redesign-header__content:has(.redesign-header__mobile-menu[open]) {
             display: block;
             padding: 0;
         }
-        .redesign-alerts-page .redesign-header__content:has(.redesign-header__mobile-menu[open]) > .redesign-header__brand {
+        .redesign-alerts-page
+            .redesign-header__content:has(.redesign-header__mobile-menu[open])
+            > .redesign-header__brand {
             left: 16px;
             position: absolute;
             top: 19px;
@@ -113,7 +223,9 @@ const propositionPage = await getAlertPropositions();
             margin-left: auto;
             margin-right: 16px;
         }
-        .redesign-alerts-page .redesign-header__mobile-menu[open] > .redesign-header__mobile-panel {
+        .redesign-alerts-page
+            .redesign-header__mobile-menu[open]
+            > .redesign-header__mobile-panel {
             height: auto;
             inset: auto;
             margin-top: 12px;
@@ -121,12 +233,17 @@ const propositionPage = await getAlertPropositions();
             overflow-y: visible;
             position: static;
         }
-        .redesign-alerts-page .redesign-header__mobile-panel a[href="/alertas"] {
+        .redesign-alerts-page
+            .redesign-header__mobile-panel
+            a[href="/alertas"] {
             background: transparent;
             color: #fff;
             text-decoration: none;
         }
-        .redesign-alerts-page .redesign-header__mobile-panel a[href="/alertas"] > span {
+        .redesign-alerts-page
+            .redesign-header__mobile-panel
+            a[href="/alertas"]
+            > span {
             background: #def279;
             color: #0b0f5e;
             text-decoration: underline;
