@@ -31,8 +31,12 @@ import { PUBLIC_API_BASE_URL } from "astro:env/client";
 import type { ActivityProposition, ActivityExplorerResponse, ActivityDashboardRow as DashboardRow } from "../lib/activity-api";
 import { activityAssessment, type ActivityFilterState as BaseActivityFilterState } from "../lib/activity-filters";
 import { YEAR_RANGE_CHANGE_EVENT, syncActivityYearRange, type ActivityYearRange } from "../lib/activity-year-range";
+import { ACTIVITY_MULTI_FILTERS, MULTI_FILTER_CHANGE_EVENT, readActivityMultiValues, syncActivityMultiFilters, type ActivityMultiFilterName } from "../lib/activity-multiselect";
+import { ACTIVITY_SINGLE_FILTERS, activitySelectInput, SELECT_CHANGE_EVENT, syncActivitySelects } from "../lib/activity-select";
 
-type ActivityFilterState = Omit<BaseActivityFilterState, "year"> & { religion: string; year_start: string; year_end: string };
+type ActivityFilterState = Omit<BaseActivityFilterState, "year" | ActivityMultiFilterName>
+    & Record<ActivityMultiFilterName, string[]>
+    & { year_start: string; year_end: string };
 
 const normalize = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const formatNumber = new Intl.NumberFormat("pt-BR");
@@ -66,7 +70,7 @@ function initActivity(root: HTMLElement) {
     }
     const filterPanel = $("[data-filter-panel]");
     const backdrop = $("[data-backdrop]");
-    const itemsSelect = $("[data-items-per-page]") as HTMLSelectElement;
+    const itemsSelect = $("[data-items-per-page]") as HTMLInputElement;
 
     let visible: Proposal[] = [];
     let page = 1;
@@ -85,6 +89,7 @@ function initActivity(root: HTMLElement) {
     function syncResponsivePageSize(render = false) {
         if (!itemsSelect.dataset.userSelected && mobileViewport.matches && itemsSelect.value !== String(MOBILE_ITEMS_PER_PAGE)) {
             itemsSelect.value = String(MOBILE_ITEMS_PER_PAGE);
+            syncActivitySelects(root);
             if (render && visible.length) {
                 page = 1;
                 void load();
@@ -92,24 +97,24 @@ function initActivity(root: HTMLElement) {
         }
     }
 
-    const field = (name: string) => filters.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null;
+    const field = (name: string) => filters.elements.namedItem(name) as HTMLInputElement | null;
     const value = (name: string) => field(name)?.value ?? "";
-    const panelControls = () => [...filters.querySelectorAll<HTMLInputElement | HTMLSelectElement>("input[name], select[name]")];
+    const panelControls = () => [...filters.querySelectorAll<HTMLInputElement>("input[name]")];
     const currentFilters = (): ActivityFilterState => ({
         search: value("search"),
         house: value("house"),
         year_start: value("year_start"),
         year_end: value("year_end"),
-        party: value("party"),
-        category: value("category"),
+        party: readActivityMultiValues(root, "party"),
+        category: readActivityMultiValues(root, "category"),
         assessment: value("assessment") as ActivityFilterState["assessment"],
-        celerity: value("celerity"),
+        celerity: readActivityMultiValues(root, "celerity"),
         movements: value("movements") as ActivityFilterState["movements"],
         gender: value("gender"),
-        state: value("state"),
-        religion: value("religion"),
+        state: readActivityMultiValues(root, "state"),
+        religion: readActivityMultiValues(root, "religion"),
         comments: value("comments"),
-        evaluator: value("evaluator"),
+        evaluator: readActivityMultiValues(root, "evaluator"),
     });
 
     let appliedFilters = currentFilters();
@@ -156,30 +161,10 @@ function initActivity(root: HTMLElement) {
     }
 
     function hydrateOptions(options: ActivityExplorerResponse["options"]) {
-        for (const [name, values] of Object.entries(options)) {
-            if (name === "year") {
-                root.dataset.yearOptions = JSON.stringify(values);
-                syncActivityYearRange(root);
-                continue;
-            }
-            const names = [name, `${name}-mobile`];
-            for (const fieldName of names) {
-                const select = field(fieldName) as HTMLSelectElement | null;
-                if (!select) continue;
-                const selected = select.value;
-                const placeholder = select.options[0].cloneNode(true) as HTMLOptionElement;
-                const entries = values.map(({ value, label }) => {
-                    const option = document.createElement("option");
-                    option.value = value;
-                    option.textContent = label;
-                    return option;
-                });
-                select.replaceChildren(placeholder, ...entries);
-                select.value = selected;
-                select.disabled = values.length === 0;
-                if (values.length) select.removeAttribute("title");
-            }
-        }
+        root.dataset.multiFilterOptions = JSON.stringify(options);
+        syncActivityMultiFilters(root);
+        root.dataset.yearOptions = JSON.stringify(options.year);
+        syncActivityYearRange(root);
     }
 
     function displayProposal(proposal: ActivityProposition): Proposal {
@@ -209,15 +194,16 @@ function initActivity(root: HTMLElement) {
     function queryParams() {
         const params = new URLSearchParams();
         for (const [name, selected] of Object.entries(appliedFilters)) {
-            if (selected) params.set(name, selected);
+            if (Array.isArray(selected)) selected.forEach((value) => params.append(name, value));
+            else if (selected) params.set(name, selected);
         }
         params.set("page", String(page));
         params.set("page_size", itemsSelect.value);
         params.set("sort", tableSort);
         params.set("direction", tableSortDirection);
-        params.set("party_sort", $<HTMLSelectElement>('[data-dashboard-sort="party"]').value);
-        params.set("author_sort", $<HTMLSelectElement>('[data-dashboard-sort="author"]').value);
-        params.set("author_minimum", $<HTMLSelectElement>("[data-dashboard-author-filter]").value);
+        params.set("party_sort", $<HTMLInputElement>('[data-dashboard-sort="party"]').value);
+        params.set("author_sort", $<HTMLInputElement>('[data-dashboard-sort="author"]').value);
+        params.set("author_minimum", $<HTMLInputElement>("[data-dashboard-author-filter]").value);
         return params;
     }
 
@@ -601,10 +587,20 @@ function initActivity(root: HTMLElement) {
     function resetFilters() {
         window.clearTimeout(Number(filters.dataset.searchTimer));
         filters.reset();
+        ["year_start", "year_end", ...ACTIVITY_SINGLE_FILTERS].forEach((name) => {
+            const input = field(name);
+            if (input) input.value = "";
+        });
+        ACTIVITY_MULTI_FILTERS.forEach((name) => {
+            const input = field(name);
+            if (input) input.value = "[]";
+        });
         syncActivityYearRange(root, true);
-        const authorMinimum = $<HTMLSelectElement>("[data-dashboard-author-filter]");
+        syncActivityMultiFilters(root, true);
+        const authorMinimum = $<HTMLInputElement>("[data-dashboard-author-filter]");
         if (authorMinimum) authorMinimum.value = String(MIN_PROPOSICOES_POR_PARLAMENTAR);
-        $$<HTMLSelectElement>("[data-dashboard-sort]").forEach((select) => { select.value = DEFAULT_DASHBOARD_ORDER; });
+        $$<HTMLInputElement>("[data-dashboard-sort]").forEach((input) => { input.value = DEFAULT_DASHBOARD_ORDER; });
+        syncActivitySelects(root, true);
         page = 1;
         appliedFilters = currentFilters();
         void load();
@@ -621,16 +617,12 @@ function initActivity(root: HTMLElement) {
         backdrop.removeAttribute("hidden");
         root.classList.add("has-overlay");
         lastFocused = document.activeElement as HTMLElement;
-        ["house", "party", "category", "assessment"].forEach((name) => {
-            const desktop = field(name);
-            const mobile = field(`${name}-mobile`);
-            if (desktop && mobile) mobile.value = desktop.value;
-        });
+        syncActivitySelects(root);
         panelSnapshot = new Map(panelControls().map((control) => [control.name, control.value]));
         $$<HTMLButtonElement>("[data-open-filters]").forEach((button) => button.setAttribute("aria-expanded", "true"));
         const focusSelector = window.matchMedia("(max-width: 1399px)").matches
-            ? ".activity-filter-panel__basic select:not([disabled])"
-            : ".activity-filter-panel__advanced select:not([disabled])";
+            ? ".activity-filter-panel__basic button:not([disabled])"
+            : ".activity-filter-panel__advanced button:not([disabled])";
         (filterPanel.querySelector(focusSelector) as HTMLElement | null)?.focus();
     }
 
@@ -643,6 +635,8 @@ function initActivity(root: HTMLElement) {
         }
         panelSnapshot = null;
         syncActivityYearRange(root, true);
+        syncActivityMultiFilters(root, true);
+        syncActivitySelects(root, true);
         filterPanel.setAttribute("hidden", "");
         backdrop.setAttribute("hidden", "");
         root.classList.remove("has-overlay");
@@ -660,22 +654,39 @@ function initActivity(root: HTMLElement) {
         if (filterPanel.hasAttribute("hidden")) applyFilters(false);
     });
 
+    root.addEventListener(MULTI_FILTER_CHANGE_EVENT, (event) => {
+        const { name, values } = (event as CustomEvent<{ name: ActivityMultiFilterName; values: string[] }>).detail;
+        const input = field(name);
+        if (input) input.value = JSON.stringify(values);
+        syncActivityMultiFilters(root);
+        if (filterPanel.hasAttribute("hidden")) applyFilters(false);
+    });
+
+    root.addEventListener(SELECT_CHANGE_EVENT, (event) => {
+        const { name, value } = (event as CustomEvent<{ name: string; value: string }>).detail;
+        const input = activitySelectInput(root, name);
+        if (!input) return;
+        input.value = value;
+        syncActivitySelects(root);
+        if (name === "items") {
+            itemsSelect.dataset.userSelected = "true";
+            page = 1;
+            void load();
+        } else if (["party_sort", "author_sort", "author_minimum"].includes(name)) {
+            void load();
+        } else if (filterPanel.hasAttribute("hidden")) {
+            applyFilters(false);
+        }
+    });
+
     filters.addEventListener("submit", (event) => { event.preventDefault(); applyFilters(true); });
     filters.addEventListener("input", (event) => {
         const target = event.target as HTMLInputElement;
-        if (target.name.endsWith("-mobile")) {
-            const desktop = field(target.name.replace(/-mobile$/, ""));
-            if (desktop) desktop.value = target.value;
-        } else if (target.name && !target.name.includes("-mobile")) {
-            const mobile = field(`${target.name}-mobile`);
-            if (mobile) mobile.value = target.value;
-        }
         if (target.name === "search" && window.matchMedia("(min-width: 768px)").matches) {
             window.clearTimeout(Number(filters.dataset.searchTimer));
             filters.dataset.searchTimer = String(window.setTimeout(() => applyFilters(false), 250));
         }
     });
-    itemsSelect.addEventListener("change", () => { itemsSelect.dataset.userSelected = "true"; page = 1; void load(); });
     mobileViewport.addEventListener("change", () => syncResponsivePageSize(true));
     root.addEventListener("click", (event) => {
         const target = (event.target as HTMLElement).closest<HTMLElement>("button, a");
@@ -723,8 +734,8 @@ function initActivity(root: HTMLElement) {
     backdrop.addEventListener("click", () => closeFilters());
     filterPanel.addEventListener("keydown", (event) => {
         if (event.key !== "Tab" || filterPanel.hasAttribute("hidden")) return;
-        const focusable = $$<HTMLElement>("button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href]")
-            .filter((element) => filterPanel.contains(element));
+        const focusable = $$<HTMLElement>("button:not([disabled]), input:not([disabled]):not([type=hidden]), textarea:not([disabled]), a[href]")
+            .filter((element) => filterPanel.contains(element) && element.getClientRects().length > 0);
         if (!focusable.length) return;
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
@@ -736,17 +747,6 @@ function initActivity(root: HTMLElement) {
             first.focus();
         }
     });
-    filters.addEventListener("change", (event) => {
-        const target = event.target as HTMLInputElement | HTMLSelectElement;
-        if (!target.name) return;
-        const pairedName = target.name.endsWith("-mobile") ? target.name.replace(/-mobile$/, "") : `${target.name}-mobile`;
-        const paired = field(pairedName);
-        if (paired) paired.value = target.value;
-        if (["house", "party", "category", "assessment"].includes(target.name) && filterPanel.hasAttribute("hidden")) {
-            applyFilters(false);
-        }
-    });
-    $$<HTMLSelectElement>("[data-dashboard-sort], [data-dashboard-author-filter]").forEach((select) => select.addEventListener("change", () => { void load(); }));
     const mapTooltip = $("[data-map-tooltip]");
     const mapTooltipTitle = $("[data-map-tooltip-title]");
     const mapTooltipSummary = $("[data-map-tooltip-summary]");

@@ -15,6 +15,14 @@ import mapLegend from "../../assets/images/redesign/activity/map/legend-divergin
 import mapUfsVector from "../../assets/images/redesign/activity/map/ufs-vector-diverging-elas-palette.svg?raw";
 import "../../styles/activity-table.css";
 import ActivityYearRange from "./ActivityYearRange";
+import ActivityMultiSelect from "./ActivityMultiSelect";
+import ActivitySelect from "./ActivitySelect";
+import { ACTIVITY_SINGLE_FILTERS } from "../../lib/activity-select";
+import { ACTIVITY_MULTI_FILTERS } from "../../lib/activity-multiselect";
+const houseOptions = [{ value: "", label: "Todas" }, { value: "Deputado", label: "Câmara" }, { value: "Senador", label: "Senado" }];
+const assessmentOptions = [{ value: "", label: "Todas" }, { value: "favorable", label: "Favorável" }, { value: "unfavorable", label: "Desfavorável" }];
+const dashboardSortOptions = [{ value: DEFAULT_DASHBOARD_ORDER, label: "Mais Desfavorável (%)" }, { value: "favorable", label: "Mais Favorável (%)" }, { value: "total", label: "Mais proposições" }];
+const authorMinimumOptions = [1, MIN_PROPOSICOES_POR_PARLAMENTAR, 10, 20].map((value) => ({ value: String(value), label: `Com ${value}+ ${value === 1 ? "proposição" : "proposições"}` }));
 ---
 
 <section
@@ -28,6 +36,8 @@ import ActivityYearRange from "./ActivityYearRange";
     <form class="activity-filters" data-filters data-astro-reload>
         <input type="hidden" name="year_start" value="" />
         <input type="hidden" name="year_end" value="" />
+        {ACTIVITY_MULTI_FILTERS.map((name) => <input type="hidden" name={name} data-activity-multiple={name} value="[]" />)}
+        {ACTIVITY_SINGLE_FILTERS.map((name) => <input type="hidden" name={name} data-activity-select={name} value="" />)}
         <div class="activity-filters__search">
             <label class="activity-field activity-field--search">
                 <span>Buscar</span>
@@ -38,11 +48,11 @@ import ActivityYearRange from "./ActivityYearRange";
         </div>
 
         <div class="activity-filters__desktop-fields">
-            <label class="activity-field"><span>Casa</span><select name="house"><option value="">Todas</option><option value="Deputado">Câmara</option><option value="Senador">Senado</option></select></label>
+            <div class="activity-field"><span>Casa</span><ActivitySelect client:load name="house" label="Casa" options={houseOptions} /></div>
             <div class="activity-field activity-field--year"><span>Ano</span><ActivityYearRange client:load /></div>
-            <label class="activity-field"><span>Partido</span><select name="party"><option value="">Todos</option></select></label>
-            <label class="activity-field activity-field--wide"><span>Categoria</span><select name="category" disabled title="A base atual ainda não fornece esta classificação"><option value="">Todas as categorias</option></select></label>
-            <label class="activity-field activity-field--assessment"><span>Avaliação</span><select name="assessment"><option value="">Todas</option><option value="favorable">Favorável</option><option value="unfavorable">Desfavorável</option></select></label>
+            <div class="activity-field"><span>Partido</span><ActivityMultiSelect client:load name="party" label="Partido" placeholder="Todos" /></div>
+            <div class="activity-field activity-field--wide"><span>Categoria</span><ActivityMultiSelect client:load name="category" label="Categoria" placeholder="Todas as categorias" /></div>
+            <div class="activity-field activity-field--assessment"><span>Avaliação</span><ActivitySelect client:load name="assessment" label="Avaliação" options={assessmentOptions} /></div>
             <button class="activity-more-filters" type="button" data-open-filters="advanced" aria-expanded="false" aria-controls="activity-filter-panel">Mais filtros <span data-filter-count hidden>0</span></button>
         </div>
 
@@ -50,31 +60,31 @@ import ActivityYearRange from "./ActivityYearRange";
             <header><h2>Filtros</h2><button type="button" data-close-filters aria-label="Fechar filtros">×</button></header>
             <div class="activity-filter-panel__scroll">
                 <div class="activity-filter-panel__basic">
-                    <label class="activity-field"><span>Casa</span><select name="house-mobile"><option value="">Todas</option><option value="Deputado">Câmara</option><option value="Senador">Senado</option></select></label>
+                    <div class="activity-field"><span>Casa</span><ActivitySelect client:load name="house" label="Casa" options={houseOptions} /></div>
                     <div class="activity-field activity-field--year"><span>Ano</span><ActivityYearRange client:load /></div>
-                    <label class="activity-field"><span>Partido</span><select name="party-mobile"><option value="">Todos</option></select></label>
-                    <label class="activity-field"><span>Categoria</span><select name="category-mobile" disabled><option value="">Todas as categorias</option></select></label>
-                    <label class="activity-field"><span>Avaliação</span><select name="assessment-mobile"><option value="">Todas</option><option value="favorable">Favorável</option><option value="unfavorable">Desfavorável</option></select></label>
+                    <div class="activity-field"><span>Partido</span><ActivityMultiSelect client:load name="party" label="Partido" placeholder="Todos" /></div>
+                    <div class="activity-field"><span>Categoria</span><ActivityMultiSelect client:load name="category" label="Categoria" placeholder="Todas as categorias" /></div>
+                    <div class="activity-field"><span>Avaliação</span><ActivitySelect client:load name="assessment" label="Avaliação" options={assessmentOptions} /></div>
                 </div>
                 <button class="activity-filter-panel__toggle" type="button" data-toggle-advanced aria-expanded="false" aria-controls="activity-filter-panel-advanced">Mais filtros</button>
                 <div class="activity-filter-panel__advanced" id="activity-filter-panel-advanced">
                     <fieldset>
                         <legend>Proposição</legend>
                         <div class="activity-field activity-field--presented"><span>Apresentada em</span><ActivityYearRange client:load /></div>
-                        <label class="activity-field activity-field--status"><span>Como está?</span><select name="celerity"><option value="">Qualquer ritmo</option></select></label>
-                        <label class="activity-field activity-field--movements"><span>Movimentações (últimos 90 dias)</span><select name="movements"><option value="">Qualquer volume</option><option value="with">Com movimentações</option><option value="without">Sem movimentações</option></select></label>
-                        <label class="activity-field activity-field--markers"><span>Marcadores analíticos</span><select disabled><option>Em breve</option></select></label>
+                        <div class="activity-field activity-field--status"><span>Como está?</span><ActivityMultiSelect client:load name="celerity" label="Ritmo da proposição" placeholder="Qualquer ritmo" /></div>
+                        <div class="activity-field activity-field--movements"><span>Movimentações (últimos 90 dias)</span><ActivitySelect client:load name="movements" label="Movimentações (últimos 90 dias)" options={[{ value: "", label: "Qualquer volume" }, { value: "with", label: "Com movimentações" }, { value: "without", label: "Sem movimentações" }]} /></div>
+                        <div class="activity-field activity-field--markers"><span>Marcadores analíticos</span><ActivitySelect client:load name="markers" label="Marcadores analíticos" disabled options={[{ value: "", label: "Em breve" }]} /></div>
                     </fieldset>
                     <fieldset>
                         <legend>Autoria</legend>
-                        <label class="activity-field activity-field--gender"><span>Gênero de quem propôs</span><select name="gender"><option value="">Todos</option><option value="F">Mulher</option><option value="M">Homem</option></select></label>
-                        <label class="activity-field activity-field--religion"><span>Religião de quem propôs</span><select name="religion"><option value="">Todas</option></select></label>
-                        <label class="activity-field activity-field--state"><span>UF de quem propôs</span><select name="state"><option value="">Todas</option></select></label>
+                        <div class="activity-field activity-field--gender"><span>Gênero de quem propôs</span><ActivitySelect client:load name="gender" label="Gênero de quem propôs" options={[{ value: "", label: "Todos" }, { value: "F", label: "Mulher" }, { value: "M", label: "Homem" }]} /></div>
+                        <div class="activity-field activity-field--religion"><span>Religião de quem propôs</span><ActivityMultiSelect client:load name="religion" label="Religião de quem propôs" placeholder="Todas" /></div>
+                        <div class="activity-field activity-field--state"><span>UF de quem propôs</span><ActivityMultiSelect client:load name="state" label="UF de quem propôs" placeholder="Todas" /></div>
                     </fieldset>
                     <fieldset>
                         <legend>Avaliação</legend>
-                        <label class="activity-field activity-field--comments"><span>Há ressalvas?</span><select name="comments"><option value="">Tanto faz</option><option value="yes">Com ressalvas</option><option value="no">Sem ressalvas</option></select></label>
-                        <label class="activity-field activity-field--evaluator"><span>Quem avaliou?</span><select name="evaluator"><option value="">Qualquer organização</option></select></label>
+                        <div class="activity-field activity-field--comments"><span>Há ressalvas?</span><ActivitySelect client:load name="comments" label="Há ressalvas?" options={[{ value: "", label: "Tanto faz" }, { value: "yes", label: "Com ressalvas" }, { value: "no", label: "Sem ressalvas" }]} /></div>
+                        <div class="activity-field activity-field--evaluator"><span>Quem avaliou?</span><ActivityMultiSelect client:load name="evaluator" label="Quem avaliou" placeholder="Qualquer organização" /></div>
                     </fieldset>
                 </div>
                 <div class="activity-filter-panel__button-wrapper">
@@ -143,10 +153,10 @@ import ActivityYearRange from "./ActivityYearRange";
                 <article class="activity-dashboard-card activity-dashboard-card--status"><header><h3>Por status <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="status" aria-describedby="activity-tooltip-status" aria-expanded="false" aria-label="Saiba mais sobre o recorte por status"><img src={infoTooltip.src} alt="" /></button></h3></header><div class="activity-dashboard-card__content activity-dashboard-card__scroll" data-dashboard-status></div><footer>Usamos o último status oficial disponível</footer></article>
             </div>
             <div class="activity-dashboard__column">
-                <article class="activity-dashboard-card activity-dashboard-card--party"><header><h3>Por partido <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="party" aria-describedby="activity-tooltip-party" aria-expanded="false" aria-label="Saiba mais sobre o recorte por partido"><img src={infoTooltip.src} alt="" /></button></h3><label>Ordem <select data-dashboard-sort="party"><option value={DEFAULT_DASHBOARD_ORDER}>Mais Desfavorável (%)</option><option value="favorable">Mais Favorável (%)</option><option value="total">Mais proposições</option></select></label></header><div class="activity-dashboard-card__content activity-dashboard-card__scroll" data-dashboard-party></div><footer>Usamos o nome atual de partidos renomeados</footer></article>
+                <article class="activity-dashboard-card activity-dashboard-card--party"><header><h3>Por partido <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="party" aria-describedby="activity-tooltip-party" aria-expanded="false" aria-label="Saiba mais sobre o recorte por partido"><img src={infoTooltip.src} alt="" /></button></h3><div class="activity-dashboard-card__order"><span>Ordem</span><input type="hidden" data-dashboard-sort="party" data-activity-select="party_sort" value={DEFAULT_DASHBOARD_ORDER} /><ActivitySelect client:load name="party_sort" label="Ordem por partido" options={dashboardSortOptions} defaultValue={DEFAULT_DASHBOARD_ORDER} compact /></div></header><div class="activity-dashboard-card__content activity-dashboard-card__scroll" data-dashboard-party></div><footer>Usamos o nome atual de partidos renomeados</footer></article>
             </div>
             <div class="activity-dashboard__column">
-                <article class="activity-dashboard-card activity-dashboard-card--author"><header><div class="activity-dashboard-card__title"><h3>Por autoria <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="authorship" aria-describedby="activity-tooltip-authorship" aria-expanded="false" aria-label="Saiba mais sobre o recorte por autoria"><img src={infoTooltip.src} alt="" /></button></h3></div><label>Ordem <select data-dashboard-sort="author"><option value={DEFAULT_DASHBOARD_ORDER}>Mais Desfavorável (%)</option><option value="favorable">Mais Favorável (%)</option><option value="total">Mais proposições</option></select></label></header><label class="activity-dashboard-card__author-filter">Ver Parlamentares <select data-dashboard-author-filter><option value="1">Com 1+ proposição</option><option value={String(MIN_PROPOSICOES_POR_PARLAMENTAR)} selected>Com {MIN_PROPOSICOES_POR_PARLAMENTAR}+ proposições</option><option value="10">Com 10+ proposições</option><option value="20">Com 20+ proposições</option></select></label><div class="activity-dashboard-card__content activity-dashboard-card__scroll" data-dashboard-author></div><footer>Inclui autorias institucionais, como “Presidência”, etc.</footer></article>
+                <article class="activity-dashboard-card activity-dashboard-card--author"><header><div class="activity-dashboard-card__title"><h3>Por autoria <button class="activity-dashboard-card__info" type="button" data-dashboard-tooltip-trigger="authorship" aria-describedby="activity-tooltip-authorship" aria-expanded="false" aria-label="Saiba mais sobre o recorte por autoria"><img src={infoTooltip.src} alt="" /></button></h3></div><div class="activity-dashboard-card__order"><span>Ordem</span><input type="hidden" data-dashboard-sort="author" data-activity-select="author_sort" value={DEFAULT_DASHBOARD_ORDER} /><ActivitySelect client:load name="author_sort" label="Ordem por autoria" options={dashboardSortOptions} defaultValue={DEFAULT_DASHBOARD_ORDER} compact /></div></header><div class="activity-dashboard-card__author-filter"><span>Ver Parlamentares</span><input type="hidden" data-dashboard-author-filter data-activity-select="author_minimum" value={String(MIN_PROPOSICOES_POR_PARLAMENTAR)} /><ActivitySelect client:load name="author_minimum" label="Mínimo de proposições por parlamentar" options={authorMinimumOptions} defaultValue={String(MIN_PROPOSICOES_POR_PARLAMENTAR)} compact /></div><div class="activity-dashboard-card__content activity-dashboard-card__scroll" data-dashboard-author></div><footer>Inclui autorias institucionais, como “Presidência”, etc.</footer></article>
             </div>
         </div>
         <div class="activity-tooltip-layer" aria-live="polite">
@@ -181,7 +191,7 @@ import ActivityYearRange from "./ActivityYearRange";
 
     <nav class="activity-pagination" data-pagination aria-label="Paginação dos resultados" hidden>
         <div data-pages></div>
-        <label>Itens por página <select data-items-per-page name="items"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option><option value="50">50</option></select></label>
+        <div class="activity-pagination__page-size"><span>Itens por página</span><input type="hidden" data-items-per-page data-activity-select="items" name="items" value="10" /><ActivitySelect client:load name="items" label="Itens por página" defaultValue="10" options={[5, 10, 20, 50].map((value) => ({ value: String(value), label: String(value) }))} /></div>
     </nav>
 
 </section>
@@ -196,19 +206,17 @@ import ActivityYearRange from "./ActivityYearRange";
     .activity-explorer.is-compact-results { min-height: 0; }
     .activity-explorer.is-empty-results { min-height: 0; }
     .sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; overflow: hidden !important; clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important; }
-    .activity-explorer button, .activity-explorer input, .activity-explorer select { font: inherit; }
+    .activity-explorer button, .activity-explorer input { font: inherit; }
     .activity-explorer button { color: inherit; }
-    .activity-explorer button:focus-visible, .activity-explorer a:focus-visible, .activity-explorer input:focus-visible, .activity-explorer select:focus-visible { outline: 3px solid #def279; outline-offset: 2px; }
+    .activity-explorer button:focus-visible, .activity-explorer a:focus-visible, .activity-explorer input:focus-visible { outline: 3px solid #def279; outline-offset: 2px; }
     .activity-filters { display: grid; width: 100%; min-height: 60px; padding: 0 48px; grid-template-columns: 366px 962px; align-items: end; gap: 16px; }
     .activity-filters__search { display: grid; width: 366px; min-width: 0; grid-template-columns: 334px 32px; grid-template-rows: 16px 36px; align-items: end; row-gap: 8px; }
     .activity-field { display: flex; min-width: 103px; flex: 1 1 auto; flex-direction: column; gap: 8px; color: #0b0f5e; font-size: 14px; font-weight: 400; line-height: 16px; }
     .activity-field > span { white-space: nowrap; }
-    .activity-field input, .activity-field select, .activity-pagination select { width: 100%; height: 36px; border: 2px solid rgb(66 66 246 / 25%); border-radius: 0; background-color: #fff; color: #5d76dd; font-size: 16px; font-weight: 700; line-height: 24px; }
+    .activity-field input { width: 100%; height: 36px; border: 2px solid rgb(66 66 246 / 25%); border-radius: 0; background-color: #fff; color: #5d76dd; font-size: 16px; font-weight: 700; line-height: 24px; }
     .activity-field input { padding: 4px 12px; }
-    .activity-field select, .activity-pagination select { padding: 4px 34px 4px 10px; appearance: none; background-image: var(--select-chevron); background-position: right 12px center; background-repeat: no-repeat; background-size: 12px 8px; }
-    .activity-field input:hover, .activity-field select:hover, .activity-pagination select:hover { border-color: #4242f6; }
-    .activity-field input:focus, .activity-field select:focus { border-color: #4242f6; outline: 0; }
-    .activity-field select:disabled { cursor: not-allowed; opacity: .55; }
+    .activity-field input:hover { border-color: #4242f6; }
+    .activity-field input:focus { border-color: #4242f6; outline: 0; }
     .activity-field--search { display: contents; width: calc(100% - 32px); }
     .activity-field--search > span { grid-column: 1 / -1; grid-row: 1; color: #0b0f5e; font-size: 14px; font-weight: 400; line-height: 16px; }
     .activity-field--search input { grid-column: 1; grid-row: 2; }
@@ -238,10 +246,10 @@ import ActivityYearRange from "./ActivityYearRange";
         .activity-filters__desktop-fields > .activity-field { display: grid; height: 60px; grid-template-columns: auto 40px; grid-template-rows: 16px 36px; gap: 0; row-gap: 8px; }
         .activity-filters__search .activity-field--search > span, .activity-filters__desktop-fields > .activity-field > span { height: 16px; margin: 0; padding: 0; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; font-size: 14px; font-weight: 400; letter-spacing: 0; line-height: 16px; }
         .activity-filters__desktop-fields > .activity-field > span { grid-column: 1 / -1; grid-row: 1; }
-        .activity-filters__desktop-fields > .activity-field > select { height: 36px; grid-column: 1 / -1; grid-row: 2; border: 2px solid rgb(66 66 246 / 25%); background-color: #fff; background-image: none; padding: 4px 10px; color: #5d76dd; font-family: "Plus Jakarta Sans", sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0; line-height: 24px; }
+        .activity-filters__desktop-fields :is(.activity-multiselect, .activity-select) { grid-column: 1 / -1; grid-row: 2; }
         .activity-filters__desktop-fields > .activity-field::after { width: 16px; height: 16px; margin-right: 12px; align-self: center; justify-self: end; grid-column: 2; grid-row: 2; background: var(--select-chevron) center / 12.0809px 7.45465px no-repeat; content: ""; pointer-events: none; }
+        .activity-filters__desktop-fields > .activity-field:has(.activity-multiselect, .activity-select)::after { content: none; }
         .activity-filters__desktop-fields > .activity-field--year::after { content: none; }
-        .activity-filters__desktop-fields > .activity-field > select:disabled { opacity: 1; }
         .activity-filters__search .activity-field--search input { height: 36px; grid-column: 1 / -1; border-color: rgb(66 66 246 / 25%); padding: 4px 12px; font-family: "Plus Jakarta Sans", sans-serif; font-weight: 700; letter-spacing: 0; line-height: 24px; }
         .activity-filters__search .activity-field--search input::placeholder { color: #5d76dd; opacity: 1; }
         .activity-filters__search .activity-search-button { width: 32px; height: 32px; align-self: center; justify-self: start; background-size: 15.5px 15.5px; }
@@ -301,12 +309,9 @@ import ActivityYearRange from "./ActivityYearRange";
     .activity-dashboard-card__toggle:focus-visible { outline: 2px solid #4242f6; outline-offset: 2px; }
     @media (min-width: 768px) { .activity-dashboard-card__info { display: grid; flex: none; place-items: center; } }
     .activity-dashboard-card__title { display: flex; min-width: 0; height: 23px; align-items: flex-start; }
-    .activity-dashboard-card header label { display: flex; min-width: 0; height: 23px; flex: none; align-items: center; gap: 3px; color: rgb(11 15 94 / 55%); font-size: 12px; line-height: 16px; white-space: nowrap; }
-    .activity-dashboard-card header select { width: 146px; height: 22px; border: 0; background: transparent var(--select-chevron) right 3px center / 8px 5px no-repeat; padding: 0 14px 0 3px; color: #4242f6; font-size: 12px; line-height: 16px; appearance: none; }
-    .activity-dashboard-card header select[data-dashboard-sort="party"], .activity-dashboard-card header select[data-dashboard-sort="author"], .activity-dashboard-card header select[data-dashboard-sort="party"]:hover, .activity-dashboard-card header select[data-dashboard-sort="author"]:hover, .activity-dashboard-card header select[data-dashboard-sort="party"]:focus, .activity-dashboard-card header select[data-dashboard-sort="author"]:focus, .activity-dashboard-card header select[data-dashboard-sort="party"]:focus-visible, .activity-dashboard-card header select[data-dashboard-sort="author"]:focus-visible, .activity-dashboard-card header select[data-dashboard-sort="party"]:active, .activity-dashboard-card header select[data-dashboard-sort="author"]:active { border: 0; outline: 0; box-shadow: none; filter: none; }
-    .activity-dashboard-card header select[data-dashboard-sort="party"]:focus-visible, .activity-dashboard-card header select[data-dashboard-sort="author"]:focus-visible { color: #0b0f5e; }
+    .activity-dashboard-card__order { display: flex; min-width: 0; height: 23px; flex: none; align-items: center; gap: 3px; color: rgb(11 15 94 / 55%); font-size: 12px; line-height: 16px; white-space: nowrap; }
+    .activity-dashboard-card__author-filter .activity-select { width: 150px; }
     .activity-dashboard-card__author-filter { display: flex; min-height: 28px; flex: none; align-items: center; justify-content: space-between; gap: 8px; border-right: 1px solid rgb(66 66 246 / 25%); border-left: 1px solid rgb(66 66 246 / 25%); padding: 4px 12px; color: rgb(11 15 94 / 55%); font-size: 12px; line-height: 16px; }
-    .activity-dashboard-card__author-filter select { min-width: 150px; height: 20px; border: 0; background: transparent var(--select-chevron) right 3px center / 8px 5px no-repeat; padding: 0 14px 0 3px; color: #4242f6; font: inherit; appearance: none; }
     .activity-dashboard-card__content { display: flex; min-height: 0; flex: 1; padding: 12px; flex-direction: column; gap: 8px; border-right: 1px solid rgb(66 66 246 / 25%); border-left: 1px solid rgb(66 66 246 / 25%); }
     .activity-dashboard-card__content:last-child { border-bottom: 1px solid rgb(66 66 246 / 25%); border-radius: 0 0 4px 4px; }
     .activity-dashboard-card__scroll { overflow-y: auto; scrollbar-color: #aeb7ea transparent; scrollbar-width: thin; }
@@ -395,16 +400,16 @@ import ActivityYearRange from "./ActivityYearRange";
     .activity-cards { display: none; }
 
     .activity-pagination { display: flex; min-height: 108px; padding: 24px 48px; align-items: flex-start; justify-content: space-between; }
-    .activity-pagination > div { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .activity-pagination > div:not(.activity-pagination__page-size) { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
     .activity-pagination > div > span:last-child { display: flex; align-items: center; gap: 4px; }
     .activity-pagination__page-label { font-size: 14px; line-height: 20px; }
-    .activity-pagination button { display: grid; min-width: 36px; height: 36px; place-items: center; border: 2px solid transparent; background: #fff; color: #4242f6; font-weight: 700; cursor: pointer; }
-    .activity-pagination button { background-position: center; background-repeat: no-repeat; background-size: 24px 16px; color: transparent; }
-    .activity-pagination button:first-child { background-image: var(--arrow-back); }.activity-pagination button:last-child { background-image: var(--arrow-forward); }
-    .activity-pagination button:hover, .activity-pagination button.is-current { border-color: #4242f6; }
-    .activity-pagination button:disabled { cursor: not-allowed; opacity: .25; }
-    .activity-pagination label { display: flex; width: 144px; align-items: flex-start; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 400; line-height: 16px; }
-    .activity-pagination select { width: 144px; }
+    .activity-pagination button:not(.activity-select__trigger) { display: grid; min-width: 36px; height: 36px; place-items: center; border: 2px solid transparent; background: #fff; color: #4242f6; font-weight: 700; cursor: pointer; }
+    .activity-pagination button:not(.activity-select__trigger) { background-position: center; background-repeat: no-repeat; background-size: 24px 16px; color: transparent; }
+    .activity-pagination button:not(.activity-select__trigger):first-child { background-image: var(--arrow-back); }.activity-pagination button:not(.activity-select__trigger):last-child { background-image: var(--arrow-forward); }
+    .activity-pagination button:not(.activity-select__trigger):hover, .activity-pagination button:not(.activity-select__trigger).is-current { border-color: #4242f6; }
+    .activity-pagination button:not(.activity-select__trigger):disabled { cursor: not-allowed; opacity: .25; }
+    .activity-pagination__page-size { display: flex; width: 144px; align-items: flex-start; flex-direction: column; gap: 8px; font-size: 14px; font-weight: 400; line-height: 16px; }
+    .activity-pagination .activity-select { width: 144px; }
 
     .activity-status { display: flex; min-height: 360px; align-items: center; justify-content: center; flex-direction: column; gap: 16px; text-align: center; }
     .activity-status[hidden] { display: none; }
@@ -439,11 +444,11 @@ import ActivityYearRange from "./ActivityYearRange";
     .activity-filter-panel__advanced .activity-field--status { width: 210px; }
     .activity-filter-panel__advanced .activity-field--movements { width: 192px; }
     .activity-filter-panel__advanced .activity-field--markers { width: 100%; }
-    .activity-filter-panel__advanced .activity-field--markers select { width: 192px; }
+    .activity-filter-panel__advanced .activity-field--markers > :is(.activity-select, .activity-multiselect) { width: 192px; }
     .activity-filter-panel__advanced .activity-field--gender, .activity-filter-panel__advanced .activity-field--religion, .activity-filter-panel__advanced .activity-field--state { width: 100%; }
-    .activity-filter-panel__advanced .activity-field--gender select { width: 240px; }
-    .activity-filter-panel__advanced .activity-field--religion select { width: 203px; }
-    .activity-filter-panel__advanced .activity-field--state select { width: 175px; }
+    .activity-filter-panel__advanced .activity-field--gender > :is(.activity-select, .activity-multiselect) { width: 240px; }
+    .activity-filter-panel__advanced .activity-field--religion > :is(.activity-select, .activity-multiselect) { width: 203px; }
+    .activity-filter-panel__advanced .activity-field--state > :is(.activity-select, .activity-multiselect) { width: 175px; }
     .activity-filter-panel__advanced .activity-field--comments { width: 142px; }
     .activity-filter-panel__advanced .activity-field--evaluator { width: 240px; }
     .activity-filter-panel__button-wrapper { display: flex; width: 100%; height: 60px; flex: 0 0 60px; flex-direction: column; padding-top: 24px; }
@@ -508,7 +513,7 @@ import ActivityYearRange from "./ActivityYearRange";
         .activity-dashboard-card__toggle::before { display: block; }
         .activity-dashboard-card.is-collapsed { height: 24px !important; }
         .activity-dashboard-card.is-collapsed > :not(header) { display: none; }
-        .activity-dashboard-card.is-collapsed > header > label { display: none; }
+        .activity-dashboard-card.is-collapsed .activity-dashboard-card__order { display: none; }
         .activity-dashboard-card.is-collapsed .activity-dashboard-card__title { min-width: 0; }
         .activity-dashboard-card.is-collapsed .activity-dashboard-card__toggle { overflow: hidden; text-overflow: ellipsis; }
         .activity-dashboard-card__info { display: grid; flex: none; place-items: center; }
@@ -516,8 +521,7 @@ import ActivityYearRange from "./ActivityYearRange";
         .activity-dashboard-card--state { height: 415px; }
         .activity-dashboard-card--status { height: 341px; }
         .activity-dashboard-card--party, .activity-dashboard-card--author { height: 420px; }
-        .activity-dashboard-card header label { min-width: 0; }
-        .activity-dashboard-card header select { min-width: 146px; }
+        .activity-dashboard-card__order { min-width: 0; }
         .activity-dashboard-mobile-heading { display: block; width: calc(100% - 32px); margin: 0 16px 8px; border-bottom: 4px solid #4242f6; padding: 8px 0; color: #4242f6; font-family: "ETC Anybody", sans-serif; font-size: 16px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
         .activity-table-wrap { display: none; }
         .activity-cards { display: flex; padding: 0 16px; flex-direction: column; gap: 0; }
@@ -530,7 +534,7 @@ import ActivityYearRange from "./ActivityYearRange";
         .activity-card > footer { display: flex; min-height: 48px; padding: 8px 0; align-items: flex-start; justify-content: space-between; gap: 12px; }
         .activity-card > footer span { display: flex; flex-direction: column; font-size: 12px; line-height: 16px; }.activity-card > footer span + span { align-items: flex-end; text-align: right; }
         .activity-pagination { min-height: 108px; padding: 24px 16px; gap: 12px; }
-        .activity-pagination > div { width: 138px; gap: 8px; }.activity-pagination button { min-width: 36px; padding: 0 4px; }.activity-pagination label { width: 144px; flex-direction: column; align-items: flex-start; font-size: 14px; gap: 8px; }.activity-pagination select { width: 144px; }
+        .activity-pagination > div:not(.activity-pagination__page-size) { width: 138px; gap: 8px; }.activity-pagination button:not(.activity-select__trigger) { min-width: 36px; padding: 0 4px; }.activity-pagination__page-size { width: 144px; flex-direction: column; align-items: flex-start; font-size: 14px; gap: 8px; }.activity-pagination .activity-select { width: 144px; }
         .activity-empty { min-height: 240px; margin: 24px 16px; padding: 48px 20px; }
         .activity-filters { position: relative; }
         .activity-filter-panel { top: 84px; right: auto; left: 16px; width: calc(100% - 32px); height: 515px; max-height: calc(100dvh - 32px); transform: none; border: 1px solid #4242f6; padding: 24px; gap: 0; overflow: hidden; }
@@ -552,7 +556,6 @@ import ActivityYearRange from "./ActivityYearRange";
     }
     @media (max-width: 359px) {
         .activity-dashboard-card h3 { padding-right: 8px; padding-left: 8px; }
-        .activity-dashboard-card header label { font-size: 11px; gap: 2px; }
-        .activity-dashboard-card header select { width: 140px; min-width: 140px; font-size: 11px; }
+        .activity-dashboard-card__order { font-size: 11px; gap: 2px; }
     }
 </style>
