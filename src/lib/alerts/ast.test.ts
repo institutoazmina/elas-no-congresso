@@ -29,6 +29,27 @@ assert.deepEqual(buildAst({ categorias: ["saude"], casa: "senado", proposicoes: 
     ],
 });
 
+// "Ambas" não envia um token de casa: mantém os temas nas duas casas.
+for (const casa of ["senado", "camara"]) {
+    assert.deepEqual(buildAst({ categorias: ["educacao_cultura"], casa }), {
+        op: "AND",
+        children: [
+            { op: "in", field: "categoria", value: ["educacao_cultura"] },
+            { op: "eq", field: "casa", value: casa },
+        ],
+    });
+}
+assert.deepEqual(buildAst({ categorias: ["educacao_cultura"], casa: "" }), {
+    op: "in", field: "categoria", value: ["educacao_cultura"],
+});
+assert.deepEqual(buildAst({ categorias: ["saude"], casa: "", proposicoes: [4242, 4343] }), {
+    op: "AND",
+    children: [
+        { field: "categoria", op: "in", value: ["saude"] },
+        { field: "proposicao", op: "in", value: [4242, 4343] },
+    ],
+});
+
 // Sem nada marcado a inscrição casaria com o Congresso inteiro — barra antes
 // de chegar na rede.
 assert.throws(() => buildAst({ categorias: [] }), /ao menos um tema/);

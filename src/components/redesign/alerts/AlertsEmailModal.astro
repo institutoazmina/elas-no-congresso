@@ -49,14 +49,8 @@ const categories = await getCategoryOptions();
                         </label>
                     </div>
                     <section class="alerts-email-modal__daily-options" hidden aria-label="Filtros para alertas diários">
-                        <p class="alerts-email-modal__daily-intro">Você pode filtrar os alertas diários por uma proposição específica. Se não escolher nenhuma, receberá alertas de todas as proposições dos temas selecionados.</p>
-                        <section class="alerts-email-modal__daily-control" aria-label="Proposição">
-                            <h3>Proposição</h3>
-                            <div class="alerts-email-modal__daily-select-wrap">
-                                <AlertsProposalCombobox client:load />
-                            </div>
-                            <p class="alerts-email-modal__daily-helper">Opcional: escolha uma PL somente se quiser restringir os alertas a ela.</p>
-                        </section>
+                        <p class="alerts-email-modal__daily-intro">Você pode filtrar os alertas diários por casa e por proposição. Se não escolher uma proposição, receberá alertas dos temas selecionados na casa escolhida.</p>
+                        <AlertsProposalCombobox client:load />
                     </section>
                 </fieldset>
 
@@ -182,6 +176,7 @@ const categories = await getCategoryOptions();
                 frequency: "daily",
                 ast: buildAst({
                     categorias,
+                    casa: dialog.querySelector<HTMLSelectElement>('[name="casa"]')?.value,
                     proposicoes: proposalIds(),
                 }),
             });
@@ -275,6 +270,7 @@ const categories = await getCategoryOptions();
     .alerts-email-modal__daily-intro { display: flex; width: 100%; min-height: 46px; align-items: center; padding: 15px 17px; background: #2b65d9; color: #fff; font: 400 12px/16px "Plus Jakarta Sans", sans-serif; }
     .alerts-email-modal__daily-control { width: 582px; padding-top: 20px; }
     .alerts-email-modal__daily-control h3 { color: #fff; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
+    .alerts-email-modal__daily-control .alerts-email-modal__house-label { display: block; color: #fff; font-family: "ETC Anybody", "Anybody", sans-serif; font-size: 18px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-transform: uppercase; }
     .alerts-email-modal__daily-select-wrap { position: relative; margin-top: 8px; }
     .alerts-email-modal__proposal-input { display: block; width: 100%; height: 50px; padding: 12px 16px; border: 1px solid rgba(30, 37, 70, .15); border-radius: 0; background: #fff; color: #0b0f5e; font: 400 16px/20px "Plus Jakarta Sans", sans-serif; }
     .alerts-email-modal__proposal-input::placeholder { color: #998d96; opacity: 1; }
