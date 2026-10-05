@@ -21,7 +21,7 @@ try {
 }
 
 const groupSize = projects.length;
-const initialPhysical = groupSize + Math.floor(groupSize / 2);
+const initialPhysical = groupSize;
 const cards = Array.from({ length: groupSize * 3 }, (_, physical) => ({
     project: projects[physical % groupSize],
     physical,
@@ -100,7 +100,7 @@ const formatEnactedDate = (value: string) => new Intl.DateTimeFormat("pt-BR", {
             const groupSize = Number(carousel.dataset.groupSize);
             if (!groupSize) return;
             const cards = Array.from(track.querySelectorAll<HTMLElement>(".enacted-projects__card"));
-            let physical = groupSize + Math.floor(groupSize / 2);
+            let physical = groupSize;
             let resetting = false;
             const update = () => {
                 const activeCard = cards[physical];

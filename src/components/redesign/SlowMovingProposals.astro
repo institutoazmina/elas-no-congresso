@@ -131,7 +131,7 @@ try {
             track.replaceChildren(...[...proposals, ...proposals, ...proposals].map((proposal) => createCard(proposal, section.dataset)));
             const groupSize = proposals.length;
             const cards = Array.from(track.querySelectorAll<HTMLElement>(".slow-moving-proposals__card"));
-            let physical = groupSize + Math.floor(groupSize / 2);
+            let physical = groupSize;
             let resetting = false;
             const update = () => {
                 track.style.transform = `translateX(${-192 - physical * 432}px)`;
