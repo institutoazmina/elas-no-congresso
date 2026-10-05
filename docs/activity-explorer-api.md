@@ -6,10 +6,20 @@ O servidor filtra a coleção pública completa antes da paginação e devolve
 O frontend apenas envia os controles e apresenta a resposta: não filtra
 proposições, deriva opções, ordena dados, agrega autorias ou calcula percentuais.
 
-Os filtros são `search`, `house`, `year`, `party`, `category`,
+Os filtros são `search`, `house`, `year_start`, `year_end`, `party`, `category`,
 `assessment`, `celerity`, `movements`, `gender`, `state`, `religion`,
 `comments` e `evaluator`. Os controles adicionais são `page`, `page_size`,
 `sort`, `direction`, `party_sort`, `author_sort` e `author_minimum`.
+
+O período usa o ano de apresentação, com limites inclusivos. `year_start`
+sozinho seleciona esse ano e os seguintes; `year_end` sozinho seleciona
+esse ano e os anteriores. Limites vazios não restringem o período.
+Um início posterior ao fim retorna HTTP 422. O parâmetro legado `year`
+continua disponível para um ano exato. O período conta como um único filtro.
+
+O controle de ano usa Popover e Select do Base UI. As opções vêm de
+`options.year`, e as versões desktop, mobile e “Apresentada em” compartilham
+o mesmo período. Nenhuma seleção filtra dados no navegador.
 
 `options.religion` contém pares `value` / `label` derivados dos
 parlamentares que assinam proposições públicas dos tipos admitidos.

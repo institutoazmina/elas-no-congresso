@@ -14,6 +14,7 @@ import mapBase from "../../assets/images/redesign/activity/map/map-br-base@2.5x.
 import mapLegend from "../../assets/images/redesign/activity/map/legend-diverging-elas-palette.svg";
 import mapUfsVector from "../../assets/images/redesign/activity/map/ufs-vector-diverging-elas-palette.svg?raw";
 import "../../styles/activity-table.css";
+import ActivityYearRange from "./ActivityYearRange";
 ---
 
 <section
@@ -25,6 +26,8 @@ import "../../styles/activity-table.css";
     aria-labelledby="activity-results-title"
 >
     <form class="activity-filters" data-filters data-astro-reload>
+        <input type="hidden" name="year_start" value="" />
+        <input type="hidden" name="year_end" value="" />
         <div class="activity-filters__search">
             <label class="activity-field activity-field--search">
                 <span>Buscar</span>
@@ -36,7 +39,7 @@ import "../../styles/activity-table.css";
 
         <div class="activity-filters__desktop-fields">
             <label class="activity-field"><span>Casa</span><select name="house"><option value="">Todas</option><option value="Deputado">Câmara</option><option value="Senador">Senado</option></select></label>
-            <label class="activity-field"><span>Ano</span><select name="year"><option value="">Todos</option></select></label>
+            <div class="activity-field activity-field--year"><span>Ano</span><ActivityYearRange client:load /></div>
             <label class="activity-field"><span>Partido</span><select name="party"><option value="">Todos</option></select></label>
             <label class="activity-field activity-field--wide"><span>Categoria</span><select name="category" disabled title="A base atual ainda não fornece esta classificação"><option value="">Todas as categorias</option></select></label>
             <label class="activity-field activity-field--assessment"><span>Avaliação</span><select name="assessment"><option value="">Todas</option><option value="favorable">Favorável</option><option value="unfavorable">Desfavorável</option></select></label>
@@ -48,7 +51,7 @@ import "../../styles/activity-table.css";
             <div class="activity-filter-panel__scroll">
                 <div class="activity-filter-panel__basic">
                     <label class="activity-field"><span>Casa</span><select name="house-mobile"><option value="">Todas</option><option value="Deputado">Câmara</option><option value="Senador">Senado</option></select></label>
-                    <label class="activity-field"><span>Ano</span><select name="year-mobile"><option value="">Todos</option></select></label>
+                    <div class="activity-field activity-field--year"><span>Ano</span><ActivityYearRange client:load /></div>
                     <label class="activity-field"><span>Partido</span><select name="party-mobile"><option value="">Todos</option></select></label>
                     <label class="activity-field"><span>Categoria</span><select name="category-mobile" disabled><option value="">Todas as categorias</option></select></label>
                     <label class="activity-field"><span>Avaliação</span><select name="assessment-mobile"><option value="">Todas</option><option value="favorable">Favorável</option><option value="unfavorable">Desfavorável</option></select></label>
@@ -57,7 +60,7 @@ import "../../styles/activity-table.css";
                 <div class="activity-filter-panel__advanced" id="activity-filter-panel-advanced">
                     <fieldset>
                         <legend>Proposição</legend>
-                        <label class="activity-field activity-field--presented"><span>Apresentada em</span><select name="presented"><option value="">Qualquer ano</option></select></label>
+                        <div class="activity-field activity-field--presented"><span>Apresentada em</span><ActivityYearRange client:load /></div>
                         <label class="activity-field activity-field--status"><span>Como está?</span><select name="celerity"><option value="">Qualquer ritmo</option></select></label>
                         <label class="activity-field activity-field--movements"><span>Movimentações (últimos 90 dias)</span><select name="movements"><option value="">Qualquer volume</option><option value="with">Com movimentações</option><option value="without">Sem movimentações</option></select></label>
                         <label class="activity-field activity-field--markers"><span>Marcadores analíticos</span><select disabled><option>Em breve</option></select></label>
@@ -222,7 +225,7 @@ import "../../styles/activity-table.css";
     .activity-field--assessment { min-width: 160px; }
     .activity-explorer .activity-more-filters, .activity-explorer .activity-mobile-filter-button, .activity-explorer .activity-filter-panel__apply { position: relative; display: inline-flex; width: 114px; height: 36px; flex: none; align-items: center; justify-content: center; justify-self: end; border: 2px solid #4242f6; background: #4242f6; padding: 4px 12px; color: #fff !important; font-family: "ETC Anybody", sans-serif; font-size: 14px; font-weight: 700; font-variation-settings: "wdth" 75; line-height: 24px; text-align: center; text-transform: uppercase; white-space: nowrap; cursor: pointer; }
     @media (min-width: 1400px) {
-        .activity-filters { display: grid; grid-template-columns: 366fr 109fr 103fr 133fr 240fr 183fr auto; align-items: end; column-gap: 16px; }
+        .activity-filters { display: grid; grid-template-columns: 311fr 109fr 158fr 133fr 240fr 183fr auto; align-items: end; column-gap: 16px; }
         .activity-filters__search { width: auto; min-width: 0; }
         .activity-filters__desktop-fields { display: contents; }
         .activity-filters__desktop-fields > .activity-field:nth-child(1),
@@ -237,6 +240,7 @@ import "../../styles/activity-table.css";
         .activity-filters__desktop-fields > .activity-field > span { grid-column: 1 / -1; grid-row: 1; }
         .activity-filters__desktop-fields > .activity-field > select { height: 36px; grid-column: 1 / -1; grid-row: 2; border: 2px solid rgb(66 66 246 / 25%); background-color: #fff; background-image: none; padding: 4px 10px; color: #5d76dd; font-family: "Plus Jakarta Sans", sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0; line-height: 24px; }
         .activity-filters__desktop-fields > .activity-field::after { width: 16px; height: 16px; margin-right: 12px; align-self: center; justify-self: end; grid-column: 2; grid-row: 2; background: var(--select-chevron) center / 12.0809px 7.45465px no-repeat; content: ""; pointer-events: none; }
+        .activity-filters__desktop-fields > .activity-field--year::after { content: none; }
         .activity-filters__desktop-fields > .activity-field > select:disabled { opacity: 1; }
         .activity-filters__search .activity-field--search input { height: 36px; grid-column: 1 / -1; border-color: rgb(66 66 246 / 25%); padding: 4px 12px; font-family: "Plus Jakarta Sans", sans-serif; font-weight: 700; letter-spacing: 0; line-height: 24px; }
         .activity-filters__search .activity-field--search input::placeholder { color: #5d76dd; opacity: 1; }
@@ -538,7 +542,7 @@ import "../../styles/activity-table.css";
         .activity-filter-panel__basic { gap: 12px; }
         .activity-filter-panel__basic .activity-field { width: auto; max-width: 100%; flex: none; }
         .activity-filter-panel__basic .activity-field:nth-child(1) { width: 109px; }
-        .activity-filter-panel__basic .activity-field:nth-child(2) { width: 103px; }
+        .activity-filter-panel__basic .activity-field:nth-child(2) { width: 158px; }
         .activity-filter-panel__basic .activity-field:nth-child(3) { width: 133px; }
         .activity-filter-panel__basic .activity-field:nth-child(4) { width: 240px; }
         .activity-filter-panel__basic .activity-field:nth-child(5) { width: 183px; }

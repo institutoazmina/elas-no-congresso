@@ -30,8 +30,9 @@ import { formatPresentedDate } from "../lib/canonical";
 import { PUBLIC_API_BASE_URL } from "astro:env/client";
 import type { ActivityProposition, ActivityExplorerResponse, ActivityDashboardRow as DashboardRow } from "../lib/activity-api";
 import { activityAssessment, type ActivityFilterState as BaseActivityFilterState } from "../lib/activity-filters";
+import { YEAR_RANGE_CHANGE_EVENT, syncActivityYearRange, type ActivityYearRange } from "../lib/activity-year-range";
 
-type ActivityFilterState = BaseActivityFilterState & { religion: string };
+type ActivityFilterState = Omit<BaseActivityFilterState, "year"> & { religion: string; year_start: string; year_end: string };
 
 const normalize = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 const formatNumber = new Intl.NumberFormat("pt-BR");
@@ -97,7 +98,8 @@ function initActivity(root: HTMLElement) {
     const currentFilters = (): ActivityFilterState => ({
         search: value("search"),
         house: value("house"),
-        year: value("presented") || value("year"),
+        year_start: value("year_start"),
+        year_end: value("year_end"),
         party: value("party"),
         category: value("category"),
         assessment: value("assessment") as ActivityFilterState["assessment"],
@@ -155,7 +157,12 @@ function initActivity(root: HTMLElement) {
 
     function hydrateOptions(options: ActivityExplorerResponse["options"]) {
         for (const [name, values] of Object.entries(options)) {
-            const names = name === "year" ? ["year", "year-mobile", "presented"] : [name, `${name}-mobile`];
+            if (name === "year") {
+                root.dataset.yearOptions = JSON.stringify(values);
+                syncActivityYearRange(root);
+                continue;
+            }
+            const names = [name, `${name}-mobile`];
             for (const fieldName of names) {
                 const select = field(fieldName) as HTMLSelectElement | null;
                 if (!select) continue;
@@ -594,6 +601,7 @@ function initActivity(root: HTMLElement) {
     function resetFilters() {
         window.clearTimeout(Number(filters.dataset.searchTimer));
         filters.reset();
+        syncActivityYearRange(root, true);
         const authorMinimum = $<HTMLSelectElement>("[data-dashboard-author-filter]");
         if (authorMinimum) authorMinimum.value = String(MIN_PROPOSICOES_POR_PARLAMENTAR);
         $$<HTMLSelectElement>("[data-dashboard-sort]").forEach((select) => { select.value = DEFAULT_DASHBOARD_ORDER; });
@@ -613,13 +621,11 @@ function initActivity(root: HTMLElement) {
         backdrop.removeAttribute("hidden");
         root.classList.add("has-overlay");
         lastFocused = document.activeElement as HTMLElement;
-        ["house", "year", "party", "category", "assessment"].forEach((name) => {
+        ["house", "party", "category", "assessment"].forEach((name) => {
             const desktop = field(name);
             const mobile = field(`${name}-mobile`);
             if (desktop && mobile) mobile.value = desktop.value;
         });
-        const presented = field("presented");
-        if (presented) presented.value = value("year");
         panelSnapshot = new Map(panelControls().map((control) => [control.name, control.value]));
         $$<HTMLButtonElement>("[data-open-filters]").forEach((button) => button.setAttribute("aria-expanded", "true"));
         const focusSelector = window.matchMedia("(max-width: 1399px)").matches
@@ -636,6 +642,7 @@ function initActivity(root: HTMLElement) {
             });
         }
         panelSnapshot = null;
+        syncActivityYearRange(root, true);
         filterPanel.setAttribute("hidden", "");
         backdrop.setAttribute("hidden", "");
         root.classList.remove("has-overlay");
@@ -643,22 +650,20 @@ function initActivity(root: HTMLElement) {
         lastFocused?.focus();
     }
 
+    root.addEventListener(YEAR_RANGE_CHANGE_EVENT, (event) => {
+        const { start, end } = (event as CustomEvent<ActivityYearRange>).detail;
+        const startField = field("year_start");
+        const endField = field("year_end");
+        if (startField) startField.value = start;
+        if (endField) endField.value = end;
+        syncActivityYearRange(root, true);
+        if (filterPanel.hasAttribute("hidden")) applyFilters(false);
+    });
+
     filters.addEventListener("submit", (event) => { event.preventDefault(); applyFilters(true); });
     filters.addEventListener("input", (event) => {
         const target = event.target as HTMLInputElement;
-        if (target.name === "presented") {
-            const desktopYear = field("year");
-            const mobileYear = field("year-mobile");
-            if (desktopYear) desktopYear.value = target.value;
-            if (mobileYear) mobileYear.value = target.value;
-        } else if (target.name === "year" || target.name === "year-mobile") {
-            const desktopYear = field("year");
-            const mobileYear = field("year-mobile");
-            const presented = field("presented");
-            if (desktopYear) desktopYear.value = target.value;
-            if (mobileYear) mobileYear.value = target.value;
-            if (presented) presented.value = target.value;
-        } else if (target.name.endsWith("-mobile")) {
+        if (target.name.endsWith("-mobile")) {
             const desktop = field(target.name.replace(/-mobile$/, ""));
             if (desktop) desktop.value = target.value;
         } else if (target.name && !target.name.includes("-mobile")) {
@@ -737,7 +742,7 @@ function initActivity(root: HTMLElement) {
         const pairedName = target.name.endsWith("-mobile") ? target.name.replace(/-mobile$/, "") : `${target.name}-mobile`;
         const paired = field(pairedName);
         if (paired) paired.value = target.value;
-        if (["house", "year", "party", "category", "assessment"].includes(target.name) && filterPanel.hasAttribute("hidden")) {
+        if (["house", "party", "category", "assessment"].includes(target.name) && filterPanel.hasAttribute("hidden")) {
             applyFilters(false);
         }
     });
