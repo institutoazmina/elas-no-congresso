@@ -15,6 +15,16 @@ import rankingHighlighter4a from "./assets/table-ranking-highlighter-4-a.svg?url
 import rankingHighlighter4b from "./assets/table-ranking-highlighter-4-b.svg?url";
 import rankingHighlighter5a from "./assets/table-ranking-highlighter-5-a.svg?url";
 import rankingHighlighter5b from "./assets/table-ranking-highlighter-5-b.svg?url";
+import favorableRankingHighlighter1a from "./assets/table-ranking-highlighter-favorable-1-a.svg?url";
+import favorableRankingHighlighter1b from "./assets/table-ranking-highlighter-favorable-1-b.svg?url";
+import favorableRankingHighlighter2a from "./assets/table-ranking-highlighter-favorable-2-a.svg?url";
+import favorableRankingHighlighter2b from "./assets/table-ranking-highlighter-favorable-2-b.svg?url";
+import favorableRankingHighlighter3a from "./assets/table-ranking-highlighter-favorable-3-a.svg?url";
+import favorableRankingHighlighter3b from "./assets/table-ranking-highlighter-favorable-3-b.svg?url";
+import favorableRankingHighlighter4a from "./assets/table-ranking-highlighter-favorable-4-a.svg?url";
+import favorableRankingHighlighter4b from "./assets/table-ranking-highlighter-favorable-4-b.svg?url";
+import favorableRankingHighlighter5a from "./assets/table-ranking-highlighter-favorable-5-a.svg?url";
+import favorableRankingHighlighter5b from "./assets/table-ranking-highlighter-favorable-5-b.svg?url";
 import StanceToggle from "./StanceToggle.astro";
 import SectionDivider from "./SectionDivider.astro";
 import { getStanceByState, type StateStat, type Stance } from "../../service/api/stats";
@@ -29,6 +39,13 @@ const tableRankingHighlighters = [
     [rankingHighlighter3a, rankingHighlighter3b],
     [rankingHighlighter4a, rankingHighlighter4b],
     [rankingHighlighter5a, rankingHighlighter5b],
+] as const;
+const favorableTableRankingHighlighters = [
+    [favorableRankingHighlighter1a, favorableRankingHighlighter1b],
+    [favorableRankingHighlighter2a, favorableRankingHighlighter2b],
+    [favorableRankingHighlighter3a, favorableRankingHighlighter3b],
+    [favorableRankingHighlighter4a, favorableRankingHighlighter4b],
+    [favorableRankingHighlighter5a, favorableRankingHighlighter5b],
 ] as const;
 
 const [unfavourableRanking, favourableRanking] = await Promise.all([
@@ -101,7 +118,7 @@ const ufLabels: Record<string, string> = {
                 <h2 class="uf-section-title" id="uf-projects-chart-title">Estas são as UFs dos parlamentares que apresentam mais projetos</h2>
                 <div class="uf-state-selector"><StanceToggle labels={{ unfavorable: "Desfavoráveis", favorable: "Favoráveis" }} /></div>
             </div>
-            <p>Boa parte das bancadas dos estados do Centro-Oeste, além das de Rondônia,<br /> Espírito Santo e Santa Catarina, lidera a apresentação de propostas que restringem<br /> direitos de mulheres, meninas e da população LGBTQIAPN+</p>
+            <p>Boa parte das bancadas dos estados do Centro-Oeste, além das de Tocantins,<br /> Espírito Santo e Santa Catarina, lidera a apresentação de propostas que restringem<br /> direitos de mulheres, meninas e da população LGBTQIAPN+</p>
         </header>
 
         <figure class="uf-projects-chart__figure">
@@ -133,6 +150,7 @@ const ufLabels: Record<string, string> = {
                         const tableRows = view.rows;
                         const isFavorable = view.stance === "favorable";
                         const stanceLabel = isFavorable ? "Favoráveis" : "Desfavoráveis";
+                        const rankingHighlighters = isFavorable ? favorableTableRankingHighlighters : tableRankingHighlighters;
                         return (
                         <table class="uf-projects-chart__table" data-stance-view={view.stance}>
                             <colgroup>
@@ -150,9 +168,9 @@ const ufLabels: Record<string, string> = {
                                         <th scope="row">
                                             <span class="uf-projects-chart__state">
                                                 {index < MAP_HIGHLIGHTS && (
-                                                    <span class={`uf-projects-chart__ranking-highlighter uf-projects-chart__ranking-highlighter--${index + 1}${isFavorable ? " uf-projects-chart__ranking-highlighter--favorable" : ""}`} aria-hidden="true">
-                                                        <span class="uf-projects-chart__ranking-highlighter-layer uf-projects-chart__ranking-highlighter-layer--one"><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--one" style={isFavorable ? `--ranking-highlighter-image: url(${tableRankingHighlighters[index][0]})` : undefined}><img src={tableRankingHighlighters[index][0]} alt="" /></span></span>
-                                                        <span class="uf-projects-chart__ranking-highlighter-layer uf-projects-chart__ranking-highlighter-layer--two"><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--two" style={isFavorable ? `--ranking-highlighter-image: url(${tableRankingHighlighters[index][1]})` : undefined}><img src={tableRankingHighlighters[index][1]} alt="" /></span></span>
+                                                    <span class={`uf-projects-chart__ranking-highlighter uf-projects-chart__ranking-highlighter--${index + 1}`} aria-hidden="true">
+                                                        <span class="uf-projects-chart__ranking-highlighter-layer uf-projects-chart__ranking-highlighter-layer--one"><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--one"><img src={rankingHighlighters[index][0]} alt="" /></span></span>
+                                                        <span class="uf-projects-chart__ranking-highlighter-layer uf-projects-chart__ranking-highlighter-layer--two"><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--two"><img src={rankingHighlighters[index][1]} alt="" /></span></span>
                                                     </span>
                                                 )}
                                                 <span class="uf-projects-chart__state-label">{ufLabels[row.uf.trim().toUpperCase()] ?? row.uf}</span>
@@ -317,8 +335,6 @@ const ufLabels: Record<string, string> = {
     .uf-projects-chart__ranking-highlighter-layer { mix-blend-mode: darken; }
     .uf-projects-chart__ranking-highlighter-image { inset: 0; }
     .uf-projects-chart__ranking-highlighter img { width: 100%; height: 100%; }
-    .uf-projects-chart__ranking-highlighter--favorable .uf-projects-chart__ranking-highlighter-image { background: #def279; -webkit-mask-image: var(--ranking-highlighter-image); -webkit-mask-position: center; -webkit-mask-repeat: no-repeat; -webkit-mask-size: 100% 100%; mask-image: var(--ranking-highlighter-image); mask-position: center; mask-repeat: no-repeat; mask-size: 100% 100%; }
-    .uf-projects-chart__ranking-highlighter--favorable .uf-projects-chart__ranking-highlighter-image img { opacity: 0; }
     .uf-projects-chart__ranking-highlighter-layer--one { left: 5.7326%; width: 94.2675%; }
     .uf-projects-chart__ranking-highlighter-layer--two { left: 1.9109%; width: 98.0892%; }
     .uf-projects-chart__ranking-highlighter--1 .uf-projects-chart__ranking-highlighter-layer--one { top: 1.333px; height: 24.667px; }
