@@ -4,6 +4,7 @@ export type ActivityAuthor = {
   party: string | null;
   state: string | null;
   gender: string | null;
+  religion?: string | null;
   photo_url: string | null;
   role: string | null;
 };
@@ -41,6 +42,34 @@ export type ActivityProposition = {
     last_event_at?: string | null;
   };
   events: ActivityEvent[];
+};
+
+export type ActivityDashboardRow = {
+  key: string;
+  label: string;
+  favorable: number;
+  unfavorable: number;
+  photo: string | null;
+  meta: string | null;
+  favorable_width: number;
+  unfavorable_width: number;
+  favorable_percent: number | null;
+  color: string | null;
+};
+
+export type ActivityExplorerResponse = {
+  items: ActivityProposition[];
+  total: number;
+  page: number;
+  page_count: number;
+  options: Record<string, Array<{ value: string; label: string }>>;
+  summary: {
+    favorable: number;
+    unfavorable: number;
+    favorable_share: number;
+    active_filter_count: number;
+  };
+  dashboard: Record<"gender" | "house" | "party" | "author" | "state" | "category" | "status", ActivityDashboardRow[]>;
 };
 
 export type EnactedProject = ActivityProposition & {

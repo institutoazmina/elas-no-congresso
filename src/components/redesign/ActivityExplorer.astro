@@ -24,7 +24,7 @@ import "../../styles/activity-table.css";
     style={`--search-icon: url(${search.src}); --select-chevron: url(${chevron.src}); --sort-down: url(${sortDown.src}); --sort-up: url(${sortUp.src}); --arrow-back: url(${arrowBack.src}); --arrow-forward: url(${arrowForward.src})`}
     aria-labelledby="activity-results-title"
 >
-    <form class="activity-filters" data-filters>
+    <form class="activity-filters" data-filters data-astro-reload>
         <div class="activity-filters__search">
             <label class="activity-field activity-field--search">
                 <span>Buscar</span>
@@ -65,7 +65,7 @@ import "../../styles/activity-table.css";
                     <fieldset>
                         <legend>Autoria</legend>
                         <label class="activity-field activity-field--gender"><span>Gênero de quem propôs</span><select name="gender"><option value="">Todos</option><option value="F">Mulher</option><option value="M">Homem</option></select></label>
-                        <label class="activity-field activity-field--religion"><span>Religião de quem propôs</span><select disabled><option>Não informada na listagem</option></select></label>
+                        <label class="activity-field activity-field--religion"><span>Religião de quem propôs</span><select name="religion"><option value="">Todas</option></select></label>
                         <label class="activity-field activity-field--state"><span>UF de quem propôs</span><select name="state"><option value="">Todas</option></select></label>
                     </fieldset>
                     <fieldset>
@@ -75,7 +75,7 @@ import "../../styles/activity-table.css";
                     </fieldset>
                 </div>
                 <div class="activity-filter-panel__button-wrapper">
-                    <button class="activity-filter-panel__apply" type="submit">Aplicar filtros</button>
+                    <button class="activity-filter-panel__apply" type="button" data-apply-filters>Aplicar filtros</button>
                 </div>
             </div>
         </aside>
@@ -92,6 +92,8 @@ import "../../styles/activity-table.css";
             </div>
         </div>
     </div>
+
+    <div class="activity-status is-loading" data-status role="status" aria-live="polite"><span aria-hidden="true"></span><p>Carregando atividade legislativa…</p></div>
 
     <section class="activity-dashboard" data-dashboard hidden aria-label="Resumo visual das proposições">
         <div class="activity-dashboard__overview">
@@ -157,8 +159,6 @@ import "../../styles/activity-table.css";
     </section>
 
     <div class="activity-dashboard-mobile-heading" aria-hidden="true">Proposições</div>
-
-    <div class="activity-status is-loading" data-status role="status" aria-live="polite"><span aria-hidden="true"></span><p>Carregando atividade legislativa…</p></div>
 
     <div class="activity-results" data-results hidden>
         <div class="activity-table-wrap">

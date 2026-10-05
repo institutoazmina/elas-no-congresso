@@ -2,106 +2,41 @@ type RawParliamentarian = {
     nome: string;
     numero: number;
     foto?: string;
-    genero?: string;
     partido?: string;
-    cargo?: string;
     estado?: string;
-    legislatura?: string[];
-    slug?: string;
 };
 
-type RawProposal = {
+type Proposal = {
     i: number;
     casa: string;
     numero: string;
     link?: string;
     comentario?: string | null;
-    slug: string;
     resumo: string;
     avaliador?: string | null;
     favoravel: number;
     categoria?: string | null;
     categoriaLabel?: string | null;
-    relevancia?: number;
-    autores?: Record<string, number>;
-    legislatura: number;
-    quiteria_prob?: number;
-    celerity: {
-        label: string;
-        days_without_movement: number;
-        movements_last_90_days: number;
-    };
+    apresentadaEm?: string | null;
+    authors: RawParliamentarian[];
+    celerity: ActivityProposition["celerity"];
 };
-
-type Proposal = RawProposal & { year: number; authors: RawParliamentarian[]; parties: string[]; states: string[]; genders: string[]; situacao?: string | null; celerityLabel?: string | null; apresentadaEm?: string | null; movementsLast90Days: number };
-type DashboardRow = { key: string; label: string; favorable: number; unfavorable: number; photo?: string; meta?: string };
 type TableSort = "number" | "author" | "summary" | "assessment" | "evaluator" | "progress" | "category" | "updated";
 
-import {
-    sortDashboardRows as sortDashboardRowsUtil,
-    groupCanetadasByParty,
-    aggregateAuthorships,
-    countAuthorProposals,
-    filterAuthorsByMinProposals,
-    normalizeGenderCode,
-    GENDER_LABELS,
-    normalizeUfCode,
-    normalizeCasa,
-    CASA_LABELS,
-    personKey,
-    createQualityCollector,
-    DEFAULT_DASHBOARD_ORDER,
-    MIN_PROPOSICOES_POR_PARLAMENTAR,
-    calculateMapFavorableRate,
-    mapFavorableRateToColor,
-    MAP_UF_CODES,
-    MOBILE_ITEMS_PER_PAGE,
-    getSingleDashboardResultMessage,
-    type DashboardSort as DashboardSortType,
-    type QualityCollector,
-} from "../lib/dashboard-utils";
+import { DEFAULT_DASHBOARD_ORDER, MIN_PROPOSICOES_POR_PARLAMENTAR, MAP_UF_CODES, MOBILE_ITEMS_PER_PAGE } from "../lib/dashboard-utils";
 import { authorRoute } from "../lib/author-page";
 import { propositionRoute } from "../lib/proposition-utils";
-import { extractPropositionYear, formatPresentedDate, normalizeEvaluatorKey, presentedAtSortValue } from "../lib/canonical";
+import { formatPresentedDate } from "../lib/canonical";
 import { PUBLIC_API_BASE_URL } from "astro:env/client";
-import type { ActivityProposition } from "../lib/activity-api";
-import {
-    activityAssessment,
-    filterDashboardAuthors,
-    filterActivityItems,
-    getActivityCategories,
-    getActivityCelerityLabels,
-    normalizeActivityStatus,
-    paginateActivityItems,
-    type ActivityFilterState,
-} from "../lib/activity-filters";
+import type { ActivityProposition, ActivityExplorerResponse, ActivityDashboardRow as DashboardRow } from "../lib/activity-api";
+import { activityAssessment, type ActivityFilterState as BaseActivityFilterState } from "../lib/activity-filters";
+
+type ActivityFilterState = BaseActivityFilterState & { religion: string };
 
 const normalize = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-const escapeCsv = (value: unknown) => `"${String(value ?? "").replaceAll('"', '""')}"`;
 const formatNumber = new Intl.NumberFormat("pt-BR");
-const QUITERIA_EVALUATOR = "QuitérIA";
-const ACTIVITY_CACHE_KEY = "elas:activity:v2";
-const ACTIVITY_CACHE_TTL = 5 * 60 * 1000;
-
 function initials(name: string) {
     return name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
-}
-
-function readActivityCache(): ActivityProposition[] | null {
-    try {
-        const cached = JSON.parse(sessionStorage.getItem(ACTIVITY_CACHE_KEY) || "null") as { expiresAt?: number; items?: ActivityProposition[] } | null;
-        return cached && cached.expiresAt && cached.expiresAt > Date.now() && Array.isArray(cached.items) ? cached.items : null;
-    } catch {
-        return null;
-    }
-}
-
-function writeActivityCache(items: ActivityProposition[]) {
-    try {
-        sessionStorage.setItem(ACTIVITY_CACHE_KEY, JSON.stringify({ expiresAt: Date.now() + ACTIVITY_CACHE_TTL, items }));
-    } catch {
-        // Cache é só uma otimização; quota/privacy mode não deve impedir a tela.
-    }
 }
 
 function initActivity(root: HTMLElement) {
@@ -132,7 +67,6 @@ function initActivity(root: HTMLElement) {
     const backdrop = $("[data-backdrop]");
     const itemsSelect = $("[data-items-per-page]") as HTMLSelectElement;
 
-    let all: Proposal[] = [];
     let visible: Proposal[] = [];
     let page = 1;
     let tableSort: TableSort = "updated";
@@ -141,7 +75,8 @@ function initActivity(root: HTMLElement) {
     let panelSnapshot: Map<string, string> | null = null;
     let lastFocused: HTMLElement | null = null;
     let stateDashboard = new Map<string, DashboardRow>();
-    let dataQuality: QualityCollector = createQualityCollector();
+    let explorer: ActivityExplorerResponse | null = null;
+    let requestController: AbortController | null = null;
     let mobileAccordionsReady = false;
     let mobileViewport = window.matchMedia("(max-width: 767px)");
     let resultsRenderVersion = 0;
@@ -151,7 +86,7 @@ function initActivity(root: HTMLElement) {
             itemsSelect.value = String(MOBILE_ITEMS_PER_PAGE);
             if (render && visible.length) {
                 page = 1;
-                renderResults();
+                void load();
             }
         }
     }
@@ -170,9 +105,12 @@ function initActivity(root: HTMLElement) {
         movements: value("movements") as ActivityFilterState["movements"],
         gender: value("gender"),
         state: value("state"),
+        religion: value("religion"),
         comments: value("comments"),
         evaluator: value("evaluator"),
     });
+
+    let appliedFilters = currentFilters();
 
     function setupMobileAccordions() {
         if (mobileAccordionsReady || !window.matchMedia("(max-width: 767px)").matches) return;
@@ -215,132 +153,71 @@ function initActivity(root: HTMLElement) {
         });
     }
 
-    function hydrateOptions(data: ActivityProposition[]) {
-        const parties = new Set<string>();
-        const years = new Set<number>();
-        const states = new Set<string>();
-        const evaluatorDisplay = new Map<string, string>();
-        evaluatorDisplay.set(normalizeEvaluatorKey(QUITERIA_EVALUATOR), QUITERIA_EVALUATOR);
-        dataQuality = createQualityCollector();
-        const proposals = data.map((proposal): Proposal => {
-            const authors = proposal.authors.map((author) => ({
+    function hydrateOptions(options: ActivityExplorerResponse["options"]) {
+        for (const [name, values] of Object.entries(options)) {
+            const names = name === "year" ? ["year", "year-mobile", "presented"] : [name, `${name}-mobile`];
+            for (const fieldName of names) {
+                const select = field(fieldName) as HTMLSelectElement | null;
+                if (!select) continue;
+                const selected = select.value;
+                const placeholder = select.options[0].cloneNode(true) as HTMLOptionElement;
+                const entries = values.map(({ value, label }) => {
+                    const option = document.createElement("option");
+                    option.value = value;
+                    option.textContent = label;
+                    return option;
+                });
+                select.replaceChildren(placeholder, ...entries);
+                select.value = selected;
+                select.disabled = values.length === 0;
+                if (values.length) select.removeAttribute("title");
+            }
+        }
+    }
+
+    function displayProposal(proposal: ActivityProposition): Proposal {
+        return {
+            i: proposal.id,
+            casa: proposal.house,
+            numero: proposal.number_label,
+            link: proposal.tramitation_url || undefined,
+            comentario: proposal.assessment_comments,
+            resumo: proposal.ementa,
+            avaliador: proposal.assessment_organization,
+            favoravel: proposal.is_favorable === true ? 1 : proposal.is_favorable === false ? -1 : 0,
+            categoria: proposal.category,
+            categoriaLabel: proposal.category_label,
+            celerity: proposal.celerity,
+            apresentadaEm: proposal.presented_at,
+            authors: proposal.authors.map((author) => ({
                 nome: author.name,
                 numero: author.id ?? 0,
                 foto: author.photo_url || undefined,
-                genero: author.gender || undefined,
                 partido: author.party || undefined,
-                cargo: author.role || undefined,
                 estado: author.state || undefined,
-            }));
-            const year = extractPropositionYear(proposal.presented_at, proposal.number_label);
-            const casa = proposal.house === "senado" ? "Senador" : proposal.house === "camara" ? "Deputado" : proposal.house;
-            const item: Proposal = {
-                i: proposal.id,
-                casa,
-                numero: proposal.number_label,
-                link: proposal.tramitation_url || undefined,
-                comentario: proposal.assessment_comments,
-                slug: proposal.number_label,
-                resumo: proposal.ementa,
-                avaliador: proposal.assessment_organization,
-                favoravel: proposal.is_favorable === true ? 1 : proposal.is_favorable === false ? -1 : 0,
-                categoria: proposal.category,
-                categoriaLabel: proposal.category_label || proposal.category,
-                legislatura: 0,
-                celerity: proposal.celerity,
-                celerityLabel: proposal.celerity.label,
-                situacao: proposal.current_status,
-                apresentadaEm: proposal.presented_at,
-                movementsLast90Days: proposal.celerity.movements_last_90_days,
-                year,
-                authors,
-                parties: [...new Set(authors.map((author) => author.partido).filter((party): party is string => Boolean(party)))],
-                states: [...new Set(authors.map((author) => normalizeUfCode(author.estado)).filter((state): state is string => state !== null))],
-                genders: [...new Set(authors.map((author) => normalizeGenderCode(author.genero)).filter((gender) => gender === "F" || gender === "M"))],
-            };
-            if (!normalizeCasa(casa)) dataQuality.record("casa-desconhecida", `${item.numero}: casa=${JSON.stringify(casa)}`);
-            authors.forEach((author) => {
-                if (!author.numero) dataQuality.record("autor-sem-numero", `${author.nome} em ${item.numero}`);
-                if (normalizeGenderCode(author.genero) === "U") dataQuality.record("genero-invalido", `${author.nome}: genero=${JSON.stringify(author.genero)}`);
-                if (normalizeUfCode(author.estado) === null) dataQuality.record("uf-invalida", `${author.nome}: estado=${JSON.stringify(author.estado)}`);
-                if (!author.partido) dataQuality.record("partido-ausente", `${author.nome} em ${item.numero}`);
-            });
-            if (year) years.add(year);
-            item.parties.forEach((party) => parties.add(party));
-            item.states.forEach((state) => states.add(state));
-            if (item.avaliador) {
-                const key = normalizeEvaluatorKey(item.avaliador);
-                if (!evaluatorDisplay.has(key)) evaluatorDisplay.set(key, item.avaliador);
-            }
-            return item;
-        });
-
-        const addOptions = (name: string, values: (string | number)[], label?: (item: string | number) => string) => {
-            const select = field(name) as HTMLSelectElement | null;
-            if (!select) return;
-            values.forEach((item) => {
-                const option = document.createElement("option");
-                option.value = String(item);
-                option.textContent = label ? label(item) : String(item);
-                select.append(option);
-            });
+            })),
         };
-        addOptions("year", [...years].sort((a, b) => b - a));
-        addOptions("year-mobile", [...years].sort((a, b) => b - a));
-        addOptions("presented", [...years].sort((a, b) => b - a));
-        addOptions("party", [...parties].sort((a, b) => a.localeCompare(b, "pt-BR")));
-        addOptions("party-mobile", [...parties].sort((a, b) => a.localeCompare(b, "pt-BR")));
-        addOptions("state", [...states].sort());
-        addOptions("evaluator", [...evaluatorDisplay.values()].sort((a, b) => a.localeCompare(b, "pt-BR")));
-        addOptions("celerity", getActivityCelerityLabels(proposals));
-        const categories = getActivityCategories(proposals);
-        if (categories.length) {
-            const categoryLabel = (category: string | number) => {
-                const proposal = proposals.find((item) => item.categoria === category);
-                return proposal?.categoriaLabel || String(category);
-            };
-            addOptions("category", categories, categoryLabel);
-            addOptions("category-mobile", categories, categoryLabel);
-            [field("category"), field("category-mobile")].forEach((select) => {
-                if (!select) return;
-                select.disabled = false;
-                select.removeAttribute("title");
-            });
-        }
-        all = proposals.sort((a, b) => b.year - a.year || b.i - a.i);
-        const quality = dataQuality.summary();
-        if (quality.total > 0) {
-            console.warn("[atividade-legislativa] relatório de qualidade dos dados:", JSON.stringify(quality));
-        }
     }
 
-    function sortItems(items: Proposal[]) {
-        const text = (item: Proposal, key: TableSort) => {
-            if (key === "number") return item.numero;
-            if (key === "author") return item.authors[0]?.nome || "";
-            if (key === "summary") return item.resumo;
-            if (key === "evaluator") return item.avaliador || "";
-            if (key === "category") return item.categoria || "";
-            return "";
-        };
-        const number = (item: Proposal, key: TableSort) => {
-            if (key === "assessment") return item.favoravel;
-            if (key === "progress") return item.celerity.movements_last_90_days;
-            if (key === "updated") return presentedAtSortValue(item.apresentadaEm);
-            return 0;
-        };
-        const direction = tableSortDirection === "ascending" ? 1 : -1;
-        return [...items].sort((a, b) => {
-            if (["assessment", "progress", "updated"].includes(tableSort)) return (number(a, tableSort) - number(b, tableSort)) * direction;
-            return text(a, tableSort).localeCompare(text(b, tableSort), "pt-BR", { numeric: true }) * direction;
-        });
+    function queryParams() {
+        const params = new URLSearchParams();
+        for (const [name, selected] of Object.entries(appliedFilters)) {
+            if (selected) params.set(name, selected);
+        }
+        params.set("page", String(page));
+        params.set("page_size", itemsSelect.value);
+        params.set("sort", tableSort);
+        params.set("direction", tableSortDirection);
+        params.set("party_sort", $<HTMLSelectElement>('[data-dashboard-sort="party"]').value);
+        params.set("author_sort", $<HTMLSelectElement>('[data-dashboard-sort="author"]').value);
+        params.set("author_minimum", $<HTMLSelectElement>("[data-dashboard-author-filter]").value);
+        return params;
     }
 
-    function currentSlice() {
-        const amount = Number(itemsSelect.value);
-        const paginationState = paginateActivityItems(visible, page, amount);
-        page = paginationState.page;
-        return paginationState.items;
+    function apiBase() {
+        return (["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)
+            ? `${location.origin}/api/v1`
+            : PUBLIC_API_BASE_URL).replace(/\/$/, "");
     }
 
     function stanceData(item: Proposal) {
@@ -407,40 +284,7 @@ function initActivity(root: HTMLElement) {
         return wrapper;
     }
 
-    function aggregateRows(items: Proposal[], groupsFor: (item: Proposal) => { key: string; label: string; photo?: string; meta?: string }[]) {
-    const rows = new Map<string, DashboardRow>();
-    items.forEach((item) => {
-        const seen = new Set<string>();
-        groupsFor(item).forEach((group) => {
-            if (!group.key || seen.has(group.key)) return;
-            seen.add(group.key);
-            const row = rows.get(group.key) || { ...group, favorable: 0, unfavorable: 0 };
-            if (item.favoravel > 0) row.favorable += 1;
-            if (item.favoravel < 0) row.unfavorable += 1;
-            rows.set(group.key, row);
-        });
-    });
-    return [...rows.values()];
-    }
-
-    function aggregatePartyCanetadas(items: Proposal[]): DashboardRow[] {
-        const mappedItems = items.map((item) => ({
-            authors: item.authors.map((author) => ({ numero: author.numero, nome: author.nome, slug: author.slug, partido: author.partido })),
-            favorable: item.favoravel,
-        }));
-        const groups = groupCanetadasByParty(mappedItems);
-        return [...groups.entries()].map(([party, counts]) => ({
-            key: party,
-            label: party,
-            ...counts,
-        }));
-    }
-
-    function sortDashboardRows(rows: DashboardRow[], mode?: DashboardSortType) {
-    return sortDashboardRowsUtil(rows, mode);
-    }
-
-    function dashboardRow(row: DashboardRow, peak: number, author = false) {
+    function dashboardRow(row: DashboardRow, author = false) {
         const element = document.createElement("div");
         element.className = "activity-dashboard-card__row";
         const key = document.createElement("div");
@@ -480,8 +324,8 @@ function initActivity(root: HTMLElement) {
         bars.className = "activity-dashboard-card__bars";
         const favorable = document.createElement("span");
         const unfavorable = document.createElement("span");
-        favorable.style.setProperty("--bar-width", `${(row.favorable / peak) * 100}%`);
-        unfavorable.style.setProperty("--bar-width", `${(row.unfavorable / peak) * 100}%`);
+        favorable.style.setProperty("--bar-width", `${row.favorable_width}%`);
+        unfavorable.style.setProperty("--bar-width", `${row.unfavorable_width}%`);
         bars.append(favorable, unfavorable);
         const values = document.createElement("div");
         values.className = "activity-dashboard-card__values";
@@ -496,123 +340,45 @@ function initActivity(root: HTMLElement) {
         return element;
     }
 
-    function fillDashboardRows(selector: string, rows: DashboardRow[], options: { sort?: DashboardSortType; author?: boolean; limit?: number; singleResultMessage?: string | null } = {}) {
+    function fillDashboardRows(selector: string, rows: DashboardRow[], author = false, singleResultMessage?: string) {
         const target = $(selector);
-        const sorted = options.sort ? sortDashboardRows(rows, options.sort) : rows;
-        const shown = options.limit ? sorted.slice(0, options.limit) : sorted;
-        const peak = Math.max(1, ...shown.flatMap((row) => [row.favorable, row.unfavorable]));
-        target.replaceChildren(...shown.map((row) => dashboardRow(row, peak, options.author)));
-        if (!shown.length) {
+        target.replaceChildren(...rows.map((row) => dashboardRow(row, author)));
+        if (!rows.length) {
             const message = document.createElement("p");
             message.textContent = "Sem dados para os filtros selecionados.";
             target.append(message);
-        } else if (options.singleResultMessage) {
+        } else if (rows.length === 1 && singleResultMessage) {
             const message = document.createElement("p");
             message.className = "activity-dashboard-card__single-result";
-            message.textContent = options.singleResultMessage;
+            message.textContent = singleResultMessage;
             target.append(message);
         }
     }
 
     function renderDashboard() {
-        if (!visible.length) {
-            stateDashboard = new Map();
-            for (const uf of MAP_UF_CODES) {
-                const visualPath = mapVisualPaths.get(uf);
-                const hitArea = mapHitAreas.get(uf);
-                if (!visualPath || !hitArea) continue;
-                visualPath.style.fill = mapFavorableRateToColor(null);
-                hitArea.setAttribute("aria-label", `${uf}: sem proposições avaliadas nos filtros atuais`);
-                hitArea.setAttribute("aria-expanded", "false");
-            }
-            dashboard.setAttribute("hidden", "");
-            return;
-        }
-        dashboard.removeAttribute("hidden");
-        // Visão por autorias: cada item carrega os autores resolvidos e a
-        // avaliação da proposição. Usado pelos painéis de canetadas.
-        const authorshipFilters = currentFilters();
-        const dashboardAuthorshipItems = visible.map((item) => ({
-            ...item,
-            authors: filterDashboardAuthors(item, authorshipFilters),
-        }));
-        const authorshipItems = dashboardAuthorshipItems.map((item) => ({ authors: item.authors, favorable: item.favoravel }));
-        // Por gênero: autorias únicas por proposição (GENDER_COUNT_MODE, provisório).
-        // Valores inválidos (ex.: nome próprio no campo `genero`) viram "Não informado".
-        const genders = aggregateAuthorships(authorshipItems, (author) => {
-            const code = normalizeGenderCode(author.genero);
-            return { key: code, label: GENDER_LABELS[code] };
-        });
-        // Por casa: proposições únicas. Poder Executivo excluído da visualização
-        // (sem apagar da base); casa ausente/desconhecida vai ao relatório de
-        // qualidade e não é convertida silenciosamente em Câmara/Senado.
-        const houses = aggregateRows(visible, (item) => {
-            const casa = normalizeCasa(item.casa);
-            if (!casa || casa === "executivo") return [];
-            return [{ key: casa, label: CASA_LABELS[casa] }];
-        });
-        const partyCanetadas = aggregatePartyCanetadas(dashboardAuthorshipItems);
-        // Por UF: UF de cada autoria única (UF_COUNT_MODE, provisório).
-        // Siglas inválidas/ausentes vão ao relatório; sem inferência.
-        const states = aggregateAuthorships(authorshipItems, (author) => {
-            const uf = normalizeUfCode(author.estado);
-            return uf ? { key: uf, label: uf } : null;
-        });
-        const allAuthors = aggregateRows(dashboardAuthorshipItems, (item) => item.authors.map((author) => ({
-            key: `person:${personKey(author)}`,
-            label: author.nome,
-            photo: author.foto,
-            meta: [author.partido, author.estado].filter(Boolean).join("/"),
-        })));
-        const authorProposalCounts = countAuthorProposals(dashboardAuthorshipItems);
-        // O limite é aplicado depois dos filtros gerais e da contagem de
-        // proposições únicas por parlamentar, antes da ordenação/renderização.
-        const authorMinimum = Number($<HTMLSelectElement>("[data-dashboard-author-filter]")?.value || MIN_PROPOSICOES_POR_PARLAMENTAR);
-        const authors = filterAuthorsByMinProposals(allAuthors, authorProposalCounts, authorMinimum);
-        stateDashboard = new Map(states.map((row) => [row.key, row]));
-
-        const partySort = ($<HTMLSelectElement>('[data-dashboard-sort="party"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
-        const authorSort = ($<HTMLSelectElement>('[data-dashboard-sort="author"]')?.value as DashboardSortType) ?? DEFAULT_DASHBOARD_ORDER;
-
-        // Regra estritamente visual: os dados desconhecidos continuam agregados e
-        // auditados, mas o painel exibe apenas F/M nesta ordem editorial fixa.
-        const displayedGenders = (["F", "M"] as const).flatMap((code) => genders.filter((row) => row.key === code));
-        fillDashboardRows("[data-dashboard-gender]", displayedGenders);
-        // Casa segue a ordem editorial do design (Câmara, Senado); somente
-        // partido e autoria expõem ordenação interativa.
-        const displayedHouses = (["camara", "senado"] as const).flatMap((key) => houses.filter((row) => row.key === key));
-        fillDashboardRows("[data-dashboard-house]", displayedHouses);
-        fillDashboardRows("[data-dashboard-party]", partyCanetadas, { sort: partySort, singleResultMessage: getSingleDashboardResultMessage("party", partyCanetadas) });
-        fillDashboardRows("[data-dashboard-author]", authors, { sort: authorSort, author: true, singleResultMessage: getSingleDashboardResultMessage("author", authors) });
-        // Por categoria: proposições DISTINTAS por categoria oficial (Categorias
-        // 2026 via dataset). Regra editorial = mesma unidade dos demais cards
-        // de contagem simples (1 proposição = 1 voto), NÃO canetadas e NÃO o
-        // /stats (que conta só desfavoráveis). Ver relatório 1.3.
-        const categories = aggregateRows(visible, (item) => item.categoria ? [{ key: item.categoria, label: item.categoriaLabel || item.categoria }] : []);
-        fillDashboardRows("[data-dashboard-category]", categories);
-        $("[data-dashboard-category]")?.classList.toggle("activity-dashboard-card__empty", categories.length === 0);
-        if (categories.length === 0) {
-            $("[data-dashboard-category]").textContent = "Sem categoria oficial para os filtros selecionados.";
-        }
-        const statuses = aggregateRows(visible, (item) => {
-            const status = normalizeActivityStatus(item.situacao);
-            return [{ key: status || "unavailable", label: status || "Não informado" }];
-        });
-        fillDashboardRows("[data-dashboard-status]", statuses);
-
+        if (!explorer) return;
+        dashboard.toggleAttribute("hidden", explorer.total === 0);
+        const rows = explorer.dashboard;
+        stateDashboard = new Map(rows.state.map((row) => [row.key, row]));
+        fillDashboardRows("[data-dashboard-gender]", rows.gender);
+        fillDashboardRows("[data-dashboard-house]", rows.house);
+        fillDashboardRows("[data-dashboard-party]", rows.party, false, "Para ver mais partidos, tente remover filtros.");
+        fillDashboardRows("[data-dashboard-author]", rows.author, true, "Para ver mais parlamentares, tente remover filtros.");
+        fillDashboardRows("[data-dashboard-category]", rows.category);
+        $("[data-dashboard-category]").classList.toggle("activity-dashboard-card__empty", rows.category.length === 0);
+        if (!rows.category.length) $("[data-dashboard-category]").textContent = "Sem categoria oficial para os filtros selecionados.";
+        fillDashboardRows("[data-dashboard-status]", rows.status);
         for (const uf of MAP_UF_CODES) {
             const visualPath = mapVisualPaths.get(uf);
             const hitArea = mapHitAreas.get(uf);
-            if (!visualPath || !hitArea) continue;
             const row = stateDashboard.get(uf);
-            const favorableRate = row ? calculateMapFavorableRate(row) : null;
-            visualPath.style.fill = mapFavorableRateToColor(favorableRate);
-            hitArea.setAttribute("aria-label", favorableRate === null
+            if (!visualPath || !hitArea || !row) continue;
+            visualPath.style.fill = row.color ?? "";
+            hitArea.setAttribute("aria-label", row.favorable_percent === null
                 ? `${uf}: sem proposições avaliadas nos filtros atuais`
-                : `${uf}: ${row!.favorable} favoráveis e ${row!.unfavorable} desfavoráveis`);
+                : `${uf}: ${row.favorable} favoráveis e ${row.unfavorable} desfavoráveis`);
             hitArea.setAttribute("aria-expanded", "false");
         }
-        dashboard.removeAttribute("hidden");
     }
 
     const dashboardTooltipTriggers = $$<HTMLButtonElement>("[data-dashboard-tooltip-trigger]");
@@ -746,22 +512,18 @@ function initActivity(root: HTMLElement) {
     }
 
     function renderSummary() {
-        const favorable = visible.filter((item) => item.favoravel > 0).length;
-        const unfavorable = visible.filter((item) => item.favoravel < 0).length;
-        const totalRated = favorable + unfavorable || 1;
-        root.classList.toggle("is-empty-results", visible.length === 0);
+        if (!explorer) return;
+        const { summary, total: count } = explorer;
+        root.classList.toggle("is-empty-results", count === 0);
         const total = $("[data-total]");
         total.hidden = false;
-        total.textContent = visible.length ? `${formatNumber.format(visible.length)} proposições` : "Nenhuma proposição encontrada";
-        $("[data-favorable-count]").textContent = formatNumber.format(favorable);
-        $("[data-unfavorable-count]").textContent = formatNumber.format(unfavorable);
+        total.textContent = count ? `${formatNumber.format(count)} proposições` : "Nenhuma proposição encontrada";
+        $("[data-favorable-count]").textContent = formatNumber.format(summary.favorable);
+        $("[data-unfavorable-count]").textContent = formatNumber.format(summary.unfavorable);
         const bar = $("[data-result-bar]") as HTMLElement;
-        bar.style.setProperty("--favorable-share", `${(favorable / totalRated) * 100}%`);
-        bar.classList.toggle("is-empty", visible.length === 0);
-        const activeNames = new Set($$<HTMLInputElement | HTMLSelectElement>("input, select")
-            .filter((control) => !control.disabled && control.name && !["items", "sort"].includes(control.name) && Boolean(control.value))
-            .map((control) => control.name.replace(/-mobile$/, "").replace(/^presented$/, "year")));
-        const activeCount = activeNames.size;
+        bar.style.setProperty("--favorable-share", `${summary.favorable_share}%`);
+        bar.classList.toggle("is-empty", count === 0);
+        const activeCount = summary.active_filter_count;
         $$<HTMLElement>("[data-filter-count]").forEach((badge) => {
             badge.textContent = String(activeCount);
             badge.hidden = activeCount === 0;
@@ -774,8 +536,9 @@ function initActivity(root: HTMLElement) {
     }
 
     function renderPagination() {
-        const pages = Math.max(1, Math.ceil(visible.length / Number(itemsSelect.value)));
-        page = Math.min(page, pages);
+        if (!explorer) return;
+        const pages = explorer.page_count;
+        page = explorer.page;
         const compact = visible.length > 0 && pages <= 1;
         root.classList.toggle("is-compact-results", compact);
         const pagesRoot = $("[data-pages]");
@@ -787,7 +550,7 @@ function initActivity(root: HTMLElement) {
             button.disabled = disabled;
             button.className = current ? "is-current" : "";
             if (current) button.setAttribute("aria-current", "page");
-            button.addEventListener("click", () => { page = target; renderResults(); root.scrollIntoView({ behavior: "smooth", block: "start" }); });
+            button.addEventListener("click", () => { page = target; void load(); root.scrollIntoView({ behavior: "smooth", block: "start" }); });
             return button;
         };
         const label = document.createElement("span");
@@ -800,7 +563,7 @@ function initActivity(root: HTMLElement) {
     }
 
     function renderResults() {
-        const slice = currentSlice();
+        const slice = visible;
         empty.hidden = visible.length !== 0;
         $("[data-results]").toggleAttribute("hidden", visible.length === 0);
         renderSummary();
@@ -821,20 +584,22 @@ function initActivity(root: HTMLElement) {
     }
 
     function applyFilters(closePanel = true) {
+        window.clearTimeout(Number(filters.dataset.searchTimer));
         page = 1;
-        visible = sortItems(filterActivityItems(all, currentFilters()));
-        renderResults();
+        appliedFilters = currentFilters();
         if (closePanel && !filterPanel.hasAttribute("hidden")) closeFilters(false);
+        void load();
     }
 
     function resetFilters() {
+        window.clearTimeout(Number(filters.dataset.searchTimer));
         filters.reset();
         const authorMinimum = $<HTMLSelectElement>("[data-dashboard-author-filter]");
         if (authorMinimum) authorMinimum.value = String(MIN_PROPOSICOES_POR_PARLAMENTAR);
         $$<HTMLSelectElement>("[data-dashboard-sort]").forEach((select) => { select.value = DEFAULT_DASHBOARD_ORDER; });
         page = 1;
-        visible = sortItems(all);
-        renderResults();
+        appliedFilters = currentFilters();
+        void load();
         if (!filterPanel.hasAttribute("hidden")) closeFilters(false);
     }
 
@@ -905,11 +670,16 @@ function initActivity(root: HTMLElement) {
             filters.dataset.searchTimer = String(window.setTimeout(() => applyFilters(false), 250));
         }
     });
-    itemsSelect.addEventListener("change", () => { itemsSelect.dataset.userSelected = "true"; page = 1; renderResults(); });
+    itemsSelect.addEventListener("change", () => { itemsSelect.dataset.userSelected = "true"; page = 1; void load(); });
     mobileViewport.addEventListener("change", () => syncResponsivePageSize(true));
     root.addEventListener("click", (event) => {
         const target = (event.target as HTMLElement).closest<HTMLElement>("button, a");
         if (!target) return;
+        if (target.matches("[data-apply-filters]")) {
+            event.preventDefault();
+            applyFilters(true);
+            return;
+        }
         if (target.matches("[data-open-filters]")) {
             if (filterPanel.hasAttribute("hidden")) openFilters(target.dataset.openFilters === "advanced");
             else closeFilters();
@@ -933,20 +703,15 @@ function initActivity(root: HTMLElement) {
                 heading?.removeAttribute("aria-sort");
                 if (active) heading?.setAttribute("aria-sort", tableSortDirection);
             });
-            visible = sortItems(visible);
             page = 1;
-            renderResults();
+            void load();
         }
         if (target.matches("[data-download]")) {
             event.preventDefault();
-            const rows = [["Proposição", "Casa", "Ano", "Autoria", "Partido/UF", "Ementa", "Avaliação", "Quem avaliou", "Ressalvas", "Categoria", "Situação"], ...visible.map((item) => [item.numero, item.casa, item.year, item.authors.map((author) => author.nome).join("; "), item.authors.map((author) => `${author.partido}/${author.estado}`).join("; "), item.resumo, stanceData(item).label, item.avaliador || "", item.comentario || "", item.categoria || "", item.situacao || ""])];
-            const blob = new Blob(["\ufeff" + rows.map((row) => row.map(escapeCsv).join(";")).join("\r\n")], { type: "text/csv;charset=utf-8" });
-            const url = URL.createObjectURL(blob);
             const anchor = document.createElement("a");
-            anchor.href = url;
+            anchor.href = `${apiBase()}/activity/explorer/export?${queryParams()}`;
             anchor.download = "atividade-legislativa.csv";
             anchor.click();
-            URL.revokeObjectURL(url);
         }
         if (target.matches("[data-retry]")) load();
     });
@@ -976,7 +741,7 @@ function initActivity(root: HTMLElement) {
             applyFilters(false);
         }
     });
-    $$<HTMLSelectElement>("[data-dashboard-sort], [data-dashboard-author-filter]").forEach((select) => select.addEventListener("change", renderDashboard));
+    $$<HTMLSelectElement>("[data-dashboard-sort], [data-dashboard-author-filter]").forEach((select) => select.addEventListener("change", () => { void load(); }));
     const mapTooltip = $("[data-map-tooltip]");
     const mapTooltipTitle = $("[data-map-tooltip-title]");
     const mapTooltipSummary = $("[data-map-tooltip-summary]");
@@ -1000,15 +765,15 @@ function initActivity(root: HTMLElement) {
     const showMapTooltip = (target: SVGUseElement, event?: PointerEvent, pinned = false) => {
         const uf = target.dataset.uf!;
         const row = stateDashboard.get(uf);
-        const favorableRate = row ? calculateMapFavorableRate(row) : null;
+        const favorablePercent = row?.favorable_percent ?? null;
         if (activeMapTarget && activeMapTarget !== target) closeMapTooltip();
-        mapTooltipTitle.textContent = favorableRate === null ? `${uf} — N/A` : uf;
-        mapTooltipSummary.textContent = favorableRate === null
+        mapTooltipTitle.textContent = favorablePercent === null ? `${uf} — N/A` : uf;
+        mapTooltipSummary.textContent = favorablePercent === null
             ? "Não há proposições avaliadas para o filtro atual."
             : `${formatNumber.format(row!.favorable)} favoráveis · ${formatNumber.format(row!.unfavorable)} desfavoráveis`;
-        mapTooltipDetails.textContent = favorableRate === null
+        mapTooltipDetails.textContent = favorablePercent === null
             ? "A taxa de favorabilidade não se aplica."
-            : `${Math.round(favorableRate * 100)}% favoráveis · considera a UF de cada parlamentar que assina.`;
+            : `${favorablePercent}% favoráveis · considera a UF de cada parlamentar que assina.`;
         mapTooltip.hidden = false;
         mapTooltip.toggleAttribute("data-pinned", pinned);
         target.setAttribute("aria-expanded", "true");
@@ -1058,45 +823,48 @@ function initActivity(root: HTMLElement) {
     });
 
     async function load() {
+        requestController?.abort();
+        const controller = new AbortController();
+        requestController = controller;
+        ++resultsRenderVersion;
         status.hidden = false;
         status.className = "activity-status is-loading";
-        status.innerHTML = `<span aria-hidden="true"></span><p>Carregando atividade legislativa…</p>`;
+        status.innerHTML = `<span aria-hidden="true"></span><p>${explorer ? "Aplicando filtros…" : "Carregando atividade legislativa…"}</p>`;
+        root.setAttribute("aria-busy", "true");
+        $("[data-results]").setAttribute("hidden", "");
+        dashboard.setAttribute("hidden", "");
+        pagination.hidden = true;
+        empty.hidden = true;
+        $("[data-total]").hidden = true;
         try {
-            const cached = readActivityCache();
-            if (cached) {
-                hydrateOptions(cached);
-                syncResponsivePageSize();
-                visible = sortItems(all);
-                status.hidden = true;
-                renderResults();
-                return;
-            }
-            const apiBase = ["localhost", "127.0.0.1", "[::1]"].includes(location.hostname)
-                ? `${location.origin}/api/v1`
-                : PUBLIC_API_BASE_URL;
-            // A listagem não exibe histórico de eventos; omiti-lo reduz vários
-            // megabytes sem alterar os campos usados em filtros e painéis.
-            const response = await fetch(`${apiBase}/activity?limit=5000&include_events=false`);
+            const response = await fetch(`${apiBase()}/activity/explorer?${queryParams()}`, { signal: controller.signal });
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const activity = await response.json() as ActivityProposition[];
-            writeActivityCache(activity);
-            hydrateOptions(activity);
-            syncResponsivePageSize();
-            visible = sortItems(all);
+            const result = await response.json() as ActivityExplorerResponse;
+            if (controller.signal.aborted) return;
+            explorer = result;
+            visible = result.items.map(displayProposal);
+            page = result.page;
+            hydrateOptions(result.options);
             status.hidden = true;
             renderResults();
         } catch (error) {
+            if (controller.signal.aborted) return;
             console.error(error);
             status.className = "activity-status is-error";
             status.innerHTML = `<p><strong>Não foi possível carregar as proposições.</strong><br />Confira sua conexão e tente novamente.</p><button type="button" data-retry>Tentar novamente</button>`;
             $("[data-results]").setAttribute("hidden", "");
+            $("[data-total]").hidden = true;
             dashboard.setAttribute("hidden", "");
             pagination.hidden = true;
+            empty.hidden = true;
+        } finally {
+            if (requestController === controller) root.removeAttribute("aria-busy");
         }
     }
 
     setupMobileAccordions();
-    load();
+    syncResponsivePageSize();
+    void load();
 }
 
 const initialize = () => document.querySelectorAll<HTMLElement>("[data-activity-root]").forEach(initActivity);

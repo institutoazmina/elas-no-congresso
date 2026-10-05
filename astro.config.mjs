@@ -35,7 +35,7 @@ export default defineConfig({
     server: {
       proxy: {
         '/api/v1': {
-          target: 'https://api.elasnocongresso.com.br',
+          target: new URL(process.env.PUBLIC_API_BASE_URL || 'https://api.elasnocongresso.com.br/api/v1').origin,
           changeOrigin: true,
         },
       },
