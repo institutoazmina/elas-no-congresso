@@ -15,13 +15,14 @@ function Chevron() {
     return <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2" /></svg>;
 }
 
-function YearSelect({ label, value, options, onChange }: {
+function YearSelect({ label, defaultLabel, value, options, onChange }: {
     label: string;
+    defaultLabel: string;
     value: string;
     options: ActivityYearOption[];
     onChange: (value: string) => void;
 }) {
-    const items = [{ value: "", label: "Qualquer ano" }, ...options];
+    const items = [{ value: "", label: defaultLabel }, ...options];
     return (
         <Select.Root items={items} value={value} onValueChange={(next) => onChange(next ?? "")}>
             <div className="activity-year-range__bound">
@@ -100,8 +101,8 @@ export default function ActivityYearRange() {
                                 <Popover.Close type="button" aria-label="Fechar período">×</Popover.Close>
                             </div>
                             <div className="activity-year-range__bounds">
-                                <YearSelect label="De" value={draft.start} options={options} onChange={(start) => setDraft({ ...draft, start })} />
-                                <YearSelect label="Até" value={draft.end} options={options} onChange={(end) => setDraft({ ...draft, end })} />
+                                <YearSelect label="De" defaultLabel="Desde o início" value={draft.start} options={options} onChange={(start) => setDraft({ ...draft, start })} />
+                                <YearSelect label="Até" defaultLabel="Até o ano mais recente" value={draft.end} options={options} onChange={(end) => setDraft({ ...draft, end })} />
                             </div>
                             <Popover.Description className="activity-year-range__hint">Deixe um ano em branco para um período aberto.</Popover.Description>
                             {invalid && <p className="activity-year-range__error" role="alert">O ano inicial deve ser igual ou anterior ao final.</p>}
