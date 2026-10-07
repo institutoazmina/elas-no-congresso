@@ -100,8 +100,8 @@ const authorMinimumOptions = [1, MIN_PROPOSICOES_POR_PARLAMENTAR, 10, 20].map((v
         <div class="activity-summary__heading">
             <h2 id="activity-results-title" data-total hidden></h2>
             <div>
-                <button type="button" data-download>Baixar planilha</button>
-                <button type="button" data-clear-filters>Remover filtros</button>
+                <button type="button" data-download><span class="activity-summary__icon" aria-hidden="true">&#8595;</span>Baixar planilha</button>
+                <button type="button" data-clear-filters><span class="activity-summary__icon" aria-hidden="true">&#215;</span>Remover filtros</button>
             </div>
         </div>
     </div>
@@ -265,9 +265,7 @@ const authorMinimumOptions = [1, MIN_PROPOSICOES_POR_PARLAMENTAR, 10, 20].map((v
     .activity-explorer:not(.is-empty-results) .activity-summary h2::after { content: " encontradas"; }
     .activity-summary__heading > div { display: flex; align-items: center; gap: 24px; white-space: nowrap; }
     .activity-summary button, .activity-empty button { border: 0; background: none; padding: 0; color: #4242f6; font-size: 14px; font-weight: 400; line-height: 16px; cursor: pointer; }
-    .activity-summary button::before { display: inline-block; margin-right: 4px; }
-    .activity-summary [data-download]::before { content: "↓"; }
-    .activity-summary [data-clear-filters]::before { content: "×"; }
+    .activity-summary__icon { display: inline-block; margin-right: 4px; pointer-events: none; }
     .activity-summary [data-clear-filters]:disabled { cursor: default; opacity: .55; }
 
     .activity-dashboard[hidden] { display: none; }
