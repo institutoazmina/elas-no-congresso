@@ -1,17 +1,12 @@
 ---
 import AuthorPage from "./AuthorPage";
 
-import { fetchReportagensPage } from "../../lib/wp";
-import { selectAuthorReports } from "../../lib/author-page";
+import type { AuthorReports } from "../../lib/author-build-cache";
 
 import { type AuthorInitialData } from "../../lib/author-page";
 
-interface Props { authorId: number; house: string; initial: AuthorInitialData | null; }
-const { authorId, house, initial } = Astro.props;
-const initialName = initial?.person.social_name || initial?.person.full_name || initial?.activity.author.nome || "Carregando…";
-const relatedPosts = (await fetchReportagensPage(undefined, 3, 1, true, initialName)).posts;
-const latestPosts = relatedPosts.length ? [] : (await fetchReportagensPage(undefined, 3, 1, true)).posts;
-const reports = selectAuthorReports(relatedPosts, latestPosts);
+interface Props { authorId: number; house: string; initial: AuthorInitialData | null; reports: AuthorReports; }
+const { authorId, house, initial, reports } = Astro.props;
 // The offline OG renderer reads this inert data payload from built pages.
 const ogData = JSON.stringify(initial).replace(/</g, "\\u003c");
 ---

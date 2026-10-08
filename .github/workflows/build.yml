@@ -27,6 +27,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Restore after npm ci, which removes node_modules. Each successful run
+      # saves a fresh snapshot; compatible earlier runs supply the warm cache.
+      - name: Cache generated pages and author images
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.astro
+            node_modules/.cache/author-og
+          key: ${{ runner.os }}-site-output-v1-${{ hashFiles('package-lock.json') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            ${{ runner.os }}-site-output-v1-${{ hashFiles('package-lock.json') }}-
+
       - name: Check unused code, assets and tests
         run: npm run check
 

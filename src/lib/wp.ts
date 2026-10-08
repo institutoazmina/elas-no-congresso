@@ -21,6 +21,7 @@ export type WpPostsPage = {
   posts: WpPost[];
   total: number;
   totalPages: number;
+  unavailable?: true;
 };
 
 export const WP_REPORTAGENS_ENDPOINT = "https://azmina.com.br/wp-json/wp/v2/az_reportagem";
@@ -53,7 +54,7 @@ export async function fetchReportagensPage(
 
   try {
     const res = await fetchPublicData(`${WP_REPORTAGENS_ENDPOINT}?${params}`);
-    if (!res.ok) return { posts: [], total: 0, totalPages: 0 };
+    if (!res.ok) return { posts: [], total: 0, totalPages: 0, unavailable: true };
 
     return {
       posts: await res.json() as WpPost[],
@@ -61,7 +62,7 @@ export async function fetchReportagensPage(
       totalPages: Number(res.headers.get("x-wp-totalpages") ?? 0),
     };
   } catch {
-    return { posts: [], total: 0, totalPages: 0 };
+    return { posts: [], total: 0, totalPages: 0, unavailable: true };
   }
 }
 

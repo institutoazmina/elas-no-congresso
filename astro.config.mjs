@@ -6,6 +6,10 @@ import react from '@astrojs/react';
 
 export default defineConfig({
   output: 'static',
+  cacheDir: process.env.ASTRO_CACHE_DIR || 'node_modules/.astro',
+  experimental: {
+    incrementalBuild: process.env.ASTRO_INCREMENTAL !== 'off',
+  },
   site: 'https://www.elasnocongresso.com.br',
   trailingSlash: 'ignore',
   integrations: [sitemap(), react()],
