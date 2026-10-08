@@ -58,3 +58,10 @@ current workflow deploys to `homologacao.elasnocongresso.com.br`, so it sets tha
 value explicitly. Without the override, images use Astro’s configured site URL.
 When deploying to production, update or remove this workflow override. Canonical
 URLs are unaffected.
+
+## Image size
+
+The background and default OG artwork use 256-color PNG compression with
+dithering. The author renderer composites the photo and text afterward, keeping
+the portrait in full color. Local Sâmia output is approximately 0.58 MB; the
+default OG image is approximately 0.30 MB, both below the 0.9 MB target.
