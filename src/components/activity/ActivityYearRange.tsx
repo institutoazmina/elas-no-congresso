@@ -25,8 +25,8 @@ function YearSelect({ label, defaultLabel, value, options, onChange }: {
     return (
         <Select.Root items={items} value={value} onValueChange={(next) => onChange(next ?? "")}>
             <div className="activity-year-range__bound tw:min-w-0">
-                <Select.Label className="activity-year-range__label tw:mb-1.5 tw:text-[13px]">{label}</Select.Label>
-                <Select.Trigger className="activity-year-range__select tw:flex tw:w-full tw:h-9 tw:items-center tw:justify-between tw:gap-2 tw:border-2 tw:border-solid tw:border-[rgb(66_66_246/25%)] tw:rounded-none tw:bg-white tw:text-periwinkle tw:font-bold tw:font-sans tw:cursor-pointer tw:text-sm tw:py-1 tw:px-2.5 tw:hover:border-accent tw:data-popup-open:border-accent tw:focus-visible:outline-3 tw:focus-visible:outline-lime tw:focus-visible:outline-offset-0.5" type="button">
+                <Select.Label className="activity-year-range__label tw:mb-1.5 tw:text-[14px]">{label}</Select.Label>
+                <Select.Trigger className="activity-year-range__select tw:flex tw:w-full tw:h-9 tw:items-center tw:justify-between tw:gap-2 tw:border-2 tw:border-solid tw:border-[rgb(66_66_246/25%)] tw:rounded-none tw:bg-white tw:text-periwinkle tw:font-bold tw:font-sans tw:cursor-pointer tw:text-sm tw:py-1 tw:px-2.5 tw:hover:border-accent tw:data-popup-open:border-accent tw:focus-visible:outline-4 tw:focus-visible:outline-lime tw:focus-visible:outline-offset-1" type="button">
                     <Select.Value /><Select.Icon><Chevron /></Select.Icon>
                 </Select.Trigger>
             </div>
@@ -94,8 +94,8 @@ export default function ActivityYearRange() {
                 </Popover.Trigger>
                 <Popover.Portal>
                     <Popover.Positioner className="activity-year-range__positioner tw:z-120" sideOffset={8} align="start" collisionPadding={16}>
-                        <Popover.Popup className="activity-year-range__popup tw:w-[min(328px,calc(100vw-32px))] tw:border tw:border-solid tw:border-accent tw:bg-white tw:text-ink tw:font-normal tw:text-sm tw:leading-5 tw:font-sans tw:shadow-[0_8px_24px_rgb(11_15_94/12%)] tw:p-4 tw:[&_button:focus-visible]:outline-3 tw:[&_button:focus-visible]:outline-lime tw:[&_button:focus-visible]:outline-offset-0.5" onKeyDown={(event) => { if (event.key === "Escape") event.stopPropagation(); }}>
-                            <div className="activity-year-range__heading tw:flex tw:items-center tw:justify-between tw:gap-2 tw:mb-4 tw:[&_h2]:font-bold tw:[&_h2]:text-[15px] tw:[&_h2]:leading-5 tw:[&_h2]:font-sans tw:[&_h2]:m-0 tw:[&_button]:w-7 tw:[&_button]:h-7 tw:[&_button]:border-0 tw:[&_button]:[background:none] tw:[&_button]:text-accent tw:[&_button]:[font:24px/1_sans-serif] tw:[&_button]:cursor-pointer tw:[&_button]:flex tw:[&_button]:items-center tw:[&_button]:justify-center">
+                        <Popover.Popup className="activity-year-range__popup tw:w-[min(328px,calc(100vw-32px))] tw:border tw:border-solid tw:border-accent tw:bg-white tw:text-ink tw:font-normal tw:text-sm tw:leading-5 tw:font-sans tw:shadow-[0_8px_24px_rgb(11_15_94/12%)] tw:p-4 tw:[&_button:focus-visible]:outline-4 tw:[&_button:focus-visible]:outline-lime tw:[&_button:focus-visible]:outline-offset-1" onKeyDown={(event) => { if (event.key === "Escape") event.stopPropagation(); }}>
+                            <div className="activity-year-range__heading tw:flex tw:items-center tw:justify-between tw:gap-2 tw:mb-4 tw:[&_h2]:font-bold tw:[&_h2]:text-[16px] tw:[&_h2]:leading-5 tw:[&_h2]:font-sans tw:[&_h2]:m-0 tw:[&_button]:w-7 tw:[&_button]:h-7 tw:[&_button]:border-0 tw:[&_button]:[background:none] tw:[&_button]:text-accent tw:[&_button]:[font:24px/1_sans-serif] tw:[&_button]:cursor-pointer tw:[&_button]:flex tw:[&_button]:items-center tw:[&_button]:justify-center">
                                 <Popover.Title>Período de apresentação</Popover.Title>
                                 <Popover.Close type="button" aria-label="Fechar período">×</Popover.Close>
                             </div>
@@ -105,8 +105,8 @@ export default function ActivityYearRange() {
                             </div>
                             <Popover.Description className="activity-year-range__hint tw:text-[#676b8e] tw:text-xs tw:leading-4.5 tw:mt-3 tw:mb-4 tw:mx-0">Deixe um ano em branco para um período aberto.</Popover.Description>
                             {invalid && <p className="activity-year-range__error tw:text-[#b1263e] tw:text-xs tw:-mt-1 tw:mb-3 tw:mx-0" role="alert">O ano inicial deve ser igual ou anterior ao final.</p>}
-                            <div className="activity-year-range__actions tw:flex tw:items-center tw:justify-between tw:gap-3 tw:[&_button]:min-h-9 tw:[&_button]:rounded-none tw:[&_button]:font-bold tw:[&_button]:text-[13px] tw:[&_button]:leading-4.5 tw:[&_button]:font-sans tw:[&_button]:cursor-pointer">
-                                <button type="button" className="activity-year-range__clear tw:border-0 tw:[background:none] tw:text-accent tw:underline tw:underline-offset-[3px] tw:py-1 tw:px-0" onClick={() => apply({ start: "", end: "" })}>Todos os anos</button>
+                            <div className="activity-year-range__actions tw:flex tw:items-center tw:justify-between tw:gap-3 tw:[&_button]:min-h-9 tw:[&_button]:rounded-none tw:[&_button]:font-bold tw:[&_button]:text-[14px] tw:[&_button]:leading-4.5 tw:[&_button]:font-sans tw:[&_button]:cursor-pointer">
+                                <button type="button" className="activity-year-range__clear tw:border-0 tw:[background:none] tw:text-accent tw:underline tw:underline-offset-4 tw:py-1 tw:px-0" onClick={() => apply({ start: "", end: "" })}>Todos os anos</button>
                                 <button type="button" className="activity-year-range__apply tw:border-2 tw:border-solid tw:border-accent tw:bg-accent tw:text-white tw:py-1.5 tw:px-3 tw:disabled:cursor-not-allowed tw:disabled:opacity-50" disabled={invalid} onClick={() => apply(draft)}>Aplicar período</button>
                             </div>
                         </Popover.Popup>

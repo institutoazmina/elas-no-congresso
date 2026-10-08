@@ -17,7 +17,7 @@ function formatDate(date: string) {
 
 <section class="tw:overflow-hidden tw:bg-[#0B0F5E] tw:py-12 tw:text-white tw:lg:py-24" style={`background-image: url('${cuttingMatPattern}'); background-position: center top; background-repeat: repeat; background-size: 200px 200px;`} aria-labelledby="home-reportagens-title">
     <header class="
-        tw:mx-auto tw:flex tw:w-full tw:max-w-[720px] tw:flex-col tw:items-center tw:px-[15px] tw:text-center
+        tw:mx-auto tw:flex tw:w-full tw:max-w-[720px] tw:flex-col tw:items-center tw:px-[16px] tw:text-center
         tw:lg:h-[62px] tw:lg:px-0 tw:max-md:items-start tw:max-md:text-left
     ">
         <h2 id="home-reportagens-title" class="tw:m-0 tw:text-[32px] tw:font-bold tw:leading-8 tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75] tw:max-md:ml-0 tw:max-md:mr-0 tw:max-md:text-left">
@@ -28,7 +28,7 @@ function formatDate(date: string) {
         </p>
     </header>
 
-    <div class="tw:mt-10 tw:overflow-x-auto tw:overflow-y-hidden tw:px-[15px] tw:lg:mt-2.5 tw:lg:overflow-hidden tw:lg:px-12 tw:lg:pt-12" aria-label="Lista de reportagens em destaque">
+    <div class="tw:mt-10 tw:overflow-x-auto tw:overflow-y-hidden tw:px-[16px] tw:lg:mt-2.5 tw:lg:overflow-hidden tw:lg:px-12 tw:lg:pt-12" aria-label="Lista de reportagens em destaque">
         <div class="tw:flex tw:w-max tw:justify-start tw:gap-4 tw:pb-2 tw:lg:w-full tw:lg:justify-center-safe tw:lg:gap-12 tw:lg:pb-0">
             {reports.map((report) => {
                 const image = report._embedded?.["wp:featuredmedia"]?.[0];
@@ -46,7 +46,7 @@ function formatDate(date: string) {
                     <h3 class="tw:m-0 tw:text-2xl tw:font-bold tw:leading-8 tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75]">
                         <a href={report.link} class="
                             home-reportagem-title-link tw:text-inherit tw:no-underline tw:hover:text-inherit tw:hover:no-underline
-                            tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-0.5
+                            tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-1
                         " target="_blank" rel="noopener noreferrer" aria-label={`Ler: ${report.title.rendered.replace(/<[^>]*>/g, "").trim()}`}>
                             <Fragment set:html={report.title.rendered} />
                         </a>

@@ -132,7 +132,7 @@ function initActivity(root: HTMLElement) {
             content.id = content.id || id;
             const toggle = document.createElement("button");
             toggle.type = "button";
-            toggle.className = "activity-dashboard-card__toggle tw:relative tw:z-1 tw:flex tw:h-[23px] tw:items-center tw:gap-1 tw:border tw:border-solid tw:border-[rgb(66_66_246_/_25%)] tw:[border-bottom-color:#fff] tw:bg-white tw:text-ink tw:font-display tw:text-sm tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-4 tw:text-left tw:uppercase tw:whitespace-nowrap tw:cursor-pointer tw:pt-1 tw:pb-0.5 tw:px-3 tw:mt-0 tw:mb-[-1px] tw:mx-0 tw:before:hidden tw:before:w-4 tw:before:h-4 tw:before:flex-none tw:before:[background:var(--select-chevron)_center_/_12px_8px_no-repeat] tw:before:content-[''] tw:focus-visible:outline-2 tw:focus-visible:outline-accent tw:focus-visible:outline-offset-0.5 tw:max-md:w-fit tw:max-md:max-w-full tw:max-md:before:block";
+            toggle.className = "activity-dashboard-card__toggle tw:relative tw:z-1 tw:flex tw:h-[24px] tw:items-center tw:gap-1 tw:border tw:border-solid tw:border-[rgb(66_66_246_/_25%)] tw:[border-bottom-color:#fff] tw:bg-white tw:text-ink tw:font-display tw:text-sm tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-4 tw:text-left tw:uppercase tw:whitespace-nowrap tw:cursor-pointer tw:pt-1 tw:pb-0.5 tw:px-3 tw:mt-0 tw:mb-[-1px] tw:mx-0 tw:before:hidden tw:before:w-4 tw:before:h-4 tw:before:flex-none tw:before:[background:var(--select-chevron)_center_/_12px_8px_no-repeat] tw:before:content-[''] tw:focus-visible:outline-2 tw:focus-visible:outline-accent tw:focus-visible:outline-offset-1 tw:max-md:w-fit tw:max-md:max-w-full tw:max-md:before:block";
             toggle.setAttribute("aria-controls", content.id);
             const info = heading.querySelector<HTMLElement>("[data-dashboard-tooltip-trigger]");
             [...heading.childNodes].forEach((node) => {
@@ -248,7 +248,7 @@ function initActivity(root: HTMLElement) {
         button.href = authorRoute(author.nome) || "/atividade-legislativa";
         button.setAttribute("aria-label", `Ver página de autoria de ${author.nome}`);
         const fallback = document.createElement("span");
-        fallback.className = "activity-author__fallback tw:w-7.5 tw:h-10 tw:flex-none tw:border tw:border-solid tw:border-muted tw:rounded-none tw:object-cover tw:object-[top_center] tw:bg-[#f1f1ff] tw:text-accent tw:text-[11px] tw:font-bold tw:flex tw:items-center tw:justify-center";
+        fallback.className = "activity-author__fallback tw:w-7.5 tw:h-10 tw:flex-none tw:border tw:border-solid tw:border-muted tw:rounded-none tw:object-cover tw:object-[top_center] tw:bg-[#f1f1ff] tw:text-accent tw:text-[12px] tw:font-bold tw:flex tw:items-center tw:justify-center";
         fallback.textContent = initials(author.nome);
         if (author.foto) {
             const photo = document.createElement("img");
@@ -284,13 +284,13 @@ function initActivity(root: HTMLElement) {
         key.className = "activity-dashboard-card__key tw:min-w-0 tw:[overflow-wrap:anywhere]";
         if (author) {
             const control = document.createElement(row.key.startsWith("person:num:") ? "a" : "div");
-            control.className = "activity-dashboard-card__author tw:items-center tw:gap-1.5 tw:[a&]:w-full tw:[a&]:text-inherit tw:[a&]:text-left tw:[a&]:no-underline tw:[a&]:cursor-pointer tw:[a&:hover_span_>_span]:text-accent tw:[a&:hover_span_>_span]:underline tw:[&_img]:block tw:[&_img]:w-6 tw:[&_img]:h-8 tw:[&_img]:flex-none tw:[&_img]:border tw:[&_img]:border-solid tw:[&_img]:border-muted tw:[&_img]:object-cover tw:[&_img]:object-[top_center] tw:[&_span]:flex tw:[&_span]:min-w-0 tw:[&_span]:flex-col tw:[&_span_>_span]:block tw:[&_span_>_span]:[overflow-wrap:anywhere] tw:[&_span_>_span]:leading-4 tw:[&_small]:text-[rgb(11_15_94_/_65%)] tw:[&_small]:text-[11px] tw:[&_small]:leading-3 tw:flex";
+            control.className = "activity-dashboard-card__author tw:items-center tw:gap-1.5 tw:[a&]:w-full tw:[a&]:text-inherit tw:[a&]:text-left tw:[a&]:no-underline tw:[a&]:cursor-pointer tw:[a&:hover_span_>_span]:text-accent tw:[a&:hover_span_>_span]:underline tw:[&_img]:block tw:[&_img]:w-6 tw:[&_img]:h-8 tw:[&_img]:flex-none tw:[&_img]:border tw:[&_img]:border-solid tw:[&_img]:border-muted tw:[&_img]:object-cover tw:[&_img]:object-[top_center] tw:[&_span]:flex tw:[&_span]:min-w-0 tw:[&_span]:flex-col tw:[&_span_>_span]:block tw:[&_span_>_span]:[overflow-wrap:anywhere] tw:[&_span_>_span]:leading-4 tw:[&_small]:text-[rgb(11_15_94_/_65%)] tw:[&_small]:text-[12px] tw:[&_small]:leading-3 tw:flex";
             if (control instanceof HTMLAnchorElement) {
                 control.href = authorRoute(row.label) || "/atividade-legislativa";
                 control.setAttribute("aria-label", `Ver página de autoria de ${row.label}`);
             }
             const fallback = document.createElement("span");
-            fallback.className = "activity-dashboard-card__author-fallback tw:w-6 tw:h-8 tw:flex-none tw:border tw:border-solid tw:border-muted tw:object-cover tw:object-[top_center] tw:bg-[#f1f1ff] tw:text-accent tw:text-[9px] tw:font-bold tw:leading-[1] tw:flex tw:items-center tw:justify-center";
+            fallback.className = "activity-dashboard-card__author-fallback tw:w-6 tw:h-8 tw:flex-none tw:border tw:border-solid tw:border-muted tw:object-cover tw:object-[top_center] tw:bg-[#f1f1ff] tw:text-accent tw:text-[10px] tw:font-bold tw:leading-[1] tw:flex tw:items-center tw:justify-center";
             fallback.textContent = initials(row.label);
             if (row.photo) {
                 const image = document.createElement("img");
@@ -489,7 +489,7 @@ function initActivity(root: HTMLElement) {
         titleWrap.append(title, house);
         header.append(titleWrap, createStance(item));
         const tag = document.createElement("span");
-        tag.className = "activity-card__tag tw:max-md:self-start tw:max-md:border tw:max-md:border-solid tw:max-md:border-[rgb(66_66_246_/_40%)] tw:max-md:text-[rgb(11_15_94_/_65%)] tw:max-md:font-display tw:max-md:text-[11px] tw:max-md:font-bold tw:max-md:[font-variation-settings:'wdth'_75] tw:max-md:leading-4 tw:max-md:uppercase tw:max-md:py-[1px] tw:max-md:px-1 tw:max-md:mt-0 tw:max-md:mb-2 tw:max-md:mx-0";
+        tag.className = "activity-card__tag tw:max-md:self-start tw:max-md:border tw:max-md:border-solid tw:max-md:border-[rgb(66_66_246_/_40%)] tw:max-md:text-[rgb(11_15_94_/_65%)] tw:max-md:font-display tw:max-md:text-[12px] tw:max-md:font-bold tw:max-md:[font-variation-settings:'wdth'_75] tw:max-md:leading-4 tw:max-md:uppercase tw:max-md:py-[1px] tw:max-md:px-1 tw:max-md:mt-0 tw:max-md:mb-2 tw:max-md:mx-0";
         tag.textContent = item.categoriaLabel || item.categoria || "Categoria não informada";
         const summary = document.createElement("p");
         summary.className = "activity-card__summary tw:max-md:text-[rgb(11_15_94_/_72%)] tw:max-md:text-sm tw:max-md:leading-4 tw:max-md:line-clamp-5 tw:max-md:mt-2 tw:max-md:mb-3 tw:max-md:mx-0";

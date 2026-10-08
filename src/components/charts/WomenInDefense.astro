@@ -26,10 +26,10 @@ const charts = [
     women-defense tw:relative tw:min-h-0 tw:overflow-visible tw:text-ink tw:bg-[#FFFFFF] tw:font-sans
     tw:[&_h2]:w-full tw:[&_h2]:h-auto tw:[&_h2]:text-ink tw:[&_h2]:font-display tw:[&_h2]:text-[28px]
     tw:[&_h2]:font-bold tw:[&_h2]:leading-[34px] tw:[&_h2]:uppercase tw:[&_h2]:[font-variation-settings:'wdth'_75]
-    tw:[&_h2]:m-0 tw:[&_h3]:m-0 tw:[&_p]:m-0 tw:max-md:[&_h2]:leading-8 tw:md:min-h-[970.5px] tw:md:mt-0 tw:md:pt-12
+    tw:[&_h2]:m-0 tw:[&_h3]:m-0 tw:[&_p]:m-0 tw:max-md:[&_h2]:leading-8 tw:md:min-h-[972px] tw:md:mt-0 tw:md:pt-12
     tw:md:overflow-hidden tw:md:[&_h2]:w-180 tw:md:[&_h2]:h-6 tw:md:[&_h2]:text-4xl tw:md:[&_h2]:leading-[42px]
 " aria-labelledby="women-defense-title">
-    <div class="women-defense__container tw:relative tw:w-full tw:h-auto tw:py-6 tw:px-4 tw:my-0 tw:mx-auto tw:max-md:px-4 tw:md:w-204 tw:md:h-[970.5px] tw:md:p-12">
+    <div class="women-defense__container tw:relative tw:w-full tw:h-auto tw:py-6 tw:px-4 tw:my-0 tw:mx-auto tw:max-md:px-4 tw:md:w-204 tw:md:h-[972px] tw:md:p-12">
         <header class="
             women-defense__header tw:flex tw:w-full tw:h-auto tw:flex-col tw:items-start tw:gap-4 tw:[&_p]:w-full
             tw:[&_p]:text-ink tw:[&_p]:text-lg tw:[&_p]:font-normal tw:[&_p]:leading-6 tw:max-md:[&_p]:text-sm
@@ -42,13 +42,13 @@ const charts = [
 
         <figure class="
             women-defense__figure tw:flex tw:w-full tw:h-auto tw:items-center tw:justify-center tw:flex-col tw:gap-6
-            tw:overflow-visible tw:py-6 tw:px-0 tw:mt-2.5 tw:mb-0 tw:mx-0 tw:md:w-180 tw:md:h-[690.5px] tw:md:items-end
+            tw:overflow-visible tw:py-6 tw:px-0 tw:mt-2.5 tw:mb-0 tw:mx-0 tw:md:w-180 tw:md:h-[692px] tw:md:items-end
             tw:md:flex-row tw:md:overflow-hidden
         " aria-label="Comparação de autoria feminina e masculina">
             {charts.map((chart) => (
-                <article class="women-defense__chart tw:flex tw:w-[244.502px] tw:h-[642.5px] tw:flex-none tw:flex-col tw:items-center tw:justify-end tw:gap-4 tw:py-4 tw:px-0">
+                <article class="women-defense__chart tw:flex tw:w-[246px] tw:h-[644px] tw:flex-none tw:flex-col tw:items-center tw:justify-end tw:gap-4 tw:py-4 tw:px-0">
                     <header class="
-                        women-defense__chart-heading tw:flex tw:w-[244.502px] tw:h-18 tw:flex-none tw:flex-col tw:items-center
+                        women-defense__chart-heading tw:flex tw:w-[246px] tw:h-18 tw:flex-none tw:flex-col tw:items-center
                         tw:justify-center tw:py-2 tw:px-0 tw:[&_span]:h-6 tw:[&_span]:text-base tw:[&_span]:leading-6 tw:[&_h3]:h-8
                         tw:[&_h3]:font-display tw:[&_h3]:text-2xl tw:[&_h3]:font-bold tw:[&_h3]:leading-8 tw:[&_h3]:uppercase
                         tw:[&_h3]:[font-variation-settings:'wdth'_75]
@@ -56,16 +56,16 @@ const charts = [
                         <span>Autoria</span>
                         <h3>{chart.authorship}</h3>
                     </header>
-                    <div class="women-defense__waffle tw:flex tw:w-[244.502px] tw:h-[522.5px] tw:flex-none tw:flex-col tw:items-center tw:gap-4 tw:py-6 tw:px-0">
+                    <div class="women-defense__waffle tw:flex tw:w-[246px] tw:h-[524px] tw:flex-none tw:flex-col tw:items-center tw:gap-4 tw:py-6 tw:px-0">
                         <div class="
                             women-defense__label women-defense__label--top tw:flex tw:h-15 tw:flex-col tw:items-center tw:gap-1 tw:text-ink
                             tw:[&_strong]:block tw:[&_strong]:h-6 tw:[&_strong]:font-display tw:[&_strong]:text-4xl tw:[&_strong]:font-bold
                             tw:[&_strong]:leading-[42px] tw:[&_strong]:[font-variation-settings:'wdth'_75] tw:[&_b]:h-6 tw:[&_b]:font-display
                             tw:[&_b]:text-xl tw:[&_b]:font-bold tw:[&_b]:leading-6 tw:[&_b]:uppercase
-                            tw:[&_b]:[font-variation-settings:'wdth'_75] tw:[&_b]:whitespace-nowrap tw:w-[113px]
+                            tw:[&_b]:[font-variation-settings:'wdth'_75] tw:[&_b]:whitespace-nowrap tw:w-[114px]
                         ">
                             <div class="tw:flex tw:h-8 tw:items-center tw:gap-2"><strong>{chart.favorable}%</strong><span class="
-                                women-defense__icon women-defense__icon--up tw:w-8 tw:h-8 tw:flex-none tw:overflow-hidden tw:rounded-[999px]
+                                women-defense__icon women-defense__icon--up tw:w-8 tw:h-8 tw:flex-none tw:overflow-hidden tw:rounded-[1000px]
                                 tw:[&_img]:w-full tw:[&_img]:h-full tw:flex tw:items-center tw:justify-center
                             "><img src={thumbsUp} alt="" /></span></div>
                             <b>Favoráveis</b>
@@ -83,11 +83,11 @@ const charts = [
                             tw:text-ink tw:[&_strong]:block tw:[&_strong]:h-6 tw:[&_strong]:font-display tw:[&_strong]:text-4xl
                             tw:[&_strong]:font-bold tw:[&_strong]:leading-[42px] tw:[&_strong]:[font-variation-settings:'wdth'_75]
                             tw:[&_b]:h-6 tw:[&_b]:font-display tw:[&_b]:text-xl tw:[&_b]:font-bold tw:[&_b]:leading-6 tw:[&_b]:uppercase
-                            tw:[&_b]:[font-variation-settings:'wdth'_75] tw:[&_b]:whitespace-nowrap tw:w-[113px] tw:mt-auto
+                            tw:[&_b]:[font-variation-settings:'wdth'_75] tw:[&_b]:whitespace-nowrap tw:w-[114px] tw:mt-auto
                         ">
                             <div class="tw:flex tw:h-8 tw:items-center tw:gap-2"><strong>{chart.unfavorable}%</strong><span class="
-                                women-defense__icon tw:w-8 tw:h-8 tw:flex-none tw:overflow-hidden tw:rounded-[999px] tw:[&_img]:w-full
-                                tw:[&_img]:h-full tw:max-md:w-[20.364px] tw:max-md:h-[20.364px] tw:max-md:aspect-[1/1] tw:flex tw:items-center
+                                women-defense__icon tw:w-8 tw:h-8 tw:flex-none tw:overflow-hidden tw:rounded-[1000px] tw:[&_img]:w-full
+                                tw:[&_img]:h-full tw:max-md:w-[22px] tw:max-md:h-[22px] tw:max-md:aspect-[1/1] tw:flex tw:items-center
                                 tw:justify-center
                             "><img class="tw:max-md:w-full tw:max-md:h-full" src={thumbsDown} alt="" /></span></div>
                             <b>Desfavoráveis</b>
@@ -101,7 +101,7 @@ const charts = [
             women-defense__note tw:relative tw:z-1 tw:top-auto tw:left-auto tw:flex tw:w-60 tw:h-45 tw:items-center
             tw:justify-center tw:[transform:rotate(-5deg)] tw:bg-lime tw:shadow-[0_4px_0_#0b0f5e] tw:text-ink tw:text-lg
             tw:font-bold tw:leading-6 tw:text-center tw:py-12 tw:px-6 tw:mt-3 tw:mb-12 tw:mx-auto tw:md:absolute
-            tw:md:top-[352.5px] tw:md:left-[-111.312px] tw:md:m-0 tw:min-[821px]:gap-2.5
+            tw:md:top-[354px] tw:md:left-[-112px] tw:md:m-0 tw:min-[821px]:gap-2.5
             tw:min-[821px]:[transform:rotate(5deg)] tw:min-[821px]:z-2
         ">A cada 100 proposições sobre gênero assinadas por mulheres, {women.favorable} são favoráveis</aside>
 
@@ -110,7 +110,7 @@ const charts = [
                 women-defense__footer tw:relative tw:bottom-auto tw:left-auto tw:flex tw:w-full tw:h-auto tw:items-start
                 tw:justify-between tw:gap-6 tw:border-t tw:border-solid tw:border-t-ink tw:pt-2 tw:text-ink tw:text-sm
                 tw:leading-4 tw:md:absolute tw:md:bottom-12 tw:md:left-12 tw:md:w-180 tw:md:h-8 tw:[&_span]:mt-1
-                tw:[&_img]:w-[113.217px] tw:[&_img]:h-3 tw:[&_img]:mt-1.5 tw:[&_img]:mb-0 tw:[&_img]:mx-2
+                tw:[&_img]:w-[114px] tw:[&_img]:h-3 tw:[&_img]:mt-1.5 tw:[&_img]:mb-0 tw:[&_img]:mx-2
             "
             content="No Congresso Nacional não há dados sobre pessoas não-binárias"
         />
@@ -123,12 +123,12 @@ const charts = [
     tw:[&_p]:flex-none tw:[&_p]:text-ink tw:[&_p]:text-lg tw:[&_p]:font-normal tw:[&_p]:leading-6
     tw:[&_p]:tracking-normal tw:[&_p]:text-left tw:[&_p]:normal-case
     tw:[&_p]:[transform:matrix(0.9999947547912598,_-0.003228801768273115,_0.003228801768273115,_0.9999947547912598,_-0.1143484115600586,_2.324735403060913)]
-    tw:[&_p]:origin-[0_0] tw:[&_p]:m-0 tw:md:h-[170.32435607910156px] tw:md:min-h-0 tw:md:py-12 tw:md:px-0
+    tw:[&_p]:origin-[0_0] tw:[&_p]:m-0 tw:md:h-[172px] tw:md:min-h-0 tw:md:py-12 tw:md:px-0
     tw:md:[&_p]:w-180 tw:md:[&_p]:h-18
 ">
     <div class="
         women-defense-fact__content tw:flex tw:w-full tw:h-auto tw:flex-none tw:flex-col tw:items-start tw:justify-start
-        tw:gap-4 tw:overflow-hidden tw:md:w-180 tw:md:h-[74.32435607910156px]
+        tw:gap-4 tw:overflow-hidden tw:md:w-180 tw:md:h-[76px]
     ">
         <p>Você sabia que Partidos, Comissões, Bancadas e Frentes Suprapartidárias podem definir o rumo da sua vida em temas como violência doméstica, dignidade sexual e autonomia financeira?</p>
     </div>

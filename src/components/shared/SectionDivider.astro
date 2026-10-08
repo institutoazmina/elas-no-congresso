@@ -10,7 +10,7 @@ interface Props {
 const { content, class: className, href, ...attributes } = Astro.props;
 ---
 
-<footer class:list={["section-divider tw:mx-auto tw:[&_a]:text-inherit tw:[&_a]:underline tw:[&_a]:underline-offset-[3px] tw:[&_a:hover]:text-accent tw:[&_a:focus-visible]:outline-2 tw:[&_a:focus-visible]:outline-accent tw:[&_a:focus-visible]:outline-offset-0.5", className]} {...attributes}>
+<footer class:list={["section-divider tw:mx-auto tw:[&_a]:text-inherit tw:[&_a]:underline tw:[&_a]:underline-offset-[4px] tw:[&_a:hover]:text-accent tw:[&_a:focus-visible]:outline-2 tw:[&_a:focus-visible]:outline-accent tw:[&_a:focus-visible]:outline-offset-1", className]} {...attributes}>
     {href ? <a href={href}>{content}</a> : <span>{content}</span>}
     <img src={elasHorizontal} alt="Elas no Congresso" />
 </footer>

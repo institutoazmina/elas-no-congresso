@@ -10,7 +10,7 @@ import { SetbackInfoTooltip } from "./SetbackInfoTooltip";
 
 // A API devolve 10 categorias; o gráfico do design tem 8 colunas.
 const COLUMNS = 7;
-// Escala do design: pilhas de 46px de largura, a mais alta com 127px.
+// Escala do design: pilhas de 46px de largura, a mais alta com 128px.
 const PILE_WIDTH = 46;
 const PILE_PEAK = 127;
 
@@ -45,18 +45,18 @@ const themes = categories.map((category, index) => {
 <section
     class="
         legislative-setbacks tw:overflow-hidden tw:bg-white tw:text-[#0B0F5E] tw:min-[821px]:pt-0
-        tw:min-[821px]:m-0 tw:[&_footer_span]:pt-1 tw:[&_footer_img]:w-[113.217px] tw:[&_footer_img]:h-3
+        tw:min-[821px]:m-0 tw:[&_footer_span]:pt-1 tw:[&_footer_img]:w-28.5 tw:[&_footer_img]:h-3
         tw:[&_footer_img]:mt-1 tw:[&_footer_img]:shrink-0 tw:max-md:[&_figure_article_>_div:first-child_canvas]:w-11.5!
         tw:max-md:[&_figure_article_>_div:first-child_canvas]:h-auto!
         tw:max-md:[&_figure_article_>_div:first-child_canvas]:flex-none
         tw:max-md:[&_figure_article_>_div:last-child_img]:w-6! tw:max-md:[&_figure_article_>_div:last-child_img]:h-6!
         tw:max-md:[&_figure_article_>_div:last-child_img]:flex-none tw:max-md:[&_footer]:flex
-        tw:max-md:[&_footer]:w-[min(251px,100%)] tw:max-md:[&_footer]:h-24 tw:max-md:[&_footer]:pt-2
+        tw:max-md:[&_footer]:w-[min(252px,100%)] tw:max-md:[&_footer]:h-24 tw:max-md:[&_footer]:pt-2
         tw:max-md:[&_footer]:flex-col tw:max-md:[&_footer]:items-center tw:max-md:[&_footer]:justify-start
         tw:max-md:[&_footer]:gap-6 tw:max-md:[&_footer]:box-border tw:max-md:[&_footer]:text-center
         tw:max-md:[&_footer]:my-0 tw:max-md:[&_footer]:mx-auto tw:max-md:[&_footer_span]:w-full
         tw:max-md:[&_footer_span]:text-sm tw:max-md:[&_footer_span]:leading-4 tw:max-md:[&_footer_span]:py-1
-        tw:max-md:[&_footer_span]:px-0 tw:max-md:[&_footer_img]:w-[113.217px] tw:max-md:[&_footer_img]:h-3
+        tw:max-md:[&_footer_span]:px-0 tw:max-md:[&_footer_img]:w-28.5 tw:max-md:[&_footer_img]:h-3
         tw:max-md:[&_footer_img]:mt-1.5 tw:max-md:[&_footer_img]:mb-0 tw:max-md:[&_footer_img]:mx-0
         tw:min-[821px]:[&_figure_>_div_>_article_>_div:last-child_img]:w-6
         tw:min-[821px]:[&_figure_>_div_>_article_>_div:last-child_img]:h-6
@@ -65,7 +65,7 @@ const themes = categories.map((category, index) => {
 >
     <div
         class="
-            tw:mx-auto tw:flex tw:w-full tw:max-w-338 tw:flex-col tw:gap-2.5 tw:px-6 tw:py-12 tw:lg:h-164.25
+            tw:mx-auto tw:flex tw:w-full tw:max-w-338 tw:flex-col tw:gap-2.5 tw:px-6 tw:py-12 tw:lg:h-164.5
             tw:lg:w-338 tw:lg:max-w-none tw:lg:p-12 tw:max-md:box-border tw:max-md:w-full tw:max-md:h-auto
             tw:max-md:gap-2.5 tw:max-md:py-6 tw:max-md:px-4
         "
@@ -96,11 +96,11 @@ const themes = categories.map((category, index) => {
         </header>
 
         <figure
-            class="tw:m-0 tw:h-95.75 tw:w-full tw:overflow-x-auto tw:py-6 tw:max-md:h-auto tw:max-md:overflow-visible tw:max-md:py-6 tw:max-md:px-0"
+            class="tw:m-0 tw:h-96 tw:w-full tw:overflow-x-auto tw:py-6 tw:max-md:h-auto tw:max-md:overflow-visible tw:max-md:py-6 tw:max-md:px-0"
         >
             <div
                 class="
-                    tw:relative tw:mx-auto tw:flex tw:h-83.75 tw:min-w-314 tw:items-end tw:gap-6 tw:max-md:w-full
+                    tw:relative tw:mx-auto tw:flex tw:h-84 tw:min-w-314 tw:items-end tw:gap-6 tw:max-md:w-full
                     tw:max-md:max-w-full tw:max-md:min-w-0 tw:max-md:h-auto tw:max-md:items-stretch tw:max-md:gap-6 tw:max-md:my-0
                     tw:max-md:mx-auto tw:max-md:flex tw:max-md:*:min-w-0 tw:max-md:flex-wrap tw:max-md:*:flex-[0_0_calc(50%-12px)]
                 "
@@ -139,7 +139,7 @@ const themes = categories.map((category, index) => {
                                         </span>
                                         <span class="
                                             legislative-setbacks__indicator-thumb tw:relative tw:block tw:size-8 tw:shrink-0 tw:rounded-full tw:max-md:w-8!
-                                            tw:max-md:h-8! tw:max-md:aspect-square tw:max-md:rounded-[999px] tw:max-md:[&_img]:inset-0!
+                                            tw:max-md:h-8! tw:max-md:aspect-square tw:max-md:rounded-[1000px] tw:max-md:[&_img]:inset-0!
                                             tw:max-md:[&_img]:w-full! tw:max-md:[&_img]:h-full!
                                         ">
                                             <img
@@ -172,7 +172,7 @@ const themes = categories.map((category, index) => {
                                 />
                             </div>
                             <div class="
-                                tw:absolute tw:top-56.75 tw:flex tw:h-23 tw:w-full tw:flex-col tw:items-center tw:justify-center tw:gap-1
+                                tw:absolute tw:top-57 tw:flex tw:h-23 tw:w-full tw:flex-col tw:items-center tw:justify-center tw:gap-1
                                 tw:py-2 tw:max-md:static tw:max-md:top-auto tw:max-md:right-auto tw:max-md:bottom-auto tw:max-md:left-auto
                                 tw:max-md:h-23 tw:max-md:justify-center tw:max-md:gap-1 tw:max-md:box-border tw:max-md:transform-none
                                 tw:max-md:translate-none tw:max-md:py-2 tw:max-md:px-0 tw:min-[821px]:gap-y-1

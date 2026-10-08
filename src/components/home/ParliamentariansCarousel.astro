@@ -22,12 +22,12 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
         parliamentarians tw:[&_h2]:font-display tw:[&_h2]:text-4xl tw:[&_h2]:font-bold tw:[&_h2]:leading-[42px]
         tw:[&_h2]:uppercase tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:m-0 tw:[&_p]:m-0
         tw:max-md:[&_h2]:text-[28px] tw:max-md:[&_h2]:leading-8 tw:[--card-width:384px] tw:[--card-padding:32px]
-        tw:[--card-radius:24px] tw:[--hole-width:98px] tw:[--hole-height:18px] tw:[--hole-top:23px]
-        tw:[--rating-art-height:54px] tw:[--rating-art-width:64px] tw:[--proposal-width:41px] tw:[--thumb-size:32px]
+        tw:[--card-radius:24px] tw:[--hole-width:98px] tw:[--hole-height:18px] tw:[--hole-top:24px]
+        tw:[--rating-art-height:54px] tw:[--rating-art-width:64px] tw:[--proposal-width:42px] tw:[--thumb-size:32px]
         tw:[--track-gap:48px] tw:mt-12 tw:bg-white tw:shadow-[0_-48px_0_#fff] tw:text-ink tw:font-sans tw:overflow-hidden
-        tw:max-md:[--card-width:min(279px,_calc(100vw_-_32px))] tw:max-md:[--card-padding:24px]
+        tw:max-md:[--card-width:min(280px,_calc(100vw_-_32px))] tw:max-md:[--card-padding:24px]
         tw:max-md:[--card-radius:18px] tw:max-md:[--hole-width:72px] tw:max-md:[--hole-height:14px]
-        tw:max-md:[--hole-top:17px] tw:max-md:[--rating-art-height:40px] tw:max-md:[--rating-art-width:48px]
+        tw:max-md:[--hole-top:18px] tw:max-md:[--rating-art-height:40px] tw:max-md:[--rating-art-width:48px]
         tw:max-md:[--proposal-width:30px] tw:max-md:[--thumb-size:24px] tw:max-md:[--track-gap:24px] tw:max-md:mt-0
         tw:max-md:shadow-none
     "
@@ -38,7 +38,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
 >
     <header class="
         parliamentarians__header tw:w-[min(100%,_816px)] tw:px-12 tw:flex tw:flex-col tw:gap-4 tw:mt-12 tw:mb-2.5
-        tw:mx-auto tw:[&_p]:text-lg tw:[&_p]:leading-6 tw:max-md:mt-12 tw:max-md:px-[15px] tw:max-md:[&_p]:text-sm
+        tw:mx-auto tw:[&_p]:text-lg tw:[&_p]:leading-6 tw:max-md:mt-12 tw:max-md:px-[16px] tw:max-md:[&_p]:text-sm
         tw:max-md:[&_p]:leading-6
     ">
         <span class="parliamentarians__attention tw:block tw:w-24 tw:h-1 tw:bg-ink" aria-hidden="true"></span>
@@ -66,7 +66,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                 tw:[&_button]:bg-white tw:[&_button]:cursor-pointer tw:[&_button]:py-2 tw:[&_button]:px-4 tw:[&_img]:block
                 tw:[&_img]:w-6 tw:[&_img]:h-6 tw:[&_button]:flex tw:[&_button]:items-center tw:[&_button]:justify-center
             ">
-                <button class="tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-[3px]"
+                <button class="tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-[4px]"
                     type="button"
                     aria-label="Parlamentar anterior"
                     data-previous
@@ -74,7 +74,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                 >
                     <img src={arrowBack} alt="" />
                 </button>
-                <button class="tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-[3px]"
+                <button class="tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-[4px]"
                     type="button"
                     aria-label="Próximo parlamentar"
                     data-next
@@ -120,7 +120,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                                     aria-hidden="true"
                                 ></span>
                                 <header class="parliamentarians__card-header tw:relative tw:z-1">
-                                    <span class:list={["parliamentarians__tag tw:max-md:min-h-6 tw:max-md:gap-2 tw:max-md:text-sm tw:max-md:leading-[18px] tw:max-md:py-[3px] tw:max-md:px-1.5 tw:relative tw:flex tw:w-fit tw:min-h-8 tw:items-center tw:gap-2.5 tw:bg-accent tw:text-white tw:font-display tw:font-bold tw:text-lg tw:leading-6 tw:[font-variation-settings:'wdth'_75] tw:uppercase tw:whitespace-nowrap tw:py-1 tw:px-2 tw:[&_i]:relative tw:[&_i]:block tw:[&_i]:w-4.5 tw:[&_i]:h-[11px] tw:[&_i]:flex-none tw:[&_i]:border-[2px] tw:[&_i]:border-solid tw:[&_i]:border-white tw:[&_i]:[border-top:0] tw:[&_i]:rounded-[0_0_12px_12px] tw:[&_i::before]:absolute tw:[&_i::before]:-top-0.5 tw:[&_i::before]:-left-0.5 tw:[&_i::before]:w-4.5 tw:[&_i::before]:border-t-[2px] tw:[&_i::before]:border-solid tw:[&_i::before]:border-t-white tw:[&_i::before]:content-[''] tw:max-md:[&_i]:w-3.5 tw:max-md:[&_i]:h-[9px] tw:max-md:[&_i::before]:w-3.5", { "parliamentarians__tag--senate tw:[&_i]:[transform:rotate(180deg)]": person.house === "Senado Federal" }]}>
+                                    <span class:list={["parliamentarians__tag tw:max-md:min-h-6 tw:max-md:gap-2 tw:max-md:text-sm tw:max-md:leading-[18px] tw:max-md:py-[4px] tw:max-md:px-1.5 tw:relative tw:flex tw:w-fit tw:min-h-8 tw:items-center tw:gap-2.5 tw:bg-accent tw:text-white tw:font-display tw:font-bold tw:text-lg tw:leading-6 tw:[font-variation-settings:'wdth'_75] tw:uppercase tw:whitespace-nowrap tw:py-1 tw:px-2 tw:[&_i]:relative tw:[&_i]:block tw:[&_i]:w-4.5 tw:[&_i]:h-[12px] tw:[&_i]:flex-none tw:[&_i]:border-[2px] tw:[&_i]:border-solid tw:[&_i]:border-white tw:[&_i]:[border-top:0] tw:[&_i]:rounded-[0_0_12px_12px] tw:[&_i::before]:absolute tw:[&_i::before]:-top-0.5 tw:[&_i::before]:-left-0.5 tw:[&_i::before]:w-4.5 tw:[&_i::before]:border-t-[2px] tw:[&_i::before]:border-solid tw:[&_i::before]:border-t-white tw:[&_i::before]:content-[''] tw:max-md:[&_i]:w-3.5 tw:max-md:[&_i]:h-[10px] tw:max-md:[&_i::before]:w-3.5", { "parliamentarians__tag--senate tw:[&_i]:[transform:rotate(180deg)]": person.house === "Senado Federal" }]}>
                                         <i aria-hidden="true"></i>
                                         {person.house}
                                     </span>
@@ -146,7 +146,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                                             </span>
                                         )}
                                         <div class="
-                                            parliamentarians__person-name tw:min-w-0 tw:pb-[7px] tw:[&_h3]:overflow-hidden tw:[&_h3]:text-ink
+                                            parliamentarians__person-name tw:min-w-0 tw:pb-[8px] tw:[&_h3]:overflow-hidden tw:[&_h3]:text-ink
                                             tw:[&_h3]:text-lg tw:[&_h3]:font-normal tw:[&_h3]:leading-6 tw:[&_h3]:text-ellipsis tw:[&_h3]:whitespace-nowrap
                                             tw:[&_h3]:mt-0 tw:[&_h3]:mb-2.5 tw:[&_h3]:mx-0 tw:[&_p]:overflow-hidden tw:[&_p]:text-ink tw:[&_p]:text-lg
                                             tw:[&_p]:font-bold tw:[&_p]:leading-6 tw:[&_p]:text-ellipsis tw:[&_p]:whitespace-nowrap tw:[&_p]:m-0
@@ -241,8 +241,8 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                                 </section>
 
                                 <dl class="
-                                    parliamentarians__details tw:gap-0.5 tw:text-ink tw:text-sm tw:leading-6 tw:p-0 tw:mt-[23px] tw:mb-0 tw:mx-0
-                                    tw:max-md:mt-[17px] tw:max-md:text-xs tw:max-md:leading-[18px] tw:[&_dd]:min-w-0 tw:[&_dd]:overflow-hidden
+                                    parliamentarians__details tw:gap-0.5 tw:text-ink tw:text-sm tw:leading-6 tw:p-0 tw:mt-[24px] tw:mb-0 tw:mx-0
+                                    tw:max-md:mt-[18px] tw:max-md:text-xs tw:max-md:leading-[18px] tw:[&_dd]:min-w-0 tw:[&_dd]:overflow-hidden
                                     tw:[&_dd]:text-ellipsis tw:[&_dd]:whitespace-nowrap tw:[&_dd]:text-right tw:[&_dd]:m-0 tw:flex tw:flex-col
                                 ">
                                     <div class="tw:gap-2 tw:min-h-6 tw:max-md:min-h-4.5 tw:flex tw:justify-between tw:[&>:first-child]:min-w-0 tw:[&>:first-child]:flex-1">
@@ -274,7 +274,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                             <span
                                 class={String.raw`
                                     parliamentarians__hole tw:absolute tw:z-3 tw:top-[var(--hole-top)] tw:left-[50%] tw:w-[var(--hole-width)]
-                                    tw:h-[var(--hole-height)] tw:border tw:border-solid tw:border-muted tw:rounded-[999px] tw:bg-transparent
+                                    tw:h-[var(--hole-height)] tw:border tw:border-solid tw:border-muted tw:rounded-[1000px] tw:bg-transparent
                                     tw:pointer-events-none tw:[transform:translateX(-50%)]
                                     tw:[.parliamentarians\_\_card--active_&]:shadow-[inset_-4px_4px_0_#0b0f5e]
                                 `}

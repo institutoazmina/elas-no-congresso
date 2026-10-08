@@ -71,7 +71,7 @@ export default function AlertsProposalCombobox() {
                     <select
                         id="alerts-house"
                         name="casa"
-                        className="alerts-email-modal__proposal-input tw:cursor-pointer tw:block tw:w-full tw:h-12.5 tw:border tw:border-solid tw:border-[rgba(30,37,70,.15)] tw:rounded-none tw:bg-white tw:text-ink tw:font-normal tw:text-base tw:leading-5 tw:font-sans tw:py-3 tw:px-4 tw:placeholder:text-muted tw:placeholder:opacity-100 tw:focus-visible:outline-2 tw:focus-visible:outline-lime tw:focus-visible:outline-offset-0.5"
+                        className="alerts-email-modal__proposal-input tw:cursor-pointer tw:block tw:w-full tw:h-12.5 tw:border tw:border-solid tw:border-[rgba(30,37,70,.15)] tw:rounded-none tw:bg-white tw:text-ink tw:font-normal tw:text-base tw:leading-5 tw:font-sans tw:py-3 tw:px-4 tw:placeholder:text-muted tw:placeholder:opacity-100 tw:focus-visible:outline-2 tw:focus-visible:outline-lime tw:focus-visible:outline-offset-1"
                         value={house}
                         onChange={(event) => {
                             const nextHouse = event.target.value;
@@ -103,7 +103,7 @@ export default function AlertsProposalCombobox() {
                     >
                         <Combobox.Chips className="alerts-email-modal__proposal-combobox tw:flex tw:w-full tw:flex-col tw:gap-2.5">
                             <Combobox.Input
-                                className="alerts-email-modal__proposal-input tw:block tw:w-full tw:h-12.5 tw:border tw:border-solid tw:border-[rgba(30,37,70,.15)] tw:rounded-none tw:bg-white tw:text-ink tw:font-normal tw:text-base tw:leading-5 tw:font-sans tw:py-3 tw:px-4 tw:placeholder:text-muted tw:placeholder:opacity-100 tw:focus-visible:outline-2 tw:focus-visible:outline-lime tw:focus-visible:outline-offset-0.5"
+                                className="alerts-email-modal__proposal-input tw:block tw:w-full tw:h-12.5 tw:border tw:border-solid tw:border-[rgba(30,37,70,.15)] tw:rounded-none tw:bg-white tw:text-ink tw:font-normal tw:text-base tw:leading-5 tw:font-sans tw:py-3 tw:px-4 tw:placeholder:text-muted tw:placeholder:opacity-100 tw:focus-visible:outline-2 tw:focus-visible:outline-lime tw:focus-visible:outline-offset-1"
                                 aria-label="Buscar proposição por número ou assunto"
                                 placeholder="Buscar por número ou assunto..."
                                 autoComplete="off"
@@ -112,10 +112,10 @@ export default function AlertsProposalCombobox() {
                                 {(values: Proposal[]) => values.length > 0 && (
                                     <div className="alerts-email-modal__selected-proposals tw:flex tw:gap-2" aria-label="Proposições selecionadas">
                                         {values.map((proposal) => (
-                                            <Combobox.Chip key={proposal.id} className="alerts-email-modal__proposal-chip tw:inline-flex tw:min-h-8.5 tw:items-center tw:gap-2.5 tw:border tw:border-solid tw:border-lime tw:bg-lime tw:text-ink tw:font-bold tw:text-sm tw:leading-5 tw:font-sans tw:py-1.25 tw:pr-1.5 tw:pl-2.5">
+                                            <Combobox.Chip key={proposal.id} className="alerts-email-modal__proposal-chip tw:inline-flex tw:min-h-8.5 tw:items-center tw:gap-2.5 tw:border tw:border-solid tw:border-lime tw:bg-lime tw:text-ink tw:font-bold tw:text-sm tw:leading-5 tw:font-sans tw:py-1.5 tw:pr-1.5 tw:pl-2.5">
                                                 <span>{proposal.number_label}</span>
                                                 <Combobox.ChipRemove
-                                                    className="alerts-email-modal__proposal-remove tw:w-6 tw:h-6 tw:border-0 tw:bg-ink tw:text-white tw:font-normal tw:text-[21px] tw:leading-none tw:font-[Arial,sans-serif] tw:cursor-pointer tw:pt-0 tw:pb-0.5 tw:px-0 tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-0.5 tw:flex tw:items-center tw:justify-center"
+                                                    className="alerts-email-modal__proposal-remove tw:w-6 tw:h-6 tw:border-0 tw:bg-ink tw:text-white tw:font-normal tw:text-[22px] tw:leading-none tw:font-[Arial,sans-serif] tw:cursor-pointer tw:pt-0 tw:pb-0.5 tw:px-0 tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-1 tw:flex tw:items-center tw:justify-center"
                                                     aria-label={`Remover ${proposal.number_label}`}
                                                 >
                                                     ×
@@ -129,7 +129,7 @@ export default function AlertsProposalCombobox() {
                         </Combobox.Chips>
                         <Combobox.Portal>
                             <Combobox.Positioner className="alerts-email-modal__proposal-positioner tw:z-101 tw:outline-none" sideOffset={4} align="start">
-                                <Combobox.Popup className="alerts-email-modal__proposal-popup tw:w-(--anchor-width) tw:border tw:border-solid tw:border-[rgba(30,37,70,.15)] tw:bg-white tw:shadow-[0_10px_15px_-3px_rgba(0,0,0,.1),0_4px_6px_-4px_rgba(0,0,0,.1)] tw:text-ink">
+                                <Combobox.Popup className="alerts-email-modal__proposal-popup tw:w-(--anchor-width) tw:border tw:border-solid tw:border-[rgba(30,37,70,.15)] tw:bg-white tw:shadow-[0_10px_16px_-4px_rgba(0,0,0,.1),0_4px_6px_-4px_rgba(0,0,0,.1)] tw:text-ink">
                                     {loading && <Combobox.Status className="alerts-email-modal__proposal-message tw:block tw:text-muted tw:font-normal tw:text-sm tw:leading-5 tw:font-sans tw:py-3 tw:px-4">Buscando...</Combobox.Status>}
                                     {!loading && message && <Combobox.Empty className="alerts-email-modal__proposal-message tw:block tw:text-muted tw:font-normal tw:text-sm tw:leading-5 tw:font-sans tw:py-3 tw:px-4">{message}</Combobox.Empty>}
                                     <Combobox.List className="alerts-email-modal__proposal-list tw:max-h-60 tw:overflow-y-auto tw:p-0">
