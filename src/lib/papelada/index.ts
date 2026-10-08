@@ -128,7 +128,7 @@ function loadSheets(assetsPath: string, category: Category, asset: string) {
 }
 
 /** Desenha o gráfico de papelada dentro do `<canvas>` informado. */
-export async function papelada(canvas: HTMLCanvasElement, options: PapeladaOptions): Promise<void> {
+export async function papelada(canvas: HTMLCanvasElement, options: PapeladaOptions, signal?: AbortSignal): Promise<void> {
     const config = resolve(options);
     const sheet = SHEETS[config.size];
     const { width, height } = papeladaSize(options);
@@ -142,10 +142,13 @@ export async function papelada(canvas: HTMLCanvasElement, options: PapeladaOptio
         HTMLImageElement[]
     >;
 
+    if (signal?.aborted) return;
     const context = canvas.getContext("2d");
     if (!context) return;
 
-    const density = window.devicePixelRatio || 1;
+    // Allocate for the displayed width, not the much larger source geometry.
+    const displayWidth = canvas.getBoundingClientRect().width || width;
+    const density = Math.min(window.devicePixelRatio || 1, 2) * Math.min(displayWidth / width, 1);
     canvas.width = Math.round(width * density);
     canvas.height = Math.round(height * density);
     context.setTransform(density, 0, 0, density, 0, 0);

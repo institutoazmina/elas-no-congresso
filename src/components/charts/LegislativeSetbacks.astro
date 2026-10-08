@@ -23,8 +23,7 @@ const gap = pileGap({
     peak: Math.max(...categories.map((category) => category.unfavorable), 1),
 });
 
-const themes = categories.map((category, index) => {
-    const isFirst = index === 0;
+const themes = categories.map((category) => {
     return {
         count: category.unfavorable,
         title: category.label,
@@ -37,9 +36,9 @@ const themes = categories.map((category, index) => {
                 : category.label.length > 14
                   ? 147
                   : 110,
-        chartWidth: isFirst ? 113 : 66,
-        countSize: isFirst ? 36 : 28,
-        label: isFirst,
+        chartWidth: 90,
+        countSize: 28,
+        label: true,
     };
 });
 ---

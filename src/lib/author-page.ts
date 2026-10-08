@@ -33,6 +33,7 @@ type ActivityProposal = {
 };
 
 export type AuthorProposal = ActivityProposal & {
+    celerity?: ActivityProposition["celerity"];
     authors: ActivityParliamentarian[];
 };
 
@@ -102,12 +103,15 @@ export function authorRoute(value: unknown): string | null {
 }
 
 export function normalizePhotoUrl(primary: unknown, fallback?: unknown): string | null {
-    const source = [primary, fallback].map((value) => String(value ?? "").trim()).find((value) => value && value !== "Indisponível");
+    const source = [primary, fallback]
+        .map((value) => String(value ?? "").trim())
+        .find((value) => value && value !== "Indisponível");
     return source ? source.replace(/^http:/, "https:") : null;
 }
 
 export function assertSuccessfulApiStatus(status: number): void {
-    if (!Number.isInteger(status) || status < 200 || status >= 300) throw new Error(`API respondeu com status ${status}`);
+    if (!Number.isInteger(status) || status < 200 || status >= 300)
+        throw new Error(`API respondeu com status ${status}`);
 }
 
 export function paginateItems<T>(items: T[], currentPage: number, pageSize: number) {
@@ -118,8 +122,13 @@ export function paginateItems<T>(items: T[], currentPage: number, pageSize: numb
     return { items: items.slice(start, start + safeSize), page, pages };
 }
 
-export function buildAuthorActivityFromApi(data: ActivityProposition[], authorId: number): AuthorActivity | null {
-    const sourceAuthor = data.flatMap((proposal) => proposal.authors).find((author) => author.id === authorId);
+export function buildAuthorActivityFromApi(
+    data: ActivityProposition[],
+    authorId: number,
+): AuthorActivity | null {
+    const sourceAuthor = data
+        .flatMap((proposal) => proposal.authors)
+        .find((author) => author.id === authorId);
     if (!sourceAuthor) return null;
 
     const author: ActivityParliamentarian = {
@@ -160,6 +169,7 @@ export function buildAuthorActivityFromApi(data: ActivityProposition[], authorId
             tema: item.themes?.length ? item.themes : item.category_label || item.category,
             situacao: item.current_status,
             apresentadaEm: item.presented_at,
+            celerity: item.celerity,
             quiteria_prob: item.celerity.movements_last_90_days,
             authors,
         };
@@ -208,15 +218,23 @@ export function houseLabel(value: string | null | undefined): string {
 export type RatingGroup = { label: string; favorable: number; unfavorable: number };
 
 function sortReportsByDate<T extends { date?: string; modified?: string }>(reports: T[]): T[] {
-    return [...reports].sort((a, b) => Date.parse(b.date || b.modified || "") - Date.parse(a.date || a.modified || ""));
+    return [...reports].sort(
+        (a, b) => Date.parse(b.date || b.modified || "") - Date.parse(a.date || a.modified || ""),
+    );
 }
 
-export function selectAuthorReports<T extends { date?: string; modified?: string }>(related: T[], latest: T[]): { title: "related" | "latest"; reports: T[] } {
+export function selectAuthorReports<T extends { date?: string; modified?: string }>(
+    related: T[],
+    latest: T[],
+): { title: "related" | "latest"; reports: T[] } {
     if (related.length > 0) return { title: "related", reports: sortReportsByDate(related).slice(0, 3) };
     return { title: "latest", reports: sortReportsByDate(latest).slice(0, 3) };
 }
 
-export function groupProposalRatings(proposals: AuthorProposal[], field: "categoria" | "tema"): RatingGroup[] {
+export function groupProposalRatings(
+    proposals: AuthorProposal[],
+    field: "categoria" | "tema",
+): RatingGroup[] {
     const groups = new Map<string, RatingGroup>();
     for (const proposal of proposals) {
         const source = proposal[field];
@@ -230,6 +248,10 @@ export function groupProposalRatings(proposals: AuthorProposal[], field: "catego
             groups.set(label, group);
         }
     }
-    return [...groups.values()].sort((a, b) => (b.favorable + b.unfavorable) - (a.favorable + a.unfavorable) || a.label.localeCompare(b.label, "pt-BR"));
+    return [...groups.values()].sort(
+        (a, b) =>
+            b.favorable + b.unfavorable - (a.favorable + a.unfavorable) ||
+            a.label.localeCompare(b.label, "pt-BR"),
+    );
 }
 import type { ActivityProposition } from "./activity-api";

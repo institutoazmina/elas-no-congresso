@@ -1,4 +1,5 @@
 import { API_BASE_URL } from 'astro:env/server';
+import { fetchPublicData } from '../../lib/public-data-fetch';
 
 const localPreviewData = (path: string, params: Record<string, string | number | undefined>): unknown => {
   if (!import.meta.env.DEV) return undefined;
@@ -93,7 +94,7 @@ export async function apiGet<T>(
   }
 
   try {
-    const response = await fetch(url, { signal: AbortSignal.timeout(15_000) });
+    const response = await fetchPublicData(url);
     if (!response.ok) {
       throw new Error(`API ${response.status} em ${url.pathname}${url.search}`);
     }

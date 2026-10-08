@@ -6,9 +6,9 @@ import thumbsDown from "../../assets/images/thumbs-down.svg";
 import attention from "../../assets/images/activity/attention.svg";
 import { getUnfavorableByLegislature } from "../../service/api/stats";
 
-// Escala do design: pilhas de 94px de largura, a mais alta com 644px.
-const PILE_WIDTH = 92.5;
-const PILE_PEAK = 643.5;
+// Uma escala comum mantém as proporções, com altura compacta no desktop.
+const PILE_WIDTH = 94;
+const PILE_PEAK = 400;
 
 const legislatures = await getUnfavorableByLegislature();
 const peak = Math.max(...legislatures.map((legislature) => legislature.unfavorable), 1);
@@ -23,14 +23,14 @@ import imageAsset2 from "../../assets/images/papelada/proposicao-desfavoravel-9-
 <section
     id="rights-under-attack"
     class="
-        rights-under-attack tw:relative tw:h-auto tw:overflow-hidden tw:py-12 tw:text-[#0B0F5E] tw:lg:h-310.5
+        rights-under-attack tw:relative tw:h-auto tw:overflow-hidden tw:py-12 tw:text-[#0B0F5E] tw:lg:h-auto
         tw:lg:overflow-visible tw:lg:bg-white tw:lg:pt-12 tw:lg:pb-0 tw:max-md:h-auto tw:max-md:overflow-visible
         tw:max-md:bg-white tw:max-md:bg-none tw:max-md:p-0
     "
     aria-labelledby="rights-under-attack-title"
 >
     <div class="
-        tw:relative tw:mx-auto tw:flex tw:w-full tw:max-w-204 tw:flex-col tw:gap-10 tw:px-6 tw:lg:h-298.5
+        tw:relative tw:mx-auto tw:flex tw:w-full tw:max-w-204 tw:flex-col tw:gap-10 tw:px-6 tw:lg:h-auto
         tw:lg:w-204 tw:lg:max-w-none tw:lg:gap-2.5 tw:lg:px-12 tw:lg:pb-12 tw:lg:pt-6 tw:max-md:w-full
         tw:max-md:max-w-none tw:max-md:h-auto tw:max-md:gap-2.5 tw:max-md:py-6 tw:max-md:px-4
     ">
@@ -59,7 +59,7 @@ import imageAsset2 from "../../assets/images/papelada/proposicao-desfavoravel-9-
         </header>
 
         <figure class="
-            tw:relative tw:m-0 tw:flex tw:w-full tw:flex-col tw:items-center tw:gap-12 tw:py-6 tw:lg:h-218
+            tw:relative tw:m-0 tw:flex tw:w-full tw:flex-col tw:items-center tw:gap-12 tw:py-6 tw:lg:h-auto
             tw:lg:flex-row tw:lg:items-end tw:lg:justify-center tw:lg:gap-6 tw:max-md:w-full tw:max-md:h-auto
             tw:max-md:min-h-48 tw:max-md:flex-row tw:max-md:items-end tw:max-md:justify-center tw:max-md:gap-6 tw:max-md:pt-6
             tw:max-md:pb-3.5 tw:max-md:px-0 tw:max-md:m-0
@@ -110,7 +110,7 @@ import imageAsset2 from "../../assets/images/papelada/proposicao-desfavoravel-9-
                         </div>
                         <Papelada
                             class={String.raw`
-                                rights-under-attack__papers tw:w-23.5 tw:max-md:h-auto!
+                                rights-under-attack__papers tw:w-23.5 tw:max-md:w-16
                                 `}
                             arrangement="pile"
                             category="desfavoravel"

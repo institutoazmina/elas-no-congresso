@@ -1,3 +1,5 @@
+import { fetchPublicData } from "./public-data-fetch.ts";
+
 type ActivityAuthor = {
   id: number | null;
   name: string;
@@ -86,25 +88,25 @@ export type EnactedProject = ActivityProposition & {
 };
 
 export async function fetchActivity(baseUrl: string, signal?: AbortSignal): Promise<ActivityProposition[]> {
-  const response = await fetch(`${baseUrl.replace(/\/$/, "")}/activity?limit=5000`, { signal });
+  const response = await fetchPublicData(`${baseUrl.replace(/\/$/, "")}/activity?limit=5000`, signal);
   if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
   return response.json() as Promise<ActivityProposition[]>;
 }
 
 export async function fetchFastUnfavorable(baseUrl: string, signal?: AbortSignal): Promise<ActivityProposition[]> {
-  const response = await fetch(`${baseUrl.replace(/\/$/, "")}/activity/fast-unfavorable`, { signal });
+  const response = await fetchPublicData(`${baseUrl.replace(/\/$/, "")}/activity/fast-unfavorable`, signal);
   if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
   return response.json() as Promise<ActivityProposition[]>;
 }
 
 export async function fetchSlowFavorable(baseUrl: string, signal?: AbortSignal): Promise<ActivityProposition[]> {
-  const response = await fetch(`${baseUrl.replace(/\/$/, "")}/activity/slow-favorable`, { signal });
+  const response = await fetchPublicData(`${baseUrl.replace(/\/$/, "")}/activity/slow-favorable`, signal);
   if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
   return response.json() as Promise<ActivityProposition[]>;
 }
 
 export async function fetchEnactedProjects(baseUrl: string, signal?: AbortSignal): Promise<EnactedProject[]> {
-  const response = await fetch(`${baseUrl.replace(/\/$/, "")}/activity/enacted-projects?limit=50`, { signal });
+  const response = await fetchPublicData(`${baseUrl.replace(/\/$/, "")}/activity/enacted-projects?limit=50`, signal);
   if (!response.ok) throw new Error(`API respondeu com status ${response.status}`);
   return response.json() as Promise<EnactedProject[]>;
 }

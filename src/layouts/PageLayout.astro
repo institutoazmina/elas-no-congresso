@@ -66,8 +66,8 @@ const fontUrl = `https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:${fo
         <meta property="og:url" content={pageUrl} />
         <meta property="og:image" content={ogImageUrl} />
         <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:width" content={ogImage.width} />
-        <meta property="og:image:height" content={ogImage.height} />
+        <meta property="og:image:width" content={String(ogImage.width)} />
+        <meta property="og:image:height" content={String(ogImage.height)} />
         <meta property="og:image:alt" content={ogImage.alt} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
@@ -97,8 +97,5 @@ const fontUrl = `https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:${fo
             <Footer />
         </div>
         <slot name="scripts" />
-        <script>
-            import "../scripts/history-back";
-        </script>
     </body>
 </html>

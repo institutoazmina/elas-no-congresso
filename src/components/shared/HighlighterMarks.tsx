@@ -1,59 +1,79 @@
----
-import { Image } from "astro:assets";
+import { Image } from "./react-utils";
+import type { CSSProperties } from "react";
 import markOne from "../../assets/images/charts/highlighter-mark-1.svg";
 import markTwo from "../../assets/images/charts/highlighter-mark-2.svg";
 import markThree from "../../assets/images/charts/highlighter-mark-3.svg";
 import markFour from "../../assets/images/charts/highlighter-mark-4.svg";
----
 
-<span class="
+export default function HighlighterMarks({ style }: { style?: CSSProperties }) {
+    return (
+        <span
+            className="
     highlighter-marks tw:block tw:h-[var(--highlighter-height,_52px)] tw:left-[var(--highlighter-left,_0px)]
     tw:pointer-events-none tw:absolute tw:top-[var(--highlighter-top,_50%)]
     tw:[transition:left_250ms_ease,_top_250ms_ease,_width_250ms_ease] tw:[transform:translateY(-50%)]
     tw:w-[var(--highlighter-width,_218px)] tw:z-[var(--highlighter-z-index,_0)] tw:[&_img]:block tw:[&_img]:absolute
     tw:[&_img]:h-full tw:[&_img]:inset-0 tw:[&_img]:w-full tw:[&[hidden]]:hidden
-" aria-hidden="true" hidden>
-    <span class="
+"
+            aria-hidden="true"
+            hidden={!style}
+            style={style}
+        >
+            <span
+                className="
         highlighter-marks__layer highlighter-marks__layer--one tw:block tw:absolute tw:mix-blend-multiply
         tw:bottom-[33.33%] tw:left-[8.3%] tw:right-[0.46%] tw:top-0
-    ">
-        <span class="
+    "
+            >
+                <span
+                    className="
             highlighter-marks__image-wrap highlighter-marks__image-wrap--one tw:block tw:absolute tw:h-full tw:inset-0
             tw:w-full tw:bottom-0 tw:left-[0.21%] tw:right-[0.29%] tw:top-0
-        ">
-            <Image src={markOne} alt="" loading="eager" />
-        </span>
-    </span>
-    <span class="highlighter-marks__layer highlighter-marks__layer--two tw:block tw:absolute tw:mix-blend-multiply tw:bottom-[9.8%] tw:left-0 tw:right-[0.46%] tw:top-0">
-        <span class="
+        "
+                >
+                    <Image src={markOne} alt="" loading="eager" />
+                </span>
+            </span>
+            <span className="highlighter-marks__layer highlighter-marks__layer--two tw:block tw:absolute tw:mix-blend-multiply tw:bottom-[9.8%] tw:left-0 tw:right-[0.46%] tw:top-0">
+                <span
+                    className="
             highlighter-marks__image-wrap highlighter-marks__image-wrap--two tw:block tw:absolute tw:h-full tw:inset-0
             tw:w-full tw:bottom-[0.37%] tw:left-[0.2%] tw:right-[0.28%] tw:top-[0.39%]
-        ">
-            <Image src={markTwo} alt="" loading="eager" />
-        </span>
-    </span>
-    <span class="
+        "
+                >
+                    <Image src={markTwo} alt="" loading="eager" />
+                </span>
+            </span>
+            <span
+                className="
         highlighter-marks__layer highlighter-marks__layer--three tw:block tw:absolute tw:mix-blend-multiply
         tw:bottom-[7.84%] tw:left-0 tw:right-0 tw:top-[27.45%]
-    ">
-        <span class="
+    "
+            >
+                <span
+                    className="
             highlighter-marks__image-wrap highlighter-marks__image-wrap--three tw:block tw:absolute tw:h-full tw:inset-0
             tw:w-full tw:bottom-0 tw:left-[0.19%] tw:right-0 tw:top-[0.17%]
-        ">
-            <Image src={markThree} alt="" loading="eager" />
-        </span>
-    </span>
-    <span class="
+        "
+                >
+                    <Image src={markThree} alt="" loading="eager" />
+                </span>
+            </span>
+            <span
+                className="
         highlighter-marks__layer highlighter-marks__layer--four tw:block tw:absolute tw:mix-blend-multiply tw:bottom-0
         tw:left-[13.36%] tw:right-0 tw:top-[37.25%]
-    ">
-        <span class="
+    "
+            >
+                <span
+                    className="
             highlighter-marks__image-wrap highlighter-marks__image-wrap--four tw:block tw:absolute tw:h-full tw:inset-0
             tw:w-full tw:bottom-[0.17%] tw:left-[0.22%] tw:right-[0.22%] tw:top-0
-        ">
-            <Image src={markFour} alt="" loading="eager" />
+        "
+                >
+                    <Image src={markFour} alt="" loading="eager" />
+                </span>
+            </span>
         </span>
-    </span>
-</span>
-
-
+    );
+}

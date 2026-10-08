@@ -1,3 +1,5 @@
+import { fetchPublicData } from "./public-data-fetch.ts";
+
 type WpImageSize = { source_url?: string };
 export type WpFeaturedMedia = {
   alt_text?: string;
@@ -50,7 +52,7 @@ export async function fetchReportagensPage(
   }
 
   try {
-    const res = await fetch(`${WP_REPORTAGENS_ENDPOINT}?${params}`);
+    const res = await fetchPublicData(`${WP_REPORTAGENS_ENDPOINT}?${params}`);
     if (!res.ok) return { posts: [], total: 0, totalPages: 0 };
 
     return {
