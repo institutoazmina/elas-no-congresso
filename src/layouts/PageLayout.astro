@@ -9,6 +9,7 @@ import Footer from "../components/layout/Footer.astro";
 interface Props {
     title: string;
     description?: string;
+    canonical?: string;
     noindex?: boolean;
     ogImage?: { src: string | URL; width: number; height: number; alt: string };
     ogType?: "website" | "profile";
@@ -23,6 +24,7 @@ interface Props {
 const {
     title,
     description,
+    canonical,
     noindex = false,
     ogImage = { ...defaultOgImage, alt: "Elas no Congresso" },
     ogType = "website",
@@ -36,7 +38,7 @@ const {
 
 // Images must resolve on the deployed host, which may differ from the canonical site.
 const ogImageUrl = new URL(ogImage.src, import.meta.env.OG_IMAGE_BASE_URL || Astro.site || Astro.url);
-const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
+const pageUrl = canonical ?? new URL(Astro.url.pathname, Astro.site ?? Astro.url);
 
 // Preserve the weights used by each page while sharing font loading and preconnects.
 const fontVariants = {
@@ -54,6 +56,7 @@ const fontUrl = `https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:${fo
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{title}</title>
+        {canonical && <link rel="canonical" href={canonical} />}
         {description && <meta name="description" content={description} />}
         {noindex && <meta name="robots" content="noindex" />}
         <meta property="og:type" content={ogType} />
@@ -77,6 +80,14 @@ const fontUrl = `https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:${fo
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href={fontUrl} rel="stylesheet" />
         <ClientRouter fallback="swap" />
+        <!-- Google tag (gtag.js) -->
+        <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-SV7MEGERHL"></script>
+        <script is:inline>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-SV7MEGERHL');
+        </script>
         <slot name="head" />
     </head>
     <body class:list={["tw:m-0! tw:pt-0! tw:bg-white!", bodyClass]}>

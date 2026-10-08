@@ -63,9 +63,10 @@ const category = activity.category_label?.trim() || activity.category?.trim() ||
 const presentedDate = formatPresentedDate(activity.presented_at);
 const themes = activity.themes?.filter(Boolean) || (category ? [category] : []);
 const title = `${activity.number_label} | Atividade Legislativa | Elas no Congresso`;
+const description = `Consulte a ementa, a autoria e a tramitação do ${activity.number_label} e acompanhe sua avaliação sobre pautas de gênero e direitos no Elas no Congresso.`;
 ---
 
-<PageLayout title={title} description={activity.ementa} fontVariant="medium"
+<PageLayout title={title} description={description} fontVariant="medium"
     pageClass="proposition-page tw:min-w-80 tw:text-ink tw:font-sans"
       pageStyle={`--proposition-paper: url(${paper.src}); --proposition-paperclip: url(${paperclip.src}); --proposition-status-label: url(${statusLabel.src})`}
 >

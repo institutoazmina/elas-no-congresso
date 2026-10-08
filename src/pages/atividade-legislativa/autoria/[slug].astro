@@ -12,7 +12,7 @@ type Props = AuthorPageProps;
 const { authorId, house, initial } = Astro.props;
 const name = initial.person.social_name || initial.person.full_name || initial.activity.author.nome;
 const title = `${name} | Atividade Legislativa | Elas no Congresso`;
-const description = `Consulte o perfil e a atividade legislativa de ${name}.`;
+const description = `Acompanhe a atuação de ${name} no Congresso Nacional e consulte suas propostas sobre gênero e direitos das mulheres e pessoas LGBTQIAPN+.`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = `${Astro.url.pathname.replace(/\/$/, "")}/og.png`;
 ---
