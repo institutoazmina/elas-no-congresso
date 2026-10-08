@@ -1,0 +1,25 @@
+---
+import FormSubstack from './FormSubstack.astro';
+const novidades = "/assets/images/novidades-exclusivas.webp";
+---
+<section class="tw:bg-white tw:py-16">
+    <div class="tw:w-full tw:mx-auto tw:px-6 tw:max-w-[1310px]">
+        <div class="tw:flex tw:flex-wrap tw:-mx-3">
+            <div class="tw:w-full tw:min-w-0 tw:px-3 tw:lg:w-[50.0000%]">
+                <figure class="tw:mx-auto tw:w-fit tw:max-w-full">
+                    <img decoding="async" height={384} width={538} src={novidades} alt="" loading="lazy" />
+                </figure>
+            </div>
+            <div class="tw:w-full tw:min-w-0 tw:px-3 tw:lg:w-[50.0000%]" >
+                <h3 class="tw:font-display tw:text-3xl tw:leading-tight tw:uppercase tw:break-words tw:lg:text-5xl tw:mb-4 tw:text-center tw:text-rose-500">
+                    <span class="tw:font-light tw:[font-variation-settings:'wdth'_200]">Receba</span>
+                    <span class="tw:font-black tw:[font-variation-settings:'wdth'_150]">novidades</span>
+                    <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">exclusivas</span>
+                </h3>
+                <div class="tw:mx-auto tw:w-fit tw:max-w-full">
+                    <FormSubstack />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

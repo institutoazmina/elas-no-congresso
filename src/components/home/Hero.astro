@@ -1,0 +1,91 @@
+---
+const attentionMark = "/assets/images/activity/attention.svg";
+const highlighterOne = "/assets/images/hero/highlighter-desfavoraveis-1.svg";
+const highlighterTwo = "/assets/images/hero/highlighter-desfavoraveis-2.svg";
+const halftoneShadow = "/assets/images/hero/halftone-shadow.png";
+const heroIllustration = "/assets/images/hero/hero-congresso-ilustracao.webp";
+---
+
+<section
+    class="
+        hero site-shared-background tw:text-ink tw:flex tw:flex-col tw:h-[435px] tw:overflow-hidden tw:relative
+        tw:max-[761px]:h-auto tw:min-[761px]:block tw:min-[761px]:h-125
+     tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+    data-page-hero
+    aria-labelledby="hero-title"
+    style={`--hero-halftone-shadow: url(${halftoneShadow})`}
+>
+    <div class="
+        hero__top-row tw:items-start tw:flex tw:flex-col tw:h-auto tw:justify-start tw:relative tw:z-2 tw:pt-8 tw:pb-0
+        tw:px-6 tw:max-[761px]:pb-[45px] tw:min-[761px]:items-center tw:min-[761px]:flex-row tw:min-[761px]:h-119
+        tw:min-[761px]:justify-between tw:min-[761px]:p-12
+    ">
+        <div class="
+            hero__content tw:items-start tw:flex tw:flex-none tw:flex-col tw:gap-[15px] tw:justify-start tw:max-w-full
+            tw:min-w-0 tw:w-full tw:min-[761px]:flex-[1_0_0] tw:min-[761px]:gap-6 tw:min-[761px]:justify-center
+            tw:min-[761px]:max-w-240 tw:min-[761px]:w-auto
+        ">
+            <img class="hero__attention tw:block tw:h-1 tw:w-8 tw:min-[761px]:h-2 tw:min-[761px]:w-24" src={attentionMark} alt="" />
+            <h1 id="hero-title" class="
+                hero__title tw:text-ink tw:font-display tw:text-[32px] tw:[font-variation-settings:'wdth'_75] tw:font-bold
+                tw:tracking-normal tw:leading-8 tw:mix-blend-multiply tw:uppercase tw:m-0 tw:min-[761px]:text-[58px]
+                tw:min-[761px]:leading-15 tw:min-[761px]:whitespace-nowrap tw:min-[1101px]:text-7xl tw:min-[1101px]:leading-18
+            ">
+                De olho <span class="hero__title-narrow tw:[font-variation-settings:'wdth'_60] tw:font-normal">nas</span> pautas de gênero<br class="hero__title-break-desktop tw:hidden tw:min-[761px]:inline" />
+                <span class="hero__title-narrow tw:[font-variation-settings:'wdth'_60] tw:font-normal">no</span> Congresso Nacional
+            </h1>
+            <p class="
+                hero__description tw:text-ink tw:font-sans tw:text-lg tw:font-bold tw:leading-6 tw:relative
+                tw:whitespace-pre-wrap tw:max-w-80 tw:w-full tw:m-0 tw:min-[761px]:text-lg tw:min-[761px]:leading-6
+                tw:min-[761px]:max-w-160 tw:min-[761px]:min-h-36 tw:min-[761px]:w-160
+            "><span class="hero__description-text tw:relative tw:z-1">{`Nos últimos 8 anos, mais de 700 proposições  apresentadas na Câmara dos Deputados e no Senado Federal  são    `}</span><span class="hero__highlighted-word tw:inline-block tw:isolate tw:relative tw:z-1"><span class="
+                hero__highlighter tw:aspect-[152.629/35.967] tw:left-[50%] tw:z-[-1] tw:pointer-events-none tw:absolute
+                tw:top-[calc(50%_+_3px)] tw:[transform:translate(-50%,_-50%)] tw:w-[calc(100%_+_24px)] tw:[&_img]:block
+                tw:[&_img]:absolute tw:[&_img]:h-full tw:[&_img]:inset-0 tw:[&_img]:max-w-none tw:[&_img]:w-full
+            " aria-hidden="true">
+                    <span class="
+                        hero__highlighter-layer hero__highlighter-layer--one tw:block tw:absolute tw:mix-blend-darken tw:bottom-[23.53%]
+                        tw:left-[5.73%] tw:right-0 tw:top-[3.92%]
+                    ">
+                        <span class="hero__highlighter-image-wrap hero__highlighter-image-wrap--one tw:block tw:absolute tw:bottom-[0.14%] tw:left-[0.39%] tw:right-[0.54%] tw:top-[0.15%]">
+                            <img src={highlighterOne} alt="" />
+                        </span>
+                    </span>
+                    <span class="
+                        hero__highlighter-layer hero__highlighter-layer--two tw:block tw:absolute tw:mix-blend-darken tw:bottom-[17.65%]
+                        tw:left-[1.91%] tw:right-0 tw:top-[13.73%]
+                    ">
+                        <span class="hero__highlighter-image-wrap hero__highlighter-image-wrap--two tw:block tw:absolute tw:bottom-[0.15%] tw:left-[0.29%] tw:right-[0.56%] tw:top-[0.39%]">
+                            <img src={highlighterTwo} alt="" />
+                        </span>
+                    </span>
+                </span><span class="hero__highlighted-word-text tw:relative tw:z-1">desfavoráveis</span></span><span class="hero__description-text tw:relative tw:z-1">{`    aos direitos de mulheres, meninas e pessoas LGBTQIAPN+`}</span></p>
+            <a class="
+                hero__cta tw:items-center tw:bg-accent tw:text-white tw:cursor-pointer tw:flex tw:font-display tw:text-lg
+                tw:[font-variation-settings:'wdth'_75] tw:font-bold tw:h-[45px] tw:justify-center tw:leading-6 tw:static tw:w-fit
+                tw:no-underline tw:uppercase tw:[transform:none] tw:[transition:background-color_220ms_ease-out]
+                tw:whitespace-nowrap tw:z-3 tw:p-3 tw:m-0 tw:hover:bg-ink tw:focus-visible:outline-2 tw:focus-visible:outline-ink
+                tw:focus-visible:outline-offset-1 tw:max-[761px]:h-auto tw:max-[761px]:min-h-[45px] tw:max-[761px]:pt-3
+                tw:max-[761px]:pb-[9px] tw:max-[761px]:px-3 tw:motion-reduce:[transition:none] tw:min-[761px]:bottom-auto
+                tw:min-[761px]:text-xl tw:min-[761px]:h-14 tw:min-[761px]:left-[50%] tw:min-[761px]:leading-6
+                tw:min-[761px]:absolute tw:min-[761px]:top-[calc(100%_-_32px)] tw:min-[761px]:[transform:translateX(-50%)]
+                tw:min-[761px]:w-auto tw:min-[761px]:pt-4.5 tw:min-[761px]:pb-3.5 tw:min-[761px]:px-6 tw:min-[761px]:m-0
+            " href="#rights-under-attack">O que descobrimos?</a>
+        </div>
+
+        <div class="
+            hero__illustration tw:hidden tw:flex-none tw:h-[389px] tw:relative tw:w-[513px] tw:m-2.5 tw:min-[761px]:block
+            tw:min-[761px]:[transform:scale(0.86)] tw:min-[761px]:origin-[right_center] tw:min-[1101px]:[transform:none]
+        " aria-hidden="true">
+            <span class="hero__illustration-image tw:inset-0 tw:absolute tw:[&_img]:block tw:[&_img]:h-auto tw:[&_img]:max-w-full tw:[&_img]:w-full"><img decoding="async" height={389} width={513} src={heroIllustration} alt="" loading="eager" /></span>
+        </div>
+    </div>
+
+    <div class="
+        hero__halftone-shadow tw:bg-[image:var(--hero-halftone-shadow)] tw:bg-bottom-left tw:bg-repeat-x
+        tw:bg-size-[1440px_24px] tw:bottom-0 tw:block tw:h-6 tw:left-0 tw:mix-blend-multiply tw:pointer-events-none
+        tw:absolute tw:w-full tw:z-1 tw:max-[761px]:bottom-auto tw:max-[761px]:relative
+    " aria-hidden="true"></div>
+</section>
+
+

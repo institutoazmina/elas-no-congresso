@@ -1,4 +1,4 @@
-export type ActivityParliamentarian = {
+type ActivityParliamentarian = {
     nome: string;
     numero: number;
     foto?: string;
@@ -10,7 +10,7 @@ export type ActivityParliamentarian = {
     slug?: string;
 };
 
-export type ActivityProposal = {
+type ActivityProposal = {
     i: number;
     casa: string;
     numero: string;
@@ -30,13 +30,6 @@ export type ActivityProposal = {
     situacao?: string | null;
     /** Data de apresentação (presented_at da API, YYYY-MM-DD). Alimenta "Atualização". */
     apresentadaEm?: string | null;
-};
-
-export type ActivityData = {
-    legislaturas: Record<string, {
-        parlamentares: Record<string, ActivityParliamentarian>;
-        proposicoes: Record<string, ActivityProposal>;
-    }>;
 };
 
 export type AuthorProposal = ActivityProposal & {
@@ -92,15 +85,6 @@ export type AuthorInitialData = {
     activity: AuthorActivity;
 };
 
-const byNewestLegislature = ([a]: [string, unknown], [b]: [string, unknown]) => Number(b) - Number(a);
-
-export function parseAuthorId(value: unknown): number | null {
-    const text = String(value ?? "").trim();
-    if (!/^\d+$/.test(text)) return null;
-    const id = Number(text);
-    return Number.isSafeInteger(id) && id > 0 ? id : null;
-}
-
 export function authorSlug(value: unknown): string | null {
     const slug = String(value ?? "")
         .normalize("NFD")
@@ -132,56 +116,6 @@ export function paginateItems<T>(items: T[], currentPage: number, pageSize: numb
     const page = Math.min(Math.max(1, Math.trunc(currentPage) || 1), pages);
     const start = (page - 1) * safeSize;
     return { items: items.slice(start, start + safeSize), page, pages };
-}
-
-export function getActivityAuthorIds(data: ActivityData): number[] {
-    const ids = new Set<number>();
-    for (const legislature of Object.values(data.legislaturas)) {
-        for (const person of Object.values(legislature.parlamentares || {})) {
-            const id = parseAuthorId(person.numero);
-            if (id !== null) ids.add(id);
-        }
-    }
-    return [...ids].sort((a, b) => a - b);
-}
-
-export function proposalHasAuthor(proposal: ActivityProposal, authorId: number): boolean {
-    return Object.prototype.hasOwnProperty.call(proposal.autores || {}, String(authorId));
-}
-
-export function buildAuthorActivity(data: ActivityData, authorId: number): AuthorActivity | null {
-    let author: ActivityParliamentarian | undefined;
-    const proposals = new Map<string, AuthorProposal>();
-
-    for (const [legislatureId, legislature] of Object.entries(data.legislaturas).sort(byNewestLegislature)) {
-        const people = legislature.parlamentares || {};
-        author ??= Object.values(people).find((person) => person.numero === authorId);
-
-        for (const proposal of Object.values(legislature.proposicoes || {})) {
-            if (!proposalHasAuthor(proposal, authorId)) continue;
-            const authors = Object.keys(proposal.autores || {}).map((id) => people[id]).filter(Boolean);
-            const key = `${proposal.casa}:${proposal.numero}`;
-            if (!proposals.has(key)) {
-                proposals.set(key, { ...proposal, legislatura: Number(proposal.legislatura || legislatureId), authors });
-            }
-        }
-    }
-
-    if (!author) return null;
-    const items = [...proposals.values()];
-    const favorable = items.filter((proposal) => proposal.favoravel > 0).length;
-    const unfavorable = items.filter((proposal) => proposal.favoravel < 0).length;
-    const unrated = items.length - favorable - unfavorable;
-    const rated = favorable + unfavorable;
-
-    return {
-        author,
-        proposals: items,
-        favorable,
-        unfavorable,
-        unrated,
-        favorabilityRate: rated === 0 ? 0 : favorable / rated,
-    };
 }
 
 export function buildAuthorActivityFromApi(data: ActivityProposition[], authorId: number): AuthorActivity | null {
@@ -247,16 +181,6 @@ export function buildAuthorActivityFromApi(data: ActivityProposition[], authorId
     };
 }
 
-export function resolveApiParliamentarian(items: ApiParliamentarian[], externalId: number) {
-    for (const person of items) {
-        const terms = (person.terms || []).filter((term) => term.external_id === externalId);
-        if (terms.length === 0) continue;
-        const term = terms.find((item) => item.end_date === null) ?? terms.sort((a, b) => b.legislature_number - a.legislature_number)[0];
-        return { person, term };
-    }
-    return null;
-}
-
 export function partyForTerm(parties: ApiParty[], term: ParliamentarianTerm | undefined): string {
     if (!term) return "Indisponível";
     return parties.find((party) => party.id === term.party)?.acronym?.trim() || "Indisponível";
@@ -285,7 +209,7 @@ export type RatingGroup = { label: string; favorable: number; unfavorable: numbe
 
 export type AuthorReport = { date?: string; modified?: string; link: string; title: { rendered: string }; _embedded?: { "wp:featuredmedia"?: Array<{ source_url?: string; link?: string; alt_text?: string; media_details?: { sizes?: Record<string, { source_url?: string }> } }> } };
 
-export function sortReportsByDate<T extends { date?: string; modified?: string }>(reports: T[]): T[] {
+function sortReportsByDate<T extends { date?: string; modified?: string }>(reports: T[]): T[] {
     return [...reports].sort((a, b) => Date.parse(b.date || b.modified || "") - Date.parse(a.date || a.modified || ""));
 }
 

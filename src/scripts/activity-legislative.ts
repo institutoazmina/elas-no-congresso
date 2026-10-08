@@ -132,7 +132,7 @@ function initActivity(root: HTMLElement) {
             content.id = content.id || id;
             const toggle = document.createElement("button");
             toggle.type = "button";
-            toggle.className = "activity-dashboard-card__toggle";
+            toggle.className = "activity-dashboard-card__toggle tw:relative tw:z-1 tw:flex tw:h-[23px] tw:items-center tw:gap-1 tw:border tw:border-solid tw:border-[rgb(66_66_246_/_25%)] tw:[border-bottom-color:#fff] tw:bg-white tw:text-ink tw:font-display tw:text-sm tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-4 tw:text-left tw:uppercase tw:whitespace-nowrap tw:cursor-pointer tw:pt-1 tw:pb-0.5 tw:px-3 tw:mt-0 tw:mb-[-1px] tw:mx-0 tw:before:hidden tw:before:w-4 tw:before:h-4 tw:before:flex-none tw:before:[background:var(--select-chevron)_center_/_12px_8px_no-repeat] tw:before:content-[''] tw:focus-visible:outline-2 tw:focus-visible:outline-accent tw:focus-visible:outline-offset-0.5 tw:max-md:w-fit tw:max-md:max-w-full tw:max-md:before:block";
             toggle.setAttribute("aria-controls", content.id);
             const info = heading.querySelector<HTMLElement>("[data-dashboard-tooltip-trigger]");
             [...heading.childNodes].forEach((node) => {
@@ -223,7 +223,7 @@ function initActivity(root: HTMLElement) {
     function createStance(item: Proposal) {
         const data = stanceData(item);
         const wrap = document.createElement("span");
-        wrap.className = `activity-stance activity-stance--${data.className}`;
+        wrap.className = `activity-stance tw:flex tw:items-center tw:gap-1 tw:text-sm tw:leading-4 tw:[&_img]:w-6 tw:[&_img]:h-6 activity-stance--${data.className}`;
         if (data.icon) {
             const image = document.createElement("img");
             image.src = data.icon;
@@ -238,7 +238,7 @@ function initActivity(root: HTMLElement) {
 
     function createAuthor(item: Proposal, compact = false) {
         const wrapper = document.createElement("div");
-        wrapper.className = "activity-author";
+        wrapper.className = "activity-author tw:[&_>_a]:flex tw:[&_>_a]:w-full tw:[&_>_a]:items-center tw:[&_>_a]:gap-2 tw:[&_>_a]:text-inherit tw:[&_>_a]:text-left tw:[&_>_a]:no-underline tw:[&_>_a]:cursor-pointer tw:[&_>_a:hover_strong]:text-accent tw:[&_>_a:hover_strong]:underline tw:[&_img]:w-7.5 tw:[&_img]:h-10 tw:[&_img]:flex-none tw:[&_img]:border tw:[&_img]:border-solid tw:[&_img]:border-muted tw:[&_img]:rounded-none tw:[&_img]:object-cover tw:[&_img]:object-[top_center] tw:[&_>_a_>_span]:flex tw:[&_>_a_>_span]:min-w-0 tw:[&_>_a_>_span]:flex-col tw:[&_strong]:block tw:[&_strong]:[overflow-wrap:anywhere] tw:[&_strong]:text-sm tw:[&_strong]:leading-[18px] tw:[&_small]:text-[rgb(11_15_94_/_65%)] tw:[&_small]:text-xs tw:[&_small]:leading-4 tw:max-md:[.activity-card_>_&]:my-2 tw:max-md:[.activity-card_>_&]:mx-0 tw:max-md:[.activity-card_>_&_>_a]:w-auto tw:max-md:[.activity-card_>_&_img]:w-7.5 tw:max-md:[.activity-card_>_&_img]:h-10";
         const author = item.authors[0];
         if (!author) {
             wrapper.textContent = "Autoria não informada";
@@ -248,7 +248,7 @@ function initActivity(root: HTMLElement) {
         button.href = authorRoute(author.nome) || "/atividade-legislativa";
         button.setAttribute("aria-label", `Ver página de autoria de ${author.nome}`);
         const fallback = document.createElement("span");
-        fallback.className = "activity-author__fallback";
+        fallback.className = "activity-author__fallback tw:w-7.5 tw:h-10 tw:flex-none tw:border tw:border-solid tw:border-muted tw:rounded-none tw:object-cover tw:object-[top_center] tw:bg-[#f1f1ff] tw:text-accent tw:text-[11px] tw:font-bold tw:flex tw:items-center tw:justify-center";
         fallback.textContent = initials(author.nome);
         if (author.foto) {
             const photo = document.createElement("img");
@@ -270,7 +270,7 @@ function initActivity(root: HTMLElement) {
         wrapper.append(button);
         if (!compact && item.authors.length > 1) {
             const extra = document.createElement("small");
-            extra.className = "activity-author__extra";
+            extra.className = "activity-author__extra tw:block tw:mt-1";
             extra.textContent = `+ ${item.authors.length - 1} ${item.authors.length === 2 ? "autoria" : "autorias"}`;
             wrapper.append(extra);
         }
@@ -279,18 +279,18 @@ function initActivity(root: HTMLElement) {
 
     function dashboardRow(row: DashboardRow, author = false) {
         const element = document.createElement("div");
-        element.className = "activity-dashboard-card__row";
+        element.className = "activity-dashboard-card__row tw:grid tw:grid-cols-[minmax(0,1fr)_38px_80px] tw:min-h-8 tw:flex-none tw:items-center tw:gap-1.5 tw:text-sm tw:leading-4";
         const key = document.createElement("div");
-        key.className = "activity-dashboard-card__key";
+        key.className = "activity-dashboard-card__key tw:min-w-0 tw:[overflow-wrap:anywhere]";
         if (author) {
             const control = document.createElement(row.key.startsWith("person:num:") ? "a" : "div");
-            control.className = "activity-dashboard-card__author";
+            control.className = "activity-dashboard-card__author tw:items-center tw:gap-1.5 tw:[a&]:w-full tw:[a&]:text-inherit tw:[a&]:text-left tw:[a&]:no-underline tw:[a&]:cursor-pointer tw:[a&:hover_span_>_span]:text-accent tw:[a&:hover_span_>_span]:underline tw:[&_img]:block tw:[&_img]:w-6 tw:[&_img]:h-8 tw:[&_img]:flex-none tw:[&_img]:border tw:[&_img]:border-solid tw:[&_img]:border-muted tw:[&_img]:object-cover tw:[&_img]:object-[top_center] tw:[&_span]:flex tw:[&_span]:min-w-0 tw:[&_span]:flex-col tw:[&_span_>_span]:block tw:[&_span_>_span]:[overflow-wrap:anywhere] tw:[&_span_>_span]:leading-4 tw:[&_small]:text-[rgb(11_15_94_/_65%)] tw:[&_small]:text-[11px] tw:[&_small]:leading-3 tw:flex";
             if (control instanceof HTMLAnchorElement) {
                 control.href = authorRoute(row.label) || "/atividade-legislativa";
                 control.setAttribute("aria-label", `Ver página de autoria de ${row.label}`);
             }
             const fallback = document.createElement("span");
-            fallback.className = "activity-dashboard-card__author-fallback";
+            fallback.className = "activity-dashboard-card__author-fallback tw:w-6 tw:h-8 tw:flex-none tw:border tw:border-solid tw:border-muted tw:object-cover tw:object-[top_center] tw:bg-[#f1f1ff] tw:text-accent tw:text-[9px] tw:font-bold tw:leading-[1] tw:flex tw:items-center tw:justify-center";
             fallback.textContent = initials(row.label);
             if (row.photo) {
                 const image = document.createElement("img");
@@ -314,14 +314,14 @@ function initActivity(root: HTMLElement) {
             key.textContent = row.label;
         }
         const bars = document.createElement("div");
-        bars.className = "activity-dashboard-card__bars";
+        bars.className = "activity-dashboard-card__bars tw:relative tw:flex tw:w-20 tw:h-5 tw:justify-center tw:flex-col tw:gap-1 tw:before:absolute tw:before:z-2 tw:before:[inset-block:0] tw:before:[inset-inline-start:0] tw:before:w-0 tw:before:[border-inline-start:1px_solid_#0b0f5e] tw:before:content-[''] tw:before:pointer-events-none tw:[&_span]:block tw:[&_span]:w-[var(--bar-width,_0%)] tw:[&_span]:min-w-0 tw:[&_span]:max-w-20 tw:[&_span]:h-1.5 tw:[&_span:first-child]:bg-[#c1e639] tw:[&_span:last-child]:bg-[#ff5865]";
         const favorable = document.createElement("span");
         const unfavorable = document.createElement("span");
         favorable.style.setProperty("--bar-width", `${row.favorable_width}%`);
         unfavorable.style.setProperty("--bar-width", `${row.unfavorable_width}%`);
         bars.append(favorable, unfavorable);
         const values = document.createElement("div");
-        values.className = "activity-dashboard-card__values";
+        values.className = "activity-dashboard-card__values tw:flex tw:items-end tw:flex-col tw:text-[rgb(11_15_94_/_75%)] tw:text-xs tw:leading-3 tw:[font-variant-numeric:tabular-nums]";
         const favorableValue = document.createElement("span");
         const unfavorableValue = document.createElement("span");
         favorableValue.textContent = formatNumber.format(row.favorable);
@@ -342,7 +342,7 @@ function initActivity(root: HTMLElement) {
             target.append(message);
         } else if (rows.length === 1 && singleResultMessage) {
             const message = document.createElement("p");
-            message.className = "activity-dashboard-card__single-result";
+            message.className = "activity-dashboard-card__single-result tw:text-[rgb(11_15_94_/_65%)] tw:text-xs tw:leading-4 tw:mt-1 tw:mb-0 tw:mx-0";
             message.textContent = singleResultMessage;
             target.append(message);
         }
@@ -458,7 +458,7 @@ function initActivity(root: HTMLElement) {
         if (item.comentario) {
             const comment = document.createElement("a");
             comment.href = propositionRoute(item.numero) || "/atividade-legislativa";
-            comment.className = "activity-table__comments";
+            comment.className = "activity-table__comments tw:block tw:mt-1 tw:text-accent tw:text-xs tw:leading-4";
             comment.textContent = "Ler comentários";
             evaluator.append(comment);
         }
@@ -478,7 +478,7 @@ function initActivity(root: HTMLElement) {
 
     function createCard(item: Proposal) {
         const article = document.createElement("article");
-        article.className = "activity-card";
+        article.className = "activity-card tw:max-md:flex tw:max-md:border-b tw:max-md:border-solid tw:max-md:border-b-[rgb(66_66_246_/_25%)] tw:max-md:bg-white tw:max-md:flex-col tw:max-md:py-2 tw:max-md:px-0 tw:max-md:[&_>_header]:flex tw:max-md:[&_>_header]:min-h-14 tw:max-md:[&_>_header]:items-start tw:max-md:[&_>_header]:justify-between tw:max-md:[&_>_header]:gap-2 tw:max-md:[&_>_header]:py-2 tw:max-md:[&_>_header]:px-0 tw:max-md:[&_>_header_>_div]:flex tw:max-md:[&_>_header_>_div]:flex-col tw:max-md:[&_>_header_a]:text-accent tw:max-md:[&_>_header_a]:font-display tw:max-md:[&_>_header_a]:text-lg tw:max-md:[&_>_header_a]:font-bold tw:max-md:[&_>_header_a]:[font-variation-settings:'wdth'_75] tw:max-md:[&_>_header_a]:leading-6 tw:max-md:[&_>_header_a]:no-underline tw:max-md:[&_>_header_a]:uppercase tw:max-md:[&_>_header_small]:text-xs tw:max-md:[&_>_header_small]:leading-4 tw:max-md:[&_>_footer]:flex tw:max-md:[&_>_footer]:min-h-12 tw:max-md:[&_>_footer]:items-start tw:max-md:[&_>_footer]:justify-between tw:max-md:[&_>_footer]:gap-3 tw:max-md:[&_>_footer]:py-2 tw:max-md:[&_>_footer]:px-0 tw:max-md:[&_>_footer_span]:flex tw:max-md:[&_>_footer_span]:flex-col tw:max-md:[&_>_footer_span]:text-xs tw:max-md:[&_>_footer_span]:leading-4 tw:max-md:[&_>_footer_span_+_span]:items-end tw:max-md:[&_>_footer_span_+_span]:text-right";
         const header = document.createElement("header");
         const titleWrap = document.createElement("div");
         const title = document.createElement("a");
@@ -489,10 +489,10 @@ function initActivity(root: HTMLElement) {
         titleWrap.append(title, house);
         header.append(titleWrap, createStance(item));
         const tag = document.createElement("span");
-        tag.className = "activity-card__tag";
+        tag.className = "activity-card__tag tw:max-md:self-start tw:max-md:border tw:max-md:border-solid tw:max-md:border-[rgb(66_66_246_/_40%)] tw:max-md:text-[rgb(11_15_94_/_65%)] tw:max-md:font-display tw:max-md:text-[11px] tw:max-md:font-bold tw:max-md:[font-variation-settings:'wdth'_75] tw:max-md:leading-4 tw:max-md:uppercase tw:max-md:py-[1px] tw:max-md:px-1 tw:max-md:mt-0 tw:max-md:mb-2 tw:max-md:mx-0";
         tag.textContent = item.categoriaLabel || item.categoria || "Categoria não informada";
         const summary = document.createElement("p");
-        summary.className = "activity-card__summary";
+        summary.className = "activity-card__summary tw:max-md:text-[rgb(11_15_94_/_72%)] tw:max-md:text-sm tw:max-md:leading-4 tw:max-md:line-clamp-5 tw:max-md:mt-2 tw:max-md:mb-3 tw:max-md:mx-0";
         summary.textContent = item.resumo;
         const footer = document.createElement("footer");
         const evaluation = document.createElement("span");
@@ -516,6 +516,9 @@ function initActivity(root: HTMLElement) {
         const bar = $("[data-result-bar]") as HTMLElement;
         bar.style.setProperty("--favorable-share", `${summary.favorable_share}%`);
         bar.classList.toggle("is-empty", count === 0);
+        const downloadButton = $<HTMLButtonElement>("[data-download]");
+        downloadButton.disabled = count === 0;
+        downloadButton.setAttribute("aria-disabled", String(count === 0));
         const activeCount = summary.active_filter_count;
         $$<HTMLElement>("[data-filter-count]").forEach((badge) => {
             badge.textContent = String(activeCount);
@@ -547,7 +550,7 @@ function initActivity(root: HTMLElement) {
             return button;
         };
         const label = document.createElement("span");
-        label.className = "activity-pagination__page-label";
+        label.className = "activity-pagination__page-label tw:text-sm tw:leading-5";
         label.textContent = `Página ${page} de ${pages}`;
         const controls = document.createElement("span");
         controls.append(makeButton("‹", page - 1, page === 1), makeButton("›", page + 1, page === pages));
@@ -833,7 +836,8 @@ function initActivity(root: HTMLElement) {
         requestController = controller;
         ++resultsRenderVersion;
         status.hidden = false;
-        status.className = "activity-status is-loading";
+        status.classList.remove("is-error");
+        status.classList.add("is-loading");
         status.innerHTML = `<span aria-hidden="true"></span><p>${explorer ? "Aplicando filtros…" : "Carregando atividade legislativa…"}</p>`;
         root.setAttribute("aria-busy", "true");
         $("[data-results]").setAttribute("hidden", "");
@@ -855,7 +859,8 @@ function initActivity(root: HTMLElement) {
         } catch (error) {
             if (controller.signal.aborted) return;
             console.error(error);
-            status.className = "activity-status is-error";
+            status.classList.remove("is-loading");
+            status.classList.add("is-error");
             status.innerHTML = `<p><strong>Não foi possível carregar as proposições.</strong><br />Confira sua conexão e tente novamente.</p><button type="button" data-retry>Tentar novamente</button>`;
             $("[data-results]").setAttribute("hidden", "");
             $("[data-total]").hidden = true;

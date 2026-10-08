@@ -1,12 +1,12 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import RedesignHeader from "../../../components/redesign/RedesignHeader.astro";
-import RedesignFooter from "../../../components/redesign/RedesignFooter.astro";
-import thumbsUp from "../../../assets/images/redesign/activity/thumbs-up.svg";
-import thumbsDown from "../../../assets/images/redesign/activity/thumbs-down.svg";
-import paper from "../../../assets/images/redesign/activity/author-hero-paper.png";
-import paperclip from "../../../assets/images/redesign/activity/author-paperclip.png";
-import statusLabel from "../../../assets/images/redesign/activity/proposition-status-label.svg";
+import Header from "../../../components/layout/Header.astro";
+import Footer from "../../../components/layout/Footer.astro";
+const thumbsUp = "/assets/images/activity/thumbs-up.svg";
+const thumbsDown = "/assets/images/activity/thumbs-down.svg";
+const paper = "/assets/images/activity/author-hero-paper.png";
+const paperclip = "/assets/images/activity/author-paperclip.png";
+const statusLabel = "/assets/images/activity/proposition-status-label.svg";
 import { authorRoute, normalizePhotoUrl } from "../../../lib/author-page";
 import { propositionSlug } from "../../../lib/proposition-utils";
 import { formatPresentedDate } from "../../../lib/canonical";
@@ -70,6 +70,7 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
 <!doctype html>
 <html lang="pt-BR">
   <head>
+        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
@@ -82,106 +83,106 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
   </head>
   <body class="tw:!m-0 tw:!bg-white tw:!pt-0">
     <div
-      class="proposition-page"
-      style={`--proposition-paper: url(${paper.src}); --proposition-paperclip: url(${paperclip.src}); --proposition-status-label: url(${statusLabel.src})`}
+      class="proposition-page tw:min-w-80 tw:text-ink tw:font-sans"
+      style={`--proposition-paper: url(${paper}); --proposition-paperclip: url(${paperclip}); --proposition-status-label: url(${statusLabel})`}
     >
-      <RedesignHeader />
-      <main>
-        <section class="proposition-hero" data-page-hero aria-labelledby="proposition-title">
-          <a href="/atividade-legislativa" data-history-back>←&nbsp; Voltar ao painel</a>
-          <div>
+      <Header />
+      <main class="tw:overflow-clip">
+        <section class="proposition-hero tw:[&>a]:absolute tw:[&>a]:z-1 tw:[&>a]:top-3 tw:[&>a]:left-12 tw:[&>a]:text-[#d0d0fd] tw:[&>a]:text-base tw:[&>a]:font-bold tw:[&>a]:leading-6 tw:[&>a]:no-underline tw:[&_p]:font-display tw:[&_p]:font-bold tw:[&_p]:[font-variation-settings:'wdth'_75] tw:[&_p]:text-center tw:[&_p]:uppercase tw:[&_p]:text-2xl tw:[&_p]:leading-8 tw:[&_p]:m-0 tw:[&_h1]:font-display tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:text-center tw:[&_h1]:uppercase tw:[&_h1]:m-0 tw:max-md:h-55 tw:max-md:bg-center tw:max-md:bg-size-[cover] tw:max-md:[&>a]:top-3 tw:max-md:[&>a]:left-4 tw:max-md:[&>a]:text-sm tw:max-md:[&_p]:text-lg tw:max-md:[&_p]:leading-6 tw:max-md:[&_h1]:mt-1 tw:max-md:[&_h1]:text-[clamp(36px,_12vw,_48px)] tw:max-md:[&_h1]:leading-[1] tw:relative tw:h-53 tw:overflow-hidden tw:bg-[#3838d9] tw:bg-[image:var(--proposition-paper)] tw:[background-blend-mode:multiply] tw:bg-center tw:bg-no-repeat tw:bg-size-[cover] tw:text-white" data-page-hero aria-labelledby="proposition-title">
+          <a class="tw:hover:text-white tw:hover:underline tw:focus-visible:text-white tw:focus-visible:underline" href="/atividade-legislativa" data-history-back>←&nbsp; Voltar ao painel</a>
+          <div class="tw:absolute tw:top-[57.5px] tw:left-[50%] tw:flex tw:w-[min(720px,_calc(100%_-_32px))] tw:[transform:translateX(-50%)] tw:items-center tw:flex-col tw:max-md:top-18">
             <p>Proposição</p>
-            <h1 id="proposition-title">{activity.number_label}</h1>
+            <h1 class="tw:text-7xl tw:leading-18 tw:[overflow-wrap:anywhere]" id="proposition-title">{activity.number_label}</h1>
           </div>
         </section>
 
-        <section class="proposition-overview" aria-label={`Detalhes de ${activity.number_label}`}>
-          <span class="proposition-overview__paperclip" aria-hidden="true"></span>
-          <div class="proposition-overview__grid">
-            <article class="proposition-column proposition-summary">
-              <h2>Ementa</h2>
-              <p>{activity.ementa || "Indisponível"}</p>
-              <div class="proposition-summary__links">
+        <section class="proposition-overview tw:relative tw:border-t tw:border-solid tw:border-t-[rgb(153_141_150_/_28%)] tw:bg-white tw:shadow-[0_-2px_9.8px_rgb(0_0_0_/_27%)] tw:pt-22 tw:pb-10 tw:px-12 tw:max-[1280px]:px-8 tw:max-md:min-h-0 tw:max-md:pt-18 tw:max-md:pb-14 tw:max-md:px-4" aria-label={`Detalhes de ${activity.number_label}`}>
+          <span class="proposition-overview__paperclip tw:absolute tw:z-2 tw:top-[-20.933px] tw:left-[max(42px,_calc(50%_-_678px))] tw:w-[46.213px] tw:h-[84.412px] tw:[background:var(--proposition-paperclip)_center_/_contain_no-repeat] tw:pointer-events-none tw:max-md:left-4 tw:max-md:w-9 tw:max-md:h-16.5" aria-hidden="true"></span>
+          <div class="proposition-overview__grid tw:w-[min(1260px,_100%)] tw:gap-5 tw:items-start tw:justify-center tw:my-0 tw:mx-auto tw:max-[1280px]:gap-y-12 tw:max-md:gap-12 tw:grid tw:grid-cols-[repeat(4,minmax(0,300px))] tw:min-[768px]:max-[1280px]:grid-cols-[repeat(2,minmax(0,300px))] tw:max-md:grid-cols-1 tw:[&>*]:min-w-0">
+            <article class="proposition-column proposition-summary tw:min-w-0 tw:max-md:[&_h2]:mb-5 tw:max-md:[&_h2]:text-[28px] tw:max-md:[&_h2]:leading-8 tw:max-md:[&>p]:w-full">
+              <h2 class="tw:text-ink tw:font-display tw:text-[32px] tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-8 tw:[text-box-edge:cap_alphabetic] tw:[text-box-trim:trim-both] tw:uppercase tw:mt-0 tw:mb-[23px] tw:mx-0">Ementa</h2>
+              <p class="tw:w-67 tw:max-w-full tw:text-[#4b5563] tw:text-lg tw:font-normal tw:leading-6 tw:[white-space:pre-line] tw:mt-0 tw:mb-6 tw:mx-0">{activity.ementa || "Indisponível"}</p>
+              <div class="proposition-summary__links tw:flex tw:flex-col tw:gap-3 tw:text-accent tw:text-lg tw:leading-6 tw:[&_a]:text-inherit tw:[&_a]:no-underline tw:[&_span]:text-muted">
                 {officialLink
-                  ? <a href={officialLink} target="_blank" rel="noopener noreferrer">Ver no site do Congresso</a>
+                  ? <a class="tw:hover:underline tw:focus-visible:underline" href={officialLink} target="_blank" rel="noopener noreferrer">Ver no site do Congresso</a>
                   : <span>Indisponível</span>}
               </div>
             </article>
 
-            <article class="proposition-column proposition-assessment" aria-label="Avaliação da proposição">
-              <h2>Avaliação</h2>
+            <article class="proposition-column proposition-assessment tw:min-w-0 tw:max-md:[&_h2]:mb-5 tw:max-md:[&_h2]:text-[28px] tw:max-md:[&_h2]:leading-8 tw:pt-[3px]" aria-label="Avaliação da proposição">
+              <h2 class="tw:text-ink tw:font-display tw:text-[32px] tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-8 tw:[text-box-edge:cap_alphabetic] tw:[text-box-trim:trim-both] tw:uppercase tw:mt-0 tw:mb-[23px] tw:mx-0">Avaliação</h2>
               <div class:list={[
-                "proposition-assessment__value",
-                { "is-favorable": assessment === "Favorável", "is-unfavorable": assessment === "Desfavorável", "is-unrated": assessment === "Sem avaliação" },
+                "proposition-assessment__value tw:flex tw:min-h-8 tw:items-center tw:gap-2 tw:text-ink tw:[&_img]:block tw:[&_img]:w-8 tw:[&_img]:h-8 tw:[&_strong]:font-display tw:[&_strong]:text-lg tw:[&_strong]:font-bold tw:[&_strong]:[font-variation-settings:'wdth'_75] tw:[&_strong]:leading-6 tw:[&_strong]:uppercase",
+                { "is-favorable": assessment === "Favorável", "is-unfavorable": assessment === "Desfavorável", [String.raw`is-unrated tw:[.proposition-assessment\_\_value&]:text-muted tw:[.activity-table\_\_stance&]:text-muted tw:[.author-table\_\_stance&]:text-muted`]: assessment === "Sem avaliação" },
               ]}>
-                {assessment === "Favorável" && <img src={thumbsUp.src} alt="" />}
-                {assessment === "Desfavorável" && <img src={thumbsDown.src} alt="" />}
+                {assessment === "Favorável" && <img src={thumbsUp} alt="" />}
+                {assessment === "Desfavorável" && <img src={thumbsDown} alt="" />}
                 <strong>{assessment}</strong>
               </div>
-              <p class="proposition-assessment__comment">
+              <p class="proposition-assessment__comment tw:text-ink tw:text-lg tw:leading-6 tw:mt-4 tw:mb-0 tw:mr-2 tw:ml-0">
                 {activity.assessment_comments ? `“${activity.assessment_comments}”` : "Indisponível"}
               </p>
-              <p class="proposition-assessment__evaluator">
+              <p class="proposition-assessment__evaluator tw:text-ink tw:text-lg tw:leading-6 tw:mt-4 tw:mb-0 tw:mr-2 tw:ml-0">
                 <span aria-hidden="true">— </span><strong>{activity.assessment_organization?.trim() || "Indisponível"}</strong>
               </p>
             </article>
 
-            <article class="proposition-column proposition-authors" aria-labelledby="proposition-authors-title">
-              <h2 id="proposition-authors-title">Autoria</h2>
+            <article class="proposition-column proposition-authors tw:min-w-0 tw:max-md:[&_h2]:mb-5 tw:max-md:[&_h2]:text-[28px] tw:max-md:[&_h2]:leading-8" aria-labelledby="proposition-authors-title">
+              <h2 class="tw:text-ink tw:font-display tw:text-[32px] tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-8 tw:[text-box-edge:cap_alphabetic] tw:[text-box-trim:trim-both] tw:uppercase tw:mt-0 tw:mb-[23px] tw:mx-0" id="proposition-authors-title">Autoria</h2>
               {authors.length > 0
-                ? <div class="proposition-authors__list">
+                ? <div class="proposition-authors__list tw:flex tw:flex-col tw:gap-4 tw:py-2 tw:px-0">
                     {authors.map((author) => {
                       const photo = normalizePhotoUrl(author.foto);
                       const initials = author.nome.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
-                      return <a class="proposition-author" href={authorRoute(author.nome) || "/atividade-legislativa"} aria-label={`Ver autoria de ${author.nome}`}>
+                      return <a class="proposition-author tw:flex tw:w-full tw:min-w-0 tw:items-start tw:gap-2 tw:text-ink tw:no-underline tw:[&_strong]:text-sm tw:[&_strong]:font-normal tw:[&_strong]:leading-4 tw:[&_small]:text-sm tw:[&_small]:font-normal tw:[&_small]:leading-4 tw:[&:hover_strong]:text-accent tw:[&:hover_strong]:underline tw:[&:focus-visible_strong]:text-accent tw:[&:focus-visible_strong]:underline" href={authorRoute(author.nome) || "/atividade-legislativa"} aria-label={`Ver autoria de ${author.nome}`}>
                         {photo
-                          ? <span class="proposition-author__photo">
+                          ? <span class="proposition-author__photo tw:w-7.5 tw:h-10 tw:flex-[0_0_30px] tw:border tw:border-solid tw:border-muted tw:overflow-hidden tw:[&_img]:w-full tw:[&_img]:h-full tw:[&_img]:object-cover tw:[&_img]:object-[top] tw:flex tw:items-center tw:justify-center">
                               <img src={photo} alt={`Foto de ${author.nome}`} loading="lazy" onerror="this.hidden = true; this.nextElementSibling.hidden = false" />
-                              <span class="proposition-author__fallback" aria-hidden="true" hidden>{initials}</span>
+                              <span class={String.raw`proposition-author__fallback tw:flex-[0_0_30px] tw:border tw:border-solid tw:border-muted tw:bg-[#f1f1ff] tw:text-accent tw:text-[11px] tw:font-bold tw:w-full tw:h-full tw:object-cover tw:object-[top] tw:[.proposition-author\_\_photo_&[hidden]]:hidden tw:flex tw:items-center tw:justify-center`} aria-hidden="true" hidden>{initials}</span>
                             </span>
-                          : <span class="proposition-author__fallback" aria-hidden="true">{initials}</span>}
-                        <span>
+                          : <span class={String.raw`proposition-author__fallback tw:w-7.5 tw:h-10 tw:flex-[0_0_30px] tw:border tw:border-solid tw:border-muted tw:bg-[#f1f1ff] tw:text-accent tw:text-[11px] tw:font-bold tw:[.proposition-author\_\_photo_&[hidden]]:hidden tw:flex tw:items-center tw:justify-center`} aria-hidden="true">{initials}</span>}
+                        <span class="tw:flex tw:min-w-0 tw:flex-col">
                           <strong>{author.nome}</strong>
                           <small>{[author.partido, author.estado].filter(Boolean).join("/") || "Indisponível"}</small>
                         </span>
                       </a>;
                     })}
                   </div>
-                : <p class="proposition-unavailable">Indisponível</p>}
+                : <p class="proposition-unavailable tw:text-muted tw:text-lg tw:leading-6 tw:m-0">Indisponível</p>}
             </article>
 
-            <aside class="proposition-details" aria-label="Informações complementares">
-              <strong class="proposition-details__tag">{category || "Indisponível"}</strong>
-              <div class="proposition-details__body">
+            <aside class="proposition-details tw:flex tw:min-h-74 tw:border tw:border-solid tw:border-[rgb(66_66_246_/_25%)] tw:flex-col tw:items-start tw:gap-4 tw:p-[23px] tw:max-md:w-full" aria-label="Informações complementares">
+              <strong class="proposition-details__tag tw:inline-flex tw:min-h-10 tw:items-center tw:bg-accent tw:text-white tw:font-display tw:text-xl tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:uppercase tw:pt-[5px] tw:pb-[3px] tw:px-2.5">{category || "Indisponível"}</strong>
+              <div class="proposition-details__body tw:w-full tw:text-[#4b5563] tw:text-lg tw:leading-6 tw:[&_p]:mt-0 tw:[&_p:not(:last-child)]:mb-6 tw:[&_p]:mx-0">
                 <p>
-                  <span>Data de apresentação:</span>
+                  <span class="tw:block tw:text-muted tw:text-sm tw:leading-4">Data de apresentação:</span>
                   {presentedDate}<br />
                   {house}
                 </p>
                 <p>
-                  <span>Última movimentação:</span>
+                  <span class="tw:block tw:text-muted tw:text-sm tw:leading-4">Última movimentação:</span>
                   {activity.celerity.last_event_at ? formatPresentedDate(activity.celerity.last_event_at) : activity.current_status?.trim() || "Indisponível"}
                 </p>
-                <p class="proposition-details__themes">
-                  {themes.length > 0 ? themes.map((theme) => <span>{theme.replace(/^#/, "")}</span>) : "Indisponível"}
+                <p class="proposition-details__themes tw:flex tw:gap-[0_5px] tw:text-accent tw:mb-0">
+                  {themes.length > 0 ? themes.map((theme) => <span class="tw:block tw:text-muted tw:text-sm tw:leading-4">{theme.replace(/^#/, "")}</span>) : "Indisponível"}
                 </p>
               </div>
             </aside>
           </div>
         </section>
 
-        <section class="proposition-progress" aria-labelledby="proposition-progress-title" data-proposition-progress data-proposition-number={activity.number_label} data-proposition-house={activityHouse}>
-          <div class="proposition-progress__bar">
-            <h2 id="proposition-progress-title">Como está?</h2>
-            <strong class="proposition-progress__status" data-progress-status>Carregando</strong>
-            <span class="proposition-progress__summary" data-progress-summary>Histórico carregado ao chegar nesta seção</span>
+        <section class="proposition-progress tw:w-full tw:bg-white tw:pt-25 tw:pb-10 tw:px-4 tw:max-md:pt-22 tw:max-md:pb-24 tw:max-md:px-4" aria-labelledby="proposition-progress-title" data-proposition-progress data-proposition-number={activity.number_label} data-proposition-house={activityHouse}>
+          <div class="proposition-progress__bar tw:max-md:h-20.5 tw:max-md:py-0 tw:max-md:px-3.5 tw:max-md:[&_h2]:top-[-43px] tw:max-md:[&_h2]:text-[28px] tw:relative tw:flex tw:w-[min(741px,_100%)] tw:h-[65px] tw:items-center tw:justify-between tw:bg-[#6262ff] tw:bg-[image:var(--proposition-paper)] tw:[background-blend-mode:multiply] tw:[background-position:center_-70px] tw:bg-no-repeat tw:bg-size-[741px_auto] tw:py-0 tw:pr-[25px] tw:pl-5 tw:my-0 tw:mx-auto">
+            <h2 class="tw:absolute tw:-top-11.5 tw:left-[50%] tw:[transform:translateX(-50%)] tw:text-navy tw:font-display tw:text-[32px] tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-8 tw:text-center tw:[text-box-edge:cap_alphabetic] tw:[text-box-trim:trim-both] tw:uppercase tw:whitespace-nowrap tw:m-0" id="proposition-progress-title">Como está?</h2>
+            <strong class="proposition-progress__status tw:relative tw:z-0 tw:flex tw:min-w-29.5 tw:h-11 tw:items-center tw:justify-center tw:gap-[5px] tw:text-navy tw:text-2xl tw:font-medium tw:leading-[44px] tw:whitespace-nowrap tw:py-0 tw:px-1.5 tw:[&>span]:text-[19px] tw:[&>span]:leading-[1] tw:max-md:min-w-28 tw:max-md:text-xl tw:before:absolute tw:before:z-[-1] tw:before:top-0 tw:before:-right-2 tw:before:-left-2 tw:before:h-11.5 tw:before:[background:var(--proposition-status-label)_center_/_100%_100%_no-repeat] tw:before:content-[''] tw:max-md:before:-right-1.5 tw:max-md:before:-left-1.5" data-progress-status>Carregando</strong>
+            <span class="proposition-progress__summary tw:[&>span]:font-normal tw:max-md:max-w-30 tw:max-md:text-sm tw:max-md:leading-[18px] tw:max-md:text-right tw:text-white tw:text-lg tw:font-bold tw:leading-6 tw:[text-shadow:1px_2px_1px_rgb(0_0_0_/_20%)]" data-progress-summary>Histórico carregado ao chegar nesta seção</span>
           </div>
-          <div class="proposition-timeline is-empty" aria-live="polite" data-progress-timeline>
+          <div class="proposition-timeline is-empty tw:w-[min(741px,_100%)] tw:min-h-74 tw:border-[2px] tw:border-solid tw:border-navy tw:bg-white tw:my-0 tw:mx-auto tw:[&>p]:text-muted tw:[&>p]:text-base tw:[&>p]:leading-6 tw:[&>p]:text-center tw:[&>p]:m-0 tw:max-md:min-h-39 tw:[&.is-empty]:p-[25px] tw:[&:not(.is-empty)]:min-h-0 tw:max-md:[&.is-empty]:p-5 tw:[&.is-empty]:flex tw:[&.is-empty]:items-center tw:[&.is-empty]:justify-center" aria-live="polite" data-progress-timeline>
             <p>Histórico de movimentações indisponível</p>
           </div>
         </section>
       </main>
-      <RedesignFooter />
+      <Footer />
     </div>
     <script>
       import { PUBLIC_API_BASE_URL } from "astro:env/client";
@@ -258,12 +259,12 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
             }
 
             const list = document.createElement("ol");
-            list.className = "proposition-timeline__events";
+            list.className = "proposition-timeline__events tw:list-none tw:p-0 tw:m-0 tw:[&_li]:border-b-[2px] tw:[&_li]:border-solid tw:[&_li]:border-b-navy tw:[&_li:last-child]:[border-bottom:0] tw:[&_header]:flex tw:[&_header]:items-center tw:[&_header]:justify-between tw:[&_header]:gap-4 tw:[&_header_strong]:text-navy tw:[&_header_strong]:font-display tw:[&_header_strong]:text-xl tw:[&_header_strong]:font-bold tw:[&_header_strong]:[font-variation-settings:'wdth'_75] tw:[&_header_strong]:leading-6 tw:[&_header_strong]:uppercase tw:[&_time]:text-navy tw:[&_time]:font-display tw:[&_time]:text-xl tw:[&_time]:font-bold tw:[&_time]:[font-variation-settings:'wdth'_75] tw:[&_time]:leading-6 tw:[&_time]:uppercase tw:[&_time]:flex-none tw:[&_time]:text-right";
             for (const event of activity.events) {
               const item = document.createElement("li");
               const destination = event.url || activity.tramitation_url;
               const card = document.createElement("a");
-              card.className = "proposition-timeline__event-card";
+              card.className = "proposition-timeline__event-card tw:block tw:text-inherit tw:no-underline tw:pt-5 tw:pb-7 tw:px-4 tw:max-md:pt-4.5 tw:max-md:pb-5.5 tw:max-md:px-3.5 tw:[&[href]:hover]:bg-[#f7f6f7] tw:[&[href]:focus-visible]:outline-2 tw:[&[href]:focus-visible]:outline-accent tw:[&[href]:focus-visible]:-outline-offset-0.5 tw:[&_>_p]:text-muted tw:[&_>_p]:font-sans tw:[&_>_p]:text-base tw:[&_>_p]:font-normal tw:[&_>_p]:[font-variant-numeric:lining-nums_tabular-nums] tw:[&_>_p]:leading-6 tw:[&_>_p]:text-left tw:[&_>_p]:mt-3 tw:[&_>_p]:mb-0 tw:[&_>_p]:mx-0";
               if (destination) {
                 card.href = destination;
                 card.target = "_blank";
@@ -355,385 +356,3 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
     </script>
   </body>
 </html>
-
-<style is:global>
-  @font-face {
-    font-family: "ETC Anybody";
-    font-style: normal;
-    font-weight: 50 1000;
-    font-display: swap;
-    src: url("/assets/fonts/ETCAnybodyVariable.woff2") format("woff2-variations");
-  }
-
-  .proposition-page,
-  .proposition-page * { box-sizing: border-box; }
-  .proposition-page { min-width: 320px; color: #0b0f5e; font-family: "Plus Jakarta Sans", sans-serif; }
-  .proposition-page main { overflow: clip; }
-
-  .proposition-hero {
-    position: relative;
-    height: 212px;
-    overflow: hidden;
-    background-color: #3838d9;
-    background-image: var(--proposition-paper);
-    background-blend-mode: multiply;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: #fff;
-  }
-  .proposition-hero > a {
-    position: absolute;
-    z-index: 1;
-    top: 12px;
-    left: 48px;
-    color: #d0d0fd;
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 24px;
-    text-decoration: none;
-  }
-  .proposition-hero > a:hover,
-  .proposition-hero > a:focus-visible { color: #fff; text-decoration: underline; }
-  .proposition-hero > div {
-    position: absolute;
-    top: 57.5px;
-    left: 50%;
-    display: flex;
-    width: min(720px, calc(100% - 32px));
-    transform: translateX(-50%);
-    align-items: center;
-    flex-direction: column;
-  }
-  .proposition-hero p,
-  .proposition-hero h1 {
-    margin: 0;
-    font-family: "ETC Anybody", sans-serif;
-    font-weight: 700;
-    font-variation-settings: "wdth" 75;
-    text-align: center;
-    text-transform: uppercase;
-  }
-  .proposition-hero p { font-size: 24px; line-height: 32px; }
-  .proposition-hero h1 { font-size: 72px; line-height: 72px; overflow-wrap: anywhere; }
-
-  .proposition-overview {
-    position: relative;
-    border-top: 1px solid rgb(153 141 150 / 28%);
-    background: #fff;
-    box-shadow: 0 -2px 9.8px rgb(0 0 0 / 27%);
-    padding: 88px 48px 40px;
-  }
-  .proposition-overview__paperclip {
-    position: absolute;
-    z-index: 2;
-    top: -20.933px;
-    left: max(42px, calc(50% - 678px));
-    width: 46.213px;
-    height: 84.412px;
-    background: var(--proposition-paperclip) center / contain no-repeat;
-    pointer-events: none;
-  }
-  .proposition-overview__grid {
-    display: grid;
-    width: min(1260px, 100%);
-    margin: 0 auto;
-    grid-template-columns: repeat(4, minmax(0, 300px));
-    gap: 20px;
-    align-items: start;
-    justify-content: center;
-  }
-  .proposition-column { min-width: 0; }
-  .proposition-column h2 {
-    margin: 0 0 23px;
-    color: #0b0f5e;
-    font-family: "ETC Anybody", sans-serif;
-    font-size: 32px;
-    font-weight: 700;
-    font-variation-settings: "wdth" 75;
-    line-height: 32px;
-    text-box-edge: cap alphabetic;
-    text-box-trim: trim-both;
-    text-transform: uppercase;
-  }
-  .proposition-summary > p {
-    width: 268px;
-    max-width: 100%;
-    margin: 0 0 24px;
-    color: #4b5563;
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 24px;
-    white-space: pre-line;
-  }
-  .proposition-summary__links {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    color: #4242f6;
-    font-size: 18px;
-    line-height: 24px;
-  }
-  .proposition-summary__links a { color: inherit; text-decoration: none; }
-  .proposition-summary__links a:hover,
-  .proposition-summary__links a:focus-visible { text-decoration: underline; }
-  .proposition-summary__links span { color: #998d96; }
-
-  .proposition-assessment { padding-top: 3px; }
-  .proposition-assessment__value {
-    display: flex;
-    min-height: 32px;
-    align-items: center;
-    gap: 8px;
-    color: #0b0f5e;
-  }
-  .proposition-assessment__value img { display: block; width: 32px; height: 32px; }
-  .proposition-assessment__value strong {
-    font-family: "ETC Anybody", sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    font-variation-settings: "wdth" 75;
-    line-height: 24px;
-    text-transform: uppercase;
-  }
-  .proposition-assessment__value.is-unrated { color: #998d96; }
-  .proposition-assessment__comment,
-  .proposition-assessment__evaluator {
-    margin: 16px 8px 0 0;
-    color: #0b0f5e;
-    font-size: 18px;
-    line-height: 24px;
-  }
-  .proposition-assessment__evaluator { margin-top: 16px; }
-
-  .proposition-authors__list {
-    display: flex;
-    padding: 8px 0;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .proposition-author {
-    display: flex;
-    width: 100%;
-    min-width: 0;
-    align-items: flex-start;
-    gap: 8px;
-    color: #0b0f5e;
-    text-decoration: none;
-  }
-  .proposition-author__photo,
-  .proposition-author__fallback {
-    display: grid;
-    width: 30px;
-    height: 40px;
-    flex: 0 0 30px;
-    border: 1px solid #998d96;
-    place-items: center;
-  }
-  .proposition-author__photo { overflow: hidden; }
-  .proposition-author__photo img,
-  .proposition-author__photo .proposition-author__fallback {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top;
-  }
-  .proposition-author__photo .proposition-author__fallback[hidden] { display: none; }
-  .proposition-author__fallback { background: #f1f1ff; color: #4242f6; font-size: 11px; font-weight: 700; }
-  .proposition-author > span:last-child { display: flex; min-width: 0; flex-direction: column; }
-  .proposition-author strong,
-  .proposition-author small {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 16px;
-  }
-  .proposition-author:hover strong,
-  .proposition-author:focus-visible strong { color: #4242f6; text-decoration: underline; }
-  .proposition-unavailable { margin: 0; color: #998d96; font-size: 18px; line-height: 24px; }
-
-  .proposition-details {
-    display: flex;
-    min-height: 296px;
-    padding: 23px;
-    border: 1px solid rgb(66 66 246 / 25%);
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-  .proposition-details__tag {
-    display: inline-flex;
-    min-height: 40px;
-    padding: 5px 10px 3px;
-    align-items: center;
-    background: #4242f6;
-    color: #fff;
-    font-family: "ETC Anybody", sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    font-variation-settings: "wdth" 75;
-    line-height: 24px;
-    text-transform: uppercase;
-  }
-  .proposition-details__body { width: 100%; color: #4b5563; font-size: 18px; line-height: 24px; }
-  .proposition-details__body p { margin: 0 0 24px; }
-  .proposition-details__body p:last-child { margin-bottom: 0; }
-  .proposition-details__body p > span:first-child {
-    display: block;
-    color: #998d96;
-    font-size: 14px;
-    line-height: 16px;
-  }
-  .proposition-details__themes { display: flex; flex-wrap: wrap; gap: 0 5px; color: #4242f6; }
-
-  .proposition-progress {
-    width: 100%;
-    padding: 100px 16px 40px;
-    background: #fff;
-  }
-  .proposition-progress__bar {
-    position: relative;
-    display: flex;
-    width: min(741px, 100%);
-    height: 65px;
-    margin: 0 auto;
-    padding: 0 25px 0 20px;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #6262ff;
-    background-image: var(--proposition-paper);
-    background-blend-mode: multiply;
-    background-position: center -70px;
-    background-repeat: no-repeat;
-    background-size: 741px auto;
-  }
-  .proposition-progress__bar h2 {
-    position: absolute;
-    top: -46px;
-    left: 50%;
-    margin: 0;
-    transform: translateX(-50%);
-    color: #1e2546;
-    font-family: "ETC Anybody", sans-serif;
-    font-size: 32px;
-    font-weight: 700;
-    font-variation-settings: "wdth" 75;
-    line-height: 32px;
-    text-align: center;
-    text-box-edge: cap alphabetic;
-    text-box-trim: trim-both;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  .proposition-progress__status {
-    position: relative;
-    z-index: 0;
-    display: flex;
-    min-width: 118px;
-    padding: 0 6px;
-    height: 44px;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    color: #1e2546;
-    font-size: 24px;
-    font-weight: 500;
-    line-height: 44px;
-    white-space: nowrap;
-  }
-  .proposition-progress__status::before {
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    right: -8px;
-    left: -8px;
-    height: 46px;
-    background: var(--proposition-status-label) center / 100% 100% no-repeat;
-    content: "";
-  }
-  .proposition-progress__status > span { font-size: 19px; line-height: 1; }
-  .proposition-progress__summary {
-    color: #fff;
-    font-size: 18px;
-    font-weight: 700;
-    line-height: 24px;
-    text-shadow: 1px 2px 1px rgb(0 0 0 / 20%);
-  }
-  .proposition-progress__summary > span { font-weight: 400; }
-  .proposition-timeline {
-    width: min(741px, 100%);
-    min-height: 296px;
-    margin: 0 auto;
-    border: 2px solid #1e2546;
-    background: #fff;
-  }
-  .proposition-timeline.is-empty { display: grid; padding: 25px; place-items: center; }
-  .proposition-timeline:not(.is-empty) { min-height: 0; }
-  .proposition-timeline p {
-    margin: 0;
-    color: #998d96;
-    font-size: 16px;
-    line-height: 24px;
-    text-align: center;
-  }
-  .proposition-timeline__events { margin: 0; padding: 0; list-style: none; }
-  .proposition-timeline__events li { border-bottom: 2px solid #1e2546; }
-  .proposition-timeline__events li:last-child { border-bottom: 0; }
-  .proposition-timeline__event-card {
-    display: block;
-    padding: 20px 16px 28px;
-    color: inherit;
-    text-decoration: none;
-  }
-  .proposition-timeline__event-card[href]:hover { background: #f7f6f7; }
-  .proposition-timeline__event-card[href]:focus-visible { outline: 2px solid #4242f6; outline-offset: -2px; }
-  .proposition-timeline__events header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .proposition-timeline__events header strong,
-  .proposition-timeline__events time {
-    color: #1e2546;
-    font-family: "ETC Anybody", sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    font-variation-settings: "wdth" 75;
-    line-height: 24px;
-    text-transform: uppercase;
-  }
-  .proposition-timeline__events time { flex: 0 0 auto; text-align: right; }
-  .proposition-timeline__event-card > p {
-    margin: 12px 0 0;
-    color: #998d96;
-    font-family: "Plus Jakarta Sans", sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    font-variant-numeric: lining-nums tabular-nums;
-    line-height: 24px;
-    text-align: left;
-  }
-
-  @media (max-width: 1279px) {
-    .proposition-overview { padding-inline: 32px; }
-    .proposition-overview__grid { grid-template-columns: repeat(2, minmax(0, 300px)); row-gap: 48px; }
-  }
-
-  @media (max-width: 767px) {
-    .proposition-hero { height: 220px; background-position: center; background-size: cover; }
-    .proposition-hero > a { top: 12px; left: 16px; font-size: 14px; }
-    .proposition-hero > div { top: 72px; }
-    .proposition-hero p { font-size: 18px; line-height: 24px; }
-    .proposition-hero h1 { margin-top: 4px; font-size: clamp(36px, 12vw, 48px); line-height: 1; }
-    .proposition-overview { min-height: 0; padding: 72px 16px 56px; }
-    .proposition-overview__paperclip { left: 16px; width: 36px; height: 66px; }
-    .proposition-overview__grid { grid-template-columns: minmax(0, 1fr); gap: 48px; }
-    .proposition-column h2 { margin-bottom: 20px; font-size: 28px; line-height: 32px; }
-    .proposition-summary > p { width: 100%; }
-    .proposition-details { width: 100%; }
-    .proposition-progress { padding: 88px 16px 96px; }
-    .proposition-progress__bar { height: 82px; padding: 0 14px; }
-    .proposition-progress__bar h2 { top: -43px; font-size: 28px; }
-    .proposition-progress__status { min-width: 112px; font-size: 20px; }
-    .proposition-progress__status::before { right: -6px; left: -6px; }
-    .proposition-progress__summary { max-width: 120px; font-size: 14px; line-height: 18px; text-align: right; }
-    .proposition-timeline { min-height: 156px; }
-    .proposition-timeline.is-empty { padding: 20px; }
-    .proposition-timeline__event-card { padding: 18px 14px 22px; }
-  }
-</style>

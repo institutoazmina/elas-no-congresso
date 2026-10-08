@@ -1,0 +1,107 @@
+---
+const links = [
+    ["atividade-legislativa", "Propostas"], ["acompanhe", "Reportagens"],
+    ["quiteria", "Quitéria"], ["newsletter", "Newsletter"],
+    ["apoiadores", "Apoiadores"], ["metodologia", "Sobre"],
+];
+const social = [
+    ["Instagram", "https://instagram.com/revistaazmina", "/assets/images/social/instagram.svg"],
+    ["TikTok", "https://www.tiktok.com/@revistaazmina", "/assets/images/social/tiktok.svg"],
+    ["Substack", "https://substack.com/@institutoazmina", "/assets/images/social/substack.svg"],
+    ["YouTube", "https://www.youtube.com/channel/UCoyYnOCs_pr0oaXSitYi35g", "/assets/images/social/youtube.svg"],
+    ["GitHub", "https://github.com/revistaazmina/", "/assets/images/social/github.svg"],
+    ["Bluesky", "https://bsky.app/profile/revistaazmina.bsky.social", "/assets/images/social/bluesky.svg"],
+];
+---
+<footer class="tw:relative tw:overflow-hidden tw:bg-navy tw:pt-12 tw:pb-24 tw:text-white tw:font-lato tw:leading-normal tw:min-[992px]:pb-8 tw:bg-[url('/assets/images/footer/splash-top-right.webp'),url('/assets/images/footer/splash-bottom-left.webp')] tw:bg-position-[right_top,left_bottom] tw:bg-no-repeat tw:bg-size-[25%,30%] tw:min-[992px]:bg-size-[25%,15%] tw:before:content-[''] tw:before:absolute tw:before:inset-x-0 tw:before:-bottom-[3%] tw:before:h-full tw:before:bg-[url('/assets/images/footer/congresso.webp')] tw:before:bg-bottom-left tw:before:bg-contain tw:before:bg-no-repeat tw:min-[768px]:before:-bottom-[12%] tw:min-[992px]:before:w-1/2 tw:min-[992px]:before:-bottom-[7%]">
+    <div class="tw:relative tw:z-1 tw:mx-auto tw:w-full tw:max-w-[1310px] tw:px-4 tw:min-[992px]:px-8">
+        <div class="tw:-mx-4 tw:flex tw:flex-wrap">
+            <div class="tw:mb-8 tw:w-full tw:px-4 tw:min-[768px]:w-1/2 tw:min-[992px]:w-1/4">
+                <a href="/" aria-label="Elas no Congresso"><img src="/assets/images/footer/article-logo.svg" alt="Elas no Congresso" class="tw:w-[215px] tw:h-[105px]" /></a>
+            </div>
+            <nav aria-label="Navegação do rodapé" class="tw:mb-12 tw:w-full tw:px-4 tw:min-[768px]:w-1/2 tw:min-[992px]:w-1/4">
+                {links.map(([path, label]) => <a href={`/${path}`} class="tw:mb-4 tw:block tw:font-display tw:text-[clamp(10px,calc(.625rem_+_2*(100vw_-_500px)/700),12px)] tw:font-semibold tw:[font-variation-settings:'wdth'_200] tw:tracking-[1.4px] tw:uppercase tw:text-lime tw:hover:text-periwinkle">{label}</a>)}
+            </nav>
+            <div class="tw:w-full tw:px-4 tw:min-[768px]:w-1/2 tw:min-[992px]:w-1/4">
+                <a href="https://elasnocongresso.substack.com/" target="_blank" rel="noopener noreferrer" class="tw:mb-8 tw:block tw:rounded-xs tw:bg-[#f2df79] tw:px-4 tw:py-3 tw:text-center tw:text-navy tw:shadow-lg tw:hover:bg-lime">
+                    <p class="tw:font-display tw:text-base tw:uppercase tw:[font-variation-settings:'wdth'_200]">Assine nossa <strong class="tw:font-black">newsletter</strong></p>
+                    <p class="tw:text-xs">Acompanhe o debate de gênero no Congresso</p>
+                </a>
+                <p class="tw:mb-4 tw:text-xs tw:font-semibold tw:uppercase">Siga AzMina</p>
+                <div class="tw:mb-8 tw:flex tw:gap-2">{social.map(([label, href, icon]) => <a href={href} aria-label={label} target="_blank" rel="noopener noreferrer" class="tw:block tw:size-[25px] tw:hover:brightness-150"><img src={icon} alt="" class="tw:size-full" /></a>)}</div>
+            </div>
+            <div class="tw:w-full tw:px-4 tw:min-[768px]:w-1/2 tw:min-[992px]:w-1/4">
+                <p class="tw:mb-4 tw:text-xs tw:font-semibold tw:uppercase">Expediente</p>
+
+<dl class="tw:text-[10px] tw:font-light tw:leading-[15px] tw:tracking-[1.4px] tw:[&_dt]:uppercase tw:[&_dd+dt]:mt-4">
+    <dt>Coordenação geral</dt>
+    <dd>Ana Carolina Araújo</dd>
+
+    <dt>Coordenação de tecnologia</dt>
+    <dd>Ingrid Fernandes</dd>
+
+    <dt>Edição</dt>
+    <dd>Ana Carolina Araújo</dd>
+    <dd>Helena Bertho</dd>
+    <dd>Jane Fernandes</dd>
+    <dd>Joana Suarez</dd>
+
+    <dt>Reportagem</dt>
+    <dd>Lu Belin</dd>
+
+    <dt>Newsletters</dt>
+    <dd>Ana Carolina Araújo</dd>
+
+    <dt>Coleta e tratamento de dados</dt>
+    <dd>Ana Carolina Araújo</dd>
+    <dd>Beatriz Farrugia</dd>
+    <dd>Diego Rabatone</dd>
+    <dd>Lu Belin</dd>
+    <dd>Lucas Ansei</dd>
+    <dd>Schirlei Alves</dd>
+
+    <dt>Consultoria estatística</dt>
+    <dd>Marina Gama Cubas</dd>
+
+    <dt>Consultoria de Inteligência Artificial</dt>
+    <dd>Adriano Belisário</dd>
+    <dd>Roberta Viola</dd>
+
+    <dt>Visualização de Dados e Design de Interface</dt>
+    <dd>Lory Costa</dd>
+    <dd>Vinícius Pereira</dd>
+    <dd><a href="https://cafe.art.br/">Café.art.br</a></dd>
+
+    <dt>Projeto Gráfico AzMina</dt>
+    <dd><a href="https://estudiorebimboca.com.br/">Estúdio Rebimboca</a></dd>
+
+    <dt>Programação</dt>
+    <dd><a href="https://wura.io/">WURA</a></dd>
+    <dd>Tapronto Creative Coding</dd>
+    <dd>Vinícius Pereira</dd>
+
+    <dt>Organizações parceiras</dt>
+    <dd>
+        Anis Bioética, Artigo 19, Cepia, CFEMEA, Coletivo Mana a Mana, Ecos,
+        Empodera, Gepô, Instituto + Diversidade, Instituto Maria da Penha,
+        Instituto Patrícia Galvão, Instituto Update, Juristas Negras, LabCidade,
+        Mulheres Negras Decidem, Observatório da Violência Obstétrica no Brasil,
+        Rede Feminista de Juristas deFEMde, Rede Liberdade, Sempreviva
+        Organização Feminista (SOF), Sexuality Policy Watch (SPW), Themis,
+        TretAqui
+    </dd>
+
+    <dt>Já trabalharam nesse projeto</dt>
+    <dd>Bárbara Libório, Carolina Oms, Renata Hirota, Thais Fôlego,</dd>
+</dl>
+
+            </div>
+        </div>
+    </div>
+</footer>
+<div class="tw:flex tw:min-h-[90px] tw:items-center tw:justify-center tw:bg-lime tw:py-4 tw:text-navy">
+    <div class="tw:flex tw:flex-col tw:items-center tw:gap-4 tw:px-4 tw:min-[992px]:flex-row tw:min-[992px]:gap-8">
+        <img src="/assets/images/footer/azmina-footer.svg" alt="AzMina" class="tw:w-[55px] tw:h-[35px]" />
+        <p class="tw:text-center tw:font-lato tw:text-[clamp(10px,calc(.625rem_+_2*(100vw_-_500px)/700),12px)] tw:font-extrabold tw:uppercase tw:leading-[18px] tw:min-[992px]:text-left">Uma proposta da revista azmina, <a href="https://creativecommons.org/licenses/by-nc-nd/2.0/deed.pt_BR" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 2.0 <img src="/assets/images/footer/creative-commons.svg" alt="" class="tw:ml-[5px] tw:inline-block tw:w-[75.4px] tw:h-[23.2px] tw:align-middle" /></a></p>
+    </div>
+</div>

@@ -1,0 +1,215 @@
+---
+const attention = "/assets/images/party-chart/attention.svg";
+const documentImage = "/assets/images/hero/proposicao-9.png";
+const backgroundPattern = "/assets/images/parliamentarians/bg-pattern.svg";
+const halftoneShadow = "/assets/images/hero/halftone-shadow.png";
+const favorableThumb = "/assets/images/thumbs-up.svg";
+const arrowBack = "/assets/images/parliamentarians/arrow-back.svg";
+const arrowForward = "/assets/images/parliamentarians/arrow-forward.svg";
+const turtleEmoji = "/assets/images/home/turtle.png";
+import { fetchSlowFavorable } from "../../lib/activity-api";
+import { API_BASE_URL } from "astro:env/server";
+
+let proposals = [];
+try {
+    proposals = await fetchSlowFavorable(API_BASE_URL);
+} catch {
+    // The homepage remains available while the API is being deployed or unavailable.
+}
+---
+
+{proposals.length > 0 && <section class="
+    slow-moving-proposals tw:h-[923.9435424804688px] tw:overflow-hidden tw:bg-white tw:text-ink tw:font-sans
+    tw:[&_h2]:w-180 tw:[&_h2]:h-16.5 tw:[&_h2]:font-display tw:[&_h2]:text-4xl tw:[&_h2]:font-bold
+    tw:[&_h2]:leading-8 tw:[&_h2]:uppercase tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:m-0 tw:[&_p]:m-0
+    tw:max-md:[&_h2]:w-[343px] tw:max-md:[&_h2]:text-[28px] tw:max-md:[&_h2]:h-auto tw:max-md:[&_h2]:max-w-full
+    tw:max-md:[&_h2]:leading-8 tw:max-md:[&_h2]:tracking-normal tw:max-md:h-[726.6062622070312px]
+    tw:max-md:box-border tw:max-md:py-12 tw:max-md:px-0
+" aria-labelledby="slow-moving-proposals-title" data-document-image={documentImage} data-favorable-thumb={favorableThumb} data-proposals={JSON.stringify(proposals)} style={`--slow-moving-proposals-background: url(${backgroundPattern}); --slow-moving-proposals-halftone-shadow: url(${halftoneShadow})`}>
+    <header class="
+        slow-moving-proposals__header tw:flex tw:w-204 tw:h-43.5 tw:flex-col tw:gap-4 tw:p-12 tw:m-auto tw:[&>img]:w-24
+        tw:[&>img]:h-1 tw:[&_p]:text-lg tw:[&_p]:leading-6 tw:max-md:w-full tw:max-md:px-[15px] tw:max-md:h-auto
+        tw:max-md:items-start tw:max-md:gap-4 tw:max-md:py-0 tw:max-md:my-0 tw:max-md:mx-auto tw:max-md:[&_p]:w-[343px]
+        tw:max-md:[&_p]:max-w-full tw:max-md:[&>p]:h-auto tw:max-md:[&>p]:text-sm tw:max-md:[&>p]:font-normal
+        tw:max-md:[&>p]:leading-6
+    "><img class="" src={attention} alt="" /><h2 class="" id="slow-moving-proposals-title">E o que é bom pra gente, mas<br class="tw:max-md:hidden" />tá indo beeeem devagar: <img src={turtleEmoji} alt="" class="slow-moving-proposals__emoji tw:inline-block tw:h-[1em] tw:w-auto tw:[vertical-align:-0.12em]" /></h2><p class="">Projetos favoráveis que ainda aguardam relatoria, parecer ou votação</p></header>
+    <div class="
+        slow-moving-proposals__carousel tw:relative tw:h-[643.9435424804688px] tw:mt-8.5 tw:overflow-hidden
+        tw:[background:#fff_url('/assets/images/background/bg-pattern-rough-paper.png')_repeat_left_top/400px_400px]
+        tw:bg-[image:var(--slow-moving-proposals-background)] tw:bg-top-left tw:bg-repeat tw:bg-size-[400px_400px]
+        tw:max-md:h-[448.60626220703125px] tw:max-md:mt-2.5 tw:before:absolute tw:before:z-1 tw:before:block
+        tw:before:w-full tw:before:h-6 tw:before:bg-[image:var(--slow-moving-proposals-halftone-shadow)]
+        tw:before:bg-bottom-left tw:before:bg-repeat-x tw:before:bg-size-[1440px_24px] tw:before:content-['']
+        tw:before:pointer-events-none tw:before:mix-blend-multiply tw:before:top-0 tw:before:left-0
+        tw:before:[transform:scaleY(-1)] tw:after:absolute tw:after:z-1 tw:after:block tw:after:w-full tw:after:h-6
+        tw:after:bg-[image:var(--slow-moving-proposals-halftone-shadow)] tw:after:bg-bottom-left tw:after:bg-repeat-x
+        tw:after:bg-size-[1440px_24px] tw:after:content-[''] tw:after:pointer-events-none tw:after:mix-blend-multiply
+        tw:after:right-0 tw:after:bottom-0 tw:max-md:before:h-3 tw:max-md:after:h-3
+    " data-slow-carousel>
+        <div class="
+            slow-moving-proposals__controls tw:absolute tw:z-3 tw:top-12 tw:left-[calc(50%_-_58px)] tw:flex tw:gap-1
+            tw:[&_button]:w-14 tw:[&_button]:h-10 tw:[&_button]:border-[2px] tw:[&_button]:border-solid
+            tw:[&_button]:border-accent tw:[&_button]:rounded-none tw:[&_button]:bg-white tw:[&_button]:py-2 tw:[&_button]:px-4
+            tw:[&_img]:block tw:[&_img]:w-6 tw:[&_img]:h-6 tw:[&_button]:flex tw:[&_button]:items-center
+            tw:[&_button]:justify-center
+        "><button class="tw:w-14 tw:h-10 tw:border-[2px] tw:border-solid tw:border-accent tw:bg-white tw:text-accent tw:[font:32px/1_Arial] tw:cursor-pointer" type="button" aria-label="Proposição anterior" data-previous><img class="" src={arrowBack} alt="" /></button><button class="tw:w-14 tw:h-10 tw:border-[2px] tw:border-solid tw:border-accent tw:bg-white tw:text-accent tw:[font:32px/1_Arial] tw:cursor-pointer" type="button" aria-label="Próxima proposição" data-next><img class="" src={arrowForward} alt="" /></button></div>
+        <div class="
+            slow-moving-proposals__viewport tw:absolute tw:top-28 tw:w-full tw:overflow-hidden tw:z-2 tw:overflow-x-clip
+            tw:overflow-y-visible tw:max-md:overflow-clip
+        "><div class="
+            slow-moving-proposals__track tw:flex tw:w-max tw:gap-12 tw:[transform:translateX(-3216px)]
+            tw:[transition:transform_.2s_ease] tw:relative tw:left-[50%] tw:max-md:[--mobile-card-width:224.345458984375px]
+            tw:max-md:[--mobile-card-gap:25px] tw:max-md:[--mobile-active-index:7] tw:max-md:gap-[var(--mobile-card-gap)]
+            tw:max-md:[transform:translateX(calc(var(--mobile-active-index)_*_-1_*_(var(--mobile-card-width)_+_var(--mobile-card-gap))_-_var(--mobile-card-width)_/_2))]!
+        " data-track></div></div>
+    </div>
+</section>
+}
+
+<script>
+    type Proposal = {
+        number_label: string;
+        ementa: string;
+        category: string | null;
+        category_label?: string | null;
+        authors: { name: string; party: string | null; state: string | null }[];
+        celerity: { days_without_movement: number };
+    };
+
+    const formatCategory = (category: string | null) => category?.replaceAll("_", " ") || "Sem categoria";
+    const propositionRoute = (numberLabel: string) => `/atividade-legislativa/proposicao/${numberLabel
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")}`;
+
+    const createCard = (proposal: Proposal, assets: DOMStringMap) => {
+        const card = document.createElement("a");
+        card.className = String.raw`slow-moving-proposals__card tw:flex tw:w-96 tw:h-[483.94354248046875px] tw:flex-none tw:flex-col tw:overflow-visible tw:border tw:border-solid tw:border-muted tw:bg-white tw:text-inherit tw:no-underline tw:[&_footer]:h-14 tw:[&_footer]:border-t tw:[&_footer]:border-solid tw:[&_footer]:border-t-muted tw:[&_footer]:text-lg tw:[&_footer]:leading-6 tw:[&_footer]:text-ink tw:[&_footer]:p-4 tw:max-md:w-[var(--mobile-card-width)] tw:max-md:h-[288.60626220703125px] tw:max-md:border-0 tw:max-md:shadow-[inset_0_0_0_0.5842328071594238px_#998d96] tw:max-md:[&_footer]:h-[33.695457458496094px] tw:max-md:[&_footer]:text-[10.516194343566895px] tw:max-md:[&_footer]:leading-[14.02159309387207px] tw:max-md:[&_footer]:flex-none tw:max-md:[&_footer]:border-t-[0.5842328071594238px] tw:max-md:[&_footer]:p-[9.347728729248047px] tw:[&_footer_strong]:text-inherit tw:[&_footer_strong]:font-bold tw:[&_footer_strong]:m-0 tw:[&_footer_b]:text-inherit tw:[&_footer_b]:font-bold tw:[&_footer_b]:m-0 tw:max-md:[.slow-moving-proposals\_\_track:has(>_&:nth-child(5).slow-moving-proposals\_\_card--featured)]:[--mobile-active-index:4] tw:max-md:[.slow-moving-proposals\_\_track:has(>_&:nth-child(6).slow-moving-proposals\_\_card--featured)]:[--mobile-active-index:5] tw:max-md:[.slow-moving-proposals\_\_track:has(>_&:nth-child(7).slow-moving-proposals\_\_card--featured)]:[--mobile-active-index:6] tw:max-md:[.slow-moving-proposals\_\_track:has(>_&:nth-child(8).slow-moving-proposals\_\_card--featured)]:[--mobile-active-index:7] tw:max-md:[.slow-moving-proposals\_\_track:has(>_&:nth-child(9).slow-moving-proposals\_\_card--featured)]:[--mobile-active-index:8] tw:max-md:[.slow-moving-proposals\_\_track:has(>_&:nth-child(10).slow-moving-proposals\_\_card--featured)]:[--mobile-active-index:9] tw:max-md:[.slow-moving-proposals\_\_track:has(>_&:nth-child(11).slow-moving-proposals\_\_card--featured)]:[--mobile-active-index:10]`;
+        card.classList.add(
+            "tw:[&[aria-hidden=false]]:border-ink",
+            "tw:[&[aria-hidden=false]]:shadow-[-4px_4px_0_#0b0f5e]",
+            "tw:max-md:[&[aria-hidden=false]]:shadow-[inset_0_0_0_0.5842328071594238px_#0b0f5e,-2.3369312286376953px_2.3369312286376953px_0_#0b0f5e]",
+        );
+        card.href = propositionRoute(proposal.number_label);
+        card.setAttribute("aria-label", `Ver proposição ${proposal.number_label}`);
+
+        const header = document.createElement("header");
+        header.className = "slow-moving-proposals__card-header tw:relative tw:flex tw:h-[69.94354248046875px] tw:items-center tw:border-b tw:border-solid tw:border-b-muted tw:py-2 tw:px-4 tw:[&>strong]:font-display tw:[&>strong]:text-xl tw:[&>strong]:leading-6 tw:[&>strong]:[font-variation-settings:'wdth'_75] tw:max-md:h-[40.86332702636719px] tw:max-md:flex-none tw:max-md:border-b-[0.5842328071594238px] tw:max-md:py-[4.673864364624023px] tw:max-md:px-[9.347728729248047px] tw:max-md:[&>strong]:text-[14.02159309387207px] tw:max-md:[&>strong]:leading-[18.695457458496094px] tw:max-md:[&>strong]:tracking-normal";
+        const number = document.createElement("strong");
+        number.textContent = proposal.number_label;
+        const status = document.createElement("span");
+        status.className = "slow-moving-proposals__status tw:absolute tw:top-2 tw:right-4 tw:w-[143.30795288085938px] tw:h-[53.94354248046875px] tw:[&_b]:absolute tw:[&_b]:font-display tw:[&_b]:text-base tw:[&_b]:leading-6 tw:[&_b]:uppercase tw:[&_b]:[font-variation-settings:'wdth'_75] tw:max-md:top-[4.673864364624023px] tw:max-md:right-[9.347728729248047px] tw:max-md:w-[83.7252426147461px] tw:max-md:h-[31.51559829711914px]";
+        const documentIcon = document.createElement("img");
+        documentIcon.className = "slow-moving-proposals__document tw:absolute tw:top-0 tw:left-[4.444942951202393px] tw:w-9 tw:h-[51px] tw:[transform:rotate(-5deg)] tw:object-fill tw:max-md:top-[0.8598003387451172px] tw:max-md:left-[3.8554019927978516px] tw:max-md:w-[21.032px] tw:max-md:h-[29.796px] tw:max-md:[transform:rotate(5deg)]";
+        documentIcon.src = assets.documentImage || "";
+        documentIcon.alt = "";
+        const thumbs = document.createElement("span");
+        thumbs.className = "slow-moving-proposals__thumbs tw:max-md:top-[6.410069465637207px] tw:max-md:left-[18.87537384033203px] tw:max-md:w-[64.84986877441406px] tw:max-md:h-[18.695457458496094px] tw:max-md:[&_b]:top-[2.3369321823120117px] tw:max-md:[&_b]:left-[23.369321823120117px] tw:max-md:[&_b]:text-[10.516194343566895px] tw:max-md:[&_b]:leading-[14.02159309387207px] tw:max-md:[&_b]:h-[14.02159309387207px] tw:max-md:[&_b]:tracking-normal tw:absolute tw:top-[10.971768379211426px] tw:left-[32.307952880859375px] tw:w-[111px] tw:h-8 tw:[&_b]:top-1 tw:[&_b]:left-10";
+        const thumb = document.createElement("img");
+        thumb.className = "slow-moving-proposals__thumb tw:absolute tw:top-0 tw:left-0 tw:w-8 tw:h-8 tw:overflow-hidden tw:rounded-[50%] tw:max-md:w-[18.695457458496094px] tw:max-md:h-[18.695457458496094px] tw:max-md:top-0 tw:max-md:left-0";
+        thumb.src = assets.favorableThumb || "";
+        thumb.alt = "";
+        const assessment = document.createElement("b");
+        assessment.textContent = "Favorável";
+        thumbs.append(thumb, assessment);
+        status.append(documentIcon, thumbs);
+        header.append(number, status);
+
+        const content = document.createElement("div");
+        content.className = "slow-moving-proposals__content tw:h-89.5 tw:overflow-hidden tw:py-6 tw:px-4 tw:max-md:h-[214.04747009277344px] tw:max-md:flex tw:max-md:flex-none tw:max-md:flex-col tw:max-md:items-start tw:max-md:gap-[9.347728729248047px] tw:max-md:py-[14.02159309387207px] tw:max-md:px-[9.347728729248047px]";
+        const authors = document.createElement("div");
+        authors.className = "slow-moving-proposals__authors tw:[&_p]:flex tw:[&_p]:justify-between tw:[&_p]:h-6 tw:[&_p]:text-lg tw:[&_p]:leading-6 tw:[&_p]:min-w-0 tw:[&_strong]:font-bold tw:max-md:h-[77.52699279785156px] tw:max-md:gap-[5.8423309326171875px] tw:max-md:w-full tw:max-md:flex-none tw:max-md:[&_p]:h-[15px] tw:max-md:[&_p]:text-[10.516194343566895px] tw:max-md:[&_p]:leading-[14.02159309387207px] tw:max-md:[&_p]:w-full tw:max-md:[&_p]:flex-none tw:flex tw:h-31.5 tw:flex-col tw:gap-2.5 tw:[&_p_>_*]:min-w-0";
+        const visibleAuthors = proposal.authors.slice(0, 3);
+        if (visibleAuthors.length) {
+            for (const author of visibleAuthors) {
+                const line = document.createElement("p");
+                const name = document.createElement("span");
+                name.textContent = author.name;
+                const party = document.createElement("strong");
+                party.textContent = [author.party, author.state].filter(Boolean).join("/");
+                line.append(name, party);
+                authors.append(line);
+            }
+        } else {
+            authors.append(Object.assign(document.createElement("p"), { textContent: "Autoria indisponível" }));
+        }
+        if (proposal.authors.length > visibleAuthors.length) {
+            const more = document.createElement("p");
+            more.className = String.raw`slow-moving-proposals__more tw:[.slow-moving-proposals\_\_authors_&]:block tw:[.slow-moving-proposals\_\_authors_&]:text-accent`;
+            more.textContent = `+${proposal.authors.length - visibleAuthors.length} parlamentares`;
+            authors.append(more);
+        }
+        const category = document.createElement("span");
+        category.className = "slow-moving-proposals__badge tw:inline-block tw:mt-4 tw:bg-accent tw:text-white tw:font-display tw:text-base tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75] tw:py-1 tw:px-2 tw:max-md:mt-0 tw:max-md:text-[11.684660911560059px] tw:max-md:leading-[14.02159309387207px] tw:max-md:inline-flex tw:max-md:w-[37.34772872924805px] tw:max-md:h-[19.673864364624023px] tw:max-md:flex-none tw:max-md:items-center tw:max-md:justify-center tw:max-md:tracking-normal tw:max-md:pt-[2.9211652278900146px] tw:max-md:pb-[1.7526991367340088px] tw:max-md:px-[4.673864364624023px]";
+        category.textContent = proposal.category_label?.trim() || formatCategory(proposal.category);
+        const description = document.createElement("p");
+        description.className = "slow-moving-proposals__description tw:mt-4! tw:text-base tw:leading-6 tw:max-md:h-[70.10796356201172px] tw:max-md:mt-0! tw:max-md:text-[9.347728729248047px] tw:max-md:leading-[14.02159309387207px] tw:max-md:line-clamp-5 tw:max-md:w-full tw:max-md:flex-none tw:max-md:overflow-hidden tw:max-md:text-[rgb(11_15_94_/_66%)] tw:h-30 tw:line-clamp-5 tw:text-ellipsis";
+        description.textContent = proposal.ementa;
+        content.append(authors, category, description);
+
+        const footer = document.createElement("footer");
+        const months = Math.max(1, Math.floor(proposal.celerity.days_without_movement / 30));
+        const count = document.createElement("strong");
+        count.textContent = `${months} ${months === 1 ? "mês" : "meses"}`;
+        footer.append("Está há ", count, " sem movimentação");
+        card.append(header, content, footer);
+        return card;
+    };
+
+    const initializeSlowMovingProposals = () => {
+        document.querySelectorAll<HTMLElement>("[data-slow-carousel]").forEach((carousel) => {
+            if (carousel.dataset.slowCarouselInitialized) return;
+            carousel.dataset.slowCarouselInitialized = "true";
+            const track = carousel.querySelector<HTMLElement>("[data-track]");
+            const previous = carousel.querySelector<HTMLButtonElement>("[data-previous]");
+            const next = carousel.querySelector<HTMLButtonElement>("[data-next]");
+            if (!track || !previous || !next) return;
+            const section = carousel.closest<HTMLElement>(".slow-moving-proposals");
+            const proposals = JSON.parse(section?.dataset.proposals || "[]") as Proposal[];
+            if (!proposals.length || !section) {
+                section?.remove();
+                return;
+            }
+            track.replaceChildren(...[...proposals, ...proposals, ...proposals].map((proposal) => createCard(proposal, section.dataset)));
+            const groupSize = proposals.length;
+            const cards = Array.from(track.querySelectorAll<HTMLElement>(".slow-moving-proposals__card"));
+            let physical = groupSize;
+            let resetting = false;
+            const update = () => {
+                track.style.transform = `translateX(${-192 - physical * 432}px)`;
+                track.style.setProperty("--mobile-active-index", String(physical));
+                cards.forEach((card, index) => {
+                    const active = index === physical;
+                    card.classList.toggle("slow-moving-proposals__card--featured", active);
+                    card.setAttribute("aria-hidden", String(!active));
+                });
+            };
+            const move = (direction: number) => {
+                if (!resetting) {
+                    physical += direction;
+                    update();
+                }
+            };
+            track.addEventListener("transitionend", (event) => {
+                if (event.propertyName !== "transform" || (physical >= groupSize && physical < groupSize * 2)) return;
+                resetting = true;
+                physical += physical < groupSize ? groupSize : -groupSize;
+                track.style.transition = "none";
+                update();
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    track.style.transition = "";
+                    resetting = false;
+                }));
+            });
+            previous.addEventListener("click", () => move(-1));
+            next.addEventListener("click", () => move(1));
+            update();
+        });
+    };
+
+    initializeSlowMovingProposals();
+    document.addEventListener("astro:page-load", initializeSlowMovingProposals);
+</script>
+

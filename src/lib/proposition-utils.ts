@@ -18,14 +18,3 @@ export function propositionRoute(
   const houseSlug = propositionSlug(propositionHouse);
   return slug ? `/atividade-legislativa/proposicao/${houseSlug ? `${houseSlug}-` : ""}${slug}` : null;
 }
-
-export function propositionStatus(probability: number | null | undefined): string {
-  if (probability === null || probability === undefined || !Number.isFinite(probability)) return "Indisponível";
-  return probability >= 0.55 ? "Rápida" : "Lenta";
-}
-
-export function propositionAssessment(value: number): "Favorável" | "Desfavorável" | "Sem avaliação" {
-  if (value > 0) return "Favorável";
-  if (value < 0) return "Desfavorável";
-  return "Sem avaliação";
-}

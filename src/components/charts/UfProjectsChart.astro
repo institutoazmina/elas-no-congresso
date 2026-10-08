@@ -1,0 +1,450 @@
+---
+import { existsSync, readFileSync } from "node:fs";
+const attention = "/assets/images/party-chart/attention.svg";
+const buttonChevron = "/assets/images/home-reportagens/chevron-right.svg";
+const mapBase = "/assets/images/charts/map/map-br-base@2.5x.webp";
+const mapLabels = "/assets/images/charts/map/map-br-labels@2.5x.webp";
+const mapHitboxes = readFileSync("public/assets/images/charts/map/map-br-ufs-vector.svg", "utf8");
+const rankingHighlighter1a = "/assets/images/charts/table-ranking-highlighter-1-a.svg";
+const rankingHighlighter1b = "/assets/images/charts/table-ranking-highlighter-1-b.svg";
+const rankingHighlighter2a = "/assets/images/charts/table-ranking-highlighter-2-a.svg";
+const rankingHighlighter2b = "/assets/images/charts/table-ranking-highlighter-2-b.svg";
+const rankingHighlighter3a = "/assets/images/charts/table-ranking-highlighter-3-a.svg";
+const rankingHighlighter3b = "/assets/images/charts/table-ranking-highlighter-3-b.svg";
+const rankingHighlighter4a = "/assets/images/charts/table-ranking-highlighter-4-a.svg";
+const rankingHighlighter4b = "/assets/images/charts/table-ranking-highlighter-4-b.svg";
+const rankingHighlighter5a = "/assets/images/charts/table-ranking-highlighter-5-a.svg";
+const rankingHighlighter5b = "/assets/images/charts/table-ranking-highlighter-5-b.svg";
+const favorableRankingHighlighter1a = "/assets/images/charts/table-ranking-highlighter-favorable-1-a.svg";
+const favorableRankingHighlighter1b = "/assets/images/charts/table-ranking-highlighter-favorable-1-b.svg";
+const favorableRankingHighlighter2a = "/assets/images/charts/table-ranking-highlighter-favorable-2-a.svg";
+const favorableRankingHighlighter2b = "/assets/images/charts/table-ranking-highlighter-favorable-2-b.svg";
+const favorableRankingHighlighter3a = "/assets/images/charts/table-ranking-highlighter-favorable-3-a.svg";
+const favorableRankingHighlighter3b = "/assets/images/charts/table-ranking-highlighter-favorable-3-b.svg";
+const favorableRankingHighlighter4a = "/assets/images/charts/table-ranking-highlighter-favorable-4-a.svg";
+const favorableRankingHighlighter4b = "/assets/images/charts/table-ranking-highlighter-favorable-4-b.svg";
+const favorableRankingHighlighter5a = "/assets/images/charts/table-ranking-highlighter-favorable-5-a.svg";
+const favorableRankingHighlighter5b = "/assets/images/charts/table-ranking-highlighter-favorable-5-b.svg";
+import StanceToggle from "./StanceToggle.astro";
+import SectionDivider from "../shared/SectionDivider.astro";
+import { getStanceByState, type StateStat, type Stance } from "../../service/api/stats";
+
+// A tabela lista as 27 UFs; o mapa destaca só o topo do mesmo ranking, então
+// uma busca por stance serve os dois — a ordem já vem da API.
+const UF_COUNT = 27;
+const MAP_HIGHLIGHTS = 5;
+const tableRankingHighlighters = [
+    [rankingHighlighter1a, rankingHighlighter1b],
+    [rankingHighlighter2a, rankingHighlighter2b],
+    [rankingHighlighter3a, rankingHighlighter3b],
+    [rankingHighlighter4a, rankingHighlighter4b],
+    [rankingHighlighter5a, rankingHighlighter5b],
+] as const;
+const favorableTableRankingHighlighters = [
+    [favorableRankingHighlighter1a, favorableRankingHighlighter1b],
+    [favorableRankingHighlighter2a, favorableRankingHighlighter2b],
+    [favorableRankingHighlighter3a, favorableRankingHighlighter3b],
+    [favorableRankingHighlighter4a, favorableRankingHighlighter4b],
+    [favorableRankingHighlighter5a, favorableRankingHighlighter5b],
+] as const;
+
+const [unfavourableRanking, favourableRanking] = await Promise.all([
+    getStanceByState({ stance: "unfavorable", limit: UF_COUNT }),
+    getStanceByState({ stance: "favorable", limit: UF_COUNT }),
+]);
+
+// Percentual, total e ordenação são todos responsabilidade da API. O componente
+// só adapta os nomes para renderizar a mesma lista no mapa e na tabela.
+const toRows = (ranking: StateStat[], stance: Stance) =>
+    ranking.map((state) => ({
+        uf: state.label,
+        unfavorable: state.unfavorable,
+        favorable: state.favorable,
+        total: state.total,
+        share: state[`${stance}_percentage`],
+    }));
+
+const views = [
+    { stance: "unfavorable" as const, heading: "Desfavoráveis", rows: toRows(unfavourableRanking, "unfavorable") },
+    { stance: "favorable" as const, heading: "Favoráveis", rows: toRows(favourableRanking, "favorable") },
+];
+
+// O design entrega um PNG por UF/stance, todos no mesmo canvas 1800x1800 do
+// mapa base — destacar um estado é só empilhar o recorte dele sobre a base.
+const layerSlug: Record<Stance, string> = { unfavorable: "desfavoravel", favorable: "favoravel" };
+
+const highlights = views.map((view) => {
+    const top = view.rows.slice(0, MAP_HIGHLIGHTS).map((row) => row.uf.trim().toUpperCase());
+    return {
+        stance: view.stance,
+        ufs: top,
+        layers: top.flatMap((uf) => {
+            const image = `/assets/images/charts/map/map-br-ufs-${layerSlug[view.stance]}-${uf}@2.5x.webp`;
+            return existsSync(`public${image}`) ? [{ uf, image }] : [];
+        }),
+    };
+});
+
+// Dados por UF para o tooltip do mapa. A API já devolve favorable e
+// unfavorable juntos em cada item, independente do stance usado na ordenação;
+// basta fundir os dois rankings num mapa único por sigla.
+// Quando a API passar a fornecer o total de parlamentares por UF, basta somar
+    // o campo aqui, sem derivação de outro endpoint ou valores fixos.
+type UfData = { favorable: number; unfavorable: number };
+const ufData: Record<string, UfData> = {};
+for (const state of [...favourableRanking, ...unfavourableRanking]) {
+    const uf = state.label.trim().toUpperCase();
+    ufData[uf] = { favorable: state.favorable, unfavorable: state.unfavorable };
+}
+
+const ufLabels: Record<string, string> = {
+    AC: "Acre", AL: "Alagoas", AP: "Amapá", AM: "Amazonas", BA: "Bahia", CE: "Ceará",
+    DF: "Distrito Federal", ES: "Espírito Santo", GO: "Goiás", MA: "Maranhão",
+    MT: "Mato Grosso", MS: "Mato Grosso do Sul", MG: "Minas Gerais", PA: "Pará",
+    PB: "Paraíba", PR: "Paraná", PE: "Pernambuco", PI: "Piauí", RJ: "Rio de Janeiro",
+    RN: "Rio Grande do Norte", RS: "Rio Grande do Sul", RO: "Rondônia", RR: "Roraima",
+    SC: "Santa Catarina", SP: "São Paulo", SE: "Sergipe", TO: "Tocantins",
+};
+---
+
+<section class="
+    uf-projects-chart tw:relative tw:min-h-316.5 tw:overflow-hidden tw:bg-white tw:shadow-[0_48px_0_#fff] tw:text-ink
+    tw:font-sans tw:[&_h2]:w-[525px] tw:[&_h2]:h-16.5 tw:[&_h2]:font-display tw:[&_h2]:text-4xl tw:[&_h2]:font-bold
+    tw:[&_h2]:leading-8 tw:[&_h2]:uppercase tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:m-0 tw:[&_p]:m-0
+    tw:max-md:min-h-0 tw:max-md:overflow-visible tw:max-md:pt-6 tw:max-md:pb-12 tw:max-md:px-6
+    tw:max-md:[&_h2]:w-full tw:max-md:[&_h2]:h-auto tw:max-md:[&_h2]:max-w-83 tw:max-md:[&_h2]:text-[28px]
+    tw:max-md:[&_h2]:leading-8 tw:min-[821px]:h-304.5 tw:min-[821px]:min-h-304.5 tw:min-[821px]:[&_h2]:w-[525px]
+    tw:min-[821px]:[&_h2]:text-4xl tw:min-[821px]:[&_h2]:font-bold
+    tw:[&[data-panel='map']_[data-panel-view='table']]:hidden
+    tw:[&[data-panel='table']_[data-panel-view='map']]:hidden
+    tw:[&[data-stance='unfavorable']_[data-stance-view='favorable']]:hidden
+    tw:[&[data-stance='favorable']_[data-stance-view='unfavorable']]:hidden
+" data-stance="unfavorable" data-panel="map" aria-labelledby="uf-projects-chart-title">
+    <div class="
+        uf-projects-chart__container tw:relative tw:w-204 tw:h-302.5 tw:p-12 tw:my-0 tw:mx-auto tw:max-md:w-full
+        tw:max-md:h-auto tw:max-md:p-0 tw:min-[821px]:h-290.5 tw:min-[821px]:py-6 tw:min-[821px]:px-12
+    ">
+        <header class="
+            uf-projects-chart__header tw:flex tw:w-180 tw:h-61.5 tw:flex-col tw:items-start tw:gap-4 tw:[&>p]:w-180
+            tw:[&>p]:h-18 tw:[&>p]:text-lg tw:[&>p]:font-normal tw:[&>p]:leading-6
+            tw:max-md:w-[min(343px,_calc(100%_+_16px))] tw:max-md:h-auto tw:max-md:-ml-2 tw:max-md:items-start
+            tw:max-md:gap-4 tw:max-md:text-left tw:max-md:[&>p]:w-full tw:max-md:[&>p]:h-auto tw:max-md:[&>p]:max-w-none
+            tw:max-md:[&>p]:basis-auto tw:max-md:[&>p]:self-stretch tw:max-md:[&>p]:text-sm tw:max-md:[&>p]:font-normal
+            tw:max-md:[&>p]:leading-6 tw:max-md:[&>p]:text-left tw:min-[821px]:h-auto tw:min-[821px]:gap-4
+            tw:min-[821px]:[&>p]:w-180 tw:min-[821px]:[&>p]:h-18 tw:min-[821px]:[&>p]:text-lg
+            tw:min-[821px]:[&>p]:font-normal tw:min-[821px]:[&>p]:leading-6 tw:min-[821px]:[&>p]:m-0
+        ">
+            <img class="uf-projects-chart__attention tw:block tw:w-24 tw:h-1 tw:min-[821px]:w-24 tw:min-[821px]:h-1" src={attention} alt="" />
+            <div class={String.raw`
+                uf-projects-chart__heading uf-title-group tw:flex tw:w-180 tw:h-34.5 tw:flex-col tw:items-start tw:gap-4
+                tw:max-md:w-full tw:max-md:h-auto tw:max-md:items-start tw:max-md:gap-4 tw:max-md:text-left tw:min-[821px]:flex
+                tw:min-[821px]:h-auto tw:min-[821px]:flex-col tw:min-[821px]:items-start tw:min-[821px]:gap-4
+                tw:min-[821px]:[align-content:flex-start] tw:max-md:[&_.stance-toggle]:w-max tw:max-md:[&_.stance-toggle]:h-10
+                tw:max-md:[&_.stance-toggle]:gap-[5.148px] tw:max-md:[&_.stance-toggle]:border-[1.287px]
+                tw:max-md:[&_.stance-toggle]:border-solid tw:max-md:[&_.stance-toggle]:border-accent
+                tw:max-md:[&_.stance-toggle]:inline-flex tw:max-md:[&_.stance-toggle]:items-center
+                tw:max-md:[&_.stance-toggle]:justify-center tw:max-md:[&_.stance-toggle]:box-border
+                tw:max-md:[&_.stance-toggle]:whitespace-nowrap tw:max-md:[&_.stance-toggle]:py-[7.722px]
+                tw:max-md:[&_.stance-toggle]:px-[10.296px] tw:max-md:[&_.stance-toggle\_\_thumb]:w-[20.591px]
+                tw:max-md:[&_.stance-toggle\_\_thumb]:h-[20.591px] tw:max-md:[&_.stance-toggle\_\_chevron]:w-[10.296px]
+                tw:max-md:[&_.stance-toggle\_\_chevron]:h-[5.148px] tw:max-md:[&_.stance-toggle\_\_chevron]:flex-none
+                tw:max-md:[&_.stance-toggle\_\_chevron]:ml-[10.296px] tw:min-[821px]:[&_.stance-toggle]:w-max
+                tw:min-[821px]:[&_.stance-toggle]:h-14 tw:min-[821px]:[&_.stance-toggle]:flex-none
+                tw:min-[821px]:[&_.stance-toggle]:box-border tw:min-[821px]:[&_.stance-toggle]:gap-2
+                tw:min-[821px]:[&_.stance-toggle]:text-4xl tw:min-[821px]:[&_.stance-toggle]:leading-[42px]
+                tw:min-[821px]:[&_.stance-toggle]:py-3 tw:min-[821px]:[&_.stance-toggle]:px-4
+                tw:min-[821px]:[&_.stance-toggle\_\_chevron]:block tw:min-[821px]:[&_.stance-toggle\_\_chevron]:w-6
+                tw:min-[821px]:[&_.stance-toggle\_\_chevron]:h-6 tw:min-[821px]:[&_.stance-toggle\_\_chevron]:flex-[0_0_24px]
+                tw:min-[821px]:[&_.stance-toggle\_\_chevron]:ml-0 tw:min-[821px]:[&_.stance-toggle\_\_chevron]:max-w-none
+                tw:min-[821px]:[&_.stance-toggle\_\_chevron]:object-contain
+                tw:min-[821px]:[&_.stance-toggle\_\_chevron]:object-[center]
+                tw:min-[821px]:[&_.stance-toggle\_\_chevron]:py-[7.41px] tw:min-[821px]:[&_.stance-toggle\_\_chevron]:px-[2.82px]
+            `}>
+                <h2 class="
+                    uf-section-title tw:min-[821px]:block tw:min-[821px]:h-auto tw:min-[821px]:min-h-0 tw:min-[821px]:leading-[42px]!
+                    tw:min-[821px]:overflow-visible tw:min-[821px]:[text-box-trim:trim-both]
+                    tw:min-[821px]:[text-box-edge:cap_alphabetic] tw:min-[821px]:p-0 tw:min-[821px]:m-0
+                " id="uf-projects-chart-title">Estas são as UFs dos parlamentares que apresentam mais projetos</h2>
+                <div class="uf-state-selector tw:min-[821px]:m-0"><StanceToggle labels={{ unfavorable: "Desfavoráveis", favorable: "Favoráveis" }} /></div>
+            </div>
+            <p>Boa parte das bancadas dos estados do Centro-Oeste, além das de Tocantins,<br class="tw:max-md:hidden" /> Espírito Santo e Santa Catarina, lidera a apresentação de propostas que restringem<br class="tw:max-md:hidden" /> direitos de mulheres, meninas e da população LGBTQIAPN+</p>
+        </header>
+
+        <figure class="
+            uf-projects-chart__figure tw:w-180 tw:h-204 tw:py-6 tw:px-0 tw:max-md:w-full tw:max-md:h-auto tw:m-0
+            tw:max-md:mt-2.5 tw:max-md:py-6 tw:max-md:px-0 tw:min-[821px]:w-180 tw:min-[821px]:h-204 tw:min-[821px]:mt-2.5
+            tw:min-[821px]:py-6 tw:min-[821px]:px-0
+        ">
+            <div class="uf-projects-chart__map-table tw:w-180 tw:h-192 tw:max-md:w-full tw:max-md:h-auto tw:max-md:text-left tw:min-[821px]:w-180 tw:min-[821px]:h-192">
+                <div class="
+                    uf-projects-chart__tabs tw:flex tw:w-180 tw:h-12 tw:items-end tw:justify-end tw:gap-0 tw:border-b-[4px]
+                    tw:border-solid tw:border-b-accent tw:max-md:w-full tw:max-md:h-auto tw:max-md:hidden tw:min-[821px]:w-180
+                    tw:min-[821px]:h-12 tw:min-[821px]:gap-0 tw:min-[821px]:py-0 tw:min-[821px]:px-4
+                " role="tablist">
+                    <button class="
+                        uf-projects-chart__tab tw:w-26 tw:h-12 tw:border-0 tw:[background:none] tw:text-accent tw:font-display tw:text-xl
+                        tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75] tw:cursor-pointer
+                        tw:min-[821px]:w-auto tw:min-[821px]:h-12 tw:min-[821px]:rounded-[16px_16px_0_0]
+                        tw:min-[821px]:[transform:translateY(4px)] tw:min-[821px]:[background:rgba(66,_66,_246,_0.1)]
+                        tw:min-[821px]:text-accent tw:min-[821px]:py-3 tw:min-[821px]:px-6
+                        tw:[&[aria-selected='true']]:rounded-[16px_16px_0_0] tw:[&[aria-selected='true']]:bg-accent
+                        tw:[&[aria-selected='true']]:text-white tw:min-[821px]:[&[aria-selected='true']]:bg-accent
+                        tw:min-[821px]:[&[aria-selected='true']]:text-white tw:flex tw:items-center tw:justify-center
+                    " type="button" role="tab" data-panel-tab="map" aria-selected="true" aria-controls="uf-panel-map">Mapa</button>
+                    <button class="
+                        uf-projects-chart__tab tw:w-26 tw:h-12 tw:border-0 tw:[background:none] tw:text-accent tw:font-display tw:text-xl
+                        tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75] tw:cursor-pointer
+                        tw:min-[821px]:w-auto tw:min-[821px]:h-12 tw:min-[821px]:rounded-[16px_16px_0_0]
+                        tw:min-[821px]:[transform:translateY(4px)] tw:min-[821px]:[background:rgba(66,_66,_246,_0.1)]
+                        tw:min-[821px]:text-accent tw:min-[821px]:py-3 tw:min-[821px]:px-6
+                        tw:[&[aria-selected='true']]:rounded-[16px_16px_0_0] tw:[&[aria-selected='true']]:bg-accent
+                        tw:[&[aria-selected='true']]:text-white tw:min-[821px]:[&[aria-selected='true']]:bg-accent
+                        tw:min-[821px]:[&[aria-selected='true']]:text-white tw:flex tw:items-center tw:justify-center
+                    " type="button" role="tab" data-panel-tab="table" aria-selected="false" aria-controls="uf-panel-table">Tabela</button>
+                </div>
+
+                <div class="
+                    uf-projects-chart__panel tw:[&[data-panel-view='table']]:flex tw:[&[data-panel-view='table']]:w-180
+                    tw:[&[data-panel-view='table']]:h-180 tw:[&[data-panel-view='table']]:flex-col
+                    tw:[&[data-panel-view='table']]:items-center tw:[&[data-panel-view='table']]:justify-center
+                    tw:[&[data-panel-view='table']]:overflow-clip tw:[&[data-panel-view='table']]:border
+                    tw:[&[data-panel-view='table']]:border-solid tw:[&[data-panel-view='table']]:border-accent
+                    tw:[&[data-panel-view='table']]:py-12 tw:[&[data-panel-view='table']]:px-0
+                    tw:max-md:[&[data-panel-view='map']]:text-left tw:max-md:[&[data-panel-view='map']]:block!
+                    tw:max-md:[&[data-panel-view='table']]:hidden! tw:min-[821px]:[&[data-panel-view='table']]:w-180
+                    tw:min-[821px]:[&[data-panel-view='table']]:h-180
+                " id="uf-panel-map" role="tabpanel" data-panel-view="map">
+                    <div class="
+                        uf-projects-chart__map tw:relative tw:w-180 tw:aspect-[1] tw:md:border tw:md:border-solid tw:md:border-accent
+                        tw:[&_img]:absolute tw:[&_img]:inset-0 tw:[&_img]:w-full tw:[&_img]:h-full tw:max-md:w-full tw:max-md:h-auto
+                        tw:max-md:aspect-[1] tw:max-md:border tw:max-md:border-solid tw:max-md:border-accent tw:min-[821px]:w-180
+                        tw:min-[821px]:h-180
+                    ">
+                        <img class="tw:relative" decoding="async" src={mapBase} alt="" width={720} height={720} loading="lazy" draggable={false} />
+                        {highlights.map((view) => (
+                            <div data-stance-view={view.stance} role="img" aria-label={`Mapa do Brasil com destaque para ${view.ufs.join(", ")}`}>
+                                {view.layers.map((layer) => (
+                                    <img decoding="async" src={layer.image} alt="" width={720} height={720} loading="lazy" draggable={false} />
+                                ))}
+                            </div>
+                        ))}
+                        <img decoding="async" src={mapLabels} alt="" width={720} height={720} loading="lazy" draggable={false} />
+                        <div class="
+                            uf-projects-chart__map-hitbox tw:absolute tw:inset-0 tw:z-2 tw:pointer-events-none tw:[&_svg]:block
+                            tw:[&_svg]:w-full tw:[&_svg]:h-full tw:[&_svg]:pointer-events-none tw:[&_path]:[pointer-events:all]
+                            tw:[&_path]:[fill:transparent]
+                        " aria-hidden="true">
+                            <Fragment set:html={mapHitboxes} />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="
+                    uf-projects-chart__panel tw:[&[data-panel-view='table']]:flex tw:[&[data-panel-view='table']]:w-180
+                    tw:[&[data-panel-view='table']]:h-180 tw:[&[data-panel-view='table']]:flex-col
+                    tw:[&[data-panel-view='table']]:items-center tw:[&[data-panel-view='table']]:justify-center
+                    tw:[&[data-panel-view='table']]:overflow-clip tw:[&[data-panel-view='table']]:border
+                    tw:[&[data-panel-view='table']]:border-solid tw:[&[data-panel-view='table']]:border-accent
+                    tw:[&[data-panel-view='table']]:py-12 tw:[&[data-panel-view='table']]:px-0
+                    tw:max-md:[&[data-panel-view='map']]:text-left tw:max-md:[&[data-panel-view='map']]:block!
+                    tw:max-md:[&[data-panel-view='table']]:hidden! tw:min-[821px]:[&[data-panel-view='table']]:w-180
+                    tw:min-[821px]:[&[data-panel-view='table']]:h-180
+                " id="uf-panel-table" role="tabpanel" data-panel-view="table">
+                    {views.map((view) => {
+                        const tableRows = view.rows;
+                        const isFavorable = view.stance === "favorable";
+                        const stanceLabel = isFavorable ? "Favoráveis" : "Desfavoráveis";
+                        const rankingHighlighters = isFavorable ? favorableTableRankingHighlighters : tableRankingHighlighters;
+                        return (
+                        <table class="
+                            uf-projects-chart__table tw:block tw:w-156 tw:h-156 tw:flex-none tw:overflow-clip tw:text-ink tw:text-base
+                            tw:[&_tr>*]:flex-[0_0_144px] tw:[&_tr>:first-child]:basis-48
+                            tw:leading-6 tw:[&_td]:flex tw:[&_td]:h-[22.2857px] tw:[&_td]:items-center tw:[&_td]:justify-end
+                            tw:[&_td]:border-b tw:[&_td]:border-solid tw:[&_td]:border-b-[rgba(66,_66,_246,_0.25)] tw:[&_td]:text-right
+                            tw:[&_td]:whitespace-nowrap tw:[&_td]:py-0 tw:[&_td]:px-3
+                        " data-stance-view={view.stance}>
+                            <thead class="tw:block">
+                                <tr class="tw:h-[22.2857px] tw:overflow-clip tw:flex"><th class="
+                                    tw:flex tw:h-[22.2857px] tw:items-center tw:justify-start tw:border-b-[2px] tw:border-solid tw:border-b-ink
+                                    tw:text-left tw:whitespace-nowrap tw:font-display tw:text-lg tw:font-bold tw:leading-6 tw:uppercase
+                                    tw:[font-variation-settings:'wdth'_75] tw:relative tw:py-0 tw:px-3
+                                " scope="col">Unidade Federativa</th><th class="
+                                    tw:flex tw:h-[22.2857px] tw:items-center tw:justify-end tw:border-b-[2px] tw:border-solid tw:border-b-ink
+                                    tw:text-right tw:whitespace-nowrap tw:font-display tw:text-lg tw:font-bold tw:leading-6 tw:uppercase
+                                    tw:[font-variation-settings:'wdth'_75] tw:py-0 tw:px-3
+                                " scope="col">Proposições</th><th class="
+                                    tw:flex tw:h-[22.2857px] tw:items-center tw:justify-end tw:border-b-[2px] tw:border-solid tw:border-b-ink
+                                    tw:text-right tw:whitespace-nowrap tw:font-display tw:text-lg tw:font-bold tw:leading-6 tw:uppercase
+                                    tw:[font-variation-settings:'wdth'_75] tw:py-0 tw:px-3
+                                " scope="col">{stanceLabel}</th><th class="
+                                    tw:flex tw:h-[22.2857px] tw:items-center tw:justify-end tw:border-b-[2px] tw:border-solid tw:border-b-ink
+                                    tw:text-right tw:whitespace-nowrap tw:font-display tw:text-lg tw:font-bold tw:leading-6 tw:uppercase
+                                    tw:[font-variation-settings:'wdth'_75] tw:py-0 tw:px-3
+                                " scope="col">% {stanceLabel}</th></tr>
+                            </thead>
+                            <tbody class="tw:block">
+                                {tableRows.map((row, index) => (
+                                    <tr class="tw:h-[22.2857px] tw:overflow-clip tw:flex">
+                                        <th class="
+                                            tw:flex tw:h-[22.2857px] tw:items-center tw:justify-start tw:border-b tw:border-solid
+                                            tw:border-b-[rgba(66,_66,_246,_0.25)] tw:text-left tw:whitespace-nowrap tw:relative tw:font-bold tw:py-0 tw:px-3
+                                        " scope="row">
+                                            <span class="uf-projects-chart__state tw:relative tw:z-1 tw:inline-block">
+                                                {index < MAP_HIGHLIGHTS && (
+                                                    <span class:list={["uf-projects-chart__ranking-highlighter tw:pointer-events-none tw:absolute tw:z-0 tw:left-[var(--ranking-highlight-left)] tw:w-[calc(100%_-_var(--ranking-highlight-left)_+_4px)]", `uf-projects-chart__ranking-highlighter--${index + 1}`, ["tw:-top-[2.43px] tw:h-[34px] tw:[--ranking-highlight-left:-15px]", "tw:top-[0.29px] tw:h-[29px] tw:[--ranking-highlight-left:-10px]", "tw:top-px tw:h-[33px] tw:[--ranking-highlight-left:-7px]", "tw:-top-[1.29px] tw:h-[33px] tw:[--ranking-highlight-left:-11px]", "tw:top-[0.43px] tw:h-[33px] tw:[--ranking-highlight-left:-12px]"][index]]} aria-hidden="true">
+                                                        <span class={String.raw`
+                                                            uf-projects-chart__ranking-highlighter-layer uf-projects-chart__ranking-highlighter-layer--one tw:absolute
+                                                            tw:block tw:mix-blend-darken tw:left-[5.7326%] tw:w-[94.2675%]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--1_&]:top-[1.333px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--1_&]:h-[24.667px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--2_&]:top-[1.137px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--2_&]:h-[21.039px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--3_&]:top-[1.294px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--3_&]:h-[23.941px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--4_&]:top-[1.294px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--4_&]:h-[23.941px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--5_&]:top-[1.294px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--5_&]:h-[23.941px]
+                                                        `}><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--one tw:absolute tw:block tw:inset-0"><img src={rankingHighlighters[index][0]} alt="" /></span></span>
+                                                        <span class={String.raw`
+                                                            uf-projects-chart__ranking-highlighter-layer uf-projects-chart__ranking-highlighter-layer--two tw:absolute
+                                                            tw:block tw:mix-blend-darken tw:left-[1.9109%] tw:w-[98.0892%]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--1_&]:top-[4.667px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--1_&]:h-[23.333px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--2_&]:top-[3.98px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--2_&]:h-[19.902px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--3_&]:top-[4.529px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--3_&]:h-[22.647px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--4_&]:top-[4.529px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--4_&]:h-[22.647px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--5_&]:top-[4.529px]
+                                                            tw:[.uf-projects-chart\_\_ranking-highlighter--5_&]:h-[22.647px]
+                                                        `}><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--two tw:absolute tw:block tw:inset-0"><img src={rankingHighlighters[index][1]} alt="" /></span></span>
+                                                    </span>
+                                                )}
+                                                <span class="uf-projects-chart__state-label tw:relative tw:z-1">{ufLabels[row.uf.trim().toUpperCase()] ?? row.uf}</span>
+                                            </span>
+                                        </th>
+                                        <td>{row.total}</td>
+                                        <td>{isFavorable ? row.favorable : row.unfavorable}</td>
+                                        <td class={index < MAP_HIGHLIGHTS ? "tw:font-bold" : undefined}>{row.share}%</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    );
+                    })}
+                </div>
+            </div>
+        </figure>
+
+        <SectionDivider
+            class="
+                uf-projects-chart__footer tw:absolute tw:right-12 tw:bottom-12 tw:left-12 tw:flex tw:w-180 tw:h-8 tw:items-start
+                tw:justify-between tw:border-t tw:border-solid tw:border-t-ink tw:pt-2 tw:text-sm tw:leading-4
+                tw:max-md:w-[min(251px,_100%)] tw:max-md:h-auto tw:max-md:relative tw:max-md:right-auto tw:max-md:bottom-auto
+                tw:max-md:left-auto tw:max-md:min-h-20 tw:max-md:flex-col tw:max-md:items-center tw:max-md:justify-start
+                tw:max-md:gap-4 tw:max-md:text-center tw:max-md:mt-0 tw:max-md:mb-12 tw:max-md:mx-auto tw:min-[821px]:bottom-6
+                tw:min-[821px]:left-12 tw:min-[821px]:right-12 tw:min-[821px]:w-180 tw:min-[821px]:h-8 tw:min-[821px]:text-ink
+                tw:[&_span]:mt-1 tw:[&_img]:w-[113.217px] tw:[&_img]:h-3 tw:[&_img]:mt-1.5 tw:[&_img]:mb-0 tw:[&_img]:mx-2
+                tw:max-md:[&_span]:mt-1 tw:max-md:[&_img]:flex-none tw:max-md:[&_img]:m-0 tw:min-[821px]:[&_span]:mt-1
+                tw:min-[821px]:[&_span]:ml-3 tw:min-[821px]:[&_span]:text-ink
+            "
+            content="A atuação das bancadas regionais revela estados com atuação mais conservadora"
+        />
+    </div>
+    <a class="
+        uf-projects-chart__button tw:absolute tw:bottom-0 tw:left-[50%] tw:flex tw:w-73.5 tw:h-14 tw:items-center
+        tw:justify-center tw:gap-4 tw:border-0 tw:[transform:translateX(-50%)] tw:bg-accent tw:text-white tw:font-display
+        tw:text-lg tw:font-bold tw:leading-6 tw:uppercase tw:[font-variation-settings:'wdth'_75] tw:no-underline
+        tw:[transition:background-color_220ms_ease-out] tw:py-4 tw:px-6 tw:[&_img]:w-[13.4142px] tw:[&_img]:h-[8.12132px]
+        tw:[&_img]:[transform:rotate(-90deg)] tw:hover:bg-ink tw:focus-visible:outline-2 tw:focus-visible:outline-ink
+        tw:focus-visible:outline-offset-1 tw:max-md:relative tw:max-md:bottom-auto tw:max-md:left-[50%]
+        tw:max-md:max-w-full tw:min-[821px]:bottom-0 tw:min-[821px]:w-73.5 tw:min-[821px]:h-14
+    " href="/atividade-legislativa">Veja como está o seu estado <img src={buttonChevron} alt="" /></a>
+    <div class="
+        uf-projects-chart__tooltip tw:fixed tw:z-1000 tw:pointer-events-none tw:max-w-60 tw:bg-white tw:text-ink
+        tw:border tw:border-solid tw:border-accent tw:shadow-[0_15px_30px_rgba(0,_0,_0,_0.2)] tw:font-sans tw:text-sm
+        tw:leading-[1.5] tw:py-3 tw:px-4 tw:[&_p]:m-0 tw:[&[hidden]]:hidden
+    " role="status" aria-live="polite" data-tooltip hidden>
+        <p class="uf-projects-chart__tooltip-uf tw:mb-2 tw:font-display tw:text-base tw:font-bold tw:uppercase tw:[font-variation-settings:'wdth'_75]" data-tooltip-uf></p>
+        <p>Favoráveis: <strong class="tw:[font-variant-numeric:tabular-nums]" data-tooltip-fav></strong></p>
+        <p>Desfavoráveis: <strong class="tw:[font-variant-numeric:tabular-nums]" data-tooltip-des></strong></p>
+    </div>
+</section>
+
+<script define:vars={{ ufData, ufLabels }}>
+    const initializeUfProjectsChart = () => {
+    // Mapa e tabela vêm os dois no HTML; a aba só troca qual o CSS mostra.
+    const section = document.querySelector(".uf-projects-chart");
+    if (!section || section.dataset.ufProjectsChartInitialized) return;
+    section.dataset.ufProjectsChartInitialized = "true";
+    const tabs = section?.querySelectorAll("[data-panel-tab]");
+
+    tabs?.forEach((tab) => {
+        tab.addEventListener("click", () => {
+            section.dataset.panel = tab.dataset.panelTab;
+            tabs.forEach((other) => other.setAttribute("aria-selected", String(other === tab)));
+        });
+    });
+
+    // Hover nas UFs: o SVG do Design vira camada de hitboxes transparente sobre
+    // os PNGs. Um par de listeners delegados (pointerover/pointerout) cobre as
+    // 27 UFs; mover o mouse dentro da mesma UF não re-dispara nada (sem piscar).
+    const hitbox = section?.querySelector(".uf-projects-chart__map-hitbox");
+    const tooltip = section?.querySelector("[data-tooltip]");
+    let currentUf = null;
+
+    function positionTooltip(event) {
+        if (!tooltip) return;
+        const pad = 16;
+        const width = tooltip.offsetWidth;
+        const height = tooltip.offsetHeight;
+        let left = event.clientX + pad;
+        let top = event.clientY + pad;
+        if (left + width > window.innerWidth) left = event.clientX - width - pad;
+        if (top + height > window.innerHeight) top = event.clientY - height - pad;
+        tooltip.style.left = Math.max(pad, left) + "px";
+        tooltip.style.top = Math.max(pad, top) + "px";
+    }
+
+    function showTooltip(uf, event) {
+        if (!tooltip) return;
+        const data = ufData[uf] ?? { favorable: 0, unfavorable: 0 };
+        const ufEl = tooltip.querySelector("[data-tooltip-uf]");
+        const favEl = tooltip.querySelector("[data-tooltip-fav]");
+        const desEl = tooltip.querySelector("[data-tooltip-des]");
+        if (ufEl) ufEl.textContent = ufLabels[uf] ?? uf;
+        if (favEl) favEl.textContent = String(data.favorable);
+        if (desEl) desEl.textContent = String(data.unfavorable);
+        tooltip.hidden = false;
+        positionTooltip(event);
+    }
+
+    hitbox?.addEventListener("pointerover", (event) => {
+        const target = event.target;
+        const path = target instanceof Element ? target.closest("path") : null;
+        if (!path) return;
+        const uf = path.id;
+        if (uf === currentUf) return;
+        currentUf = uf;
+        showTooltip(uf, event);
+    });
+
+    hitbox?.addEventListener("pointerout", (event) => {
+        const related = event.relatedTarget;
+        if (!(related instanceof Element) || !related.closest("path")) {
+            currentUf = null;
+            if (tooltip) tooltip.hidden = true;
+        }
+    });
+
+    hitbox?.addEventListener("pointermove", (event) => {
+        if (currentUf) positionTooltip(event);
+    });
+    };
+
+    initializeUfProjectsChart();
+    document.addEventListener("astro:page-load", initializeUfProjectsChart);
+</script>
+

@@ -1,17 +1,16 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import RedesignHeader from "../components/redesign/RedesignHeader.astro";
-import RedesignFooter from "../components/redesign/RedesignFooter.astro";
-import ReportagemCard from "../components/redesign/ReportagemCard.astro";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import ReportagemCard from "../components/shared/ReportagemCard.astro";
 import { fetchReportagensPage, WP_REPORTAGENS_ENDPOINT } from "../lib/wp";
-import heroIllustration from "../../public/assets/images/catavento.png";
-import attention from "../assets/images/redesign/hero/attention.svg";
-import halftoneShadow from "../assets/images/redesign/hero/halftone-shadow.png";
-import cuttingMatPattern from "../assets/images/redesign/home-reportagens/bg-pattern-cutting-mat.svg";
-import paginationPrevious from "../assets/images/redesign/reportagens/pagination-previous.svg";
-import paginationNext from "../assets/images/redesign/reportagens/pagination-next.svg";
+const heroIllustration = "/assets/images/catavento.png";
+const attention = "/assets/images/activity/attention.svg";
+const halftoneShadow = "/assets/images/hero/halftone-shadow.png";
+const cuttingMatPattern = "/assets/images/home-reportagens/bg-pattern-cutting-mat.svg";
+const paginationPrevious = "/assets/images/reportagens/pagination-previous.svg";
+const paginationNext = "/assets/images/reportagens/pagination-next.svg";
 import "../styles/tailwind.css";
-import "../styles/redesign-shared-background.css";
 
 const POSTS_PER_PAGE = 9;
 const RECENT_POST_COUNT = 3;
@@ -33,6 +32,7 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
 <!doctype html>
 <html lang="pt-BR">
     <head>
+        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Reportagens | Elas no Congresso</title>
@@ -51,96 +51,96 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
         />
         <ClientRouter fallback="swap" />
     </head>
-    <body class="tw:!pt-0 tw:!bg-white">
+    <body class="tw:!pt-0 tw:!bg-white tw:m-0">
         <div
-            class="reportagens-page"
-            style={`--reportagens-pattern: url(${cuttingMatPattern.src})`}
+            class="reportagens-page tw:text-ink tw:font-sans"
+            style={`--reportagens-pattern: url(${cuttingMatPattern})`}
         >
-            <RedesignHeader />
+            <Header />
             <main>
                 <section
-                    class="reportagens-hero redesign-shared-background"
+                    class="reportagens-hero site-shared-background tw:text-ink tw:h-125 tw:overflow-hidden tw:relative tw:[&_h1]:mix-blend-multiply tw:[&_h1]:font-display tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:uppercase tw:[&_h1]:text-ink tw:[&_h1]:text-7xl tw:[&_h1]:tracking-normal tw:[&_h1]:leading-18 tw:[&_h1]:m-0 tw:[&_p]:mix-blend-multiply tw:[&_p]:text-lg tw:[&_p]:font-bold tw:[&_p]:tracking-normal tw:[&_p]:leading-6 tw:[&_p]:w-160 tw:[&_p]:m-0 tw:max-[901px]:h-152.5 tw:max-[901px]:[&_p]:w-full tw:max-[561px]:h-[251px] tw:max-[561px]:[&_p]:max-w-80 tw:max-[561px]:[&_p]:w-80 tw:max-[561px]:[&_p]:pt-[5px] tw:max-[561px]:[&_p]:pb-2.5 tw:max-[561px]:[&_p]:px-0 tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
                     data-page-hero
                     aria-labelledby="reportagens-hero-title"
-                    style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}
+                    style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow})`}
                 >
-                    <div class="reportagens-hero__top-row">
-                        <div class="reportagens-hero__copy">
+                    <div class="reportagens-hero__top-row tw:items-center tw:flex tw:h-119 tw:justify-between tw:relative tw:z-2 tw:p-12 tw:max-[901px]:items-start tw:max-[901px]:h-146.5 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:max-[561px]:items-start tw:max-[561px]:h-full tw:max-[561px]:p-6">
+                        <div class="reportagens-hero__copy tw:items-start tw:flex tw:flex-[1_0_0] tw:flex-col tw:gap-6 tw:justify-center tw:max-w-240 tw:min-w-0 tw:max-[901px]:gap-5 tw:max-[901px]:max-w-full tw:max-[561px]:flex-none tw:max-[561px]:gap-[15px] tw:max-[561px]:justify-start tw:max-[561px]:max-w-full tw:max-[561px]:w-full">
                             <img
-                                class="reportagens-attention"
-                                src={attention.src}
+                                class="reportagens-attention tw:block tw:h-2 tw:w-24 tw:max-[561px]:h-1 tw:max-[561px]:w-8"
+                                src={attention}
                                 alt=""
                             />
-                            <h1 id="reportagens-hero-title">Reportagens</h1>
+                            <h1 class="tw:max-[561px]:text-[32px]! tw:max-[561px]:leading-8! tw:max-[561px]:[text-box-edge:cap_alphabetic] tw:max-[561px]:[text-box-trim:trim-both]" id="reportagens-hero-title">Reportagens</h1>
                             <p>
                                 Veja as histórias que os dados do Congresso nos
                                 contam.
                             </p>
                         </div>
-                        <div class="reportagens-hero__art">
+                        <div class="reportagens-hero__art tw:items-center tw:flex tw:flex-none tw:h-95 tw:justify-center tw:overflow-hidden tw:relative tw:w-145 tw:p-2.5 tw:max-[901px]:bottom-4 tw:max-[901px]:absolute tw:max-[901px]:-right-22 tw:max-[901px]:[transform:scale(0.54)] tw:max-[901px]:origin-[bottom_right] tw:max-[901px]:m-0 tw:max-[561px]:hidden">
                             <div
-                                class="reportagens-hero__illustration"
+                                class="reportagens-hero__illustration tw:h-125 tw:relative tw:w-125"
                                 aria-hidden="true"
                             >
-                                <div class="reportagens-hero__illustration-inner">
-                                    <img src={heroIllustration.src} alt="" />
+                                <div class="reportagens-hero__illustration-inner tw:h-[inherit] tw:bottom-0 tw:absolute tw:w-[inherit] tw:[&_img]:object-contain">
+                                    <img src={heroIllustration} alt="" />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div
-                        class="reportagens-hero__shadow"
+                        class="reportagens-hero__shadow tw:bg-[image:var(--reportagens-hero-halftone-shadow)] tw:bg-bottom-left tw:bg-repeat-x tw:bg-size-[1440px_24px] tw:bottom-0 tw:block tw:h-6 tw:left-0 tw:mix-blend-multiply tw:pointer-events-none tw:absolute tw:w-full tw:z-1"
                         aria-hidden="true"
                     ></div>
                 </section>
                 <section
-                    class="reportagens-recent"
+                    class={String.raw`reportagens-recent tw:[&_h2]:font-display tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:uppercase tw:[&_h2]:text-[32px] tw:[&_h2]:leading-8 tw:[&_h2]:text-center tw:[&_h2]:w-180 tw:[&_h2]:my-0 tw:[&_h2]:mx-auto tw:[background:#0b0f5e_var(--reportagens-pattern)_center_top_/_200px_200px_repeat] tw:text-white tw:min-h-[647px] tw:relative tw:pt-24 tw:pb-26.5 tw:px-0 tw:max-[901px]:py-16 tw:max-[901px]:px-0 tw:max-[901px]:[&_h2]:w-auto tw:max-[561px]:[background:#0b0f5e_var(--reportagens-pattern)_center_top_/_200px_200px_repeat] tw:max-[561px]:min-h-0 tw:max-[561px]:overflow-hidden tw:max-[561px]:pt-[65px] tw:max-[561px]:pb-[49px] tw:max-[561px]:px-0 tw:before:[background:linear-gradient(_to_bottom,_rgba(66,_66,_246,_0.25),_transparent_)] tw:before:content-[''] tw:before:h-3 tw:before:left-0 tw:before:absolute tw:before:right-0 tw:before:top-0 tw:max-[561px]:after:[content:none] tw:max-[561px]:before:z-1 tw:max-[561px]:[&_.reportagem-card]:flex-[0_0_384px] tw:max-[561px]:[&_.reportagem-card]:w-96 tw:max-[561px]:[&_.reportagem-card\_\_image]:aspect-[384/216] tw:max-[561px]:[&_.reportagem-card\_\_image]:h-54 tw:max-[561px]:[&_.reportagem-card\_\_image]:w-96 tw:max-[561px]:[&_.reportagem-card_h3]:min-h-0`}
                     aria-labelledby="reportagens-recentes-title"
                 >
-                    <h2 id="reportagens-recentes-title">
+                    <h2 class="tw:max-[561px]:relative tw:max-[561px]:text-left! tw:max-[561px]:[text-box-edge:cap_alphabetic] tw:max-[561px]:[text-box-trim:trim-both] tw:max-[561px]:whitespace-nowrap tw:max-[561px]:w-full tw:max-[561px]:z-2 tw:max-[561px]:py-0 tw:max-[561px]:px-6 tw:max-[561px]:m-0" id="reportagens-recentes-title">
                         Reportagens mais recentes
                     </h2>
                     {recentPosts.length > 0 ? (
                         <div
-                            class="reportagens-recent__scroll"
+                            class="reportagens-recent__scroll tw:max-[901px]:pl-6 tw:max-[901px]:pr-6 tw:flex tw:gap-12 tw:justify-center tw:overflow-x-auto tw:[scroll-snap-type:x_mandatory] tw:w-full tw:pt-0 tw:pb-4 tw:px-12 tw:mt-12 tw:mb-0 tw:mx-auto tw:max-[561px]:block tw:max-[561px]:overflow-x-auto tw:max-[561px]:overflow-y-hidden tw:max-[561px]:relative tw:max-[561px]:[scroll-snap-type:none] tw:max-[561px]:[scrollbar-width:thin] tw:max-[561px]:w-full tw:max-[561px]:z-2 tw:max-[561px]:pt-0 tw:max-[561px]:pb-4 tw:max-[561px]:px-0 tw:max-[561px]:mt-14.5 tw:max-[561px]:mb-0 tw:max-[561px]:mx-0"
                             tabindex="0"
                             aria-label="Lista de reportagens mais recentes"
                         >
-                            <div class="reportagens-recent__track">
+                            <div class="reportagens-recent__track tw:flex tw:flex-none tw:gap-12 tw:max-[561px]:gap-12 tw:max-[561px]:w-max tw:max-[561px]:py-0 tw:max-[561px]:px-6">
                                 {recentPosts.map((post) => (
                                     <ReportagemCard post={post} dark />
                                 ))}
                             </div>
                         </div>
                     ) : (
-                        <p class="reportagens-feedback" role="status">
+                        <p class="reportagens-feedback tw:text-white tw:text-base tw:leading-6 tw:relative tw:z-2 tw:mt-12 tw:mb-0 tw:mx-6" role="status">
                             N&atilde;o foi poss&iacute;vel carregar as
                             reportagens mais recentes.
                         </p>
                     )}
                 </section>
                 <section
-                    class="reportagens-all"
+                    class="reportagens-all tw:[&_h2]:items-start tw:[&_h2]:flex tw:[&_h2]:font-display tw:[&_h2]:text-[32px] tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:leading-[42px] tw:[&_h2]:max-w-full tw:[&_h2]:uppercase tw:[&_h2]:w-205 tw:[&_h2]:mt-0 tw:[&_h2]:mb-12 tw:[&_h2]:mx-0 tw:max-[901px]:[&_h2]:mb-10 tw:[--reportagens-all-inline-padding:48px] tw:p-[72px_var(--reportagens-all-inline-padding)_0] tw:max-[901px]:[--reportagens-all-inline-padding:24px] tw:max-[901px]:p-[64px_var(--reportagens-all-inline-padding)_0] tw:max-[561px]:[--reportagens-all-inline-padding:24px] tw:max-[561px]:pt-18 tw:max-[561px]:pb-[85px] tw:max-[561px]:pr-[23px] tw:max-[561px]:pl-6"
                     aria-labelledby="todas-reportagens-title"
                     data-reportagens-pagination
                     data-pagination-endpoint={WP_REPORTAGENS_ENDPOINT}
                     data-pagination-total-pages={allPostsTotalPages}
                 >
-                    <div class="reportagens-all__content">
-                        <h2 id="todas-reportagens-title">
-                            <span>Todas as reportagens</span>
+                    <div class="reportagens-all__content tw:max-w-336 tw:w-full tw:my-0 tw:mx-auto">
+                        <h2 class="tw:max-[561px]:leading-8 tw:max-[561px]:mb-12 tw:max-[561px]:min-h-10.5 tw:max-[561px]:[text-box-edge:cap_alphabetic] tw:max-[561px]:[text-box-trim:trim-both] tw:max-[561px]:w-full" id="todas-reportagens-title">
+                            <span class="tw:flex-[0_0_292px] tw:text-center tw:max-[561px]:basis-73 tw:max-[561px]:text-left tw:max-[561px]:leading-8">Todas as reportagens</span>
                         </h2>
                         {posts.length > 0 ? (
-                            <div class="reportagens-all__grid">
+                            <div class={String.raw`reportagens-all__grid tw:mx-auto tw:flex tw:max-w-336 tw:flex-wrap tw:justify-between tw:gap-24 tw:[&>*]:min-w-0 tw:[&>*]:flex-none tw:[&>*]:w-[calc((100%_-_192px)/3)] tw:max-[901px]:gap-x-6 tw:max-[901px]:gap-y-16 tw:max-[901px]:[&>*]:w-[calc((100%_-_24px)/2)] tw:max-[901px]:[&_.reportagem-card]:w-full tw:max-[901px]:[&_.reportagem-card\_\_image]:w-full tw:max-[561px]:w-full tw:max-[561px]:max-w-none tw:max-[561px]:flex-col tw:max-[561px]:gap-24 tw:max-[561px]:[&>*]:w-full tw:max-[561px]:[&_.reportagem-card]:flex-none tw:max-[561px]:[&_.reportagem-card\_\_image]:aspect-[384/216] tw:max-[561px]:[&_.reportagem-card\_\_image]:h-auto tw:max-[561px]:[&_.reportagem-card_h3]:min-h-0`}>
                                 {posts.map((post) => (
-                                    <div data-reportagem-pagination-card>
+                                    <div class="tw:max-[561px]:w-full" data-reportagem-pagination-card>
                                         <ReportagemCard post={post} />
                                     </div>
                                 ))}
                             </div>
                         ) : (
                             <p
-                                class="reportagens-feedback reportagens-feedback--light"
+                                class="reportagens-feedback reportagens-feedback--light tw:text-base tw:leading-6 tw:relative tw:z-2 tw:text-navy tw:my-12 tw:mx-0"
                                 role="status"
                             >
                                 N&atilde;o foi poss&iacute;vel carregar as
@@ -150,19 +150,19 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
                     </div>
                     {allPostsTotalPages > 1 && (
                         <div
-                            class="reportagens-pagination-region"
-                            style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}
+                            class="reportagens-pagination-region tw:h-[195px] tw:ml-[calc(var(--reportagens-all-inline-padding)_*_-1)] tw:mt-7.5 tw:overflow-hidden tw:relative tw:w-[calc(100%_+_(var(--reportagens-all-inline-padding)_*_2))] tw:max-[561px]:-ml-6 tw:max-[561px]:mt-[69.5px] tw:max-[561px]:w-[calc(100%_+_47px)] tw:before:bg-[image:var(--reportagens-hero-halftone-shadow)] tw:before:bg-top-left tw:before:bg-repeat-x tw:before:bg-size-[1440px_24px] tw:before:content-[''] tw:before:h-6 tw:before:left-0 tw:before:mix-blend-multiply tw:before:pointer-events-none tw:before:absolute tw:before:right-0 tw:before:top-7.5 tw:before:[transform:rotate(180deg)] tw:before:z-1 tw:max-[561px]:before:bg-[image:var(--reportagens-hero-halftone-shadow)] tw:max-[561px]:before:bg-top-left tw:max-[561px]:before:bg-repeat-x tw:max-[561px]:before:bg-size-[720px_12px] tw:max-[561px]:before:content-[''] tw:max-[561px]:before:h-3 tw:max-[561px]:before:left-0 tw:max-[561px]:before:mix-blend-multiply tw:max-[561px]:before:pointer-events-none tw:max-[561px]:before:absolute tw:max-[561px]:before:right-0 tw:max-[561px]:before:z-1 tw:max-[561px]:before:top-7.5 tw:max-[561px]:before:[transform:rotate(180deg)] tw:max-[561px]:after:bg-[image:var(--reportagens-hero-halftone-shadow)] tw:max-[561px]:after:bg-top-left tw:max-[561px]:after:bg-repeat-x tw:max-[561px]:after:bg-size-[720px_12px] tw:max-[561px]:after:content-[''] tw:max-[561px]:after:h-3 tw:max-[561px]:after:left-0 tw:max-[561px]:after:mix-blend-multiply tw:max-[561px]:after:pointer-events-none tw:max-[561px]:after:absolute tw:max-[561px]:after:right-0 tw:max-[561px]:after:z-1 tw:max-[561px]:after:bottom-[29px]"
+                            style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow})`}
                         >
                             <div
-                                class="reportagens-pagination-region__texture redesign-shared-background"
+                                class="reportagens-pagination-region__texture site-shared-background tw:max-[561px]:bottom-[29px] tw:max-[561px]:top-7.5 tw:[background-position:center_-30px] tw:bottom-0 tw:left-0 tw:pointer-events-none tw:absolute tw:right-0 tw:top-7.5 tw:z-0 tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
                                 aria-hidden="true"
                             ></div>
                             <nav
-                                class="reportagens-pagination"
+                                class="reportagens-pagination tw:items-start tw:flex tw:gap-1 tw:justify-center tw:left-0 tw:absolute tw:right-0 tw:top-19.5 tw:z-2 tw:m-0"
                                 aria-label="Pagina&#231;&#227;o das reportagens"
                             >
                                 <button
-                                    class="reportagens-pagination__button"
+                                    class="reportagens-pagination__button tw:items-center tw:bg-white tw:border-[2px] tw:border-solid tw:border-accent tw:text-accent tw:cursor-pointer tw:flex tw:h-10 tw:justify-center tw:[transition:background-color_150ms_ease,_color_150ms_ease] tw:w-14 tw:py-2 tw:px-4 tw:[&>span]:items-center tw:[&>span]:flex tw:[&>span]:h-6 tw:[&>span]:justify-center tw:[&>span]:w-6 tw:[&_img]:block tw:[&_img]:h-4 tw:[&_img]:w-4 tw:focus-visible:bg-accent tw:focus-visible:outline-2 tw:focus-visible:outline-ink tw:focus-visible:outline-offset-0.5 tw:disabled:cursor-default tw:disabled:opacity-40 tw:[&:hover:not(:disabled)]:bg-accent tw:[&:hover:not(:disabled)]:outline-none tw:[&:hover:not(:disabled)_img]:[filter:brightness(0)_invert(1)] tw:[&:focus-visible_img]:[filter:brightness(0)_invert(1)]"
                                     type="button"
                                     data-pagination-previous
                                     aria-label="P&#225;gina anterior"
@@ -170,23 +170,23 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
                                 >
                                     <span>
                                         <img
-                                            src={paginationPrevious.src}
+                                            src={paginationPrevious}
                                             alt=""
                                         />
                                     </span>
                                 </button>
                                 <button
-                                    class="reportagens-pagination__button"
+                                    class="reportagens-pagination__button tw:items-center tw:bg-white tw:border-[2px] tw:border-solid tw:border-accent tw:text-accent tw:cursor-pointer tw:flex tw:h-10 tw:justify-center tw:[transition:background-color_150ms_ease,_color_150ms_ease] tw:w-14 tw:py-2 tw:px-4 tw:[&>span]:items-center tw:[&>span]:flex tw:[&>span]:h-6 tw:[&>span]:justify-center tw:[&>span]:w-6 tw:[&_img]:block tw:[&_img]:h-4 tw:[&_img]:w-4 tw:focus-visible:bg-accent tw:focus-visible:outline-2 tw:focus-visible:outline-ink tw:focus-visible:outline-offset-0.5 tw:disabled:cursor-default tw:disabled:opacity-40 tw:[&:hover:not(:disabled)]:bg-accent tw:[&:hover:not(:disabled)]:outline-none tw:[&:hover:not(:disabled)_img]:[filter:brightness(0)_invert(1)] tw:[&:focus-visible_img]:[filter:brightness(0)_invert(1)]"
                                     type="button"
                                     data-pagination-next
                                     aria-label="Pr&oacute;xima p&aacute;gina"
                                 >
                                     <span>
-                                        <img src={paginationNext.src} alt="" />
+                                        <img src={paginationNext} alt="" />
                                     </span>
                                 </button>
                                 <span
-                                    class="reportagens-pagination__status"
+                                    class="reportagens-pagination__status tw:h-[1px] tw:overflow-hidden tw:absolute tw:w-[1px] tw:[clip:rect(0_0_0_0)] tw:m-[-1px]"
                                     aria-live="polite"
                                     data-pagination-status
                                 >
@@ -197,7 +197,7 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
                     )}
                 </section>
             </main>
-            <RedesignFooter />
+            <Footer />
         </div>
     </body>
 </html>
@@ -489,600 +489,3 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
         initialiseReportagensPagination,
     );
 </script>
-
-<style is:global>
-    @font-face {
-        font-family: "ETC Anybody";
-        font-style: normal;
-        font-weight: 50 1000;
-        font-display: swap;
-        src: url("/assets/fonts/ETCAnybodyVariable.woff2")
-            format("woff2-variations");
-    }
-    body:has(.reportagens-page) {
-        margin: 0;
-    }
-    .reportagens-page,
-    .reportagens-page * {
-        box-sizing: border-box;
-    }
-    .reportagens-page {
-        color: #0b0f5e;
-        font-family: "Plus Jakarta Sans", sans-serif;
-    }
-    .reportagens-hero {
-        color: #0b0f5e;
-        height: 500px;
-        overflow: hidden;
-        position: relative;
-    }
-    .reportagens-hero__top-row {
-        align-items: center;
-        display: flex;
-        height: 476px;
-        justify-content: space-between;
-        padding: 48px;
-        position: relative;
-        z-index: 2;
-    }
-    .reportagens-hero__copy {
-        align-items: flex-start;
-        display: flex;
-        flex: 1 0 0;
-        flex-direction: column;
-        gap: 24px;
-        justify-content: center;
-        max-width: 960px;
-        min-width: 0;
-    }
-    .reportagens-attention {
-        display: block;
-        height: 8px;
-        width: 96px;
-    }
-    .reportagens-hero h1,
-    .reportagens-hero p {
-        mix-blend-mode: multiply;
-    }
-    .reportagens-hero h1,
-    .reportagens-recent h2,
-    .reportagem-card h3,
-    .reportagem-card__link {
-        font-family: "ETC Anybody", sans-serif;
-        font-weight: 700;
-        font-variation-settings: "wdth" 75;
-        text-transform: uppercase;
-    }
-    .reportagens-hero h1 {
-        color: #0b0f5e;
-        font-size: 72px;
-        letter-spacing: 0;
-        line-height: 72px;
-        margin: 0;
-    }
-    .reportagens-hero p {
-        font-size: 18px;
-        font-weight: 700;
-        letter-spacing: 0;
-        line-height: 24px;
-        margin: 0;
-        width: 640px;
-    }
-    .reportagens-hero__art {
-        align-items: center;
-        display: flex;
-        flex: none;
-        height: 380px;
-        justify-content: center;
-        overflow: hidden;
-        padding: 10px;
-        position: relative;
-        width: 580px;
-    }
-    .reportagens-hero__illustration {
-        height: 500px;
-        position: relative;
-        width: 500px;
-    }
-    .reportagens-hero__illustration-inner {
-        height: inherit;
-        bottom: 0;
-        position: absolute;
-        width: inherit;
-    }
-    .reportagens-hero__illustration-inner img {
-        object-fit: contain;
-    }
-    .reportagens-hero__shadow {
-        background-image: var(--reportagens-hero-halftone-shadow);
-        background-position: left bottom;
-        background-repeat: repeat-x;
-        background-size: 1440px 24px;
-        bottom: 0;
-        display: block;
-        height: 24px;
-        left: 0;
-        mix-blend-mode: multiply;
-        pointer-events: none;
-        position: absolute;
-        width: 100%;
-        z-index: 1;
-    }
-    .reportagens-recent {
-        background: #0b0f5e var(--reportagens-pattern) center top / 200px 200px
-            repeat;
-        color: #fff;
-        min-height: 647px;
-        padding: 96px 0 106px;
-        position: relative;
-    }
-    .reportagens-recent::before {
-        background: linear-gradient(
-            to bottom,
-            rgba(66, 66, 246, 0.25),
-            transparent
-        );
-        content: "";
-        height: 12px;
-        left: 0;
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-    .reportagens-recent h2 {
-        font-size: 32px;
-        line-height: 32px;
-        margin: 0 auto;
-        text-align: center;
-        width: 720px;
-    }
-    .reportagens-recent__scroll {
-        display: flex;
-        gap: 48px;
-        justify-content: center;
-        margin: 48px auto 0;
-        overflow-x: auto;
-        padding: 0 48px 16px;
-        scroll-snap-type: x mandatory;
-        width: 100%;
-    }
-    .reportagens-recent__track {
-        display: flex;
-        flex: none;
-        gap: 48px;
-    }
-    .reportagem-card {
-        display: flex;
-        flex: 0 0 384px;
-        flex-direction: column;
-        gap: 16px;
-        scroll-snap-align: start;
-    }
-    .reportagem-card__image {
-        border: 2px solid #4242f6;
-        display: block;
-        height: 216px;
-        overflow: hidden;
-        width: 384px;
-    }
-    .reportagem-card__image img {
-        height: 100%;
-        object-fit: cover;
-        width: 100%;
-    }
-    .reportagem-card h3 {
-        color: #0b0f5e;
-        font-size: 24px;
-        line-height: 32px;
-        margin: 0;
-        min-height: 64px;
-    }
-    .reportagem-card--dark h3 {
-        color: #fff;
-        min-height: 96px;
-    }
-    .reportagem-card__details {
-        align-items: flex-start;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        justify-content: center;
-        overflow: hidden;
-    }
-    .reportagem-card__link {
-        align-items: center;
-        align-self: flex-start;
-        background: #4242f6;
-        color: #fff;
-        display: flex;
-        font-size: 18px;
-        gap: 8px;
-        height: 38px;
-        justify-content: center;
-        line-height: 24px;
-        padding: 8px 12px 6px 14px;
-        text-decoration: none;
-    }
-    .reportagem-card__link > span:last-child {
-        align-items: center;
-        display: flex;
-        height: 24px;
-        justify-content: flex-end;
-        width: 12px;
-    }
-    .reportagem-card__link img {
-        display: block;
-        height: 6px;
-        transform: rotate(-90deg);
-        width: 12px;
-    }
-    .reportagem-card__date {
-        color: #1e2546;
-        font-size: 14px;
-        font-weight: 400;
-        letter-spacing: 0;
-        line-height: 16px;
-        margin: 0;
-    }
-    .reportagem-card--dark .reportagem-card__date {
-        color: #fff;
-    }
-    .reportagens-all {
-        --reportagens-all-inline-padding: 48px;
-        padding: 72px var(--reportagens-all-inline-padding) 0;
-    }
-    .reportagens-all__content {
-        margin: 0 auto;
-        max-width: 1344px;
-        width: 100%;
-    }
-    .reportagens-all h2 {
-        align-items: flex-start;
-        display: flex;
-        font-family: "ETC Anybody", sans-serif;
-        font-size: 32px;
-        font-weight: 700;
-        font-variation-settings: "wdth" 75;
-        line-height: 42px;
-        margin: 0 0 48px;
-        max-width: 100%;
-        text-transform: uppercase;
-        width: 820px;
-    }
-    .reportagens-all h2 > span {
-        flex: 0 0 292px;
-        text-align: center;
-    }
-    .reportagens-all__grid {
-        display: grid;
-        gap: 96px;
-        grid-template-columns: repeat(3, 384px);
-        justify-content: space-between;
-        margin: 0 auto;
-        max-width: 1344px;
-    }
-    .reportagens-all__grid > [hidden] {
-        display: none;
-    }
-    .reportagens-pagination-region {
-        height: 195px;
-        margin-left: calc(var(--reportagens-all-inline-padding) * -1);
-        margin-top: 30px;
-        overflow: hidden;
-        position: relative;
-        width: calc(100% + (var(--reportagens-all-inline-padding) * 2));
-    }
-    .reportagens-pagination-region__texture {
-        background-position: center -30px;
-        bottom: 0;
-        left: 0;
-        pointer-events: none;
-        position: absolute;
-        right: 0;
-        top: 30px;
-        z-index: 0;
-    }
-    .reportagens-pagination-region::before {
-        background-image: var(--reportagens-hero-halftone-shadow);
-        background-position: left top;
-        background-repeat: repeat-x;
-        background-size: 1440px 24px;
-        content: "";
-        height: 24px;
-        left: 0;
-        mix-blend-mode: multiply;
-        pointer-events: none;
-        position: absolute;
-        right: 0;
-        top: 30px;
-        transform: rotate(180deg);
-        z-index: 1;
-    }
-    .reportagens-pagination {
-        align-items: flex-start;
-        display: flex;
-        gap: 4px;
-        justify-content: center;
-        left: 0;
-        margin: 0;
-        position: absolute;
-        right: 0;
-        top: 78px;
-        z-index: 2;
-    }
-    .reportagens-pagination__button {
-        align-items: center;
-        background: #fff;
-        border: 2px solid #4242f6;
-        color: #4242f6;
-        cursor: pointer;
-        display: flex;
-        height: 40px;
-        justify-content: center;
-        padding: 8px 16px;
-        transition:
-            background-color 150ms ease,
-            color 150ms ease;
-        width: 56px;
-    }
-    .reportagens-pagination__button > span {
-        align-items: center;
-        display: flex;
-        height: 24px;
-        justify-content: center;
-        width: 24px;
-    }
-    .reportagens-pagination__button img {
-        display: block;
-        height: 16px;
-        width: 16px;
-    }
-    .reportagens-pagination__button:hover:not(:disabled),
-    .reportagens-pagination__button:focus-visible {
-        background: #4242f6;
-        outline: none;
-    }
-    .reportagens-pagination__button:hover:not(:disabled) img,
-    .reportagens-pagination__button:focus-visible img {
-        filter: brightness(0) invert(1);
-    }
-    .reportagens-pagination__button:focus-visible {
-        outline: 2px solid #0b0f5e;
-        outline-offset: 2px;
-    }
-    .reportagens-pagination__button:disabled {
-        cursor: default;
-        opacity: 0.4;
-    }
-    .reportagens-pagination__status {
-        height: 1px;
-        margin: -1px;
-        overflow: hidden;
-        position: absolute;
-        width: 1px;
-        clip: rect(0 0 0 0);
-    }
-    .reportagens-feedback {
-        color: #fff;
-        font-size: 16px;
-        line-height: 24px;
-        margin: 48px 24px 0;
-        position: relative;
-        z-index: 2;
-    }
-    .reportagens-feedback--light {
-        color: #1e2546;
-        margin: 48px 0;
-    }
-    @media (max-width: 900px) {
-        .reportagens-hero {
-            height: 610px;
-        }
-        .reportagens-hero__top-row {
-            align-items: flex-start;
-            height: 586px;
-            padding: 48px 24px;
-        }
-        .reportagens-hero__copy {
-            gap: 20px;
-            max-width: 100%;
-        }
-        .reportagens-hero p {
-            width: 100%;
-        }
-        .reportagens-hero__art {
-            bottom: 16px;
-            margin: 0;
-            position: absolute;
-            right: -88px;
-            transform: scale(0.54);
-            transform-origin: bottom right;
-        }
-        .reportagens-recent {
-            padding: 64px 0;
-        }
-        .reportagens-recent h2 {
-            width: auto;
-        }
-        .reportagens-recent__scroll {
-            padding-left: 24px;
-            padding-right: 24px;
-        }
-        .reportagens-all {
-            --reportagens-all-inline-padding: 24px;
-            padding: 64px var(--reportagens-all-inline-padding) 0;
-        }
-        .reportagens-all h2 {
-            margin-bottom: 40px;
-        }
-        .reportagens-all__grid {
-            gap: 64px 24px;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-        .reportagens-all__grid .reportagem-card,
-        .reportagens-all__grid .reportagem-card__image {
-            width: 100%;
-        }
-    }
-
-    @media (max-width: 560px) {
-        .reportagens-hero {
-            height: 251px;
-        }
-        .reportagens-hero__top-row {
-            align-items: flex-start;
-            height: 100%;
-            padding: 24px;
-        }
-        .reportagens-hero__copy {
-            flex: none;
-            gap: 15px;
-            justify-content: flex-start;
-            max-width: 100%;
-            width: 100%;
-        }
-        .reportagens-attention {
-            height: 4px;
-            width: 32px;
-        }
-        .reportagens-hero h1 {
-            font-size: 32px;
-            line-height: 32px;
-            text-box-edge: cap alphabetic;
-            text-box-trim: trim-both;
-        }
-        .reportagens-hero p {
-            max-width: 320px;
-            padding: 5px 0 10px;
-            width: 320px;
-        }
-        .reportagens-hero__art {
-            display: none;
-        }
-
-        .reportagens-recent {
-            background: #0b0f5e var(--reportagens-pattern) center top / 200px
-                200px repeat;
-            min-height: 0;
-            overflow: hidden;
-            padding: 65px 0 49px;
-        }
-        .reportagens-recent::after {
-            content: none;
-        }
-        .reportagens-recent::before {
-            z-index: 1;
-        }
-        .reportagens-recent h2 {
-            margin: 0;
-            padding: 0 24px;
-            position: relative;
-            text-align: left;
-            text-box-edge: cap alphabetic;
-            text-box-trim: trim-both;
-            white-space: nowrap;
-            width: 100%;
-            z-index: 2;
-        }
-        .reportagens-recent__scroll {
-            display: block;
-            margin: 58px 0 0;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding: 0 0 16px;
-            position: relative;
-            scroll-snap-type: none;
-            scrollbar-width: thin;
-            width: 100%;
-            z-index: 2;
-        }
-        .reportagens-recent__track {
-            gap: 48px;
-            padding: 0 24px;
-            width: max-content;
-        }
-        .reportagens-recent .reportagem-card {
-            flex: 0 0 384px;
-            width: 384px;
-        }
-        .reportagens-recent .reportagem-card__image {
-            aspect-ratio: 384 / 216;
-            height: 216px;
-            width: 384px;
-        }
-        .reportagens-recent .reportagem-card h3 {
-            min-height: 0;
-        }
-
-        .reportagens-all {
-            --reportagens-all-inline-padding: 24px;
-            padding: 72px 23px 85px 24px;
-        }
-        .reportagens-all h2 {
-            line-height: 32px;
-            margin-bottom: 48px;
-            min-height: 42px;
-            text-box-edge: cap alphabetic;
-            text-box-trim: trim-both;
-            width: 100%;
-        }
-        .reportagens-all h2 > span {
-            flex-basis: 292px;
-            text-align: left;
-        }
-        .reportagens-all__grid {
-            gap: 96px;
-            grid-template-columns: minmax(0, 1fr);
-            justify-content: start;
-            max-width: none;
-            width: 100%;
-        }
-        .reportagens-all__grid > div {
-            width: 100%;
-        }
-        .reportagens-all__grid .reportagem-card {
-            flex: none;
-            width: 100%;
-        }
-        .reportagens-all__grid .reportagem-card__image {
-            aspect-ratio: 384 / 216;
-            height: auto;
-            width: 100%;
-        }
-        .reportagens-all__grid .reportagem-card h3 {
-            min-height: 0;
-        }
-
-        .reportagens-pagination-region {
-            margin-left: -24px;
-            margin-top: 69.5px;
-            width: calc(100% + 47px);
-        }
-        .reportagens-pagination-region__texture {
-            bottom: 29px;
-            top: 30px;
-        }
-        .reportagens-pagination-region::before,
-        .reportagens-pagination-region::after {
-            background-image: var(--reportagens-hero-halftone-shadow);
-            background-position: left top;
-            background-repeat: repeat-x;
-            background-size: 720px 12px;
-            content: "";
-            height: 12px;
-            left: 0;
-            mix-blend-mode: multiply;
-            pointer-events: none;
-            position: absolute;
-            right: 0;
-            z-index: 1;
-        }
-        .reportagens-pagination-region::before {
-            top: 30px;
-            transform: rotate(180deg);
-        }
-        .reportagens-pagination-region::after {
-            bottom: 29px;
-        }
-    }
-</style>

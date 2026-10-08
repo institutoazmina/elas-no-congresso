@@ -1,34 +1,34 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Share from '../components/Share.astro';
-import FormSubstack from '../components/FormSubstack.astro';
+import Share from '../components/shared/Share.astro';
+import FormSubstack from '../components/newsletter/FormSubstack.astro';
 ---
 <BaseLayout title="Assine nossa newsletter">
 <main>
-    <header class="abertura-newsletter">
+    <header class="tw:relative tw:flex tw:min-[992px]:min-h-[60vh] tw:flex-col tw:justify-center tw:bg-periwinkle tw:bg-[url('/assets/images/backgrounds/abertura-acompanhe.webp')] tw:bg-contain tw:bg-no-repeat tw:bg-bottom tw:pt-4 tw:pb-12 tw:min-[992px]:pt-12">
         <Share title="Assine nossa newsletter" />
-        <div class="container-fluid wrap">
-            <div class="row">
-                <div class="col-xs-12 col-md-7 col-md-offset-1">
-                    <h2 class="titulo-variavel tcb t9 mb2">
-                        <span class="w900 wdth400">Assine</span>
-                        <span class="w400 wdth300"> nossa </span>
-                        <span class="w900 wdth250 wdth400-sm linha">newsletter</span>
+        <div class="tw:w-full tw:mx-auto tw:px-4 tw:min-[992px]:px-8 tw:max-w-[1310px]">
+            <div class="tw:flex tw:flex-wrap tw:-mx-4">
+                <div class="tw:w-full tw:min-w-0 tw:px-4 tw:min-[992px]:w-[58.3333%] tw:min-[992px]:ml-[8.3333%]">
+                    <h2 class="tw:font-display tw:uppercase tw:break-normal tw:text-white tw:text-[clamp(36.4px,calc(2.275rem_+_15.6*(100vw_-_500px)/700),52px)] tw:leading-[1.5] tw:mb-8">
+                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">Assine</span>
+                        <span class="tw:font-normal tw:[font-variation-settings:'wdth'_300]"> nossa </span>
+                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_250] tw:sm:[font-variation-settings:'wdth'_400] tw:block">newsletter</span>
                     </h2>
                 </div>
             </div>
         </div>
     </header>
 
-    <article class="conteudo-newsletter">
-        <div class="container-fluid wrap">
-            <div class="row">
-                <div class="col-xs-12 col-md-7 col-md-offset-1">
-                    <h3 class="titulo-variavel tca mb1">
-                        <span class="w600 wdth150">Fique de olho no</span>
-                        <span class="w900 wdth350">congresso</span>
+    <article class="tw:relative tw:bg-white tw:py-20 tw:before:content-[''] tw:before:absolute tw:before:z-2 tw:before:left-0 tw:before:bottom-[calc(100%_-_32px)] tw:before:w-full tw:before:h-[7vh] tw:before:bg-[url('/assets/images/backgrounds/paper-edge.svg')] tw:before:bg-cover tw:before:bg-top tw:before:pointer-events-none tw:[&_p]:leading-[1.3] tw:[&_article]:mb-12 tw:[&_table]:w-full tw:[&_table]:text-sm tw:[&_th]:p-2 tw:[&_td]:p-2 tw:[&_tbody_tr]:border-b tw:[&_tbody_tr]:border-periwinkle/20">
+        <div class="tw:w-full tw:mx-auto tw:px-4 tw:min-[992px]:px-8 tw:max-w-[1310px]">
+            <div class="tw:flex tw:flex-wrap tw:-mx-4">
+                <div class="tw:w-full tw:min-w-0 tw:px-4 tw:min-[992px]:w-[58.3333%] tw:min-[992px]:ml-[8.3333%]">
+                    <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                        <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_150]">Fique de olho no</span>
+                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_350]">congresso</span>
                     </h3>
-                    <p class="t3 mb2 lh1-25">Receba semanalmente direto no seu e-mail um monitoramento completo de tudo que tem rolado ligado aos direitos das mulheres no Congresso Nacional. Com análises e contextualizações exclusivas, para saber não só o que tem acontecido, mas o que está por trás, quem está envolvido e como você pode entrar em ação.</p>
+                    <p class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-8 tw:leading-tight">Receba semanalmente direto no seu e-mail um monitoramento completo de tudo que tem rolado ligado aos direitos das mulheres no Congresso Nacional. Com análises e contextualizações exclusivas, para saber não só o que tem acontecido, mas o que está por trás, quem está envolvido e como você pode entrar em ação.</p>
                     <FormSubstack />
                 </div>
             </div>

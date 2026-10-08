@@ -9,7 +9,11 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "knip": "knip",
+    "test": "node --test \"src/**/*.test.ts\"",
+    "check:assets": "node scripts/check-assets.mjs",
+    "check": "npm run knip && npm run check:assets && npm test"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.5",
@@ -22,10 +26,7 @@
     "tailwindcss": "^4.2.3"
   },
   "devDependencies": {
-    "@unlighthouse/cli": "^0.17.10",
-    "autoprefixer": "^10.5.0",
-    "less": "^4.6.4",
-    "puppeteer": "^25.1.0",
+    "knip": "^6.40.0",
     "sharp": "^0.35.1"
   }
 }

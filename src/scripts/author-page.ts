@@ -90,7 +90,7 @@ function initAuthorPage() {
     function showStatus(kind: "loading" | "error" | "not-found", message?: string) {
         const status = $("[data-author-status]");
         status.hidden = false;
-        status.className = `author-status is-${kind}`;
+        for (const state of ["loading", "error", "not-found"]) status.classList.toggle(`is-${state}`, state === kind);
         if (kind === "loading") {
             status.innerHTML = `<span aria-hidden="true"></span><p>${message || "Carregando informações da autoria…"}</p>`;
         } else if (kind === "not-found") {
@@ -123,24 +123,24 @@ function initAuthorPage() {
     function createGroupedRows(targetSelector: string, groups: RatingGroup[]) {
         const target = $(targetSelector);
         if (groups.length === 0) {
-            target.className = "author-dashboard-card__empty";
+            target.classList.add("is-empty");
             target.textContent = "Não informado na base da Atividade Legislativa";
             return;
         }
-        target.className = "";
+        target.classList.remove("is-empty");
         const shown = groups.slice(0, 3);
         const peak = Math.max(1, ...shown.flatMap((group) => [group.favorable, group.unfavorable]));
         target.replaceChildren(...shown.map((group) => {
             const row = document.createElement("div");
-            row.className = "author-dashboard-card__row";
+            row.className = "author-dashboard-card__row tw:grid tw:grid-cols-[minmax(0,1fr)_38px_80px] tw:min-h-8 tw:items-center tw:gap-1.5 tw:text-sm tw:leading-4 tw:[&_>_span:first-child]:overflow-hidden tw:[&_>_span:first-child]:text-ellipsis tw:[&_>_span:first-child]:whitespace-nowrap";
             const label = document.createElement("span");
             label.textContent = group.label;
             label.title = group.label;
             const values = document.createElement("span");
-            values.className = "author-dashboard-card__values";
+            values.className = "author-dashboard-card__values tw:flex tw:items-end tw:flex-col tw:text-[rgb(11_15_94_/_75%)] tw:text-xs tw:leading-3";
             values.innerHTML = `<span>${formatNumber.format(group.favorable)}</span><span>${formatNumber.format(group.unfavorable)}</span>`;
             const bars = document.createElement("span");
-            bars.className = "author-dashboard-card__bars";
+            bars.className = "author-dashboard-card__bars tw:flex tw:h-5 tw:border-l tw:border-solid tw:border-l-ink tw:flex-col tw:gap-1 tw:py-0.5 tw:px-0 tw:[&_span]:block tw:[&_span]:h-1.5 tw:[&_span]:w-[var(--bar-width,_0%)] tw:[&_span:first-child]:bg-[#c1e639] tw:[&_span:last-child]:bg-[#ff5865]";
             const favorable = document.createElement("span");
             const unfavorable = document.createElement("span");
             favorable.style.setProperty("--bar-width", `${(group.favorable / peak) * 100}%`);
@@ -160,7 +160,7 @@ function initAuthorPage() {
     function createStance(proposal: AuthorProposal) {
         const data = stanceData(proposal);
         const element = document.createElement("span");
-        element.className = `activity-table__stance ${data.className}`;
+        element.className = `activity-table__stance tw:flex tw:items-center tw:gap-1.5 tw:[&_img]:w-6 tw:[&_img]:h-6 ${data.className}`;
         if (data.icon) {
             const icon = document.createElement("img");
             icon.src = data.icon;
@@ -174,7 +174,7 @@ function initAuthorPage() {
     function createAuthorLink(proposal: AuthorProposal) {
         const author = activity!.author;
         const link = document.createElement("a");
-        link.className = "activity-table__author";
+        link.className = "activity-table__author tw:flex tw:items-center tw:gap-2 tw:text-inherit tw:no-underline tw:[&_img]:w-7.5 tw:[&_img]:h-10 tw:[&_img]:flex-none tw:[&_img]:border tw:[&_img]:border-solid tw:[&_img]:border-muted tw:[&_img]:object-cover tw:[&_img]:object-[top_center] tw:[&_>_span]:flex tw:[&_>_span]:min-w-0 tw:[&_>_span]:flex-col tw:[&_strong]:overflow-hidden tw:[&_strong]:text-ellipsis tw:[&_strong]:whitespace-nowrap tw:[&_small]:text-[rgb(11_15_94_/_65%)] tw:[&_small]:text-xs tw:[&_small]:leading-4";
         link.href = authorRoute(author.nome) || "/atividade-legislativa";
         link.setAttribute("aria-label", `Ver página de autoria de ${author.nome}`);
         if (author.foto) {
@@ -184,14 +184,14 @@ function initAuthorPage() {
             image.loading = "lazy";
             image.onerror = () => {
                 const fallback = document.createElement("span");
-                fallback.className = "activity-table__author-fallback";
+                fallback.className = "activity-table__author-fallback tw:w-7.5 tw:h-10 tw:flex-none tw:border tw:border-solid tw:border-muted tw:object-cover tw:object-[top_center] tw:bg-[#f1f1ff] tw:text-accent tw:font-bold tw:flex tw:items-center tw:justify-center";
                 fallback.textContent = initials(author.nome);
                 image.replaceWith(fallback);
             };
             link.append(image);
         } else {
             const fallback = document.createElement("span");
-            fallback.className = "activity-table__author-fallback";
+            fallback.className = "activity-table__author-fallback tw:w-7.5 tw:h-10 tw:flex-none tw:border tw:border-solid tw:border-muted tw:object-cover tw:object-[top_center] tw:bg-[#f1f1ff] tw:text-accent tw:font-bold tw:flex tw:items-center tw:justify-center";
             fallback.textContent = initials(author.nome);
             link.append(fallback);
         }
@@ -247,11 +247,11 @@ function initAuthorPage() {
 
     function createMobileCard(proposal: AuthorProposal) {
         const card = document.createElement("article");
-        card.className = "author-card";
+        card.className = "author-card tw:max-md:flex tw:max-md:border-b tw:max-md:border-solid tw:max-md:border-b-[rgb(66_66_246_/_25%)] tw:max-md:flex-col tw:max-md:gap-2.5 tw:max-md:py-4 tw:max-md:px-0 tw:max-md:[&_header]:flex tw:max-md:[&_header]:justify-between tw:max-md:[&_header]:gap-3 tw:max-md:[&_header_>_span]:flex tw:max-md:[&_header_>_span]:flex-col tw:max-md:[&_footer]:flex tw:max-md:[&_footer]:justify-between tw:max-md:[&_footer]:gap-3 tw:max-md:[&_footer]:text-xs tw:max-md:[&_footer]:leading-4 tw:max-md:[&_footer_>_span]:flex tw:max-md:[&_footer_>_span]:flex-col tw:max-md:[&_footer_>_span:last-child]:text-right";
         const header = document.createElement("header");
         const identity = document.createElement("span");
         const link = document.createElement("a");
-        link.className = "author-card__number";
+        link.className = "author-card__number tw:text-accent tw:font-display tw:text-base tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:no-underline tw:uppercase tw:max-md:text-lg";
         link.href = propositionRoute(proposal.numero) || "/atividade-legislativa";
         link.textContent = proposal.numero;
         const house = document.createElement("small");
@@ -262,7 +262,7 @@ function initAuthorPage() {
         category.textContent = proposal.categoria || "Categoria não informada";
         card.append(header, category, createAuthorLink(proposal));
         const summary = document.createElement("p");
-        summary.className = "author-card__summary";
+        summary.className = "author-card__summary tw:max-md:text-[rgb(11_15_94_/_75%)] tw:max-md:text-sm tw:max-md:leading-[18px] tw:max-md:m-0";
         summary.textContent = proposal.resumo;
         const footer = document.createElement("footer");
         const evaluator = document.createElement("span");
@@ -384,7 +384,7 @@ function initAuthorPage() {
                 const media = post._embedded?.["wp:featuredmedia"]?.[0];
                 const imageSource = resolveReportagemImage(media);
                 const article = document.createElement("article");
-                article.className = "reportagem-card";
+                article.className = "reportagem-card tw:[&_h3]:font-display tw:[&_h3]:font-bold tw:[&_h3]:[font-variation-settings:'wdth'_75] tw:[&_h3]:uppercase tw:[&_h3]:text-ink tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:min-h-16 tw:[&_h3]:m-0 tw:flex tw:flex-[0_0_384px] tw:flex-col tw:gap-4 tw:[scroll-snap-align:start]";
                 const imageLink = document.createElement("a");
                 imageLink.className = "reportagem-card__image";
                 imageLink.href = post.link;
@@ -408,9 +408,9 @@ function initAuthorPage() {
                 titleLink.textContent = decodeHtml(post.title.rendered);
                 title.append(titleLink);
                 const details = document.createElement("div");
-                details.className = "reportagem-card__details";
+                details.className = "reportagem-card__details tw:items-start tw:flex tw:flex-col tw:gap-4 tw:justify-center tw:overflow-hidden";
                 const link = document.createElement("a");
-                link.className = "reportagem-card__link";
+                link.className = "reportagem-card__link tw:font-display tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:uppercase tw:items-center tw:self-start tw:bg-accent tw:text-white tw:flex tw:text-lg tw:gap-2 tw:h-9.5 tw:justify-center tw:leading-6 tw:no-underline tw:pt-2 tw:pb-1.5 tw:pr-3 tw:pl-3.5 tw:[&_>_span:last-child]:items-center tw:[&_>_span:last-child]:flex tw:[&_>_span:last-child]:h-6 tw:[&_>_span:last-child]:justify-end tw:[&_>_span:last-child]:w-3 tw:[&_img]:block tw:[&_img]:h-1.5 tw:[&_img]:[transform:rotate(-90deg)] tw:[&_img]:w-3";
                 link.href = post.link;
                 link.target = "_blank";
                 link.rel = "noopener noreferrer";
@@ -419,7 +419,7 @@ function initAuthorPage() {
                 const reportDate = post.modified || post.date;
                 if (reportDate) {
                     const time = document.createElement("time");
-                    time.className = "reportagem-card__date";
+                    time.className = "reportagem-card__date tw:text-navy tw:text-sm tw:font-normal tw:tracking-normal tw:leading-4 tw:m-0 tw:[.reportagem-card--dark_&]:text-white";
                     time.dateTime = reportDate;
                     time.textContent = `Atualizada em ${new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", year: "numeric", timeZone: "America/Sao_Paulo" }).format(new Date(reportDate))}`;
                     details.append(time);

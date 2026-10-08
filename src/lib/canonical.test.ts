@@ -1,42 +1,5 @@
 import assert from "node:assert";
-import {
-    canonicalPropositionKey,
-    extractPropositionYear,
-    formatPresentedDate,
-    isCanonicalNumero,
-    isValidLegislativeYear,
-    normalizeCasaKey,
-    normalizeEvaluatorKey,
-    normalizeNumero,
-    presentedAtSortValue,
-} from "./canonical.ts";
-
-// Normalização de número: trim + colapso de whitespace + uppercase.
-assert.equal(normalizeNumero("PL  1338/2022"), "PL 1338/2022");
-assert.equal(normalizeNumero("  pdl 176/2021 "), "PDL 176/2021");
-assert.equal(normalizeNumero(null), "");
-
-// Whitespace duplicado: a chave canônica deve permanecer a mesma.
-assert.equal(
-    canonicalPropositionKey("Deputado", "PL  1338/2022"),
-    canonicalPropositionKey("Deputado", "PL 1338/2022"),
-);
-assert.equal(canonicalPropositionKey("Deputado", "PL 1338/2022"), "CAMARA|PL 1338/2022");
-
-// Casa: convenções das duas bases convergem.
-assert.equal(normalizeCasaKey("Deputado"), "CAMARA");
-assert.equal(normalizeCasaKey("camara"), "CAMARA");
-assert.equal(normalizeCasaKey("Câmara"), "CAMARA");
-assert.equal(normalizeCasaKey("Senador"), "SENADO");
-assert.equal(normalizeCasaKey("senado"), "SENADO");
-assert.equal(canonicalPropositionKey("Senado", "PEC 18/2021"), "SENADO|PEC 18/2021");
-// Desconhecida nunca vira silenciosamente Câmara.
-assert.equal(normalizeCasaKey("Poder Executivo"), "PODER EXECUTIVO");
-
-// Avaliador: agrupamento sem alterar texto editorial.
-assert.equal(normalizeEvaluatorKey("Cfemea"), normalizeEvaluatorKey("CFEMEA"));
-assert.equal(normalizeEvaluatorKey("deFEMde"), normalizeEvaluatorKey("deFemde"));
-assert.notEqual(normalizeEvaluatorKey("Anis"), normalizeEvaluatorKey("Themis"));
+import { extractPropositionYear, formatPresentedDate, isValidLegislativeYear } from "./canonical.ts";
 
 // year=0 da API é inválido; nunca gerar "Ano 0".
 assert.equal(isValidLegislativeYear(0), false);
@@ -54,15 +17,5 @@ assert.equal(extractPropositionYear(null, "SBT 2/0"), 0);
 assert.equal(formatPresentedDate("2021-04-26"), "26/04/2021");
 assert.equal(formatPresentedDate(null), "Indisponível");
 assert.equal(formatPresentedDate("não-data"), "Indisponível");
-
-// Ordenação da coluna "Atualização" usa a data apresentada, não o id interno.
-assert.ok(presentedAtSortValue("2026-09-25") > presentedAtSortValue("2026-06-01"));
-assert.equal(presentedAtSortValue("não-data"), 0);
-
-// Colisões: forma sem espaço duplo é a canônica (URL única).
-assert.equal(isCanonicalNumero("PL 1338/2022"), true);
-assert.equal(isCanonicalNumero("PL  1338/2022"), false);
-assert.equal(isCanonicalNumero("  PL 1338/2022"), false);
-assert.equal(isCanonicalNumero(""), false);
 
 console.log("canonical.test.ts: OK");

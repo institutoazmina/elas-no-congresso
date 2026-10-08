@@ -1,0 +1,210 @@
+---
+import Papelada from "./Papelada.astro";
+import SectionDivider from "../shared/SectionDivider.astro";
+import { pileGap } from "../../lib/papelada";
+const thumbsDown = "/assets/images/thumbs-down.svg";
+const info = "/assets/images/home-chart/info.svg";
+const attention = "/assets/images/activity/attention.svg";
+import { getUnfavorableByCategory } from "../../service/api/stats";
+import { SetbackInfoTooltip } from "./SetbackInfoTooltip";
+
+// A API devolve 10 categorias; o gráfico do design tem 8 colunas.
+const COLUMNS = 7;
+// Escala do design: pilhas de 46px de largura, a mais alta com 127px.
+const PILE_WIDTH = 46;
+const PILE_PEAK = 127;
+
+const categories = (await getUnfavorableByCategory()).slice(0, COLUMNS);
+const gap = pileGap({
+    width: PILE_WIDTH,
+    height: PILE_PEAK,
+    peak: Math.max(...categories.map((category) => category.unfavorable), 1),
+});
+
+const themes = categories.map((category, index) => {
+    const isFirst = index === 0;
+    return {
+        count: category.unfavorable,
+        title: category.label,
+        // ponytail: largura pelo tamanho do rótulo. Se algum título novo quebrar
+        // feio, vira um mapa de largura por categoria.
+        width:
+            category.label.length > 24
+                ? 192
+                : category.label.length > 14
+                  ? 147
+                  : 110,
+        chartWidth: isFirst ? 113 : 66,
+        countSize: isFirst ? 36 : 28,
+        label: isFirst,
+    };
+});
+---
+
+<div class="legislative-setbacks-spacing tw:min-[821px]:w-full tw:min-[821px]:py-12 tw:min-[821px]:bg-white tw:min-[821px]:bg-none">
+<section
+    class="
+        legislative-setbacks tw:overflow-hidden tw:bg-white tw:text-[#0B0F5E] tw:min-[821px]:pt-0
+        tw:min-[821px]:m-0 tw:[&_footer_span]:pt-1 tw:[&_footer_img]:w-[113.217px] tw:[&_footer_img]:h-3
+        tw:[&_footer_img]:mt-1 tw:[&_footer_img]:shrink-0 tw:max-md:[&_figure_article_>_div:first-child_canvas]:w-11.5!
+        tw:max-md:[&_figure_article_>_div:first-child_canvas]:h-auto!
+        tw:max-md:[&_figure_article_>_div:first-child_canvas]:flex-none
+        tw:max-md:[&_figure_article_>_div:last-child_img]:w-6! tw:max-md:[&_figure_article_>_div:last-child_img]:h-6!
+        tw:max-md:[&_figure_article_>_div:last-child_img]:flex-none tw:max-md:[&_footer]:flex
+        tw:max-md:[&_footer]:w-[min(251px,_100%)] tw:max-md:[&_footer]:h-24 tw:max-md:[&_footer]:pt-2
+        tw:max-md:[&_footer]:flex-col tw:max-md:[&_footer]:items-center tw:max-md:[&_footer]:justify-start
+        tw:max-md:[&_footer]:gap-6 tw:max-md:[&_footer]:box-border tw:max-md:[&_footer]:text-center
+        tw:max-md:[&_footer]:my-0 tw:max-md:[&_footer]:mx-auto tw:max-md:[&_footer_span]:w-full
+        tw:max-md:[&_footer_span]:text-sm tw:max-md:[&_footer_span]:leading-4 tw:max-md:[&_footer_span]:py-1
+        tw:max-md:[&_footer_span]:px-0 tw:max-md:[&_footer_img]:w-[113.217px] tw:max-md:[&_footer_img]:h-3
+        tw:max-md:[&_footer_img]:mt-1.5 tw:max-md:[&_footer_img]:mb-0 tw:max-md:[&_footer_img]:mx-0
+        tw:min-[821px]:[&_figure_>_div_>_article_>_div:last-child_img]:w-6
+        tw:min-[821px]:[&_figure_>_div_>_article_>_div:last-child_img]:h-6
+    "
+    aria-labelledby="legislative-setbacks-title"
+>
+    <div
+        class="
+            tw:mx-auto tw:flex tw:w-full tw:max-w-[1352px] tw:flex-col tw:gap-2.5 tw:px-6 tw:py-12 tw:lg:h-[657px]
+            tw:lg:w-[1352px] tw:lg:max-w-none tw:lg:p-12 tw:max-md:box-border tw:max-md:w-full tw:max-md:h-auto
+            tw:max-md:gap-2.5 tw:max-md:py-6 tw:max-md:px-4
+        "
+    >
+        <header
+            class="
+                tw:mx-auto tw:flex tw:w-full tw:max-w-[720px] tw:flex-col tw:items-start tw:gap-4 tw:lg:mx-auto tw:h-[126px]
+                tw:max-md:w-full tw:max-md:max-w-none tw:max-md:h-auto tw:max-md:gap-4
+            "
+        >
+            <img class="tw:h-1 tw:w-24" src={attention} alt="" />
+            <h2
+                id="legislative-setbacks-title"
+                class="
+                    tw:m-0 tw:w-full tw:text-[28px] tw:font-bold tw:leading-[34px] tw:uppercase
+                    tw:font-display tw:[font-variation-settings:'wdth'_75] tw:sm:text-4xl tw:sm:leading-[42px] tw:max-md:text-[28px]
+                    tw:max-md:leading-8 tw:min-[821px]:h-16.5 tw:min-[821px]:leading-8!
+                "
+            >
+                Estes são Os temas com mais<br class="tw:hidden tw:sm:block" /> retrocesso
+                no legislativo
+            </h2>
+            <p
+                class="tw:m-0 tw:w-full tw:font-[Plus_Jakarta_Sans] tw:text-lg tw:leading-6 tw:max-md:text-sm tw:max-md:leading-6"
+            >
+                Proporcionalmente, o direito ao aborto e de pessoas LGBTQIAPN+ são os mais atacados no Congresso
+            </p>
+        </header>
+
+        <figure
+            class="tw:m-0 tw:h-[383px] tw:w-full tw:overflow-x-auto tw:py-6 tw:max-md:h-auto tw:max-md:overflow-visible tw:max-md:py-6 tw:max-md:px-0"
+        >
+            <div
+                class="
+                    tw:relative tw:mx-auto tw:flex tw:h-[335px] tw:min-w-[1256px] tw:items-end tw:gap-6 tw:max-md:w-full
+                    tw:max-md:max-w-full tw:max-md:min-w-0 tw:max-md:h-auto tw:max-md:items-stretch tw:max-md:gap-6 tw:max-md:my-0
+                    tw:max-md:mx-auto tw:max-md:flex tw:max-md:[&>*]:min-w-0 tw:max-md:flex-wrap tw:max-md:[&>*]:flex-[0_0_calc(50%_-_12px)]
+                "
+            >
+                {
+                    themes.map((theme) => (
+                        <article
+                            class="
+                                tw:relative tw:flex tw:h-full tw:shrink-0 tw:flex-col tw:items-center tw:justify-end tw:gap-4 tw:py-4
+                                tw:max-md:w-auto! tw:max-md:min-w-0 tw:max-md:min-h-0 tw:max-md:h-auto tw:max-md:[transform:none]! tw:max-md:py-4
+                                tw:max-md:px-0
+                            "
+                            style={`width: ${theme.width}px;`}
+                            aria-label={`${theme.count} proposições desfavoráveis: ${theme.title}`}
+                        >
+                            <div
+                                class="
+                                    tw:absolute tw:bottom-[124px] tw:left-1/2 tw:flex tw:-translate-x-1/2 tw:flex-col tw:items-center tw:justify-end
+                                    tw:gap-2 tw:max-md:flex tw:max-md:static tw:max-md:w-full! tw:max-md:max-w-72 tw:max-md:top-auto
+                                    tw:max-md:right-auto tw:max-md:bottom-auto tw:max-md:left-auto tw:max-md:items-center tw:max-md:justify-end
+                                    tw:max-md:gap-2 tw:max-md:[transform:none] tw:max-md:[translate:none]
+                                "
+                                style={`width: ${theme.chartWidth}px;`}
+                            >
+                                <div
+                                    class={`legislative-setbacks__indicator tw:max-md:flex-col! tw:max-md:gap-2! tw:flex tw:items-center tw:justify-center tw:gap-2 ${theme.label ? "tw:flex-col tw:gap-1" : "tw:flex-row"}`}
+                                >
+                                    <div class="
+                                        legislative-setbacks__indicator-value tw:flex tw:items-center tw:justify-center tw:gap-2 tw:max-md:items-center!
+                                        tw:max-md:justify-center! tw:max-md:gap-1!
+                                    ">
+                                        <span
+                                            class={`legislative-setbacks__indicator-number tw:max-md:text-4xl! tw:max-md:leading-[42px]! tw:max-md:text-center tw:font-display tw:font-bold tw:leading-8 tw:uppercase tw:[font-variation-settings:'wdth'_75] ${theme.countSize === 36 ? "tw:text-4xl tw:leading-[42px]" : "tw:text-[28px]"}`}
+                                        >
+                                            {theme.count}
+                                        </span>
+                                        <span class="
+                                            legislative-setbacks__indicator-thumb tw:relative tw:block tw:size-8 tw:shrink-0 tw:rounded-full tw:max-md:w-8!
+                                            tw:max-md:h-8! tw:max-md:aspect-[1/1] tw:max-md:rounded-[999px] tw:max-md:[&_img]:inset-0!
+                                            tw:max-md:[&_img]:w-full! tw:max-md:[&_img]:h-full!
+                                        ">
+                                            <img
+                                                class="tw:block tw:size-full"
+                                                src={thumbsDown}
+                                                alt=""
+                                            />
+                                        </span>
+                                    </div>
+                                    {theme.label && (
+                                        <span class="legislative-setbacks__desktop-unfavorable tw:text-xl tw:font-bold tw:leading-6 tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75] tw:max-md:hidden">
+                                            Desfavoráveis
+                                        </span>
+                                    )}
+                                    {theme.label && (
+                                        <span class="
+                                            legislative-setbacks__mobile-unfavorable tw:hidden tw:max-md:block tw:max-md:text-[#0B0F5E]
+                                            tw:max-md:font-display tw:max-md:text-xl tw:max-md:not-italic tw:max-md:font-bold tw:max-md:leading-6
+                                            tw:max-md:text-center tw:max-md:uppercase tw:max-md:whitespace-nowrap
+                                        ">Desfavoráveis</span>
+                                    )}
+                                </div>
+                                <Papelada
+                                    class="tw:w-[46px]"
+                                    arrangement="pile"
+                                    category="desfavoravel"
+                                    size="a4"
+                                    gap={gap}
+                                    amount={theme.count}
+                                />
+                            </div>
+                            <div class="
+                                tw:absolute tw:top-[227px] tw:flex tw:h-[92px] tw:w-full tw:flex-col tw:items-center tw:justify-center tw:gap-1
+                                tw:py-2 tw:max-md:static tw:max-md:top-auto tw:max-md:right-auto tw:max-md:bottom-auto tw:max-md:left-auto
+                                tw:max-md:h-23 tw:max-md:justify-center tw:max-md:gap-1 tw:max-md:box-border tw:max-md:[transform:none]
+                                tw:max-md:[translate:none] tw:max-md:py-2 tw:max-md:px-0 tw:min-[821px]:gap-y-1
+                                tw:min-[821px]:py-2 tw:min-[821px]:px-0 tw:min-[821px]:flex
+                                tw:min-[821px]:flex-col
+                            ">
+                                <SetbackInfoTooltip client:load count={theme.count} iconSrc={info} title={theme.title} />
+                                <h3 class="
+                                    tw:m-0 tw:text-center tw:text-xl tw:font-bold tw:leading-6 tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75]
+                                    tw:max-md:w-full tw:max-md:min-w-24 tw:max-md:max-w-48 tw:max-md:min-h-12 tw:max-md:text-[#0B0F5E]
+                                    tw:max-md:font-display tw:max-md:text-xl tw:max-md:not-italic tw:max-md:font-bold tw:max-md:leading-6
+                                    tw:max-md:text-center tw:max-md:uppercase tw:max-md:mix-blend-multiply tw:max-md:whitespace-normal tw:max-md:m-0
+                                    tw:min-[821px]:w-full tw:min-[821px]:h-12 tw:min-[821px]:min-h-12 tw:min-[821px]:leading-6 tw:min-[821px]:m-0
+                                ">
+                                    {theme.title}
+                                </h3>
+                            </div>
+                        </article>
+                    ))
+                }
+            </div>
+        </figure>
+
+        <SectionDivider
+            href="/atividade-legislativa"
+            content="Acesse a aba Atividade de Legislativa para ver em detalhes"
+            class="
+                tw:flex tw:w-full tw:items-start tw:justify-between tw:gap-6 tw:border-t tw:border-[#0B0F5E] tw:pt-2
+                tw:font-[Plus_Jakarta_Sans] tw:text-sm tw:leading-4 tw:lg:h-8
+            "
+        />
+    </div>
+</section>
+</div>
+

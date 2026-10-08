@@ -12,7 +12,6 @@
 import { apiGet } from './client';
 
 export type CategoryOption = { value: string; label: string };
-export type CommitteeOption = { acronym: string; name: string; house: string };
 export type AlertProposition = {
   id: number;
   typeCode: string;
@@ -36,14 +35,6 @@ type PropositionResponse = {
 
 export async function getCategoryOptions(): Promise<CategoryOption[]> {
   return apiGet<CategoryOption[]>('/taxonomy/categories');
-}
-
-export async function getCommitteeOptions(): Promise<CommitteeOption[]> {
-  const { items } = await apiGet<Paginated<CommitteeOption>>('/committees/', {
-    active: 'true',
-    limit: 200,
-  });
-  return items.map(({ acronym, name, house }) => ({ acronym, name, house }));
 }
 
 export async function getAlertPropositions(): Promise<AlertPropositionsPage> {

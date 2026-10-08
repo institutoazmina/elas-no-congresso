@@ -1,14 +1,13 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import RedesignHeader from "../components/redesign/RedesignHeader.astro";
-import AlertsHero from "../components/redesign/alerts/AlertsHero.astro";
-import AlertsToolbar from "../components/redesign/alerts/AlertsToolbar.astro";
-import AlertsList from "../components/redesign/alerts/AlertsList.astro";
-import AlertsEmailModal from "../components/redesign/alerts/AlertsEmailModal.astro";
-import RedesignFooter from "../components/redesign/RedesignFooter.astro";
+import Header from "../components/layout/Header.astro";
+import AlertsHero from "../components/alerts/AlertsHero.astro";
+import AlertsToolbar from "../components/alerts/AlertsToolbar.astro";
+import AlertsList from "../components/alerts/AlertsList.astro";
+import AlertsEmailModal from "../components/alerts/AlertsEmailModal.astro";
+import Footer from "../components/layout/Footer.astro";
 import { getAlertPropositions } from "../service/api/alerts";
 import "../styles/tailwind.css";
-import "../styles/redesign-shared-background.css";
 
 const propositionPage = await getAlertPropositions();
 ---
@@ -16,6 +15,7 @@ const propositionPage = await getAlertPropositions();
 <!doctype html>
 <html lang="pt-BR">
     <head>
+        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>Alertas | Elas no Congresso</title>
@@ -35,13 +35,13 @@ const propositionPage = await getAlertPropositions();
         <ClientRouter fallback="swap" />
     </head>
     <body class="tw:!pt-0 tw:!bg-white">
-        <div class="redesign-alerts-page">
-            <div class="redesign-alerts-header-background redesign-shared-background">
-                <RedesignHeader />
+        <div class={String.raw`site-alerts-page tw:max-md:[body.alerts-email-modal-open_&]:flex tw:max-md:[body.alerts-email-modal-open_&]:flex-col tw:max-md:[&_.site-header.site-header--scrolled]:inset-[0_0_auto] tw:max-md:[&_.site-header.site-header--scrolled]:fixed tw:max-md:[&_.site-header_.highlighter-marks]:hidden! tw:max-md:[&_.site-header:not(.site-header--scrolled):has(_.site-header\_\_mobile-menu[open]_)]:inset-auto tw:max-md:[&_.site-header:not(.site-header--scrolled):has(_.site-header\_\_mobile-menu[open]_)]:relative tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])]:block tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])]:p-0 tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:left-4 tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:absolute tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:top-[19px] tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:z-2 tw:max-md:[&_.site-header\_\_mobile-menu[open]]:block tw:max-md:[&_.site-header\_\_mobile-menu[open]]:pt-3 tw:max-md:[&_.site-header\_\_mobile-menu[open]]:w-full tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_summary]:ml-auto tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_summary]:mr-4 tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:h-auto tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:inset-auto tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:mt-3 tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:min-h-0 tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:overflow-y-visible tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:static tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']]:bg-transparent tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']]:text-white tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']]:no-underline tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:bg-lime tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:text-ink tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:underline tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:[text-decoration-thickness:2px] tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:underline-offset-1`}>
+            <div class="site-alerts-header-background site-shared-background tw:relative tw:z-12 tw:max-md:[body.alerts-email-modal-open_&]:[order:0] tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]">
+                <Header />
             </div>
-            <main class="redesign-alerts-main">
+            <main class="site-alerts-main tw:bg-white tw:[body.alerts-email-modal-open_&]:hidden">
                 <AlertsHero />
-                <section class="alerts-content" aria-label="Alertas recentes">
+                <section class="alerts-content tw:flex tw:flex-col tw:gap-8 tw:w-224 tw:pt-25 tw:pb-14 tw:px-10 tw:my-0 tw:mx-auto tw:max-[941px]:w-full tw:max-[941px]:py-16 tw:max-[941px]:px-8 tw:max-md:gap-8 tw:max-md:py-12 tw:max-md:px-6" aria-label="Alertas recentes">
                     <AlertsToolbar />
                     <AlertsList
                         propositions={propositionPage.items}
@@ -50,205 +50,7 @@ const propositionPage = await getAlertPropositions();
                 </section>
             </main>
             <AlertsEmailModal />
-            <RedesignFooter />
+            <Footer />
         </div>
     </body>
 </html>
-
-<style is:global>
-    @font-face {
-        font-family: "ETC Anybody";
-        font-style: normal;
-        font-weight: 50 1000;
-        font-display: swap;
-        src: url("/assets/fonts/ETCAnybodyVariable.woff2")
-            format("woff2-variations");
-    }
-    body:has(.redesign-header) {
-        margin: 0;
-    }
-    .redesign-header .container-fluid {
-        width: 100%;
-    }
-    .redesign-header .wrap {
-        max-width: 1310px;
-    }
-    .redesign-header .ff1 {
-        font-family: "ETC Anybody", sans-serif;
-    }
-    .redesign-alerts-header-background {
-        position: relative;
-        z-index: 12;
-    }
-    .redesign-alerts-main {
-        background: #fff;
-    }
-    body.alerts-email-modal-open .redesign-alerts-main {
-        display: none;
-    }
-    .alerts-content {
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
-        margin: 0 auto;
-        padding: 100px 40px 56px;
-        width: 896px;
-    }
-    @media (max-width: 940px) {
-        .alerts-content {
-            padding: 64px 32px;
-            width: 100%;
-        }
-    }
-    @media (max-width: 767px) {
-        .alerts-content {
-            gap: 32px;
-            padding: 48px 24px;
-        }
-        body.alerts-email-modal-open .redesign-alerts-page {
-            display: flex;
-            flex-direction: column;
-        }
-        body.alerts-email-modal-open .redesign-alerts-header-background {
-            order: 0;
-        }
-        body.alerts-email-modal-open .alerts-email-modal {
-            order: 1;
-        }
-        body.alerts-email-modal-open .redesign-footer {
-            margin-top: 30px;
-            order: 2;
-        }
-        body.alerts-email-modal-open .redesign-header__mobile-menu summary {
-            width: 28px;
-            height: 22px;
-        }
-        body.alerts-email-modal-open
-            .redesign-header__mobile-menu
-            summary
-            span {
-            left: 4px;
-            width: 20px;
-        }
-        body.alerts-email-modal-open
-            .redesign-header__mobile-menu
-            summary
-            span:nth-child(1) {
-            top: 4px;
-        }
-        body.alerts-email-modal-open
-            .redesign-header__mobile-menu
-            summary
-            span:nth-child(2) {
-            top: 10px;
-        }
-        body.alerts-email-modal-open
-            .redesign-header__mobile-menu
-            summary
-            span:nth-child(3) {
-            top: 16px;
-        }
-        body.alerts-email-modal-open
-            .redesign-header__mobile-menu[open]
-            summary
-            span:nth-child(1),
-        body.alerts-email-modal-open
-            .redesign-header__mobile-menu[open]
-            summary
-            span:nth-child(3) {
-            top: 10px;
-        }
-        body.alerts-email-modal-open .redesign-footer__alerts {
-            padding-bottom: 32px;
-        }
-        body.alerts-email-modal-open .redesign-footer__identity {
-            gap: 72px;
-        }
-        body.alerts-email-modal-open .redesign-footer__funders h2 {
-            font-size: 18px !important;
-            line-height: 24px !important;
-            white-space: nowrap;
-        }
-        body.alerts-email-modal-open .redesign-footer__funder-logos {
-            height: 48px;
-        }
-        body.alerts-email-modal-open .redesign-footer__elas-funder {
-            height: 48px !important;
-        }
-        body.alerts-email-modal-open .redesign-footer__banner p {
-            font-size: 14px !important;
-            line-height: 16px !important;
-        }
-        body.alerts-email-modal-open
-            .redesign-footer__banner
-            > .redesign-footer__azmina {
-            width: 50px !important;
-            height: 34px !important;
-            object-fit: contain;
-        }
-        .redesign-alerts-page .redesign-header.redesign-header--scrolled {
-            inset: 0 0 auto;
-            position: fixed;
-        }
-        .redesign-alerts-page .redesign-header .highlighter-marks {
-            display: none !important;
-        }
-        .redesign-alerts-page
-            .redesign-header:not(.redesign-header--scrolled):has(
-                .redesign-header__mobile-menu[open]
-            ) {
-            inset: auto;
-            position: relative;
-        }
-        .redesign-alerts-page
-            .redesign-header__content:has(.redesign-header__mobile-menu[open]) {
-            display: block;
-            padding: 0;
-        }
-        .redesign-alerts-page
-            .redesign-header__content:has(.redesign-header__mobile-menu[open])
-            > .redesign-header__brand {
-            left: 16px;
-            position: absolute;
-            top: 19px;
-            z-index: 2;
-        }
-        .redesign-alerts-page .redesign-header__mobile-menu[open] {
-            display: block;
-            padding-top: 12px;
-            width: 100%;
-        }
-        .redesign-alerts-page .redesign-header__mobile-menu[open] > summary {
-            margin-left: auto;
-            margin-right: 16px;
-        }
-        .redesign-alerts-page
-            .redesign-header__mobile-menu[open]
-            > .redesign-header__mobile-panel {
-            height: auto;
-            inset: auto;
-            margin-top: 12px;
-            min-height: 0;
-            overflow-y: visible;
-            position: static;
-        }
-        .redesign-alerts-page
-            .redesign-header__mobile-panel
-            a[href="/alertas"] {
-            background: transparent;
-            color: #fff;
-            text-decoration: none;
-        }
-        .redesign-alerts-page
-            .redesign-header__mobile-panel
-            a[href="/alertas"]
-            > span {
-            background: #def279;
-            color: #0b0f5e;
-            text-decoration: underline;
-            text-decoration-thickness: 2px;
-            text-underline-offset: 4px;
-        }
-    }
-</style>

@@ -2,14 +2,14 @@ import { apiGet } from './client';
 
 const UNAVAILABLE = 'Indisponível';
 
-export type ParliamentarianTerm = {
+type ParliamentarianTerm = {
   party: number;
   house: string;
   state: string;
   end_date: string | null;
 };
 
-export type ParliamentarianRecord = {
+type ParliamentarianRecord = {
   id: number | null;
   full_name: string;
   social_name: string | null;
@@ -25,14 +25,14 @@ export type ParliamentarianRecord = {
   terms: ParliamentarianTerm[];
 };
 
-export type PartyRecord = {
+type PartyRecord = {
   id: number | null;
   acronym: string;
   name: string;
 };
 
-export type ParliamentariansResponse = { count: number; items: ParliamentarianRecord[] };
-export type PartiesResponse = { count: number; items: PartyRecord[] };
+type ParliamentariansResponse = { count: number; items: ParliamentarianRecord[] };
+type PartiesResponse = { count: number; items: PartyRecord[] };
 
 export type ParliamentarianViewModel = {
   id: number;

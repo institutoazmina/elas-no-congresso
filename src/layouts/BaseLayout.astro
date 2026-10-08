@@ -1,9 +1,7 @@
 ---
-import "../styles/global.less";
 import "../styles/tailwind.css";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import BgStyles from "../components/BgStyles.astro";
+import Header from "../components/layout/Header.astro";
+import ArticleFooter from "../components/layout/ArticleFooter.astro";
 
 interface Props {
     title?: string;
@@ -17,7 +15,7 @@ interface Props {
 const {
     title,
     description = "",
-    ogImage = "/assets/images/share.jpg",
+    ogImage = "/assets/images/hero/hero-congresso-ilustracao.webp",
     currentUrl,
     hasForm = false,
 } = Astro.props;
@@ -31,13 +29,13 @@ const canonicalUrl = currentUrl ?? Astro.url.href;
 ---
 
 <!doctype html>
-<html lang="pt_br">
+<html lang="pt_br" class="tw:scroll-smooth tw:motion-reduce:scroll-auto">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="HandheldFriendly" content="True" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Plus+Jakarta+Sans:wght@400;700&display=swap" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <meta name="language" content="pt-br" />
         <title>{pageTitle}</title>
@@ -62,12 +60,11 @@ const canonicalUrl = currentUrl ?? Astro.url.href;
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
-        <BgStyles />
     </head>
-    <body>
+    <body class="tw:font-lato tw:text-navy tw:bg-white">
         <Header />
         <slot />
-        <Footer />
+        <ArticleFooter />
         {
             hasForm && (
                 <script src="https://www.google.com/recaptcha/api.js" async defer />

@@ -4,12 +4,12 @@
 // algoritmo (ordem dos sorteios, fórmulas de tamanho) é o mesmo, então as
 // pilhas saem com a mesma geometria dos PNGs que elas substituem.
 
-export type Arrangement = "pile" | "waffle";
-export type Category = "favoravel" | "desfavoravel";
-export type Amounts = [Category, number][];
+type Arrangement = "pile" | "waffle";
+type Category = "favoravel" | "desfavoravel";
+type Amounts = [Category, number][];
 
 /** Dimensões da folha em px e a resolução do asset correspondente. */
-export const SHEETS = {
+const SHEETS = {
     a8: { width: 24, height: 34, asset: "96w" },
     a6: { width: 48, height: 68, asset: "96w" },
     a4: { width: 96, height: 136, asset: "192w" },
@@ -48,7 +48,7 @@ function resolve(options: PapeladaOptions): Config {
         size: options.size ?? "a4",
         category: options.category ?? "favoravel",
         gap: options.gap ?? 0.025,
-        assetsPath: options.assetsPath ?? "/assets/papelada/",
+        assetsPath: options.assetsPath ?? "/assets/images/papelada/",
         amount: options.amount ?? 0,
         amounts: options.amounts,
     };

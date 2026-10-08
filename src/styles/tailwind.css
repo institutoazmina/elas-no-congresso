@@ -1,1 +1,31 @@
 @import "tailwindcss" prefix(tw);
+
+@theme {
+    --font-sans: "Plus Jakarta Sans", sans-serif;
+    --font-display: "ETC Anybody", sans-serif;
+    --font-lato: "Lato", sans-serif;
+    --color-ink: #0b0f5e;
+    --color-accent: #4242f6;
+    --color-lime: #def279;
+    --color-muted: #998d96;
+    --color-periwinkle: #5d76dd;
+    --color-navy: #1e2546;
+}
+
+@layer base {
+    @font-face {
+        font-family: "Anybody";
+        font-style: normal;
+        font-weight: 100 900;
+        font-display: swap;
+        src: url("/assets/fonts/anybodyvariable.ttf") format("truetype");
+    }
+
+    @font-face {
+        font-family: "ETC Anybody";
+        font-style: normal;
+        font-weight: 50 1000;
+        font-display: swap;
+        src: url("/assets/fonts/ETCAnybodyVariable.woff2") format("woff2-variations");
+    }
+}

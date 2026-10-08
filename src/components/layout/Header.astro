@@ -1,0 +1,598 @@
+---
+const azmLogo = "/assets/images/charts/azm.svg";
+import HighlighterMarks from "../shared/HighlighterMarks.astro";
+
+const links = [
+    { href: "/atividade-legislativa", label: "Atividade legislativa" },
+    { href: "/alertas", label: "Alertas" },
+    { href: "/ia-feminista", label: "IA feminista" },
+    { href: "/reportagens", label: "Reportagens" },
+    { href: "/sobre", label: "Sobre" },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
+---
+
+<header class="
+    site-header site-shared-background tw:text-ink tw:min-h-13 tw:min-[821px]:min-h-26 tw:sticky tw:top-0 tw:z-100
+    tw:w-full tw:[transition:transform_180ms_ease,_background-color_180ms_ease] tw:[transform:translateY(0)]
+    tw:[will-change:transform] tw:max-md:sticky tw:max-md:z-100 tw:max-md:top-0 tw:max-md:w-full tw:max-md:bg-white
+    tw:max-md:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:max-md:bg-top tw:max-md:bg-repeat
+    tw:max-md:bg-size-[400px_400px] tw:max-md:[transition:transform_180ms_ease,_background-color_180ms_ease]
+    tw:max-md:[transform:translateY(0)] tw:max-md:[will-change:transform]
+    tw:md:[transition:transform_180ms_ease,_background-color_180ms_ease]
+    tw:md:[&.site-header--desktop-scrolled_.highlighter-marks]:hidden
+    tw:max-md:[.site-header&.site-header--hidden]:[transform:translateY(-100%)]
+    tw:md:[.site-header&.site-header--desktop-hidden]:[transform:translateY(-100%)]
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--scrolling-up:not(.site-header--desktop-hidden):not(.site-header--over-hero)]:bg-white
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--scrolling-up:not(.site-header--desktop-hidden):not(.site-header--over-hero)]:bg-none
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--scrolling-up:not(.site-header--desktop-hidden):not(.site-header--over-hero)]:[-webkit-backdrop-filter:none]
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--scrolling-up:not(.site-header--desktop-hidden):not(.site-header--over-hero)]:[backdrop-filter:none]
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--scrolling-up:not(.site-header--desktop-hidden):not(.site-header--over-hero)]:shadow-none
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--desktop-hidden:not(.site-header--over-hero)]:bg-white
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--desktop-hidden:not(.site-header--over-hero)]:bg-none
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--desktop-hidden:not(.site-header--over-hero)]:[-webkit-backdrop-filter:none]
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--desktop-hidden:not(.site-header--over-hero)]:[backdrop-filter:none]
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--desktop-hidden:not(.site-header--over-hero)]:shadow-none
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-[var(--header-hero-surface,_#fff)]
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')]
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-top
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-repeat
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-size-[400px_400px]
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:[background-blend-mode:multiply]
+    tw:md:[.site-alerts-header-background_>_.site-header&.site-header--desktop-scrolled]:fixed
+    tw:md:[.site-alerts-header-background_>_.site-header&.site-header--desktop-scrolled]:inset-[0_0_auto]
+    tw:[body:has(&)]:m-0 tw:[.author-route-page_&]:box-border
+ tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]">
+    <nav
+        class="
+            site-header__content container-fluid wrap tw:!max-w-screen tw:items-center tw:flex tw:gap-4 tw:justify-between
+            tw:min-h-13 tw:relative tw:py-0 tw:px-4 tw:my-0 tw:mx-auto tw:max-md:min-h-13 tw:max-md:py-0 tw:max-md:px-4
+            tw:min-[821px]:gap-5.5 tw:min-[821px]:min-h-26 tw:min-[821px]:py-0 tw:min-[821px]:px-6 tw:min-[1051px]:gap-8
+            tw:min-[1051px]:py-0 tw:min-[1051px]:px-12 tw:[&_>_:not(.highlighter-marks)]:relative
+            tw:[&_>_:not(.highlighter-marks)]:z-1 tw:[.site-header_&]:w-full tw:[.author-route-page_.site-header_&]:w-full
+            tw:[.site-header_&]:max-w-327.5 tw:[.author-route-page_.site-header_&]:max-w-327.5
+        "
+        aria-label="Navegação principal"
+    >
+        <a
+            href="/"
+            class="
+                site-header__brand logo-header tw:hover:bg-[#4745e8] tw:min-[821px]:h-[25px] tw:min-[821px]:w-57.5 tw:bg-ink
+                tw:bg-none tw:flex-none tw:h-3.5 tw:w-32
+                tw:[-webkit-mask:url('/assets/images/logo-header.svg')_center_/_contain_no-repeat]
+                tw:[mask:url('/assets/images/logo-header.svg')_center_/_contain_no-repeat]
+                tw:[transition:background-color_0.4s_ease]
+            "
+            data-highlighter-target
+            data-highlighter-routes="/"
+            aria-label="Elas no Congresso"
+        ></a>
+
+        <div class="
+            site-header__desktop-links tw:items-center tw:hidden tw:gap-10 tw:ml-auto tw:[&_a]:text-inherit
+            tw:[&_a]:font-display tw:[&_a]:text-lg tw:[&_a]:font-bold tw:[&_a]:[font-variation-settings:'wdth'_75]
+            tw:[&_a]:tracking-normal tw:[&_a]:leading-6 tw:[&_a]:no-underline tw:[&_a]:uppercase tw:[&_a]:whitespace-nowrap
+            tw:[&_a]:[transition:color_0.4s_ease] tw:min-[821px]:gap-5.5 tw:min-[821px]:flex tw:min-[821px]:[&_a]:text-base
+            tw:min-[1051px]:gap-10 tw:min-[1051px]:[&_a]:text-lg
+        ">
+            {
+                links.map((link) => (
+                    <a
+                        href={link.href}
+                        class="ff1 tw:hover:text-[#6075ce] tw:[.site-header_&]:font-display tw:[.author-route-page_.site-header_&]:font-display"
+                        data-highlighter-target
+                        data-highlighter-routes={link.href}
+                        aria-current={currentPath === link.href ? "page" : undefined}
+                    >
+                        {link.label}
+                    </a>
+                ))
+            }
+        </div>
+
+        <a
+            class="
+                site-header__azm tw:hover:bg-[#4745e8] tw:hidden tw:min-[821px]:block tw:bg-ink tw:flex-none tw:h-[35px] tw:w-16
+                tw:[-webkit-mask:var(--site-header-azm-logo)_center_/_contain_no-repeat]
+                tw:[mask:var(--site-header-azm-logo)_center_/_contain_no-repeat] tw:[transition:background-color_0.4s_ease]
+            "
+            href="https://azmina.com.br/"
+            aria-label="Revista AzMina"
+            style={`--site-header-azm-logo: url("${azmLogo}")`}
+        ></a>
+
+        <HighlighterMarks />
+
+        <details class="
+            site-header__mobile-menu tw:block tw:relative tw:max-md:static tw:min-[821px]:hidden
+            tw:[&_summary::-webkit-details-marker]:hidden tw:max-md:[:global(html:has(&[open]))]:overflow-hidden
+            tw:max-md:[:global(body:has(&[open]))]:overflow-hidden tw:max-md:[.site-header:has(&[open])]:fixed
+            tw:max-md:[.site-header:has(&[open])]:inset-[0_0_auto]
+            tw:max-md:[.site-header:has(&[open])]:[transform:translateY(0)]
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--scrolling-up:not(.site-header--hidden):not(.site-header--over-hero):not(:has(&[open]))]:border-0
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--scrolling-up:not(.site-header--hidden):not(.site-header--over-hero):not(:has(&[open]))]:bg-white
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--scrolling-up:not(.site-header--hidden):not(.site-header--over-hero):not(:has(&[open]))]:bg-none
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--scrolling-up:not(.site-header--hidden):not(.site-header--over-hero):not(:has(&[open]))]:[-webkit-backdrop-filter:none]
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--scrolling-up:not(.site-header--hidden):not(.site-header--over-hero):not(:has(&[open]))]:[backdrop-filter:none]
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--scrolling-up:not(.site-header--hidden):not(.site-header--over-hero):not(:has(&[open]))]:shadow-none
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--hidden:not(.site-header--over-hero):not(:has(&[open]))]:border-0
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--hidden:not(.site-header--over-hero):not(:has(&[open]))]:bg-white
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--hidden:not(.site-header--over-hero):not(:has(&[open]))]:bg-none
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--hidden:not(.site-header--over-hero):not(:has(&[open]))]:[-webkit-backdrop-filter:none]
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--hidden:not(.site-header--over-hero):not(:has(&[open]))]:[backdrop-filter:none]
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--hidden:not(.site-header--over-hero):not(:has(&[open]))]:shadow-none
+            tw:max-md:[.site-header--scrolled:not(:has(&[open]))_.highlighter-marks]:hidden
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:bg-[var(--header-hero-surface,_#fff)]
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')]
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:bg-top
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:bg-repeat
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:bg-size-[400px_400px]
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:[background-blend-mode:multiply]
+            tw:max-md:[&[open]_summary_span:nth-child(1)]:top-[13px]
+            tw:max-md:[&[open]_summary_span:nth-child(1)]:[transform:rotate(45deg)]
+            tw:max-md:[&[open]_summary_span:nth-child(2)]:opacity-0 tw:max-md:[&[open]_summary_span:nth-child(3)]:top-[13px]
+            tw:max-md:[&[open]_summary_span:nth-child(3)]:[transform:rotate(-45deg)]
+            tw:max-md:[body.alerts-email-modal-open_&_summary]:w-7 tw:max-md:[body.alerts-email-modal-open_&_summary]:h-5.5
+            tw:max-md:[body.alerts-email-modal-open_&_summary_span]:left-1
+            tw:max-md:[body.alerts-email-modal-open_&_summary_span]:w-5
+            tw:max-md:[body.alerts-email-modal-open_&_summary_span:nth-child(1)]:top-1
+            tw:max-md:[body.alerts-email-modal-open_&_summary_span:nth-child(2)]:top-2.5
+            tw:max-md:[body.alerts-email-modal-open_&_summary_span:nth-child(3)]:top-4
+            tw:max-md:[body.alerts-email-modal-open_&[open]_summary_span:nth-child(1)]:top-2.5
+            tw:max-md:[body.alerts-email-modal-open_&[open]_summary_span:nth-child(3)]:top-2.5
+        ">
+            <summary class="tw:cursor-pointer tw:gap-[5px] tw:h-5.5 tw:list-none tw:w-7 tw:p-0 tw:max-md:relative tw:max-md:block tw:max-md:w-7 tw:max-md:h-7 tw:flex tw:flex-col" aria-label="Abrir menu">
+                <span class="
+                    tw:bg-current tw:block tw:h-0.5 tw:w-7 tw:max-md:absolute tw:max-md:left-0
+                    tw:max-md:[transition:top_180ms_ease,_opacity_180ms_ease,_transform_180ms_ease] tw:max-md:top-1
+                "></span><span class="
+                    tw:bg-current tw:block tw:h-0.5 tw:w-7 tw:max-md:absolute tw:max-md:left-0
+                    tw:max-md:[transition:top_180ms_ease,_opacity_180ms_ease,_transform_180ms_ease] tw:max-md:top-[13px]
+                "></span><span class="
+                    tw:bg-current tw:block tw:h-0.5 tw:w-7 tw:max-md:absolute tw:max-md:left-0
+                    tw:max-md:[transition:top_180ms_ease,_opacity_180ms_ease,_transform_180ms_ease] tw:max-md:top-5.5
+                "></span>
+            </summary>
+            <div class="
+                site-header__mobile-panel tw:[&_a]:text-inherit tw:[&_a]:font-display tw:[&_a]:text-lg tw:[&_a]:font-bold
+                tw:[&_a]:[font-variation-settings:'wdth'_75] tw:[&_a]:tracking-normal tw:[&_a]:leading-6 tw:[&_a]:no-underline
+                tw:[&_a]:uppercase tw:[&_a]:whitespace-nowrap tw:[&_a]:relative tw:[&_a]:z-12 tw:bg-white tw:border-t-[4px]
+                tw:border-solid tw:border-t-lime tw:shadow-[0_12px_20px_rgba(11,_15,_94,_0.16)] tw:gap-5 tw:absolute tw:right-0
+                tw:top-[calc(100%_+_8px)] tw:w-[min(320px,_calc(100vw_-_32px))] tw:z-10 tw:p-6 tw:max-md:[&_a]:flex
+                tw:max-md:[&_a]:w-full tw:max-md:[&_a]:items-center tw:max-md:[&_a]:border-b tw:max-md:[&_a]:border-solid
+                tw:max-md:[&_a]:border-b-[rgba(255,_255,_255,_0.3)] tw:max-md:[&_a]:text-white tw:max-md:[&_a]:text-left
+                tw:max-md:[&_a]:py-4 tw:max-md:[&_a]:px-6 tw:max-md:fixed tw:max-md:inset-[52px_0_0] tw:max-md:z-99
+                tw:max-md:w-full tw:max-md:min-h-[calc(100dvh_-_52px)] tw:max-md:[align-content:start] tw:max-md:gap-0
+                tw:max-md:overflow-y-auto tw:max-md:border-0 tw:max-md:bg-ink tw:max-md:shadow-none tw:max-md:p-0 tw:flex
+                tw:flex-col tw:max-md:flex tw:max-md:flex-col
+            ">
+                {
+                links.map((link) => (
+                    <a
+                        href={link.href}
+                        class="ff1 tw:[.site-header_&]:font-display tw:[.author-route-page_.site-header_&]:font-display"
+                        data-highlighter-target
+                        data-highlighter-routes={link.href}
+                        aria-current={currentPath === link.href ? "page" : undefined}
+                    >
+                        <span>{link.label}</span>
+                    </a>
+                    ))
+                }
+            </div>
+        </details>
+    </nav>
+</header>
+
+
+
+<script>
+    // O módulo executa uma vez por sessão, mas o header é re-renderizado a
+    // cada navegação client-side. Por isso, listeners de window e observers
+    // vivem em escopo de módulo (registrados uma única vez, sem duplicar a
+    // cada rota) e os handlers sempre resolvem o header atual do documento,
+    // nunca um nó de página anterior.
+    let mobileScrollBound = false;
+    let desktopScrollBound = false;
+    let highlighterLayoutObserver: ResizeObserver | null = null;
+    let heroCache: { element: Element | null; surface: string | null } | null = null;
+
+    // Superfície real do Hero ([data-page-hero]): primeira cor de fundo
+    // opaca do Hero ou de seus ancestrais. Resolve uma vez por página;
+    // se o Hero mudar de cor, o header acompanha sem hardcode por rota.
+    const resolveHeroSurface = (hero: Element): string => {
+        let node: Element | null = hero;
+        while (node && node !== document.documentElement) {
+            const bg = window.getComputedStyle(node).backgroundColor;
+            const match = bg.match(/rgba?\(([^)]+)\)/);
+            if (match) {
+                const parts = match[1].split(",").map((part) => part.trim());
+                const alpha = parts.length === 4 ? Number.parseFloat(parts[3]) : 1;
+                if (alpha > 0) return bg;
+            }
+            node = node.parentElement;
+        }
+        return "#fff";
+    };
+
+    // Liga/desliga .site-header--over-hero conforme a faixa do header
+    // ([0, altura real]) cruza a região real do Hero. Sem números mágicos.
+    const syncHeroState = (header: HTMLElement) => {
+        if (!heroCache || (heroCache.element && !heroCache.element.isConnected)) {
+            const hero = document.querySelector("[data-page-hero]");
+            heroCache = { element: hero, surface: hero ? resolveHeroSurface(hero) : null };
+        }
+        const hero = heroCache.element;
+        if (!hero || !heroCache.surface) {
+            header.classList.remove("site-header--over-hero");
+            header.style.removeProperty("--header-hero-surface");
+            return;
+        }
+        const heroBounds = hero.getBoundingClientRect();
+        const headerHeight = header.offsetHeight || 0;
+        const overHero = heroBounds.top <= headerHeight && heroBounds.bottom > headerHeight;
+        // Durante a animação de saída (escondido), congela a superfície de
+        // entrada: a troca hero<->sólido só volta a avaliar com ele visível,
+        // evitando qualquer flash no meio do movimento.
+        if (
+            header.classList.contains("site-header--hidden") ||
+            header.classList.contains("site-header--desktop-hidden")
+        ) {
+            return;
+        }
+        header.classList.toggle("site-header--over-hero", overHero);
+        if (overHero) header.style.setProperty("--header-hero-surface", heroCache.surface);
+    };
+
+    const updateHighlighter = () => {
+        const nav = document.querySelector(".site-header__content");
+        const highlighter = nav?.querySelector(".highlighter-marks");
+
+        if (!nav || !highlighter) return;
+
+        const currentPath = (window.location.pathname.replace(/\/+$/, "") || "/");
+        nav.querySelectorAll(
+            ".site-header__desktop-links a[data-highlighter-routes], .site-header__mobile-panel a[data-highlighter-routes]",
+        ).forEach((link) => {
+            const routes = link.dataset.highlighterRoutes?.split(",") ?? [];
+            if (routes.includes(currentPath)) {
+                link.setAttribute("aria-current", "page");
+            } else {
+                link.removeAttribute("aria-current");
+            }
+        });
+        const isMobile = window.matchMedia("(max-width: 820px)").matches;
+        const matchesMobileDesign = window.matchMedia("(max-width: 767px)").matches;
+        const target = isMobile
+            ? (["/sobre", "/ia-feminista", "/reportagens"].includes(currentPath) ? null : nav.querySelector(".site-header__brand"))
+            : [...nav.querySelectorAll("[data-highlighter-target]")].find(
+                (element) => {
+                    const styles = window.getComputedStyle(element);
+                    const routes = element.dataset.highlighterRoutes?.split(",") ?? [];
+                    return (
+                        routes.includes(currentPath) &&
+                        styles.display !== "none" &&
+                        element.getClientRects().length > 0
+                    );
+                },
+            );
+
+        if (!target) {
+            highlighter.hidden = true;
+            return;
+        }
+
+        const navBounds = nav.getBoundingClientRect();
+        const targetBounds = target.getBoundingClientRect();
+        const horizontalPadding = 16;
+        const isBrandTarget = target.classList.contains("site-header__brand");
+        const isMobileBrandTarget = matchesMobileDesign && isBrandTarget;
+        const mobileBrandScale = isMobileBrandTarget ? targetBounds.width / 128 : 1;
+        const highlighterWidth = isBrandTarget
+            ? isMobileBrandTarget
+                ? 149 * mobileBrandScale
+                : 217
+            : targetBounds.width + horizontalPadding * 2;
+        const highlighterLeft = isMobileBrandTarget
+            ? targetBounds.left - navBounds.left - 10 * mobileBrandScale
+            : isBrandTarget
+              ? targetBounds.left - navBounds.left
+                + (targetBounds.width - highlighterWidth) / 2
+              : targetBounds.left - navBounds.left - horizontalPadding;
+        const highlighterTop =
+            targetBounds.top - navBounds.top + targetBounds.height / 2
+            - (isMobileBrandTarget ? mobileBrandScale : 0);
+
+        highlighter.style.setProperty(
+            "--highlighter-left",
+            `${highlighterLeft}px`,
+        );
+        highlighter.style.setProperty(
+            "--highlighter-top",
+            `${highlighterTop}px`,
+        );
+        highlighter.style.setProperty(
+            "--highlighter-width",
+            `${highlighterWidth}px`,
+        );
+        if (isMobileBrandTarget) {
+            highlighter.style.setProperty(
+                "--highlighter-height",
+                `${30 * mobileBrandScale}px`,
+            );
+        } else {
+            highlighter.style.removeProperty("--highlighter-height");
+        }
+        highlighter.style.setProperty(
+            "--highlighter-z-index",
+            target.closest(".site-header__mobile-panel") ? "11" : "0",
+        );
+        highlighter.hidden = false;
+    };
+
+    const scheduleHighlighterUpdate = () => {
+        window.requestAnimationFrame(updateHighlighter);
+    };
+
+    const prepareMobileHeaderNavigation = () => {
+        const header = document.querySelector<HTMLElement>(".site-header");
+        const mobileMenu = header?.querySelector<HTMLDetailsElement>(
+            ".site-header__mobile-menu",
+        );
+        if (!header || !mobileMenu) return;
+
+        mobileMenu.open = false;
+        header.classList.remove("site-header--hidden", "site-header--scrolled");
+        header.dataset.mobilePreviousScroll = "0";
+    };
+
+    const bindMobileMenu = () => {
+        const mobileMenu = document.querySelector<HTMLDetailsElement>(
+            ".site-header__mobile-menu",
+        );
+
+        if (!mobileMenu) return;
+
+        const summary = mobileMenu.querySelector("summary");
+        const header = mobileMenu.closest<HTMLElement>(".site-header");
+        const syncMenuState = () => {
+            const isOpen = mobileMenu.open;
+            summary?.setAttribute("aria-label", isOpen ? "Fechar menu" : "Abrir menu");
+            if (isOpen) header?.classList.remove("site-header--hidden");
+            if (header) header.dataset.mobilePreviousScroll = String(Math.max(window.scrollY, 0));
+            scheduleHighlighterUpdate();
+        };
+
+        if (!mobileMenu.dataset.highlighterBound) {
+            mobileMenu.dataset.highlighterBound = "true";
+            mobileMenu.addEventListener("toggle", syncMenuState);
+            mobileMenu.querySelectorAll("a").forEach((link) => {
+                link.addEventListener("click", prepareMobileHeaderNavigation);
+            });
+        }
+
+        const brand = header?.querySelector<HTMLElement>(".site-header__brand");
+        if (brand && !brand.dataset.mobileStateBound) {
+            brand.dataset.mobileStateBound = "true";
+            brand.addEventListener("click", prepareMobileHeaderNavigation);
+        }
+
+        syncMenuState();
+    };
+
+    const bindMobileHeaderScroll = () => {
+        const mobileViewport = window.matchMedia("(max-width: 767px)");
+        const threshold = 8;
+
+        const updateHeader = (forceVisible = false) => {
+            const header = document.querySelector<HTMLElement>(".site-header");
+            if (!header || !header.isConnected) return;
+            const currentScroll = Math.max(window.scrollY, 0);
+            const previousScroll = Number(header.dataset.mobilePreviousScroll ?? currentScroll);
+            const mobileMenu = header.querySelector<HTMLDetailsElement>(
+                ".site-header__mobile-menu",
+            );
+
+            if (!mobileViewport.matches) {
+                header.classList.remove("site-header--hidden");
+                header.classList.remove("site-header--scrolled");
+                header.dataset.mobilePreviousScroll = String(currentScroll);
+                return;
+            }
+
+            const isAtTop = currentScroll <= threshold;
+
+            header.classList.toggle("site-header--scrolled", !isAtTop);
+
+            if (forceVisible || mobileMenu?.open || isAtTop) {
+                header.classList.remove("site-header--hidden");
+                if (isAtTop) {
+                    header.classList.remove(
+                        "site-header--scrolling-up",
+                        "site-header--scrolling-down",
+                    );
+                }
+                header.dataset.mobilePreviousScroll = String(currentScroll);
+                return;
+            }
+
+            const delta = currentScroll - previousScroll;
+            if (Math.abs(delta) >= threshold) {
+                header.classList.toggle("site-header--hidden", delta > 0);
+                header.classList.toggle("site-header--scrolling-down", delta > 0);
+                header.classList.toggle("site-header--scrolling-up", delta < 0);
+                header.dataset.mobilePreviousScroll = String(currentScroll);
+            }
+
+            syncHeroState(header);
+        };
+
+        if (!mobileScrollBound) {
+            mobileScrollBound = true;
+            let ticking = false;
+            window.addEventListener("scroll", () => {
+                if (!ticking) {
+                    ticking = true;
+                    window.requestAnimationFrame(() => {
+                        updateHeader();
+                        ticking = false;
+                    });
+                }
+            }, { passive: true });
+
+            mobileViewport.addEventListener("change", () => { updateHeader(true); });
+        }
+
+        updateHeader(true);
+    };
+
+    const bindDesktopHeaderScroll = () => {
+        const desktopViewport = window.matchMedia("(min-width: 768px)");
+        const threshold = 8;
+
+        const updateHeader = (forceVisible = false) => {
+            const header = document.querySelector<HTMLElement>(".site-header");
+            if (!header || !header.isConnected) return;
+            const currentScroll = Math.max(window.scrollY, 0);
+            const previousScroll = Number(header.dataset.desktopPreviousScroll ?? currentScroll);
+            const mobileMenu = header.querySelector<HTMLDetailsElement>(
+                ".site-header__mobile-menu",
+            );
+
+            syncHeroState(header);
+
+            if (!desktopViewport.matches) {
+                header.classList.remove(
+                    "site-header--desktop-hidden",
+                    "site-header--desktop-scrolled",
+                );
+                header.dataset.desktopPreviousScroll = String(currentScroll);
+                return;
+            }
+
+            const isAtTop = currentScroll <= threshold;
+            if (isAtTop) {
+                header.classList.remove(
+                    "site-header--desktop-hidden",
+                    "site-header--desktop-scrolled",
+                );
+                header.classList.remove(
+                    "site-header--scrolling-up",
+                    "site-header--scrolling-down",
+                );
+                header.dataset.desktopPreviousScroll = String(currentScroll);
+                return;
+            }
+
+            if (forceVisible || mobileMenu?.open) {
+                header.classList.remove("site-header--desktop-hidden");
+                header.classList.add("site-header--desktop-scrolled");
+                header.dataset.desktopPreviousScroll = String(currentScroll);
+                return;
+            }
+
+            const delta = currentScroll - previousScroll;
+            if (Math.abs(delta) >= threshold) {
+                const isScrollingUp = delta < 0;
+                header.classList.toggle("site-header--desktop-hidden", !isScrollingUp);
+                header.classList.toggle("site-header--scrolling-down", !isScrollingUp);
+                header.classList.toggle("site-header--scrolling-up", isScrollingUp);
+                header.classList.add("site-header--desktop-scrolled");
+                header.dataset.desktopPreviousScroll = String(currentScroll);
+            }
+
+            syncHeroState(header);
+        };
+
+        if (!desktopScrollBound) {
+            desktopScrollBound = true;
+            let ticking = false;
+            window.addEventListener("scroll", () => {
+                if (!ticking) {
+                    ticking = true;
+                    window.requestAnimationFrame(() => {
+                        updateHeader();
+                        ticking = false;
+                    });
+                }
+            }, { passive: true });
+
+            desktopViewport.addEventListener("change", () => { updateHeader(true); });
+        }
+
+        updateHeader(true);
+    };
+
+    const resetDesktopHeaderState = () => {
+        const header = document.querySelector<HTMLElement>(".site-header");
+        if (!header) return;
+
+        header.classList.remove(
+            "site-header--desktop-hidden",
+            "site-header--desktop-scrolled",
+        );
+        header.classList.remove(
+            "site-header--scrolling-up",
+            "site-header--scrolling-down",
+        );
+        header.classList.remove("site-header--over-hero");
+        header.style.removeProperty("--header-hero-surface");
+        header.dataset.desktopPreviousScroll = String(Math.max(window.scrollY, 0));
+    };
+
+    const resetMobileHeaderState = () => {
+        const header = document.querySelector<HTMLElement>(".site-header");
+        const mobileMenu = header?.querySelector<HTMLDetailsElement>(
+            ".site-header__mobile-menu",
+        );
+        if (!header || !mobileMenu) return;
+
+        mobileMenu.open = false;
+        header.classList.remove("site-header--hidden");
+        header.classList.remove(
+            "site-header--scrolling-up",
+            "site-header--scrolling-down",
+        );
+        header.classList.remove("site-header--over-hero");
+        header.style.removeProperty("--header-hero-surface");
+        header.classList.toggle(
+            "site-header--scrolled",
+            window.matchMedia("(max-width: 767px)").matches && window.scrollY > 8,
+        );
+        header.dataset.mobilePreviousScroll = String(Math.max(window.scrollY, 0));
+    };
+
+    const bindHighlighterLayoutObserver = () => {
+        const nav = document.querySelector(".site-header__content");
+
+        if (!nav) return;
+
+        highlighterLayoutObserver?.disconnect();
+        highlighterLayoutObserver = new ResizeObserver(scheduleHighlighterUpdate);
+        highlighterLayoutObserver.observe(nav);
+        nav.querySelectorAll("[data-highlighter-target]").forEach((target) => {
+            highlighterLayoutObserver?.observe(target);
+        });
+
+        document.fonts?.ready.then(scheduleHighlighterUpdate);
+    };
+
+    const refreshHighlighter = (resetState = false) => {
+        if (resetState) resetMobileHeaderState();
+        if (resetState) resetDesktopHeaderState();
+        heroCache = null;
+        bindMobileMenu();
+        bindMobileHeaderScroll();
+        bindDesktopHeaderScroll();
+        bindHighlighterLayoutObserver();
+        scheduleHighlighterUpdate();
+    };
+
+    refreshHighlighter(true);
+    window.addEventListener("resize", scheduleHighlighterUpdate);
+    window.addEventListener("popstate", scheduleHighlighterUpdate);
+    document.addEventListener("astro:before-swap", prepareMobileHeaderNavigation);
+    document.addEventListener("astro:after-swap", () => { refreshHighlighter(true); });
+    document.addEventListener("astro:page-load", () => { refreshHighlighter(); });
+</script>

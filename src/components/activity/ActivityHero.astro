@@ -1,0 +1,32 @@
+---
+const attention = "/assets/images/activity/attention.svg";
+const robot = "/assets/images/activity/activity-robot.png";
+const halftone = "/assets/images/hero/halftone-shadow.png";
+---
+
+<section
+    class="activity-hero site-shared-background tw:relative tw:flex tw:w-full tw:h-96 tw:items-center tw:justify-between tw:overflow-hidden tw:text-ink tw:pt-0 tw:pb-6 tw:px-12 tw:[&_h1]:font-display tw:[&_h1]:text-7xl tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:tracking-normal tw:[&_h1]:leading-18 tw:[&_h1]:uppercase tw:[&_h1]:m-0 tw:[&_p]:w-160 tw:[&_p]:max-w-full tw:[&_p]:font-sans tw:[&_p]:text-lg tw:[&_p]:font-normal tw:[&_p]:leading-6 tw:[&_p]:m-0 tw:max-[901px]:h-90 tw:max-[901px]:py-10 tw:max-[901px]:px-8 tw:max-[901px]:[&_h1]:text-[52px] tw:max-[901px]:[&_h1]:leading-[56px] tw:max-md:h-65 tw:max-md:items-start tw:max-md:p-6 tw:max-md:[&_h1]:w-full tw:max-md:[&_h1]:text-[32px] tw:max-md:[&_h1]:tracking-normal tw:max-md:[&_h1]:leading-8 tw:max-md:[&_h1]:whitespace-nowrap tw:max-md:[&_p]:w-80 tw:max-md:[&_p]:max-w-full tw:max-md:[&_p]:pt-[5px] tw:max-md:[&_p]:pb-2.5 tw:max-md:[&_p]:text-lg tw:max-md:[&_p]:font-medium tw:max-md:[&_p]:leading-6 tw:max-[360px]:[&_h1]:whitespace-normal tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+    data-page-hero
+    aria-labelledby="activity-title"
+    style={`--activity-halftone: url(${halftone})`}
+>
+    <div class="activity-hero__copy tw:flex tw:w-[681px] tw:max-w-[calc(100%_-_420px)] tw:flex-col tw:items-start tw:gap-6 tw:max-[901px]:max-w-[calc(100%_-_280px)] tw:max-md:z-1 tw:max-md:w-full tw:max-md:max-w-full tw:max-md:gap-[15px] ">
+        <img class="activity-hero__attention tw:block tw:w-24 tw:h-2 tw:object-fill tw:max-md:w-24 tw:max-md:h-1 " src={attention} alt="" />
+        <h1 class="" id="activity-title">
+            <span class="tw:[font-variation-settings:'wdth'_60]">Atividade</span> Legislativa
+        </h1>
+        <p class="">
+            Use filtros e explore as movimentações do Legislativo sensíveis a
+            gênero, atualizadas diariamente pela nossa robô que monitora o
+            Congresso.
+        </p>
+    </div>
+    <img
+        class="activity-hero__robot tw:absolute tw:-top-12 tw:right-39.5 tw:block tw:w-90 tw:h-112.5 tw:object-contain tw:max-[901px]:top-0 tw:max-[901px]:right-6 tw:max-[901px]:w-70 tw:max-[901px]:h-87.5 tw:max-md:hidden "
+        src={robot}
+        alt="Ilustração de um robô feito de papel"
+    />
+    <div class="activity-hero__halftone tw:absolute tw:right-0 tw:bottom-0 tw:left-0 tw:h-6 tw:bg-[image:var(--activity-halftone)] tw:bg-bottom-left tw:bg-repeat-x tw:bg-size-[1440px_24px] tw:mix-blend-multiply tw:pointer-events-none tw:max-md:h-6 tw:max-md:bg-size-[375px_24px] " aria-hidden="true"></div>
+</section>
+
+

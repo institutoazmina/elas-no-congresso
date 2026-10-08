@@ -1,34 +1,33 @@
 ---
-import { Image } from 'astro:assets';
-import RedesignLayout from '../components/redesign/RedesignLayout.astro';
-import Share from '../components/Share.astro';
-import Participantes from '../components/Participantes.astro';
-import quiteriaLogo from '../assets/images/quiteria/logo.webp';
-import quiteriaFluxo from '../assets/images/quiteria/fluxo.webp';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Share from '../components/shared/Share.astro';
+import Participantes from '../components/about/Participantes.astro';
+const quiteriaLogo = "/assets/images/quiteria/logo.webp";
+const quiteriaFluxo = "/assets/images/quiteria/fluxo.webp";
 ---
-<RedesignLayout title="QuitérIA">
-<main class="pagina-quiteria">
-    <header class="abertura-quiteria">
-        <Share title="QuitérIA" />
+<SiteLayout title="QuitérIA">
+<main class="tw:[&_ul]:list-disc tw:[&_nav_ul]:list-none tw:[&_ul]:list-inside tw:[&_ol]:list-decimal tw:[&_ol]:list-inside tw:[&_li]:mb-2 tw:[&_nav_li]:list-none tw:[&_a]:text-periwinkle">
+    <header class="tw:relative tw:flex tw:flex-col tw:justify-center tw:bg-periwinkle tw:bg-[url('/assets/images/quiteria/abertura-bg--cropped.webp')] tw:bg-auto tw:bg-repeat tw:bg-top tw:pt-4 tw:pb-12 tw:mb-8 tw:min-[1000px]:before:content-[''] tw:min-[1000px]:before:z-2 tw:min-[1000px]:before:absolute tw:min-[1000px]:before:bottom-0 tw:min-[1000px]:before:left-0 tw:min-[1000px]:before:right-[calc(50%_+_183px)] tw:min-[1000px]:before:h-125 tw:min-[1000px]:before:bg-[url('/assets/images/quiteria/justica-e-estrela.webp')] tw:min-[1000px]:before:bg-size-[525px_auto] tw:min-[1000px]:before:bg-top-right tw:min-[1000px]:before:bg-no-repeat tw:min-[1000px]:after:content-[''] tw:min-[1000px]:after:z-2 tw:min-[1000px]:after:absolute tw:min-[1000px]:after:bottom-0 tw:min-[1000px]:after:right-0 tw:min-[1000px]:after:left-[calc(50%_+_324px)] tw:min-[1000px]:after:h-87.5 tw:min-[1000px]:after:bg-[url('/assets/images/quiteria/mulher-analise.webp')] tw:min-[1000px]:after:bg-size-[280px_auto] tw:min-[1000px]:after:bg-top-left tw:min-[1000px]:after:bg-no-repeat">
+        <Share title="QuitérIA" inline />
 
-        <div class="container-fluid wrap abertura-quiteria__conteudo">
-            <h2 class="abertura-quiteria__titulo-variavel titulo-variavel tcb t9 mb2">
-                <Image src={quiteriaLogo} class="abertura-quiteria__logo" alt="QuitérIA" loading="eager" />
+        <div class="tw:w-full tw:mx-auto tw:px-4 tw:min-[992px]:px-8 tw:max-w-[1310px] tw:flex tw:h-[390px] tw:items-center tw:justify-center tw:before:content-[''] tw:before:absolute tw:before:inset-x-0 tw:before:top-0 tw:before:h-full tw:min-[992px]:before:h-4/5 tw:before:bg-[url('/assets/images/quiteria/celular-e-raios.webp')] tw:before:bg-size-[1108px_auto] tw:before:bg-bottom tw:before:bg-no-repeat">
+            <h2 class="tw:relative tw:z-1 tw:w-full tw:max-w-[468px] tw:mx-auto tw:font-display tw:uppercase tw:break-normal tw:text-white tw:text-[clamp(36.4px,calc(2.275rem_+_15.6*(100vw_-_500px)/700),52px)] tw:leading-[1.5] tw:my-auto">
+                <img decoding="async" height={188} width={468} src={quiteriaLogo} class="tw:w-full tw:h-auto" alt="QuitérIA" loading="eager" />
             </h2>
         </div>
     </header>
 
-    <article class="conteudo-quiteria">
-        <div class="container-fluid wrap">
-            <div class="row">
-                <section class="col-xs-12 col-md-7 col-md-offset-1">
+    <article class="tw:relative tw:bg-white tw:py-20 tw:before:content-[''] tw:before:absolute tw:before:z-2 tw:before:left-0 tw:before:bottom-[calc(100%_+_32px)] tw:before:w-full tw:before:h-8 tw:before:bg-[url('/assets/images/backgrounds/paper-edge.svg')] tw:before:bg-cover tw:before:bg-top tw:before:pointer-events-none tw:[&_p]:mb-4 tw:[&_p]:leading-[1.3] tw:[&_article]:mb-20 tw:min-[992px]:[&_article]:mb-0 tw:min-[992px]:[&_article]:pb-4 tw:min-[992px]:[&_article+article]:pt-20 tw:[&_table]:w-full tw:[&_table]:text-sm tw:[&_th]:p-2 tw:[&_td]:p-2 tw:[&_tbody_tr]:border-b tw:[&_tbody_tr]:border-periwinkle/20">
+        <div class="tw:w-full tw:mx-auto tw:px-4 tw:min-[992px]:px-8 tw:max-w-[1310px]">
+            <div class="tw:flex tw:flex-wrap tw:-mx-4">
+                <section class="tw:w-full tw:min-w-0 tw:px-4 tw:min-[992px]:w-[58.3333%] tw:min-[992px]:ml-[8.3333%]">
                     <article id="sobre-o-projeto">
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w300 wdth250">uma Inteligência Artificial</span>
-                            <span class="w300 wdth150">feminista</span>
-                            <span class="w900 wdth200">de monitoramento legislativo</span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-light tw:[font-variation-settings:'wdth'_250]">uma Inteligência Artificial</span>
+                            <span class="tw:font-light tw:[font-variation-settings:'wdth'_150]">feminista</span>
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">de monitoramento legislativo</span>
                         </h3>
-                        <div class="t3">
+                        <div class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">
                             <p>A <strong>QuitérIA</strong> é uma ferramenta digital de inteligência artificial feminista projetada para <strong>analisar, classificar e avaliar proposições legislativas (PLs)</strong> com foco nas questões de gênero e direitos das meninas, mulheres e pessoas LGBTQIAPN+. Ela oferece um <strong>monitoramento legislativo automatizado e qualificado</strong>, que não só identifica PLs, mas também os categoriza e avalia, permitindo uma análise mais precisa e ágil da movimentação legislativa sobre gênero. Esse é o jeito AzMina de <strong>transformar a opacidade legislativa em transparência,</strong> compartilhando análises essenciais à compreensão do campo no Brasil.</p>
 
                             <p>Nossa <strong>ferramenta de IA</strong> utiliza <strong>Processamento de Linguagem Natural (PLN)</strong> para coletar, classificar e avaliar os projetos de lei em tramitação no Congresso Nacional, focando em temas como <strong>violência contra a mulher, direitos sexuais e reprodutivos e igualdade de gênero.</strong> O objetivo é permitir que qualquer pessoa tenha acesso a <strong>informações qualificadas</strong> e <strong>transparentes</strong>. De modo especial, auxiliar o trabalho de jornalistas, profissionais de pesquisa, organizações sociais e ativistas dos direitos humanos.</p>
@@ -36,52 +35,52 @@ import quiteriaFluxo from '../assets/images/quiteria/fluxo.webp';
                     </article>
 
                     <article id="como-funciona">
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w600 wdth200">Como</span>
-                            <span class="w900 wdth200">funciona?</span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">Como</span>
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">funciona?</span>
                         </h3>
-                        <div class="t3">
+                        <div class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">
                             <p>A <strong>QuitérIA</strong> foi desenvolvida para automatizar o processo de monitoramento legislativo, com um foco específico na <strong>classificação de PLs</strong> que abordam direitos das meninas, mulheres, e pessoas LGBTQIAPN+.</p>
                         </div>
 
-                        <Image src={quiteriaFluxo} height={480} width={424} class="mb2 mt2 block" alt="" loading="lazy" />
+                        <img decoding="async" src={quiteriaFluxo} height={480} width={424} class="tw:mb-8 tw:mt-8 tw:block" alt="" loading="lazy" />
 
                     </article>
                     <article id="coleta-automatizada-de-dados">
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w900 wdth200">Coleta</span>
-                            <span class="w400 wdth200">automatizada</span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Coleta</span>
+                            <span class="tw:font-normal tw:[font-variation-settings:'wdth'_200]">automatizada</span>
                         </h3>
-                        <p class="t3">A coleta diária de dados das proposições legislativas é feita automaticamente pelo raspador <strong>Elas no Congresso</strong> usando as APIs da <strong>Câmara dos Deputados</strong> e do <strong>Senado Federal</strong>, a partir de <strong>palavras-chave</strong> relacionadas a gênero e raça. A cada 24h, o bot coleta informações como <strong>título</strong>, <strong>autor</strong>, <strong>ementa</strong> e <strong>status</strong>, armazenando-as em arquivos CSV de acesso aberto para uso posterior.</p>
+                        <p class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">A coleta diária de dados das proposições legislativas é feita automaticamente pelo raspador <strong>Elas no Congresso</strong> usando as APIs da <strong>Câmara dos Deputados</strong> e do <strong>Senado Federal</strong>, a partir de <strong>palavras-chave</strong> relacionadas a gênero e raça. A cada 24h, o bot coleta informações como <strong>título</strong>, <strong>autor</strong>, <strong>ementa</strong> e <strong>status</strong>, armazenando-as em arquivos CSV de acesso aberto para uso posterior.</p>
                     </article>
 
                     <article id="modelos-utilizados">
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w900 wdth200">Modelos</span>
-                            <span class="w600 wdth150">utilizados</span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Modelos</span>
+                            <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_150]">utilizados</span>
                         </h3>
-                        <p class="t3">A <strong>QuitérIA</strong> é baseada em um <strong>Large Language Model (LLM)</strong> ajustado para o contexto legislativo brasileiro e os temas de gênero. O processo de treinamento da IA foi realizado com base em <strong>dados rotulados manualmente</strong> com a colaboração de organizações da sociedade civil ligadas aos direitos de gênero, provenientes de mais de 1.600 projetos de lei, com abordagem feminista interseccional.
+                        <p class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">A <strong>QuitérIA</strong> é baseada em um <strong>Large Language Model (LLM)</strong> ajustado para o contexto legislativo brasileiro e os temas de gênero. O processo de treinamento da IA foi realizado com base em <strong>dados rotulados manualmente</strong> com a colaboração de organizações da sociedade civil ligadas aos direitos de gênero, provenientes de mais de 1.600 projetos de lei, com abordagem feminista interseccional.
                         </p>
 
-                        <p class="t3">Confira aqui todas as organizações que participaram da anotação de dados.</p>
+                        <p class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">Confira aqui todas as organizações que participaram da anotação de dados.</p>
 
                         <Participantes />
 
-                        <p class="t3">Os principais modelos utilizados na QuitérIA são:</p>
+                        <p class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">Os principais modelos utilizados na QuitérIA são:</p>
 
-                        <ul class="t3">
+                        <ul class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">
                             <li><strong>Modelo Congretimbau</strong> – Baseado na arquitetura <strong>BERT</strong> e adaptado para o português, é o modelo de maior desempenho da <strong>QuitérIA</strong>, alcançando um <strong>F1-score de 0.79</strong>. Este modelo foi ajustado para classificar PLs com alta precisão em relação a temas como <strong>gênero</strong>, <strong>violência contra a mulher</strong>, <strong>direitos sexuais e reprodutivos</strong> e <strong>maternidade</strong>.</li>
                             <li><strong>Modelos baseados em BERT e Transformer</strong> – A <strong>QuitérIA</strong> também utiliza modelos como o <strong>BERTimbau</strong> e o <strong>DeBERTina</strong>, ambos adaptados para a língua portuguesa, para garantir a precisão na análise de ementas e textos de PLs.</li>
                         </ul>
                     </article>
 
                     <article id="categorizacao-e-avaliacao">
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w900 wdth200">Categorização</span>
-                            <span class="w600 wdth150"> e </span>
-                            <span class="w900 wdth350">Avaliação</span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Categorização</span>
+                            <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_150]"> e </span>
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_350]">Avaliação</span>
                         </h3>
-                        <div class="t3">
+                        <div class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">
                             <p>A <strong>QuitérIA</strong> classifica PLs em <strong>temas</strong> e, em seguida, avalia a <strong>desfavorabilidade</strong> de cada um, atribuindo uma pontuação de <strong>0 a 1</strong>, onde <strong>0</strong> significa <strong>totalmente favorável</strong> e <strong>1</strong> significa <strong>totalmente desfavorável</strong> aos direitos das meninas, mulheres e pessoas LGBTQIAPN+.</p>
                             <p>A metodologia para avaliar a desfavorabilidade é baseada nos seguintes critérios:</p>
 
@@ -93,11 +92,11 @@ import quiteriaFluxo from '../assets/images/quiteria/fluxo.webp';
                     </article>
 
                     <article id="validacao-humana">
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w900 wdth200">Validação</span>
-                            <span class="w900 wdth350"> humana </span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Validação</span>
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_350]"> humana </span>
                         </h3>
-                        <div class="t3">
+                        <div class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">
                             <p>
                                 Embora a classificação e avaliação dos PLs sejam feitas pela QuitérIA, é crucial que os resultados passem por validação humana, como previsto na política de uso de IA d'AzMina, para garantir que a IA esteja alinhada à nossa missão. A equipe do Instituto AzMina, ao lado de XX organizações parceiras, revisa os resultados e ajusta os parâmetros da IA, garantindo que a ferramenta evolua em consonância com os desafios contemporâneos.
                             </p>
@@ -108,125 +107,125 @@ import quiteriaFluxo from '../assets/images/quiteria/fluxo.webp';
                     </article>
 
                     <article id="desempenho">
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w900 wdth200">Desempenho</span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Desempenho</span>
                         </h3>
-                        <div class="t3">
+                        <div class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">
                             <p>A QuitérIA tem alcançado resultados significativos de precisão e acuracidade. A tabela abaixo mostra as métricas de desempenho do modelo de avaliação de desfavorabilidade:</p>
 
-                            <table class="mb2">
+                            <div class="tw:max-w-full tw:overflow-x-auto"><table class="tw:mb-8">
                                 <colgroup>
-                                    <col style="width: 40%;">
-                                    <col style="width: 15%;">
-                                    <col style="width: 15%;">
-                                    <col style="width: 15%;">
-                                    <col style="width: 15%;">
+                                    <col class="tw:w-2/5">
+                                    <col class="tw:w-[15%]">
+                                    <col class="tw:w-[15%]">
+                                    <col class="tw:w-[15%]">
+                                    <col class="tw:w-[15%]">
                                 </colgroup>
 
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th class="tr">Precisão</th>
-                                        <th class="tr">Sensibilidade</th>
-                                        <th class="tr">Índice F1</th>
-                                        <th class="tr">Amostra</th>
+                                        <th class="tw:text-right">Precisão</th>
+                                        <th class="tw:text-right">Sensibilidade</th>
+                                        <th class="tw:text-right">Índice F1</th>
+                                        <th class="tw:text-right">Amostra</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <th>Dignidade Sexual</th>
-                                        <td class="tr">0,94</td>
-                                        <td class="tr">0,88</td>
-                                        <td class="tr">0,91</td>
-                                        <td class="tr">17</td>
+                                        <td class="tw:text-right">0,94</td>
+                                        <td class="tw:text-right">0,88</td>
+                                        <td class="tw:text-right">0,91</td>
+                                        <td class="tw:text-right">17</td>
                                     </tr>
                                     <tr>
                                         <th>Direitos Sexuais e Reprodutivos</th>
-                                        <td class="tr">0,89</td>
-                                        <td class="tr">0,84</td>
-                                        <td class="tr">0,86</td>
-                                        <td class="tr">19</td>
+                                        <td class="tw:text-right">0,89</td>
+                                        <td class="tw:text-right">0,84</td>
+                                        <td class="tw:text-right">0,86</td>
+                                        <td class="tw:text-right">19</td>
                                     </tr>
                                     <tr>
                                         <th>Direitos Sociais</th>
-                                        <td class="tr">0,61</td>
-                                        <td class="tr">0,58</td>
-                                        <td class="tr">0,59</td>
-                                        <td class="tr">19</td>
+                                        <td class="tw:text-right">0,61</td>
+                                        <td class="tw:text-right">0,58</td>
+                                        <td class="tw:text-right">0,59</td>
+                                        <td class="tw:text-right">19</td>
                                     </tr>
                                     <tr>
                                         <th>Economia</th>
-                                        <td class="tr">0,78</td>
-                                        <td class="tr">0,50</td>
-                                        <td class="tr">0,61</td>
-                                        <td class="tr">14</td>
+                                        <td class="tw:text-right">0,78</td>
+                                        <td class="tw:text-right">0,50</td>
+                                        <td class="tw:text-right">0,61</td>
+                                        <td class="tw:text-right">14</td>
                                     </tr>
                                     <tr>
                                         <th>Feminicídio</th>
-                                        <td class="tr">0,67</td>
-                                        <td class="tr">0,80</td>
-                                        <td class="tr">0,73</td>
-                                        <td class="tr">5</td>
+                                        <td class="tw:text-right">0,67</td>
+                                        <td class="tw:text-right">0,80</td>
+                                        <td class="tw:text-right">0,73</td>
+                                        <td class="tw:text-right">5</td>
                                     </tr>
                                     <tr>
                                         <th>Gênero</th>
-                                        <td class="tr">0,81</td>
-                                        <td class="tr">1,00</td>
-                                        <td class="tr">0,90</td>
-                                        <td class="tr">13</td>
+                                        <td class="tw:text-right">0,81</td>
+                                        <td class="tw:text-right">1,00</td>
+                                        <td class="tw:text-right">0,90</td>
+                                        <td class="tw:text-right">13</td>
                                     </tr>
                                     <tr>
                                         <th>Maternidade</th>
-                                        <td class="tr">0,70</td>
-                                        <td class="tr">0,74</td>
-                                        <td class="tr">0,72</td>
-                                        <td class="tr">19</td>
+                                        <td class="tw:text-right">0,70</td>
+                                        <td class="tw:text-right">0,74</td>
+                                        <td class="tw:text-right">0,72</td>
+                                        <td class="tw:text-right">19</td>
                                     </tr>
                                     <tr>
                                         <th>Politica</th>
-                                        <td class="tr">1,00</td>
-                                        <td class="tr">0,88</td>
-                                        <td class="tr">0,93</td>
-                                        <td class="tr">8</td>
+                                        <td class="tw:text-right">1,00</td>
+                                        <td class="tw:text-right">0,88</td>
+                                        <td class="tw:text-right">0,93</td>
+                                        <td class="tw:text-right">8</td>
                                     </tr>
                                     <tr>
                                         <th>Violência Contra a Mulher</th>
-                                        <td class="tr">0,86</td>
-                                        <td class="tr">0,93</td>
-                                        <td class="tr">0,89</td>
-                                        <td class="tr">54</td>
+                                        <td class="tw:text-right">0,86</td>
+                                        <td class="tw:text-right">0,93</td>
+                                        <td class="tw:text-right">0,89</td>
+                                        <td class="tw:text-right">54</td>
                                     </tr>
                                     <tr>
                                         <th>Acurácia</th>
-                                        <td class="tr"></td>
-                                        <td class="tr"></td>
-                                        <td class="tr">0,82</td>
-                                        <td class="tr">168</td>
+                                        <td class="tw:text-right"></td>
+                                        <td class="tw:text-right"></td>
+                                        <td class="tw:text-right">0,82</td>
+                                        <td class="tw:text-right">168</td>
                                     </tr>
                                     <tr>
                                         <th>Média macro</th>
-                                        <td class="tr">0,81</td>
-                                        <td class="tr">0,79</td>
-                                        <td class="tr">0,79</td>
-                                        <td class="tr">168</td>
+                                        <td class="tw:text-right">0,81</td>
+                                        <td class="tw:text-right">0,79</td>
+                                        <td class="tw:text-right">0,79</td>
+                                        <td class="tw:text-right">168</td>
                                     </tr>
                                     <tr>
                                         <th>Média ponderada</th>
-                                        <td class="tr">0,82</td>
-                                        <td class="tr">0,82</td>
-                                        <td class="tr">0,81</td>
-                                        <td class="tr">168</td>
+                                        <td class="tw:text-right">0,82</td>
+                                        <td class="tw:text-right">0,82</td>
+                                        <td class="tw:text-right">0,81</td>
+                                        <td class="tw:text-right">168</td>
                                     </tr>
                                 </tbody>
-                            </table>
+                            </table></div>
                         </div>
                     </article>
 
                     <article id="codigo-fonte-da-quiteria">
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w900 wdth200">Código-<span class="wdth150">fonte</span></span>
-                            <span class="w600 wdth100">da</span>
-                            <span class="w900 wdth350 linha">QuitérIA</span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Código-<span class="tw:[font-variation-settings:'wdth'_150]">fonte</span></span>
+                            <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_100]">da</span>
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_350] tw:block">QuitérIA</span>
                         </h3>
                         <ul>
                             <li>
@@ -238,63 +237,63 @@ import quiteriaFluxo from '../assets/images/quiteria/fluxo.webp';
                         </ul>
                     </article>
                 </section>
-                <section class="col-xs-12 col-md-3 col-md-offset-1 visible-md pt3-md">
-                    <nav class="nav-quiteria">
+                <section class="tw:w-full tw:min-w-0 tw:px-4 tw:min-[992px]:w-[25.0000%] tw:min-[992px]:ml-[8.3333%] tw:hidden tw:min-[992px]:block tw:min-[992px]:pt-12 tw:min-[992px]:-mt-20">
+                    <nav class="tw:sticky tw:top-24 tw:flex tw:flex-col tw:gap-2 tw:[&_a]:block tw:[&_a]:p-4 tw:[&_a]:hover:bg-lime">
                         <ul>
                             <li>
                                 <a href="#sobre-o-projeto">
-                                    <p class="titulo-variavel tca t3 mb0">
-                                        <span class="w600 wdth200">Sobre o </span>
-                                        <span class="w900 wdth350">Projeto</span>
+                                    <p class="tw:font-display tw:uppercase tw:break-normal tw:text-periwinkle tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-0">
+                                        <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">Sobre o </span>
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_350]">Projeto</span>
                                     </p>
                                 </a>
                             </li>
                             <li>
                                 <a href="#como-funciona">
-                                    <p class="titulo-variavel tca t3 mb0">
-                                        <span class="w600 wdth200">Como</span>
-                                        <span class="w900 wdth200">funciona?</span>
+                                    <p class="tw:font-display tw:uppercase tw:break-normal tw:text-periwinkle tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-0">
+                                        <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">Como</span>
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">funciona?</span>
                                     </p>
                                 </a>
                             </li>
                             <li>
                                 <a href="#coleta-automatizada-de-dados">
-                                    <p class="titulo-variavel tca t3 mb0">
-                                        <span class="w900 wdth200">Coleta</span>
-                                        <span class="w400 wdth200">automatizada</span>
+                                    <p class="tw:font-display tw:uppercase tw:break-normal tw:text-periwinkle tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-0">
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Coleta</span>
+                                        <span class="tw:font-normal tw:[font-variation-settings:'wdth'_200]">automatizada</span>
                                     </p>
                                 </a>
                             </li>
                             <li>
                                 <a href="#categorizacao-e-avaliacao">
-                                    <p class="titulo-variavel tca t3 mb0">
-                                        <span class="w900 wdth200">Categorização</span>
-                                        <span class="w600 wdth150"> e </span>
-                                        <span class="w900 wdth350">Avaliação</span>
+                                    <p class="tw:font-display tw:uppercase tw:break-normal tw:text-periwinkle tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-0">
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Categorização</span>
+                                        <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_150]"> e </span>
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_350]">Avaliação</span>
                                     </p>
                                 </a>
                             </li>
                             <li>
                                 <a href="#validacao-humana">
-                                    <p class="titulo-variavel tca t3 mb0">
-                                        <span class="w900 wdth200">Validação</span>
-                                        <span class="w900 wdth350"> humana </span>
+                                    <p class="tw:font-display tw:uppercase tw:break-normal tw:text-periwinkle tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-0">
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Validação</span>
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_350]"> humana </span>
                                     </p>
                                 </a>
                             </li>
                             <li>
                                 <a href="#desempenho">
-                                    <p class="titulo-variavel tca t3 mb0">
-                                        <span class="w900 wdth200">Desempenho</span>
+                                    <p class="tw:font-display tw:uppercase tw:break-normal tw:text-periwinkle tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-0">
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Desempenho</span>
                                     </p>
                                 </a>
                             </li>
                             <li>
                                 <a href="#codigo-fonte-da-quiteria">
-                                    <p class="titulo-variavel tca t3 mb0">
-                                        <span class="w900 wdth200">Código-<span class="wdth150">fonte</span></span>
-                                        <span class="w600 wdth100">da</span>
-                                        <span class="w900 wdth350 linha">QuitérIA</span>
+                                    <p class="tw:font-display tw:uppercase tw:break-normal tw:text-periwinkle tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-0">
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Código-<span class="tw:[font-variation-settings:'wdth'_150]">fonte</span></span>
+                                        <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_100]">da</span>
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_350] tw:block">QuitérIA</span>
                                     </p>
                                 </a>
                             </li>
@@ -305,4 +304,4 @@ import quiteriaFluxo from '../assets/images/quiteria/fluxo.webp';
         </div>
     </article>
 </main>
-</RedesignLayout>
+</SiteLayout>

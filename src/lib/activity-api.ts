@@ -1,4 +1,4 @@
-export type ActivityAuthor = {
+type ActivityAuthor = {
   id: number | null;
   name: string;
   party: string | null;
@@ -9,7 +9,7 @@ export type ActivityAuthor = {
   role: string | null;
 };
 
-export type ActivityEvent = {
+type ActivityEvent = {
   event_at: string;
   title: string | null;
   description: string | null;

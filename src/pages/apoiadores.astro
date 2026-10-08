@@ -1,519 +1,512 @@
 ---
-import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Share from '../components/Share.astro';
+import Share from '../components/shared/Share.astro';
 
-const parceiros = import.meta.glob<ImageMetadata>(
-    '../assets/images/logos/apoiadores/*.png',
-    { eager: true, import: 'default' },
-);
-const P = (name: string) => parceiros[`../assets/images/logos/apoiadores/${name}`];
 ---
 <BaseLayout title="Apoiadores">
 <main>
-    <header class="abertura-apoiadores">
+    <header class="tw:relative tw:flex tw:min-[992px]:min-h-[60vh] tw:flex-col tw:justify-center tw:bg-periwinkle tw:bg-[url('/assets/images/backgrounds/abertura-apoiadores.webp')] tw:bg-contain tw:bg-no-repeat tw:bg-bottom tw:pt-4 tw:pb-12 tw:min-[992px]:pt-12">
         <Share title="Apoiadores" />
 
-        <div class="container-fluid wrap">
-            <div class="row">
-                <div class="col-xs-12 col-md-6 col-md-offset-1">
-                    <h2 class="titulo-variavel tcb t9 mb2">
-                        <span class="w900 wdth200">Não é</span>
-                        <span class="w300 wdth250"> cortina</span>
-                        <span class="w300 wdth150">de </span>
-                        <span class="w900 wdth200">fumaça</span>
+        <div class="tw:w-full tw:mx-auto tw:px-4 tw:min-[992px]:px-8 tw:max-w-[1310px]">
+            <div class="tw:flex tw:flex-wrap tw:-mx-4">
+                <div class="tw:w-full tw:min-w-0 tw:px-4 tw:min-[992px]:w-[50.0000%] tw:min-[992px]:ml-[8.3333%]">
+                    <h2 class="tw:font-display tw:uppercase tw:break-normal tw:text-white tw:text-[clamp(36.4px,calc(2.275rem_+_15.6*(100vw_-_500px)/700),52px)] tw:leading-[1.5] tw:mb-8">
+                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">Não é</span>
+                        <span class="tw:font-light tw:[font-variation-settings:'wdth'_250]"> cortina</span>
+                        <span class="tw:font-light tw:[font-variation-settings:'wdth'_150]">de </span>
+                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_200]">fumaça</span>
                     </h2>
-                    <p class="t5 tcb w700 lh1-25 ff1">Estão atacando <br />os nossos direitos</p>
+                    <p class="tw:text-xl tw:lg:text-2xl tw:text-white tw:font-bold tw:leading-tight tw:font-display">Estão atacando <br />os nossos direitos</p>
                 </div>
             </div>
         </div>
     </header>
 
-    <article class="conteudo-sobre">
-        <div class="container-fluid wrap">
-            <div class="row">
-                <section class="col-xs-12 col-md-7 col-md-offset-1">
+    <article class="tw:relative tw:bg-white tw:py-20 tw:before:content-[''] tw:before:absolute tw:before:z-2 tw:before:left-0 tw:before:bottom-[calc(100%_-_32px)] tw:before:w-full tw:before:h-[7vh] tw:before:bg-[url('/assets/images/backgrounds/paper-edge.svg')] tw:before:bg-cover tw:before:bg-top tw:before:pointer-events-none tw:[&_p]:leading-[1.3] tw:[&_article]:mb-12 tw:[&_table]:w-full tw:[&_table]:text-sm tw:[&_th]:p-2 tw:[&_td]:p-2 tw:[&_tbody_tr]:border-b tw:[&_tbody_tr]:border-periwinkle/20">
+        <div class="tw:w-full tw:mx-auto tw:px-4 tw:min-[992px]:px-8 tw:max-w-[1310px]">
+            <div class="tw:flex tw:flex-wrap tw:-mx-4">
+                <section class="tw:w-full tw:min-w-0 tw:px-4 tw:min-[992px]:w-[58.3333%] tw:min-[992px]:ml-[8.3333%]">
                     <article id="seguimos-atentas-e-fortes">
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w600 wdth200">Seguimos </span>
-                            <span class="w900 wdth400">atentas</span>
-                            <span class="w600 wdth200">e </span>
-                            <span class="w900 wdth400">fortes</span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">Seguimos </span>
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">atentas</span>
+                            <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">e </span>
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">fortes</span>
                         </h3>
-                        <div class="t3">
-                            <p>
-                                Há quatro anos, a força da comunidade d'AzMina fez história: garantiu o financiamento do Elas no Congresso por um semestre inteiro. A campanha de financiamento coletivo <a class="tca w700" href="https://www.catarse.me/elasnocongresso" target="_blank">Não é cortina de fumaça</a>, realizada em 2021, mobilizou as redes sociais, produziu reportagens e engajou aqueles que acreditam em uma política mais justa.
+                        <div class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">
+                            <p class="tw:mb-4">
+                                Há quatro anos, a força da comunidade d'AzMina fez história: garantiu o financiamento do Elas no Congresso por um semestre inteiro. A campanha de financiamento coletivo <a class="tw:text-periwinkle tw:font-bold" href="https://www.catarse.me/elasnocongresso" target="_blank">Não é cortina de fumaça</a>, realizada em 2021, mobilizou as redes sociais, produziu reportagens e engajou aqueles que acreditam em uma política mais justa.
                             </p>
 
-                            <p>
-                                Mais de 400 pessoas apoiaram, ultrapassamos a meta da campanha e arrecadamos acima de R$ 33 mil. A equipe d'<a class="tca w700" href="https://azmina.com.br" target="_blank">AzMina</a> agradeceu e continua agradecendo a cada pessoa que doou, ajudou a divulgar a campanha e fez o projeto chegar mais longe. É incrível ver o que podemos realizar juntas!
+                            <p class="tw:mb-4">
+                                Mais de 400 pessoas apoiaram, ultrapassamos a meta da campanha e arrecadamos acima de R$ 33 mil. A equipe d'<a class="tw:text-periwinkle tw:font-bold" href="https://azmina.com.br" target="_blank">AzMina</a> agradeceu e continua agradecendo a cada pessoa que doou, ajudou a divulgar a campanha e fez o projeto chegar mais longe. É incrível ver o que podemos realizar juntas!
                             </p>
 
-                            <p>
+                            <p class="tw:mb-4">
                                 Para tornar tudo isso real, também contamos com o apoio de empresas parceiras, autoras e ilustradoras, que doaram seus livros, cursos e artes para as recompensas da campanha. Muito obrigada por defenderem a democracia e os direitos das mulheres com a gente.
                             </p>
 
-                            <p class="w700">
+                            <p class="tw:font-bold">
                                 Muito além do resultado financeiro, o Elas no Congresso saiu fortalecido desta campanha, mostrando o quanto o projeto é importante para a nossa comunidade de leitores (e eleitores!) e para o trabalho de organizações da sociedade civil que lutam pelos direitos das mulheres, da população LGBTQIAPN+ e de outros grupos minoritários.
                             </p>
 
-                            <p>
-                                A campanha de 2021 pode até ter terminado, mas nunca esquecemos de quem soma para tornar o nosso trabalho possível. Nosso compromisso segue firme: vamos continuar monitorando o Legislativo, produzindo uma <a class="tca w700" href="https://www.elasnocongresso.com.br/newsletter">newsletter semanal</a> e <a class="tca w700" href="https://azmina.com.br/?s=elas+no+congresso" target="_blank">reportagens especiais</a> em nosso site. E seguimos cada vez mais conscientes de que nosso trabalho, desde 2021, segue sendo fundamental. <a href="https://www.catarse.me/azmina?utm_source=facebook&utm_medium=site elas&utm_campaign=03/06/2025pag-apoiadores-elas" class="tca w700" target="_blank">Continue apoiando AzMina</a>.
+                            <p class="tw:mb-4">
+                                A campanha de 2021 pode até ter terminado, mas nunca esquecemos de quem soma para tornar o nosso trabalho possível. Nosso compromisso segue firme: vamos continuar monitorando o Legislativo, produzindo uma <a class="tw:text-periwinkle tw:font-bold" href="https://www.elasnocongresso.com.br/newsletter">newsletter semanal</a> e <a class="tw:text-periwinkle tw:font-bold" href="https://azmina.com.br/?s=elas+no+congresso" target="_blank">reportagens especiais</a> em nosso site. E seguimos cada vez mais conscientes de que nosso trabalho, desde 2021, segue sendo fundamental. <a href="https://www.catarse.me/azmina?utm_source=facebook&utm_medium=site elas&utm_campaign=03/06/2025pag-apoiadores-elas" class="tw:text-periwinkle tw:font-bold" target="_blank">Continue apoiando AzMina</a>.
                             </p>
                         </div>
                     </article>
                     <article id="empresas-parceiras-da-campanha">
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w900 wdth400">Empresas parceiras </span>
-                            <span class="w600 wdth200">da campanha</span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">Empresas parceiras </span>
+                            <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">da campanha</span>
                         </h3>
 
-                        <div class="flex jcsb acenter">
-                            <div class="mr2 mb1"><a href="https://linktr.ee/anisbioetica" target="_blank"><Image src={P("parceiros-01.png")} alt="" loading="lazy" /></a></div>
-                            <div class="mr2 mb1"><a href="https://cafe.art.br/" target="_blank"><Image src={P("parceiros-02.png")} alt="" loading="lazy" /></a></div>
-                            <div class="mr2 mb1"><a href="https://tapronto.com.br/" target="_blank"><Image src={P("parceiros-03.png")} alt="" loading="lazy" /></a></div>
-                            <div class="mr2 mb1"><a href="https://elefanteeditora.com.br/" target="_blank"><Image src={P("parceiros-04.png")} alt="" loading="lazy" /></a></div>
-                            <div class="mb1"><a href="https://theintercept.com/brasil/" target="_blank"><Image src={P("parceiros-05.png")} alt="" loading="lazy" /></a></div>
+                        <div class="tw:flex tw:gap-4 tw:justify-between tw:items-center">
+                            <div class="tw:mr-8 tw:mb-4"><a href="https://linktr.ee/anisbioetica" target="_blank"><img decoding="async" height={121} width={143} src="/assets/images/logos/apoiadores/parceiros-01.webp" alt="" loading="lazy" /></a></div>
+                            <div class="tw:mr-8 tw:mb-4"><a href="https://cafe.art.br/" target="_blank"><img decoding="async" height={42} width={97} src="/assets/images/logos/apoiadores/parceiros-02.webp" alt="" loading="lazy" /></a></div>
+                            <div class="tw:mr-8 tw:mb-4"><a href="https://tapronto.com.br/" target="_blank"><img decoding="async" height={32} width={201} src="/assets/images/logos/apoiadores/parceiros-03.webp" alt="" loading="lazy" /></a></div>
+                            <div class="tw:mr-8 tw:mb-4"><a href="https://elefanteeditora.com.br/" target="_blank"><img decoding="async" height={83} width={249} src="/assets/images/logos/apoiadores/parceiros-04.webp" alt="" loading="lazy" /></a></div>
+                            <div class="tw:mb-4"><a href="https://theintercept.com/brasil/" target="_blank"><img decoding="async" height={83} width={170} src="/assets/images/logos/apoiadores/parceiros-05.webp" alt="" loading="lazy" /></a></div>
                         </div>
 
-                        <div class="flex jcsb acenter">
-                            <div class="mr2 mb1"><a href="https://ok.org.br/" target="_blank"><Image src={P("parceiros-09.png")} alt="" loading="lazy" /></a></div>
-                            <div class="mr2 mb1"><a href="https://www.programaria.org/" target="_blank"><Image src={P("parceiros-07.png")} alt="" loading="lazy" /></a></div>
-                            <div class="mr2 mb1"><a href="https://www.ubueditora.com.br/" target="_blank"><Image src={P("parceiros-06.png")} alt="" loading="lazy" /></a></div>
-                            <div class="mb1"><a href="https://itsrio.org/pt/home/" target="_blank"><Image src={P("parceiros-08.png")} alt="" loading="lazy" /></a></div>
+                        <div class="tw:flex tw:gap-4 tw:justify-between tw:items-center">
+                            <div class="tw:mr-8 tw:mb-4"><a href="https://ok.org.br/" target="_blank"><img decoding="async" height={73} width={262} src="/assets/images/logos/apoiadores/parceiros-09.webp" alt="" loading="lazy" /></a></div>
+                            <div class="tw:mr-8 tw:mb-4"><a href="https://www.programaria.org/" target="_blank"><img decoding="async" height={29} width={187} src="/assets/images/logos/apoiadores/parceiros-07.webp" alt="" loading="lazy" /></a></div>
+                            <div class="tw:mr-8 tw:mb-4"><a href="https://www.ubueditora.com.br/" target="_blank"><img decoding="async" height={65} width={134} src="/assets/images/logos/apoiadores/parceiros-06.webp" alt="" loading="lazy" /></a></div>
+                            <div class="tw:mb-4"><a href="https://itsrio.org/pt/home/" target="_blank"><img decoding="async" height={93} width={214} src="/assets/images/logos/apoiadores/parceiros-08.webp" alt="" loading="lazy" /></a></div>
                         </div>
 
                     </article>
 
                     <article id="autoras-e-ilustradoras-parceiras">
 
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w900 wdth400">Autoras </span>
-                            <span class="w600 wdth200">e </span>
-                            <span class="w900 wdth400">ilustradoras </span>
-                            <span class="w600 wdth200">parceiras </span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">Autoras </span>
+                            <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">e </span>
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">ilustradoras </span>
+                            <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">parceiras </span>
                         </h3>
 
-                        <div class="t3">
-                            <p class="tca mb05"><a href="https://www.instagram.com/tamanhoggrande/" target="blank"><b>Agnes Arruda </b>(@tamanhoggrande)</a></p>
-                            <p class="tca mb05"><a href="https://www.instagram.com/camixvx/" target="blank"><b>Camila Rosa </b>(@camixvx)</a></p>
-                            <p class="tca mb05"><a href="https://twitter.com/brumelianebrum" target="blank"><b>Eliane Brum </b>(@brumelianebrum)</a></p>
-                            <p class="tca mb05"><a href="https://www.instagram.com/ecarareto/" target="blank"><b>Elisa Carareto </b>(@ecarareto)</a></p>
-                            <p class="tca mb05"><a href="https://www.instagram.com/jkgomess/" target="blank"><b>Jéssyca Gomes </b>(@jkgomess)</a></p>
-                            <p class="tca mb05"><a href="https://www.instagram.com/la_minna/" target="blank"><b>Lana Carollina </b>(@la_minna)</a></p>
-                            <p class="tca mb05"><a href="https://www.instagram.com/museu_inventado/" target="blank"><b>Larissa Ribeiro </b>(@museu_inventado)</a></p>
-                            <p class="tca mb05"><a href="https://www.instagram.com/ltdathayde/" target="blank"><b>Laura Athayde </b>(@ltdathayde)</a></p>
-                            <p class="tca mb05"><a href="https://www.instagram.com/lunabastos_/" target="blank"><b>Luna Bastos </b>(@lunabastos_)</a></p>
-                            <p class="tca mb05"><a href="https://www.instagram.com/nana.queiroz/" target="blank"><b>Nana Queiroz </b>(@nana.queiroz)</a></p>
-                            <p class="tca mb05"><a href="https://www.instagram.com/pcamata/" target="blank"><b>Patricia Camata </b>(@pcamata)</a></p>
-                            <p class="tca mb05"><a href="https://www.instagram.com/pri_wi/" target="blank"><b>Pri Wi </b>(@pri_wi)</a></p>
-                            <p class="tca mb05"><a href="https://www.instagram.com/viviancoutinho.arte/" target="blank"><b>Vivian Coutinho </b>(@viviancoutinho.arte)</a></p>
+                        <div class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)]">
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/tamanhoggrande/" target="blank"><b>Agnes Arruda </b>(@tamanhoggrande)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/camixvx/" target="blank"><b>Camila Rosa </b>(@camixvx)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://twitter.com/brumelianebrum" target="blank"><b>Eliane Brum </b>(@brumelianebrum)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/ecarareto/" target="blank"><b>Elisa Carareto </b>(@ecarareto)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/jkgomess/" target="blank"><b>Jéssyca Gomes </b>(@jkgomess)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/la_minna/" target="blank"><b>Lana Carollina </b>(@la_minna)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/museu_inventado/" target="blank"><b>Larissa Ribeiro </b>(@museu_inventado)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/ltdathayde/" target="blank"><b>Laura Athayde </b>(@ltdathayde)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/lunabastos_/" target="blank"><b>Luna Bastos </b>(@lunabastos_)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/nana.queiroz/" target="blank"><b>Nana Queiroz </b>(@nana.queiroz)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/pcamata/" target="blank"><b>Patricia Camata </b>(@pcamata)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/pri_wi/" target="blank"><b>Pri Wi </b>(@pri_wi)</a></p>
+                            <p class="tw:text-periwinkle tw:mb-2"><a href="https://www.instagram.com/viviancoutinho.arte/" target="blank"><b>Vivian Coutinho </b>(@viviancoutinho.arte)</a></p>
                         </div>
 
                     </article>
 
                     <article id="doadores">
 
-                        <h3 class="titulo-variavel tca mb1">
-                            <span class="w900 wdth400">Doadores </span>
+                        <h3 class="tw:font-display tw:text-[clamp(28.8px,calc(1.8rem_+_7.2*(100vw_-_500px)/700),36px)] tw:leading-[1.5] tw:uppercase tw:break-normal tw:text-periwinkle tw:mb-4">
+                            <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">Doadores </span>
                         </h3>
 
-                        <div class="t3 flex">
-                            <div class="mr2">
-                                <p class="mb05">Anna Carolina Sampaio de Baez</p>
-                                <p class="mb05">Aldenora Teófilo Vieira Santos Cavalcante</p>
-                                <p class="mb05">Alessandra Anselmo </p>
-                                <p class="mb05">Alessandra Effori</p>
-                                <p class="mb05">Alexandre Augusto de Paiva </p>
-                                <p class="mb05">Alexandre V. Borges Netto</p>
-                                <p class="mb05">Alice Bianchini</p>
-                                <p class="mb05">Alice de Souza</p>
-                                <p class="mb05">Aline Camata Leandro</p>
-                                <p class="mb05">Aline de Souza Santos</p>
-                                <p class="mb05">Aline Oliveira</p>
-                                <p class="mb05">Aline Pereira Cabral</p>
-                                <p class="mb05">Alline Silva de Oliveira</p>
-                                <p class="mb05">Álvaro Justen</p>
-                                <p class="mb05">Amanda de Albuquerque Jardim Rocha</p>
-                                <p class="mb05">Amanda Dourado</p>
-                                <p class="mb05">Amanda Luz</p>
-                                <p class="mb05">Amarela Obnubilada</p>
-                                <p class="mb05">Amauri Alfredo Eugênio Júnior</p>
-                                <p class="mb05">Ana Carolina Moreno</p>
-                                <p class="mb05">Ana Carolina Nunes</p>
-                                <p class="mb05">Ana Cernov</p>
-                                <p class="mb05">Ana Cleide Ferreira do Nascimento</p>
-                                <p class="mb05">Ana Cristina Balieiro</p>
-                                <p class="mb05">Ana Cristina da Conceição</p>
-                                <p class="mb05">Ana Cristina Vallada</p>
-                                <p class="mb05">Ana Cunha</p>
-                                <p class="mb05">Ana Elvira Luciano Gebara</p>
-                                <p class="mb05">Ana Luíza Oliveira Lomba</p>
-                                <p class="mb05">Ana Maria Pinto Cesar</p>
-                                <p class="mb05">Ana Paula Tavares Ribeiro</p>
-                                <p class="mb05">Ana Paula Vizeu Carvalho</p>
-                                <p class="mb05">Ana Rita Cunha</p>
-                                <p class="mb05">Ana Rodrigues</p>
-                                <p class="mb05">André Tamura</p>
-                                <p class="mb05">Andréa Borges Araújo</p>
-                                <p class="mb05">Andréa Mrtnl</p>
-                                <p class="mb05">Andressa Franco</p>
-                                <p class="mb05">Angela Boldrini</p>
-                                <p class="mb05">Angela Roman</p>
-                                <p class="mb05">Ângelo Frederico Souza de Oliveira e Torres</p>
-                                <p class="mb05">Anna Abreu</p>
-                                <p class="mb05">Anna Clara de Vitto</p>
-                                <p class="mb05">Arthur Pinho</p>
-                                <p class="mb05">Augusto Conconi</p>
-                                <p class="mb05">Aymê Brito</p>
-                                <p class="mb05">Bárbara Guimarães Mengardo</p>
-                                <p class="mb05">Bárbara Libório</p>
-                                <p class="mb05">Bárbara Miranda</p>
-                                <p class="mb05">Beatriz Craveiro</p>
-                                <p class="mb05">Beatriz Doria Pereira </p>
-                                <p class="mb05">Beatriz Hildebrand Comin Alves de Oliveira</p>
-                                <p class="mb05">Beatriz Olivon</p>
-                                <p class="mb05">Beatriz Sanz</p>
-                                <p class="mb05">Beatriz Soares Benedito</p>
-                                <p class="mb05">Belliza Fortes</p>
-                                <p class="mb05">Bethânia Lopes</p>
-                                <p class="mb05">Brenda Marques</p>
-                                <p class="mb05">Bruce Marinho</p>
-                                <p class="mb05">Bruna Camurça</p>
-                                <p class="mb05">Bruna Donegá Alves</p>
-                                <p class="mb05">Bruna Oewel</p>
-                                <p class="mb05">Bruno Lupion Gonçalves</p>
-                                <p class="mb05">Bruno Nomura</p>
-                                <p class="mb05">Camila de Oliveira Mendes Leal</p>
-                                <p class="mb05">Camila Magalhães Ávila</p>
-                                <p class="mb05">Camila Medeiros Bonfim Gomes</p>
-                                <p class="mb05">Camila Soares Lippi</p>
-                                <p class="mb05">Camila Souza Ramos</p>
-                                <p class="mb05">Camila Vieira</p>
-                                <p class="mb05">Camilla Costa</p>
-                                <p class="mb05">Camille Moura</p>
-                                <p class="mb05">Cândido Sales Gomes</p>
-                                <p class="mb05">Carla Gisele Batista</p>
-                                <p class="mb05">Carla Juliana Pissinatti Borges</p>
-                                <p class="mb05">Carla Pedroso de Mendonça</p>
-                                <p class="mb05">Carla Soffi</p>
-                                <p class="mb05">Carlos Prado</p>
-                                <p class="mb05">Carol Pires</p>
-                                <p class="mb05">Carolina Herrera Pinto</p>
-                                <p class="mb05">Carolina Moreira de Souza Besse</p>
-                                <p class="mb05">Carolina Oms</p>
-                                <p class="mb05">Carolina Torres</p>
-                                <p class="mb05">Caroline Salvan Pagnan</p>
-                                <p class="mb05">Cássia Alves</p>
-                                <p class="mb05">Cássia Helena Mallmann Bittar</p>
-                                <p class="mb05">Celso Meneguelo Lobo</p>
-                                <p class="mb05">Cintia Loureiro Amorim</p>
-                                <p class="mb05">Clara Silberschneider</p>
-                                <p class="mb05">Clarice Sfair da Costa Ferreira</p>
-                                <p class="mb05">Claudia Croitor</p>
-                                <p class="mb05">Claudia Sabino de Macedo Soares</p>
-                                <p class="mb05">Clóvis Ribeiro</p>
-                                <p class="mb05">Cristina Zanella</p>
-                                <p class="mb05">Daniel de Abreu</p>
-                                <p class="mb05">Danilo Duarte Correia da Costa Reis</p>
-                                <p class="mb05">Débora Cajé Yamamoto</p>
-                                <p class="mb05">Débora Ely</p>
-                                <p class="mb05">Deborah Quenia Gouveia Foroni</p>
-                                <p class="mb05">Deise Maciel</p>
-                                <p class="mb05">Denise Maria Neumann</p>
-                                <p class="mb05">Diana Bertuol Garcia</p>
-                                <p class="mb05">Diana Yukari</p>
-                                <p class="mb05">Diane Otília</p>
-                                <p class="mb05">Diego Queiroz</p>
-                                <p class="mb05">Drielly Felix</p>
-                                <p class="mb05">Edney B. C. Soares de Souza </p>
-                                <p class="mb05">Eduardo Cuducos</p>
-                                <p class="mb05">Elena Martinis</p>
-                                <p class="mb05">Elisabeth Melo Cordeiro</p>
-                                <p class="mb05">Elizabeth Ponte de Freitas</p>
-                                <p class="mb05">Emanuela Nóbrega de Souza</p>
-                                <p class="mb05">Emily Canto Nunes</p>
-                                <p class="mb05">Erica Yazigi Roumieh</p>
-                                <p class="mb05">Fabiana Cambricoli</p>
-                                <p class="mb05">Fabiana R Marques </p>
-                                <p class="mb05">Fabiano Angélico</p>
-                                <p class="mb05">Felipe Cotta Cardoso</p>
-                                <p class="mb05">Felipe da Silva Freitas</p>
-                                <p class="mb05">Felipe Grandin</p>
-                                <p class="mb05">Felippe Mercurio</p>
-                                <p class="mb05">Fernanda Campagnucci</p>
-                                <p class="mb05">Fernanda Fonseca</p>
-                                <p class="mb05">Fernanda Hoffmann Lobato</p>
-                                <p class="mb05">Fernanda Martins Sousa</p>
-                                <p class="mb05">Fernanda Rezende</p>
-                                <p class="mb05">Fernando S Ferreira</p>
-                                <p class="mb05">Fernando T B Lima</p>
-                                <p class="mb05">Flávia M Salvador</p>
-                                <p class="mb05">Flavio Tavares</p>
-                                <p class="mb05">Frederico Soares</p>
-                                <p class="mb05">Gabi Coelho</p>
-                                <p class="mb05">Gabi Maciel</p>
-                                <p class="mb05">Gabriel Marmentini</p>
-                                <p class="mb05">Gabriel Oliveira Borges</p>
-                                <p class="mb05">Gabriela Garcez Monteiro</p>
-                                <p class="mb05">Gabriela Giovana de Carvalho Andrade</p>
-                                <p class="mb05">Gabriela Gonçalves Terenzi</p>
-                                <p class="mb05">Gabriela Kimura</p>
-                                <p class="mb05">Gabriela Viola</p>
-                                <p class="mb05">Georgia Ferraz</p>
-                                <p class="mb05">Gil Barbosa Reis</p>
-                                <p class="mb05">Gina Dourado Rocha Leite</p>
-                                <p class="mb05">Gisele Federicce</p>
-                                <p class="mb05">Graciliano Toni </p>
-                                <p class="mb05">Gregório Benevides</p>
-                                <p class="mb05">Helena M. S. Rolo</p>
-                                <p class="mb05">Helena van Kampen</p>
-                                <p class="mb05">Helio Miguel</p>
-                                <p class="mb05">Heloísa Iaconis</p>
-                                <p class="mb05">Iana Chan</p>
-                                <p class="mb05">Iara Simis</p>
-                                <p class="mb05">Inara Souza da Silva</p>
-                                <p class="mb05">Irene Vida Gala</p>
-                                <p class="mb05">Isa Maria de Souza Fernandes Ferrari</p>
-                                <p class="mb05">Isabel Mota</p>
-                                <p class="mb05">Isabel Rizk</p>
-                                <p class="mb05">Isabela Marinho</p>
-                                <p class="mb05">Isadora Coimbra Diniz</p>
-                                <p class="mb05">Isadora Lemes</p>
-                                <p class="mb05">Izabela Batista Henriques</p>
-                                <p class="mb05">Jacqueline de Paula</p>
-                                <p class="mb05">Jade Drummond</p>
-                                <p class="mb05">Jaque Nunes Maino</p>
-                                <p class="mb05">Jeni MA</p>
-                                <p class="mb05">Jerome Vergueiro Vonk</p>
-                                <p class="mb05">Jessica Brasil Skroch</p>
-                                <p class="mb05">Jessik Beatris c dos Santos Nunes</p>
-                                <p class="mb05">Joana Suarez</p>
-                                <p class="mb05">João Eduardo Herzog</p>
-                                <p class="mb05">João Ernane de Paula Barbosa</p>
-                                <p class="mb05">Jose Restrepo</p>
-                                <p class="mb05">Julia de Paula Santos</p>
+                        <div class="tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:flex tw:gap-4">
+                            <div class="tw:mr-8">
+                                <p class="tw:mb-2">Anna Carolina Sampaio de Baez</p>
+                                <p class="tw:mb-2">Aldenora Teófilo Vieira Santos Cavalcante</p>
+                                <p class="tw:mb-2">Alessandra Anselmo </p>
+                                <p class="tw:mb-2">Alessandra Effori</p>
+                                <p class="tw:mb-2">Alexandre Augusto de Paiva </p>
+                                <p class="tw:mb-2">Alexandre V. Borges Netto</p>
+                                <p class="tw:mb-2">Alice Bianchini</p>
+                                <p class="tw:mb-2">Alice de Souza</p>
+                                <p class="tw:mb-2">Aline Camata Leandro</p>
+                                <p class="tw:mb-2">Aline de Souza Santos</p>
+                                <p class="tw:mb-2">Aline Oliveira</p>
+                                <p class="tw:mb-2">Aline Pereira Cabral</p>
+                                <p class="tw:mb-2">Alline Silva de Oliveira</p>
+                                <p class="tw:mb-2">Álvaro Justen</p>
+                                <p class="tw:mb-2">Amanda de Albuquerque Jardim Rocha</p>
+                                <p class="tw:mb-2">Amanda Dourado</p>
+                                <p class="tw:mb-2">Amanda Luz</p>
+                                <p class="tw:mb-2">Amarela Obnubilada</p>
+                                <p class="tw:mb-2">Amauri Alfredo Eugênio Júnior</p>
+                                <p class="tw:mb-2">Ana Carolina Moreno</p>
+                                <p class="tw:mb-2">Ana Carolina Nunes</p>
+                                <p class="tw:mb-2">Ana Cernov</p>
+                                <p class="tw:mb-2">Ana Cleide Ferreira do Nascimento</p>
+                                <p class="tw:mb-2">Ana Cristina Balieiro</p>
+                                <p class="tw:mb-2">Ana Cristina da Conceição</p>
+                                <p class="tw:mb-2">Ana Cristina Vallada</p>
+                                <p class="tw:mb-2">Ana Cunha</p>
+                                <p class="tw:mb-2">Ana Elvira Luciano Gebara</p>
+                                <p class="tw:mb-2">Ana Luíza Oliveira Lomba</p>
+                                <p class="tw:mb-2">Ana Maria Pinto Cesar</p>
+                                <p class="tw:mb-2">Ana Paula Tavares Ribeiro</p>
+                                <p class="tw:mb-2">Ana Paula Vizeu Carvalho</p>
+                                <p class="tw:mb-2">Ana Rita Cunha</p>
+                                <p class="tw:mb-2">Ana Rodrigues</p>
+                                <p class="tw:mb-2">André Tamura</p>
+                                <p class="tw:mb-2">Andréa Borges Araújo</p>
+                                <p class="tw:mb-2">Andréa Mrtnl</p>
+                                <p class="tw:mb-2">Andressa Franco</p>
+                                <p class="tw:mb-2">Angela Boldrini</p>
+                                <p class="tw:mb-2">Angela Roman</p>
+                                <p class="tw:mb-2">Ângelo Frederico Souza de Oliveira e Torres</p>
+                                <p class="tw:mb-2">Anna Abreu</p>
+                                <p class="tw:mb-2">Anna Clara de Vitto</p>
+                                <p class="tw:mb-2">Arthur Pinho</p>
+                                <p class="tw:mb-2">Augusto Conconi</p>
+                                <p class="tw:mb-2">Aymê Brito</p>
+                                <p class="tw:mb-2">Bárbara Guimarães Mengardo</p>
+                                <p class="tw:mb-2">Bárbara Libório</p>
+                                <p class="tw:mb-2">Bárbara Miranda</p>
+                                <p class="tw:mb-2">Beatriz Craveiro</p>
+                                <p class="tw:mb-2">Beatriz Doria Pereira </p>
+                                <p class="tw:mb-2">Beatriz Hildebrand Comin Alves de Oliveira</p>
+                                <p class="tw:mb-2">Beatriz Olivon</p>
+                                <p class="tw:mb-2">Beatriz Sanz</p>
+                                <p class="tw:mb-2">Beatriz Soares Benedito</p>
+                                <p class="tw:mb-2">Belliza Fortes</p>
+                                <p class="tw:mb-2">Bethânia Lopes</p>
+                                <p class="tw:mb-2">Brenda Marques</p>
+                                <p class="tw:mb-2">Bruce Marinho</p>
+                                <p class="tw:mb-2">Bruna Camurça</p>
+                                <p class="tw:mb-2">Bruna Donegá Alves</p>
+                                <p class="tw:mb-2">Bruna Oewel</p>
+                                <p class="tw:mb-2">Bruno Lupion Gonçalves</p>
+                                <p class="tw:mb-2">Bruno Nomura</p>
+                                <p class="tw:mb-2">Camila de Oliveira Mendes Leal</p>
+                                <p class="tw:mb-2">Camila Magalhães Ávila</p>
+                                <p class="tw:mb-2">Camila Medeiros Bonfim Gomes</p>
+                                <p class="tw:mb-2">Camila Soares Lippi</p>
+                                <p class="tw:mb-2">Camila Souza Ramos</p>
+                                <p class="tw:mb-2">Camila Vieira</p>
+                                <p class="tw:mb-2">Camilla Costa</p>
+                                <p class="tw:mb-2">Camille Moura</p>
+                                <p class="tw:mb-2">Cândido Sales Gomes</p>
+                                <p class="tw:mb-2">Carla Gisele Batista</p>
+                                <p class="tw:mb-2">Carla Juliana Pissinatti Borges</p>
+                                <p class="tw:mb-2">Carla Pedroso de Mendonça</p>
+                                <p class="tw:mb-2">Carla Soffi</p>
+                                <p class="tw:mb-2">Carlos Prado</p>
+                                <p class="tw:mb-2">Carol Pires</p>
+                                <p class="tw:mb-2">Carolina Herrera Pinto</p>
+                                <p class="tw:mb-2">Carolina Moreira de Souza Besse</p>
+                                <p class="tw:mb-2">Carolina Oms</p>
+                                <p class="tw:mb-2">Carolina Torres</p>
+                                <p class="tw:mb-2">Caroline Salvan Pagnan</p>
+                                <p class="tw:mb-2">Cássia Alves</p>
+                                <p class="tw:mb-2">Cássia Helena Mallmann Bittar</p>
+                                <p class="tw:mb-2">Celso Meneguelo Lobo</p>
+                                <p class="tw:mb-2">Cintia Loureiro Amorim</p>
+                                <p class="tw:mb-2">Clara Silberschneider</p>
+                                <p class="tw:mb-2">Clarice Sfair da Costa Ferreira</p>
+                                <p class="tw:mb-2">Claudia Croitor</p>
+                                <p class="tw:mb-2">Claudia Sabino de Macedo Soares</p>
+                                <p class="tw:mb-2">Clóvis Ribeiro</p>
+                                <p class="tw:mb-2">Cristina Zanella</p>
+                                <p class="tw:mb-2">Daniel de Abreu</p>
+                                <p class="tw:mb-2">Danilo Duarte Correia da Costa Reis</p>
+                                <p class="tw:mb-2">Débora Cajé Yamamoto</p>
+                                <p class="tw:mb-2">Débora Ely</p>
+                                <p class="tw:mb-2">Deborah Quenia Gouveia Foroni</p>
+                                <p class="tw:mb-2">Deise Maciel</p>
+                                <p class="tw:mb-2">Denise Maria Neumann</p>
+                                <p class="tw:mb-2">Diana Bertuol Garcia</p>
+                                <p class="tw:mb-2">Diana Yukari</p>
+                                <p class="tw:mb-2">Diane Otília</p>
+                                <p class="tw:mb-2">Diego Queiroz</p>
+                                <p class="tw:mb-2">Drielly Felix</p>
+                                <p class="tw:mb-2">Edney B. C. Soares de Souza </p>
+                                <p class="tw:mb-2">Eduardo Cuducos</p>
+                                <p class="tw:mb-2">Elena Martinis</p>
+                                <p class="tw:mb-2">Elisabeth Melo Cordeiro</p>
+                                <p class="tw:mb-2">Elizabeth Ponte de Freitas</p>
+                                <p class="tw:mb-2">Emanuela Nóbrega de Souza</p>
+                                <p class="tw:mb-2">Emily Canto Nunes</p>
+                                <p class="tw:mb-2">Erica Yazigi Roumieh</p>
+                                <p class="tw:mb-2">Fabiana Cambricoli</p>
+                                <p class="tw:mb-2">Fabiana R Marques </p>
+                                <p class="tw:mb-2">Fabiano Angélico</p>
+                                <p class="tw:mb-2">Felipe Cotta Cardoso</p>
+                                <p class="tw:mb-2">Felipe da Silva Freitas</p>
+                                <p class="tw:mb-2">Felipe Grandin</p>
+                                <p class="tw:mb-2">Felippe Mercurio</p>
+                                <p class="tw:mb-2">Fernanda Campagnucci</p>
+                                <p class="tw:mb-2">Fernanda Fonseca</p>
+                                <p class="tw:mb-2">Fernanda Hoffmann Lobato</p>
+                                <p class="tw:mb-2">Fernanda Martins Sousa</p>
+                                <p class="tw:mb-2">Fernanda Rezende</p>
+                                <p class="tw:mb-2">Fernando S Ferreira</p>
+                                <p class="tw:mb-2">Fernando T B Lima</p>
+                                <p class="tw:mb-2">Flávia M Salvador</p>
+                                <p class="tw:mb-2">Flavio Tavares</p>
+                                <p class="tw:mb-2">Frederico Soares</p>
+                                <p class="tw:mb-2">Gabi Coelho</p>
+                                <p class="tw:mb-2">Gabi Maciel</p>
+                                <p class="tw:mb-2">Gabriel Marmentini</p>
+                                <p class="tw:mb-2">Gabriel Oliveira Borges</p>
+                                <p class="tw:mb-2">Gabriela Garcez Monteiro</p>
+                                <p class="tw:mb-2">Gabriela Giovana de Carvalho Andrade</p>
+                                <p class="tw:mb-2">Gabriela Gonçalves Terenzi</p>
+                                <p class="tw:mb-2">Gabriela Kimura</p>
+                                <p class="tw:mb-2">Gabriela Viola</p>
+                                <p class="tw:mb-2">Georgia Ferraz</p>
+                                <p class="tw:mb-2">Gil Barbosa Reis</p>
+                                <p class="tw:mb-2">Gina Dourado Rocha Leite</p>
+                                <p class="tw:mb-2">Gisele Federicce</p>
+                                <p class="tw:mb-2">Graciliano Toni </p>
+                                <p class="tw:mb-2">Gregório Benevides</p>
+                                <p class="tw:mb-2">Helena M. S. Rolo</p>
+                                <p class="tw:mb-2">Helena van Kampen</p>
+                                <p class="tw:mb-2">Helio Miguel</p>
+                                <p class="tw:mb-2">Heloísa Iaconis</p>
+                                <p class="tw:mb-2">Iana Chan</p>
+                                <p class="tw:mb-2">Iara Simis</p>
+                                <p class="tw:mb-2">Inara Souza da Silva</p>
+                                <p class="tw:mb-2">Irene Vida Gala</p>
+                                <p class="tw:mb-2">Isa Maria de Souza Fernandes Ferrari</p>
+                                <p class="tw:mb-2">Isabel Mota</p>
+                                <p class="tw:mb-2">Isabel Rizk</p>
+                                <p class="tw:mb-2">Isabela Marinho</p>
+                                <p class="tw:mb-2">Isadora Coimbra Diniz</p>
+                                <p class="tw:mb-2">Isadora Lemes</p>
+                                <p class="tw:mb-2">Izabela Batista Henriques</p>
+                                <p class="tw:mb-2">Jacqueline de Paula</p>
+                                <p class="tw:mb-2">Jade Drummond</p>
+                                <p class="tw:mb-2">Jaque Nunes Maino</p>
+                                <p class="tw:mb-2">Jeni MA</p>
+                                <p class="tw:mb-2">Jerome Vergueiro Vonk</p>
+                                <p class="tw:mb-2">Jessica Brasil Skroch</p>
+                                <p class="tw:mb-2">Jessik Beatris c dos Santos Nunes</p>
+                                <p class="tw:mb-2">Joana Suarez</p>
+                                <p class="tw:mb-2">João Eduardo Herzog</p>
+                                <p class="tw:mb-2">João Ernane de Paula Barbosa</p>
+                                <p class="tw:mb-2">Jose Restrepo</p>
+                                <p class="tw:mb-2">Julia de Paula Santos</p>
                             </div>
-                            <div class="ml2">
-                                <p class="mb05">Julia Favoretto</p>
-                                <p class="mb05">Julia Francisca Gomes Simoes Moita</p>
-                                <p class="mb05">Julia Tavares</p>
-                                <p class="mb05">Juliana Dal Piva </p>
-                                <p class="mb05">Juliana Moyses</p>
-                                <p class="mb05">Juliana Paranhos</p>
-                                <p class="mb05">Juliana Simionato</p>
-                                <p class="mb05">Juliana Vieira</p>
-                                <p class="mb05">K Tuma</p>
-                                <p class="mb05">Karina Leyser Cordeiro</p>
-                                <p class="mb05">Karo Oliveira</p>
-                                <p class="mb05">Kris Freitas</p>
-                                <p class="mb05">Laelya Longo</p>
-                                <p class="mb05">Laísa Amaral Queiroz</p>
-                                <p class="mb05">Lanna Dogo</p>
-                                <p class="mb05">Lara Haje</p>
-                                <p class="mb05">Larissa Agostinho Teixeira</p>
-                                <p class="mb05">Larissa Maria de Castro Alves</p>
-                                <p class="mb05">Larissa Maues Pelucio Silva</p>
-                                <p class="mb05">Laura Diniz Scofield</p>
-                                <p class="mb05">Laura Ribeiro</p>
-                                <p class="mb05">Leda Antunes</p>
-                                <p class="mb05">Leo Yu Marins</p>
-                                <p class="mb05">Letícia Ferreira</p>
-                                <p class="mb05">Leticia Teixeira</p>
-                                <p class="mb05">Lia Bello</p>
-                                <p class="mb05">Lívia Andrade</p>
-                                <p class="mb05">Lívia Gimenes Dias da Fonseca</p>
-                                <p class="mb05">Lívia Lara da Cruz</p>
-                                <p class="mb05">Luana Flávia da Silveira</p>
-                                <p class="mb05">Luane Prado</p>
-                                <p class="mb05">Lucia Boldrini</p>
-                                <p class="mb05">Luciana Forgiarini</p>
-                                <p class="mb05">Luciana Micheletti</p>
-                                <p class="mb05">Luís Otávio Felipe Ribeiro</p>
-                                <p class="mb05">Luísa Cardoso</p>
-                                <p class="mb05">Luísa Carvalho</p>
-                                <p class="mb05">Luisa Rodrigues</p>
-                                <p class="mb05">Luisa Steffanello Brandão</p>
-                                <p class="mb05">Luiz Carlos J. Junior</p>
-                                <p class="mb05">Luiza Barros</p>
-                                <p class="mb05">Luiza Donatelli</p>
-                                <p class="mb05">Mabel Lazzarin</p>
-                                <p class="mb05">Madge Porto Cruz</p>
-                                <p class="mb05">Maia Gonçalves Fortes</p>
-                                <p class="mb05">Maiara Ramos</p>
-                                <p class="mb05">Maíra Avelar Miranda</p>
-                                <p class="mb05">Maira de Lacerda Marques</p>
-                                <p class="mb05">Maíra Teixeira da Silva</p>
-                                <p class="mb05">Malu Gatto</p>
-                                <p class="mb05">Manoela Albuquerque</p>
-                                <p class="mb05">Manuela Andreoni</p>
-                                <p class="mb05">Marcela Lanius</p>
-                                <p class="mb05">Marcela Merisio A. Oliveira</p>
-                                <p class="mb05">Marcelle Cristine de Souza</p>
-                                <p class="mb05">Marcelle Cristine de Souza</p>
-                                <p class="mb05">Marcelo Silva Ferreira</p>
-                                <p class="mb05">Márcia Cabral</p>
-                                <p class="mb05">Marcia Daniela Pianaro Valenga</p>
-                                <p class="mb05">Marcia Lunardi</p>
-                                <p class="mb05">Marcia Mello da Silveira </p>
-                                <p class="mb05">Maria Cecília Brod</p>
-                                <p class="mb05">Maria Helena Fernandes da Trindade Henriques Mueller</p>
-                                <p class="mb05">Maria Joana Weber Giareton</p>
-                                <p class="mb05">Maria Lucia Pereira de Almeida</p>
-                                <p class="mb05">Mariama Correia</p>
-                                <p class="mb05">Mariana Abbate</p>
-                                <p class="mb05">Mariana C Mendonca</p>
-                                <p class="mb05">Mariana Cristina Soares</p>
-                                <p class="mb05">Mariana Dias Guilardi</p>
-                                <p class="mb05">Mariana Fagundes Ausani </p>
-                                <p class="mb05">Mariana Merino de Freitas Xavier</p>
-                                <p class="mb05">Mariana Salimena Pires</p>
-                                <p class="mb05">Mariana Torres Behr</p>
-                                <p class="mb05">Marianna Viana</p>
-                                <p class="mb05">Marilia Gehrke</p>
-                                <p class="mb05">Marília Marcondes Tenório</p>
-                                <p class="mb05">Marília Moreira</p>
-                                <p class="mb05">Marina Bernardo Mandarini</p>
-                                <p class="mb05">Marina Garrote</p>
-                                <p class="mb05">Marina Iemini Atoji</p>
-                                <p class="mb05">Marina Martins Machado</p>
-                                <p class="mb05">Marina Soares Marinho</p>
-                                <p class="mb05">Marisa Sanematsu</p>
-                                <p class="mb05">Maxwell Rocha Santos</p>
-                                <p class="mb05">Mayvonne Morais</p>
-                                <p class="mb05">Melissa de Sá</p>
-                                <p class="mb05">Melissa Rizzo Battistella</p>
-                                <p class="mb05">Michele Santos</p>
-                                <p class="mb05">Mikhail Barros e Favalessa</p>
-                                <p class="mb05">Mirna Oliveira Ledo </p>
-                                <p class="mb05">Monica Baña Alvarez</p>
-                                <p class="mb05">Monica Siqueira</p>
-                                <p class="mb05">Munah Malek</p>
-                                <p class="mb05">Nádia Corrêa Santos</p>
-                                <p class="mb05">Nara Perobelli de Moraes</p>
-                                <p class="mb05">Nara Sarmanho Cunha</p>
-                                <p class="mb05">Natália Coelho</p>
-                                <p class="mb05">Natália Flach Gomes</p>
-                                <p class="mb05">Natália Mazotte</p>
-                                <p class="mb05">Nathália Cariatti</p>
-                                <p class="mb05">Norton Gomes de Almeira </p>
-                                <p class="mb05">Patrick Marcelo Preato</p>
-                                <p class="mb05">Paula Biazus</p>
-                                <p class="mb05">Paula Kaufmann</p>
-                                <p class="mb05">Pedro Barbosa Capetti Porto</p>
-                                <p class="mb05">Pedro Burgos</p>
-                                <p class="mb05">Rafa Ferreira</p>
-                                <p class="mb05">Rafa Quintanilha</p>
-                                <p class="mb05">Rafael Campos</p>
-                                <p class="mb05">Rafael Costa</p>
-                                <p class="mb05">Rafael Regatieri</p>
-                                <p class="mb05">Raisa Paranhos</p>
-                                <p class="mb05">Raissa Carla B de Souza </p>
-                                <p class="mb05">Raíssa Helena Paiva Apolinario</p>
-                                <p class="mb05">Ramayana Rambo</p>
-                                <p class="mb05">Raquel Alves</p>
-                                <p class="mb05">Rasiele dos Santos Rasia</p>
-                                <p class="mb05">Raul Torres</p>
-                                <p class="mb05">Rayana Burgos</p>
-                                <p class="mb05">Rebecca Monteiro</p>
-                                <p class="mb05">Rebecca Wendhausen</p>
-                                <p class="mb05">Regina Bomfim</p>
-                                <p class="mb05">Renata Carolina Corrêa Vieira </p>
-                                <p class="mb05">Renata De Luca</p>
-                                <p class="mb05">Renata Roncali Maffezoli</p>
-                                <p class="mb05">Richardson Santos dos Reis</p>
-                                <p class="mb05">Roberta Alves Ferreira</p>
-                                <p class="mb05">Roberta Silva vilarins</p>
-                                <p class="mb05">Rodolfo Viana</p>
-                                <p class="mb05">Rodrigo M Machado</p>
-                                <p class="mb05">Rogério Casagrande da Rocha</p>
-                                <p class="mb05">Rosana Fantini</p>
-                                <p class="mb05">Samira Spolidorio</p>
-                                <p class="mb05">Samylla Santos Rodrigues</p>
-                                <p class="mb05">Sandra Brod Pacheco</p>
-                                <p class="mb05">Sandra Nodari</p>
-                                <p class="mb05">Sarah Marques da Silva</p>
-                                <p class="mb05">Sérgio Boeck Lüdtke</p>
-                                <p class="mb05">Silvia Gurgel</p>
-                                <p class="mb05">Sislene Pereira Gomes</p>
-                                <p class="mb05">Sofia Franco</p>
-                                <p class="mb05">Sônia Maria Barroso Zainko</p>
-                                <p class="mb05">Sophia Tess</p>
-                                <p class="mb05">Sthefany Alves Marques</p>
-                                <p class="mb05">Talita Fernandes</p>
-                                <p class="mb05">Tâmara Bittencourt</p>
-                                <p class="mb05">Tassia Carina Kastner</p>
-                                <p class="mb05">Tatiana Bertini</p>
-                                <p class="mb05">Tatiane Coutinho dos Reis</p>
-                                <p class="mb05">Thaime Lopes</p>
-                                <p class="mb05">Thainá Kedzierski</p>
-                                <p class="mb05">Thaís Barros</p>
-                                <p class="mb05">Thais Denardi</p>
-                                <p class="mb05">Thais Folego Gama</p>
-                                <p class="mb05">Thárin Gomes Radín</p>
-                                <p class="mb05">Thiago Roberto de Freitas</p>
-                                <p class="mb05">Thiago Rondon</p>
-                                <p class="mb05">Tiago Minchillo da Silveira</p>
-                                <p class="mb05">Valéria Pereira</p>
-                                <p class="mb05">Vanessa Correia</p>
-                                <p class="mb05">Vanessa Grigoletto</p>
-                                <p class="mb05">Verena Paranhos</p>
-                                <p class="mb05">Veronica Melhem</p>
-                                <p class="mb05">Vicky Régia</p>
-                                <p class="mb05">Vito Vaz</p>
-                                <p class="mb05">Vítor Márcio Paiva de Sousa Baptista</p>
-                                <p class="mb05">Viviane Gouvea</p>
-                                <p class="mb05">Wagner Resende Santos</p>
-                                <p class="mb05">Walkiria Giraldi</p>
-                                <p class="mb05">Wesley Almeida</p>
-                                <p class="mb05">Winola Weiss Pires Cunha</p>
-                                <p class="mb05">Yasmin Curzi</p>
-                                <p class="mb05">Yone Ferrer Kalix</p>
-                                <p class="mb05">Yuri Bonarde de Oliveira</p>
+                            <div class="tw:ml-8">
+                                <p class="tw:mb-2">Julia Favoretto</p>
+                                <p class="tw:mb-2">Julia Francisca Gomes Simoes Moita</p>
+                                <p class="tw:mb-2">Julia Tavares</p>
+                                <p class="tw:mb-2">Juliana Dal Piva </p>
+                                <p class="tw:mb-2">Juliana Moyses</p>
+                                <p class="tw:mb-2">Juliana Paranhos</p>
+                                <p class="tw:mb-2">Juliana Simionato</p>
+                                <p class="tw:mb-2">Juliana Vieira</p>
+                                <p class="tw:mb-2">K Tuma</p>
+                                <p class="tw:mb-2">Karina Leyser Cordeiro</p>
+                                <p class="tw:mb-2">Karo Oliveira</p>
+                                <p class="tw:mb-2">Kris Freitas</p>
+                                <p class="tw:mb-2">Laelya Longo</p>
+                                <p class="tw:mb-2">Laísa Amaral Queiroz</p>
+                                <p class="tw:mb-2">Lanna Dogo</p>
+                                <p class="tw:mb-2">Lara Haje</p>
+                                <p class="tw:mb-2">Larissa Agostinho Teixeira</p>
+                                <p class="tw:mb-2">Larissa Maria de Castro Alves</p>
+                                <p class="tw:mb-2">Larissa Maues Pelucio Silva</p>
+                                <p class="tw:mb-2">Laura Diniz Scofield</p>
+                                <p class="tw:mb-2">Laura Ribeiro</p>
+                                <p class="tw:mb-2">Leda Antunes</p>
+                                <p class="tw:mb-2">Leo Yu Marins</p>
+                                <p class="tw:mb-2">Letícia Ferreira</p>
+                                <p class="tw:mb-2">Leticia Teixeira</p>
+                                <p class="tw:mb-2">Lia Bello</p>
+                                <p class="tw:mb-2">Lívia Andrade</p>
+                                <p class="tw:mb-2">Lívia Gimenes Dias da Fonseca</p>
+                                <p class="tw:mb-2">Lívia Lara da Cruz</p>
+                                <p class="tw:mb-2">Luana Flávia da Silveira</p>
+                                <p class="tw:mb-2">Luane Prado</p>
+                                <p class="tw:mb-2">Lucia Boldrini</p>
+                                <p class="tw:mb-2">Luciana Forgiarini</p>
+                                <p class="tw:mb-2">Luciana Micheletti</p>
+                                <p class="tw:mb-2">Luís Otávio Felipe Ribeiro</p>
+                                <p class="tw:mb-2">Luísa Cardoso</p>
+                                <p class="tw:mb-2">Luísa Carvalho</p>
+                                <p class="tw:mb-2">Luisa Rodrigues</p>
+                                <p class="tw:mb-2">Luisa Steffanello Brandão</p>
+                                <p class="tw:mb-2">Luiz Carlos J. Junior</p>
+                                <p class="tw:mb-2">Luiza Barros</p>
+                                <p class="tw:mb-2">Luiza Donatelli</p>
+                                <p class="tw:mb-2">Mabel Lazzarin</p>
+                                <p class="tw:mb-2">Madge Porto Cruz</p>
+                                <p class="tw:mb-2">Maia Gonçalves Fortes</p>
+                                <p class="tw:mb-2">Maiara Ramos</p>
+                                <p class="tw:mb-2">Maíra Avelar Miranda</p>
+                                <p class="tw:mb-2">Maira de Lacerda Marques</p>
+                                <p class="tw:mb-2">Maíra Teixeira da Silva</p>
+                                <p class="tw:mb-2">Malu Gatto</p>
+                                <p class="tw:mb-2">Manoela Albuquerque</p>
+                                <p class="tw:mb-2">Manuela Andreoni</p>
+                                <p class="tw:mb-2">Marcela Lanius</p>
+                                <p class="tw:mb-2">Marcela Merisio A. Oliveira</p>
+                                <p class="tw:mb-2">Marcelle Cristine de Souza</p>
+                                <p class="tw:mb-2">Marcelle Cristine de Souza</p>
+                                <p class="tw:mb-2">Marcelo Silva Ferreira</p>
+                                <p class="tw:mb-2">Márcia Cabral</p>
+                                <p class="tw:mb-2">Marcia Daniela Pianaro Valenga</p>
+                                <p class="tw:mb-2">Marcia Lunardi</p>
+                                <p class="tw:mb-2">Marcia Mello da Silveira </p>
+                                <p class="tw:mb-2">Maria Cecília Brod</p>
+                                <p class="tw:mb-2">Maria Helena Fernandes da Trindade Henriques Mueller</p>
+                                <p class="tw:mb-2">Maria Joana Weber Giareton</p>
+                                <p class="tw:mb-2">Maria Lucia Pereira de Almeida</p>
+                                <p class="tw:mb-2">Mariama Correia</p>
+                                <p class="tw:mb-2">Mariana Abbate</p>
+                                <p class="tw:mb-2">Mariana C Mendonca</p>
+                                <p class="tw:mb-2">Mariana Cristina Soares</p>
+                                <p class="tw:mb-2">Mariana Dias Guilardi</p>
+                                <p class="tw:mb-2">Mariana Fagundes Ausani </p>
+                                <p class="tw:mb-2">Mariana Merino de Freitas Xavier</p>
+                                <p class="tw:mb-2">Mariana Salimena Pires</p>
+                                <p class="tw:mb-2">Mariana Torres Behr</p>
+                                <p class="tw:mb-2">Marianna Viana</p>
+                                <p class="tw:mb-2">Marilia Gehrke</p>
+                                <p class="tw:mb-2">Marília Marcondes Tenório</p>
+                                <p class="tw:mb-2">Marília Moreira</p>
+                                <p class="tw:mb-2">Marina Bernardo Mandarini</p>
+                                <p class="tw:mb-2">Marina Garrote</p>
+                                <p class="tw:mb-2">Marina Iemini Atoji</p>
+                                <p class="tw:mb-2">Marina Martins Machado</p>
+                                <p class="tw:mb-2">Marina Soares Marinho</p>
+                                <p class="tw:mb-2">Marisa Sanematsu</p>
+                                <p class="tw:mb-2">Maxwell Rocha Santos</p>
+                                <p class="tw:mb-2">Mayvonne Morais</p>
+                                <p class="tw:mb-2">Melissa de Sá</p>
+                                <p class="tw:mb-2">Melissa Rizzo Battistella</p>
+                                <p class="tw:mb-2">Michele Santos</p>
+                                <p class="tw:mb-2">Mikhail Barros e Favalessa</p>
+                                <p class="tw:mb-2">Mirna Oliveira Ledo </p>
+                                <p class="tw:mb-2">Monica Baña Alvarez</p>
+                                <p class="tw:mb-2">Monica Siqueira</p>
+                                <p class="tw:mb-2">Munah Malek</p>
+                                <p class="tw:mb-2">Nádia Corrêa Santos</p>
+                                <p class="tw:mb-2">Nara Perobelli de Moraes</p>
+                                <p class="tw:mb-2">Nara Sarmanho Cunha</p>
+                                <p class="tw:mb-2">Natália Coelho</p>
+                                <p class="tw:mb-2">Natália Flach Gomes</p>
+                                <p class="tw:mb-2">Natália Mazotte</p>
+                                <p class="tw:mb-2">Nathália Cariatti</p>
+                                <p class="tw:mb-2">Norton Gomes de Almeira </p>
+                                <p class="tw:mb-2">Patrick Marcelo Preato</p>
+                                <p class="tw:mb-2">Paula Biazus</p>
+                                <p class="tw:mb-2">Paula Kaufmann</p>
+                                <p class="tw:mb-2">Pedro Barbosa Capetti Porto</p>
+                                <p class="tw:mb-2">Pedro Burgos</p>
+                                <p class="tw:mb-2">Rafa Ferreira</p>
+                                <p class="tw:mb-2">Rafa Quintanilha</p>
+                                <p class="tw:mb-2">Rafael Campos</p>
+                                <p class="tw:mb-2">Rafael Costa</p>
+                                <p class="tw:mb-2">Rafael Regatieri</p>
+                                <p class="tw:mb-2">Raisa Paranhos</p>
+                                <p class="tw:mb-2">Raissa Carla B de Souza </p>
+                                <p class="tw:mb-2">Raíssa Helena Paiva Apolinario</p>
+                                <p class="tw:mb-2">Ramayana Rambo</p>
+                                <p class="tw:mb-2">Raquel Alves</p>
+                                <p class="tw:mb-2">Rasiele dos Santos Rasia</p>
+                                <p class="tw:mb-2">Raul Torres</p>
+                                <p class="tw:mb-2">Rayana Burgos</p>
+                                <p class="tw:mb-2">Rebecca Monteiro</p>
+                                <p class="tw:mb-2">Rebecca Wendhausen</p>
+                                <p class="tw:mb-2">Regina Bomfim</p>
+                                <p class="tw:mb-2">Renata Carolina Corrêa Vieira </p>
+                                <p class="tw:mb-2">Renata De Luca</p>
+                                <p class="tw:mb-2">Renata Roncali Maffezoli</p>
+                                <p class="tw:mb-2">Richardson Santos dos Reis</p>
+                                <p class="tw:mb-2">Roberta Alves Ferreira</p>
+                                <p class="tw:mb-2">Roberta Silva vilarins</p>
+                                <p class="tw:mb-2">Rodolfo Viana</p>
+                                <p class="tw:mb-2">Rodrigo M Machado</p>
+                                <p class="tw:mb-2">Rogério Casagrande da Rocha</p>
+                                <p class="tw:mb-2">Rosana Fantini</p>
+                                <p class="tw:mb-2">Samira Spolidorio</p>
+                                <p class="tw:mb-2">Samylla Santos Rodrigues</p>
+                                <p class="tw:mb-2">Sandra Brod Pacheco</p>
+                                <p class="tw:mb-2">Sandra Nodari</p>
+                                <p class="tw:mb-2">Sarah Marques da Silva</p>
+                                <p class="tw:mb-2">Sérgio Boeck Lüdtke</p>
+                                <p class="tw:mb-2">Silvia Gurgel</p>
+                                <p class="tw:mb-2">Sislene Pereira Gomes</p>
+                                <p class="tw:mb-2">Sofia Franco</p>
+                                <p class="tw:mb-2">Sônia Maria Barroso Zainko</p>
+                                <p class="tw:mb-2">Sophia Tess</p>
+                                <p class="tw:mb-2">Sthefany Alves Marques</p>
+                                <p class="tw:mb-2">Talita Fernandes</p>
+                                <p class="tw:mb-2">Tâmara Bittencourt</p>
+                                <p class="tw:mb-2">Tassia Carina Kastner</p>
+                                <p class="tw:mb-2">Tatiana Bertini</p>
+                                <p class="tw:mb-2">Tatiane Coutinho dos Reis</p>
+                                <p class="tw:mb-2">Thaime Lopes</p>
+                                <p class="tw:mb-2">Thainá Kedzierski</p>
+                                <p class="tw:mb-2">Thaís Barros</p>
+                                <p class="tw:mb-2">Thais Denardi</p>
+                                <p class="tw:mb-2">Thais Folego Gama</p>
+                                <p class="tw:mb-2">Thárin Gomes Radín</p>
+                                <p class="tw:mb-2">Thiago Roberto de Freitas</p>
+                                <p class="tw:mb-2">Thiago Rondon</p>
+                                <p class="tw:mb-2">Tiago Minchillo da Silveira</p>
+                                <p class="tw:mb-2">Valéria Pereira</p>
+                                <p class="tw:mb-2">Vanessa Correia</p>
+                                <p class="tw:mb-2">Vanessa Grigoletto</p>
+                                <p class="tw:mb-2">Verena Paranhos</p>
+                                <p class="tw:mb-2">Veronica Melhem</p>
+                                <p class="tw:mb-2">Vicky Régia</p>
+                                <p class="tw:mb-2">Vito Vaz</p>
+                                <p class="tw:mb-2">Vítor Márcio Paiva de Sousa Baptista</p>
+                                <p class="tw:mb-2">Viviane Gouvea</p>
+                                <p class="tw:mb-2">Wagner Resende Santos</p>
+                                <p class="tw:mb-2">Walkiria Giraldi</p>
+                                <p class="tw:mb-2">Wesley Almeida</p>
+                                <p class="tw:mb-2">Winola Weiss Pires Cunha</p>
+                                <p class="tw:mb-2">Yasmin Curzi</p>
+                                <p class="tw:mb-2">Yone Ferrer Kalix</p>
+                                <p class="tw:mb-2">Yuri Bonarde de Oliveira</p>
                             </div>
                         </div>
 
-                        <p class="tca mt2 w700">E mais 64 doadores anônimos</p>
+                        <p class="tw:text-periwinkle tw:mt-8 tw:font-bold">E mais 64 doadores anônimos</p>
 
                     </article>
 
                 </section>
-                <section class="col-xs-12 col-md-3 col-md-offset-1 visible-md pt3-md">
-                    <nav class="nav-sobre">
+                <section class="tw:w-full tw:min-w-0 tw:px-4 tw:min-[992px]:w-[25.0000%] tw:min-[992px]:ml-[8.3333%] tw:hidden tw:lg:block tw:min-[992px]:pt-12 tw:min-[992px]:-mt-20">
+                    <nav class="tw:sticky tw:top-24 tw:flex tw:flex-col tw:gap-2 tw:[&_a]:block tw:[&_a]:p-4 tw:[&_a]:hover:bg-lime">
                         <ul>
                             <li>
                                 <a href="#seguimos-atentas-e-fortes">
-                                    <p class="titulo-variavel tca t3 mb0">
-                                        <span class="w600 wdth200">Seguimos </span>
-                                        <span class="w900 wdth400">atentas </span>
-                                        <span class="w600 wdth200">e </span>
-                                        <span class="w900 wdth400">fortes</span>
+                                    <p class="tw:font-display tw:uppercase tw:break-normal tw:text-periwinkle tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-0">
+                                        <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">Seguimos </span>
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">atentas </span>
+                                        <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">e </span>
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">fortes</span>
                                     </p>
                                 </a>
                             </li>
                             <li>
                                 <a href="#empresas-parceiras-da-campanha">
-                                    <p class="titulo-variavel tca t3 mb0">
-                                        <span class="w900 wdth400">Empresas parceiras </span>
-                                        <span class="w600 wdth200">da campanha</span>
+                                    <p class="tw:font-display tw:uppercase tw:break-normal tw:text-periwinkle tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-0">
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">Empresas parceiras </span>
+                                        <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">da campanha</span>
                                     </p>
                                 </a>
                             </li>
                             <li>
                                 <a href="#autoras-e-ilustradoras-parceiras">
-                                    <p class="titulo-variavel tca t3 mb0">
-                                        <span class="w900 wdth400">Autoras </span>
-                                        <span class="w600 wdth200">e </span>
-                                        <span class="w900 wdth400">ilustradoras </span>
-                                        <span class="w600 wdth200">parceiras </span>
+                                    <p class="tw:font-display tw:uppercase tw:break-normal tw:text-periwinkle tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-0">
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">Autoras </span>
+                                        <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">e </span>
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">ilustradoras </span>
+                                        <span class="tw:font-semibold tw:[font-variation-settings:'wdth'_200]">parceiras </span>
                                     </p>
                                 </a>
                             </li>
                             <li>
                                 <a href="#doadores">
-                                    <p class="titulo-variavel tca t3 mb0">
-                                        <span class="w900 wdth400">Doadores</span>
+                                    <p class="tw:font-display tw:uppercase tw:break-normal tw:text-periwinkle tw:text-[clamp(14px,calc(.875rem_+_2*(100vw_-_500px)/700),16px)] tw:mb-0">
+                                        <span class="tw:font-black tw:[font-variation-settings:'wdth'_400]">Doadores</span>
                                     </p>
                                 </a>
                             </li>

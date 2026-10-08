@@ -1,0 +1,37 @@
+---
+const siren = "/assets/images/home-alerts/alert-siren.png";
+const chevron = "/assets/images/home-reportagens/chevron-right.svg";
+---
+
+<section class="
+    home-alerts tw:relative tw:flex tw:w-full tw:min-h-[605.4716796875px] tw:items-center tw:justify-center tw:mt-12
+    tw:overflow-hidden tw:bg-ink tw:bg-[url('/assets/images/home-reportagens/bg-pattern-cutting-mat.svg')]
+    tw:bg-repeat tw:bg-top-left tw:bg-size-[200px_200px] tw:text-white tw:font-sans tw:p-8 tw:[&_h2]:font-display
+    tw:[&_h2]:text-[28px] tw:[&_h2]:font-bold tw:[&_h2]:leading-8 tw:[&_h2]:uppercase
+    tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:m-0 tw:[&_p]:m-0 tw:max-md:min-h-[605.4716796875px]
+    tw:max-md:items-stretch tw:max-md:p-8 tw:max-md:[&_h2]:w-full tw:max-md:[&_h2]:text-left
+" aria-labelledby="home-alerts-title">
+    <img class="
+        home-alerts__siren tw:absolute tw:top-27 tw:left-[calc(50%_-_60px)] tw:block tw:w-30 tw:h-32 tw:max-md:top-12
+        tw:max-md:left-6 tw:max-md:w-20 tw:max-md:h-auto
+    " src={siren} alt="" />
+    <div class="
+        home-alerts__content tw:relative tw:flex tw:w-180 tw:max-w-full tw:flex-col tw:items-center tw:gap-6
+        tw:text-center tw:pt-52.5 tw:pb-16 tw:px-8 tw:max-md:w-full tw:max-md:items-start tw:max-md:text-left
+        tw:max-md:pt-34 tw:max-md:pb-16 tw:max-md:px-0
+    ">
+        <h2 class="" id="home-alerts-title">A gente te avisa</h2>
+        <p class="home-alerts__intro tw:text-lg tw:font-normal tw:leading-6 tw:max-md:w-full tw:max-md:text-left ">Pra evitar retrocessos, é essencial saber o que<br class="tw:max-md:hidden" />está acontecendo no Congresso e agir!</p>
+        <p class="home-alerts__detail tw:text-lg tw:font-normal tw:leading-6 tw:[&_strong]:font-bold tw:max-md:w-full tw:max-md:text-left ">Por isso, temos uma IA que faz esse <strong class="">monitoramento</strong> pra você</p>
+        <a class="
+            home-alerts__button tw:flex tw:w-47.5 tw:h-14 tw:items-center tw:justify-center tw:gap-4 tw:border-0 tw:bg-accent
+            tw:text-white tw:font-display tw:text-lg tw:font-bold tw:leading-6 tw:uppercase
+            tw:[font-variation-settings:'wdth'_75] tw:no-underline tw:py-4 tw:px-6 tw:[&_img]:w-[13.4142px]
+            tw:[&_img]:h-[8.12132px] tw:[&_img]:[transform:rotate(-90deg)] tw:hover:bg-ink tw:hover:outline-1
+            tw:hover:outline-white tw:focus-visible:outline-2 tw:focus-visible:outline-white
+            tw:focus-visible:outline-offset-[3px]
+        " href="/alertas">Receba alertas <img class="" src={chevron} alt="" /></a>
+    </div>
+</section>
+
+

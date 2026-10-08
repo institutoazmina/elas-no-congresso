@@ -31,7 +31,6 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
-    css: { preprocessorOptions: { less: {} } },
     server: {
       proxy: {
         '/api/v1': {

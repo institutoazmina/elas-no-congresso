@@ -1,0 +1,224 @@
+---
+import Papelada from "./Papelada.astro";
+import { pileGap } from "../../lib/papelada";
+const thumbsDown = "/assets/images/thumbs-down.svg";
+const attention = "/assets/images/activity/attention.svg";
+import { getUnfavorableByLegislature } from "../../service/api/stats";
+
+// Escala do design: pilhas de 92.5px de largura, a mais alta com 643.5px.
+const PILE_WIDTH = 92.5;
+const PILE_PEAK = 643.5;
+
+const legislatures = await getUnfavorableByLegislature();
+const gap = pileGap({
+    width: PILE_WIDTH,
+    height: PILE_PEAK,
+    peak: Math.max(
+        ...legislatures.map((legislature) => legislature.unfavorable),
+        1,
+    ),
+});
+---
+
+<section
+    id="rights-under-attack"
+    class="
+        rights-under-attack tw:relative tw:h-auto tw:overflow-hidden tw:py-12 tw:text-[#0B0F5E] tw:lg:h-[1241.5px]
+        tw:lg:overflow-visible tw:lg:bg-white tw:lg:pt-12 tw:lg:pb-0 tw:max-md:h-auto tw:max-md:overflow-visible
+        tw:max-md:bg-white tw:max-md:bg-none tw:max-md:p-0
+    "
+    aria-labelledby="rights-under-attack-title"
+>
+    <div class="
+        tw:relative tw:mx-auto tw:flex tw:w-full tw:max-w-[816px] tw:flex-col tw:gap-10 tw:px-6 tw:lg:h-[1193.5px]
+        tw:lg:w-[816px] tw:lg:max-w-none tw:lg:gap-2.5 tw:lg:px-12 tw:lg:pb-12 tw:lg:pt-6 tw:max-md:w-full
+        tw:max-md:max-w-none tw:max-md:h-auto tw:max-md:gap-2.5 tw:max-md:py-6 tw:max-md:px-4
+    ">
+        <header class="
+            tw:flex tw:w-full tw:flex-col tw:items-start tw:gap-4 tw:lg:mx-auto tw:lg:h-auto tw:lg:max-w-[960px]
+            tw:lg:justify-center tw:max-md:w-full tw:max-md:h-auto tw:max-md:gap-4
+        ">
+            <img class="tw:h-1 tw:w-24" src={attention} alt="" />
+            <h2
+                id="rights-under-attack-title"
+                class="
+                    tw:m-0 tw:w-full tw:font-bold tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75] tw:text-4xl tw:leading-[42px]
+                    tw:max-md:text-[28px] tw:max-md:leading-8 tw:md:h-auto tw:md:[text-box-trim:trim-both]
+                    tw:md:[text-box-edge:cap_alphabetic]
+                "
+            >
+                Os direitos das mulheres e pessoas LGBTQIA+ nunca foram tão
+                atacados
+            </h2>
+            <p class="tw:m-0 tw:w-full tw:font-[Plus_Jakarta_Sans] tw:text-lg tw:leading-6 tw:lg:h-[72px] tw:max-md:text-sm tw:max-md:leading-6">
+                Legislar sobre nossos direitos não é sinônimo de fortalecê-los.
+                Muito do trabalho legislativo faz o contrário: retrocesso e
+                restrição de direitos já conquistados. E o atual Congresso tem
+                sido campeão nos ataques:
+            </p>
+        </header>
+
+        <figure class="
+            tw:relative tw:m-0 tw:flex tw:w-full tw:flex-col tw:items-center tw:gap-12 tw:py-6 tw:lg:h-[871.5px]
+            tw:lg:flex-row tw:lg:items-end tw:lg:justify-center tw:lg:gap-6 tw:max-md:w-full tw:max-md:h-auto
+            tw:max-md:min-h-48 tw:max-md:flex-row tw:max-md:items-end tw:max-md:justify-center tw:max-md:gap-6 tw:max-md:pt-6
+            tw:max-md:pb-3.5 tw:max-md:px-0 tw:max-md:m-0
+        ">
+            {legislatures.map((legislature, index) => (
+                <div class="
+                    rights-under-attack__column tw:flex tw:w-[113px] tw:flex-col tw:items-center tw:justify-end tw:gap-4 tw:py-4
+                    tw:max-md:w-18! tw:max-md:gap-[10.196px]! tw:max-md:py-[10.196px]! tw:max-md:px-0!
+                    tw:max-md:[&:nth-child(2)]:gap-[10.196px]! tw:max-md:[&:nth-child(2)]:py-[10.196px]!
+                    tw:max-md:[&:nth-child(2)]:px-0!
+                ">
+                    <div class={String.raw`
+                        rights-under-attack__tower tw:flex tw:w-[113px] tw:flex-col tw:items-center tw:justify-end tw:gap-2
+                        tw:max-md:w-18! tw:max-md:gap-[3.223px]! tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&]:gap-[3.223px]!
+                    `}>
+                        <div class={String.raw`
+                            rights-under-attack__value tw:flex tw:flex-col tw:items-center tw:gap-1 tw:max-md:h-auto tw:max-md:justify-center
+                            tw:max-md:gap-[1.622px]! tw:max-md:[&>span]:text-[12.727px]! tw:max-md:[&>span]:leading-[15.273px]!
+                            tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&]:h-auto
+                            tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&]:gap-[1.622px]!
+                            tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&_>_div]:gap-[3.244px]!
+                            tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&_>_div_>_span:first-child]:text-[22.909px]!
+                            tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&_>_div_>_span:first-child]:leading-[26.728px]!
+                            tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&_>_div_>_span:nth-child(2)]:w-[20.364px]!
+                            tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&_>_div_>_span:nth-child(2)]:h-[20.364px]!
+                            tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&_>_span]:text-[12.727px]!
+                            tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&_>_span]:leading-[15.273px]!
+                        `}>
+                            <div class="tw:flex tw:h-8 tw:items-center tw:justify-center tw:gap-2 tw:max-md:h-auto! tw:max-md:gap-[3.223px]!">
+                                <span class="
+                                    tw:text-4xl tw:font-bold tw:leading-[42px] tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75]
+                                    tw:max-md:text-[22.909px]! tw:max-md:leading-[26.728px]!
+                                ">
+                                    {legislature.unfavorable}
+                                </span>
+                                <span class="tw:relative tw:block tw:size-8 tw:rounded-full tw:max-md:w-[20.364px]! tw:max-md:h-[20.364px]! tw:max-md:aspect-[1/1]">
+                                    <img
+                                        class="tw:block tw:size-full tw:max-md:inset-0! tw:max-md:w-full! tw:max-md:h-full! tw:max-md:m-auto"
+                                        src={thumbsDown}
+                                        alt=""
+                                    />
+                                </span>
+                            </div>
+                            <span class="tw:text-xl tw:font-bold tw:leading-6 tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75]">
+                                Desfavoráveis
+                            </span>
+                        </div>
+                        <Papelada
+                            class={String.raw`
+                                rights-under-attack__papers tw:w-[92.5px] tw:max-md:h-auto!
+                                `}
+                            arrangement="pile"
+                            category="desfavoravel"
+                            size="a4"
+                            gap={gap}
+                            amount={legislature.unfavorable}
+                            alt={`${legislature.unfavorable} proposições desfavoráveis na ${legislature.number}ª Legislatura`}
+                        />
+                    </div>
+                    <div class={String.raw`
+                        rights-under-attack__caption tw:flex tw:h-16 tw:w-[113px] tw:flex-col tw:items-center tw:justify-center tw:py-2
+                        tw:max-md:w-18! tw:max-md:h-auto! tw:max-md:justify-end! tw:max-md:gap-[10.169px]! tw:max-md:py-[10.169px]!
+                        tw:max-md:px-0! tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&]:h-auto!
+                        tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&]:gap-[10.169px]!
+                        tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&]:py-[10.169px]!
+                        tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&]:px-0!
+                        tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&_>_span:first-child]:text-[12.75px]!
+                        tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&_>_span:first-child]:leading-[15.295px]!
+                        tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&_>_span:last-child]:text-[10.169px]!
+                        tw:max-md:[.rights-under-attack\_\_column:nth-child(2)_&_>_span:last-child]:leading-[15.254px]!
+                    `}>
+                        <span class="tw:text-xl tw:font-bold tw:leading-6 tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75] tw:max-md:text-[12.71px]! tw:max-md:leading-[15.254px]!">
+                            {legislature.from} a {legislature.to}
+                            {index === legislatures.length - 1 ? "*" : ""}
+                        </span>
+                        <span class="tw:font-[Plus_Jakarta_Sans] tw:text-base tw:leading-6 tw:max-md:text-[10.169px]! tw:max-md:leading-[15.254px]!">
+                            {legislature.number}ª Legislatura
+                        </span>
+                    </div>
+                </div>
+            ))}
+        </figure>
+
+        <a
+            href="https://azmina.com.br/reportagens/ataques-direitos-lgbtqia-aborto-congresso/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="
+                rights-under-attack__note--mobile tw:cursor-pointer tw:no-underline tw:max-md:flex tw:max-md:w-[227.492px]
+                tw:max-md:h-[181px] tw:max-md:items-center tw:max-md:justify-center tw:max-md:gap-2
+                tw:max-md:[transform:rotate(-5deg)] tw:max-md:bg-[#ff808a] tw:max-md:shadow-[0_4px_0_#0b0f5e] tw:max-md:text-ink
+                tw:max-md:flex-col tw:max-md:font-sans tw:max-md:text-center tw:max-md:py-12 tw:max-md:px-6 tw:max-md:mt-3
+                tw:max-md:mb-6 tw:max-md:mx-auto tw:max-md:[&_p]:text-sm tw:max-md:[&_p]:font-bold tw:max-md:[&_p]:leading-6
+                tw:max-md:[&_p]:m-0 tw:max-md:[&_span]:text-sm tw:max-md:[&_span]:leading-4 tw:md:hidden
+            "
+            aria-label="Contexto"
+        >
+            <p>
+                Em 2023 começou o mandato da bancada mais conservadora desde
+                1964
+            </p>
+            <span>Ler mais →</span>
+        </a>
+
+        <footer class="
+            tw:relative tw:flex tw:w-full tw:flex-col tw:gap-3 tw:border-t tw:border-[#0B0F5E] tw:pt-2
+            tw:font-[Plus_Jakarta_Sans] tw:text-sm tw:leading-4 tw:lg:block tw:lg:h-[74.972px] tw:max-md:static
+            tw:max-md:w-[min(251px,_100%)] tw:max-md:h-24 tw:max-md:flex tw:max-md:flex-col tw:max-md:items-center
+            tw:max-md:gap-6 tw:max-md:pt-2 tw:max-md:text-center tw:max-md:my-0 tw:max-md:mx-auto
+        ">
+            <div class="tw:flex tw:h-[26.972px] tw:items-center tw:gap-2 tw:lg:absolute tw:lg:left-0 tw:lg:top-3 tw:max-md:hidden">
+                <span class="tw:flex tw:h-[26.972px] tw:w-[20.154px] tw:items-center tw:justify-center">
+                    <img
+                        class="tw:h-[25.5px] tw:w-[18px] tw:rotate-[5deg] tw:border-[0.5px] tw:border-[#4242F6] tw:object-cover"
+                        src="/assets/images/papelada/proposicao-desfavoravel-9-192w.png"
+                        alt=""
+                    />
+                </span>
+                <span>Cada folha representa 1 proposição</span>
+            </div>
+            <span class="
+                tw:lg:absolute tw:lg:left-0 tw:lg:top-[54.972px] tw:max-md:flex tw:max-md:w-full tw:max-md:h-10
+                tw:max-md:items-center tw:max-md:justify-center tw:max-md:box-border tw:max-md:text-sm tw:max-md:leading-4
+                tw:max-md:py-1 tw:max-md:px-0
+            ">
+                *Foram avaliadas proposições até março de 2026
+            </span>
+            <span
+                class="
+                    tw:h-3 tw:w-[113.217px] tw:self-end tw:bg-[#0B0F5E] tw:lg:absolute tw:lg:right-0 tw:lg:top-2
+                    tw:max-md:w-[113.217px] tw:max-md:h-6 tw:max-md:self-center tw:max-md:box-border tw:max-md:py-1.5 tw:max-md:px-0
+                "
+                style="mask: url('/assets/images/logo-header.svg') center / contain no-repeat; -webkit-mask: url('/assets/images/logo-header.svg') center / contain no-repeat;"
+                role="img"
+                aria-label="Elas no Congresso"
+            ></span>
+        </footer>
+
+        <a
+            href="https://azmina.com.br/reportagens/ataques-direitos-lgbtqia-aborto-congresso/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="
+                rights-under-attack__note--desktop tw:mx-auto tw:mt-0 tw:flex tw:h-[180px] tw:w-60 tw:rotate-[-5deg]
+                tw:cursor-pointer tw:flex-col tw:items-center tw:justify-center tw:gap-2 tw:bg-[#FF808A] tw:px-6 tw:py-12
+                tw:text-center tw:no-underline tw:shadow-[0_4px_0_#0B0F5E] tw:lg:absolute tw:lg:right-[-15.775px]
+                tw:lg:bottom-[173.268px] tw:lg:mt-0 tw:max-md:hidden
+            "
+            aria-label="Contexto"
+        >
+            <p class="tw:m-0 tw:w-48 tw:text-lg tw:font-bold tw:leading-6">
+                Em 2023 começou o mandato da bancada mais conservadora desde
+                1964
+            </p>
+            <span class="tw:w-48 tw:font-[Plus_Jakarta_Sans] tw:text-sm tw:leading-4">
+                Ler mais →
+            </span>
+        </a>
+    </div>
+</section>
+
+

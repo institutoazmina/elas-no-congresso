@@ -1,0 +1,22 @@
+---
+import StanceSelect from "./StanceSelect";
+const thumbsDown = "/assets/images/thumbs-down.svg";
+const thumbsUp = "/assets/images/thumbs-up.svg";
+const chevron = "/assets/images/party-chart/chevron.svg";
+import type { Stance } from "../../service/api/stats";
+
+interface Props {
+    /** texto exibido em cada estado, ex.: `{ unfavorable: "Atacado", favorable: "Defendido" }` */
+    labels: Record<Stance, string>;
+}
+
+const { labels } = Astro.props;
+---
+
+<StanceSelect
+    client:load
+    labels={labels}
+    thumbsDownSrc={thumbsDown}
+    thumbsUpSrc={thumbsUp}
+    chevronSrc={chevron}
+/>

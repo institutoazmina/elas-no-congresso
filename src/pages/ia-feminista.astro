@@ -1,14 +1,13 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import RedesignHeader from "../components/redesign/RedesignHeader.astro";
-import RedesignFooter from "../components/redesign/RedesignFooter.astro";
-import heroIllustration from "../../public/assets/images/quiteria.png";
-import fluxoProcessamento from "../assets/images/redesign/ia-feminista/fluxo-processamento.svg";
-import fluxoProcessamentoMobile from "../assets/images/redesign/ia-feminista/fluxo-processamento-mobile.png";
-import attention from "../assets/images/redesign/hero/attention.svg";
-import halftoneShadow from "../assets/images/redesign/hero/halftone-shadow.png";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+const heroIllustration = "/assets/images/quiteria.png";
+const fluxoProcessamento = "/assets/images/ia-feminista/fluxo-processamento.svg";
+const fluxoProcessamentoMobile = "/assets/images/ia-feminista/fluxo-processamento-mobile.png";
+const attention = "/assets/images/activity/attention.svg";
+const halftoneShadow = "/assets/images/hero/halftone-shadow.png";
 import "../styles/tailwind.css";
-import "../styles/redesign-shared-background.css";
 
 const categories = [
     [
@@ -170,6 +169,7 @@ const thematicPartitions = [
 <!doctype html>
 <html lang="pt-BR">
     <head>
+        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>IA Feminista | Elas no Congresso</title>
@@ -188,30 +188,30 @@ const thematicPartitions = [
         />
         <ClientRouter fallback="swap" />
     </head>
-    <body class="tw:!pt-0 tw:!bg-white">
-        <div class="ia-page ia-feminista-page">
-            <RedesignHeader />
+    <body class="tw:!pt-0 tw:!bg-white tw:m-0">
+        <div class="ia-page ia-feminista-page tw:text-ink tw:font-sans tw:text-lg tw:leading-[29.7px]  tw:[&_h1]:font-display tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:uppercase tw:[&_h2]:font-display tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:uppercase tw:[&_h3]:font-display tw:[&_h3]:font-bold tw:[&_h3]:[font-variation-settings:'wdth'_75] tw:[&_h3]:uppercase tw:[&_h4]:font-display tw:[&_h4]:font-bold tw:[&_h4]:[font-variation-settings:'wdth'_75] tw:[&_h4]:uppercase tw:max-md:[&_.ia-wide_h3]:text-[28px] tw:max-md:[&_.ia-wide_h3]:leading-8 tw:max-md:[&_.ia-wide_h3]:pt-[12.8px] tw:max-md:[&_.ia-wide_h3]:m-0">
+            <Header />
             <main>
                 <section
-                    class="ia-hero redesign-shared-background"
+                    class="ia-hero site-shared-background tw:flex tw:items-start tw:justify-start tw:min-h-113 tw:flex-col tw:h-125 tw:overflow-hidden tw:relative tw:p-0 tw:[&_h1]:text-7xl tw:[&_h1]:leading-18 tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:text-ink tw:[&_h1]:font-bold tw:[&_h1]:tracking-normal tw:[&_h1]:mix-blend-multiply tw:[&_h1]:whitespace-nowrap tw:[&_h1]:w-[681px] tw:[&_h1]:m-0 tw:[&_p]:font-bold tw:[&_p]:leading-6 tw:[&_p]:w-160 tw:max-[901px]:flex-col tw:max-[901px]:items-start tw:max-[901px]:h-152.5 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:max-[901px]:[&_p]:w-full tw:max-[901px]:[&_h1]:text-[52px] tw:max-[901px]:[&_h1]:leading-[56px] tw:max-[901px]:[&_h1]:w-full tw:max-[901px]:[&_h1]:whitespace-normal tw:max-[561px]:[&_h1]:text-[40px] tw:max-[561px]:[&_h1]:leading-[44px] tw:max-md:h-auto tw:max-md:min-h-0 tw:max-md:overflow-hidden tw:max-md:justify-start tw:max-md:pt-6 tw:max-md:pb-12 tw:max-md:px-6 tw:[&_i]:h-2 tw:[&_i]:mb-6 tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
                     data-page-hero
                     aria-labelledby="ia-hero-title"
-                    style={`--ia-hero-halftone-shadow: url(${halftoneShadow.src})`}
+                    style={`--ia-hero-halftone-shadow: url(${halftoneShadow})`}
                 >
-                    <div class="ia-hero__top-row">
-                        <div class="ia-hero__copy">
+                    <div class="ia-hero__top-row tw:items-center tw:flex tw:flex-[0_0_476px] tw:h-119 tw:justify-between tw:w-full tw:z-2 tw:relative tw:p-12 tw:max-[901px]:basis-146.5 tw:max-[901px]:h-146.5 tw:max-[901px]:w-full tw:max-md:flex-none tw:max-md:h-auto tw:max-md:flex-col tw:max-md:items-start tw:max-md:justify-start tw:max-md:gap-3 tw:max-md:p-0">
+                        <div class="ia-hero__copy tw:items-start tw:flex tw:flex-none tw:flex-col tw:gap-6 tw:justify-center tw:max-w-240 tw:min-w-0 tw:w-[681px] tw:[&>p]:text-ink tw:[&>p]:font-sans tw:[&>p]:text-lg tw:[&>p]:font-medium tw:[&>p]:tracking-normal tw:[&>p]:leading-6 tw:[&>p]:mix-blend-multiply tw:[&>p]:w-160 tw:[&>p]:m-0 tw:max-[901px]:w-full tw:max-[901px]:[&>p]:w-full tw:max-md:w-full tw:max-md:max-w-full tw:max-md:gap-3">
                             <img
-                                class="ia-hero__attention"
-                                src={attention.src}
+                                class="ia-hero__attention tw:block tw:h-2 tw:w-24 tw:max-md:w-8 tw:max-md:h-1 tw:max-md:m-0"
+                                src={attention}
                                 alt=""
                             />
-                            <h1 id="ia-hero-title">
-                                <span class="hero__title-narrow">
+                            <h1 class="tw:max-md:text-[32px]! tw:max-md:leading-8! tw:max-md:w-full tw:max-md:max-w-60 tw:max-md:whitespace-normal" id="ia-hero-title">
+                                <span class="hero__title-narrow tw:[font-variation-settings:'wdth'_60] tw:font-normal">
                                     Quem foi{" "}
                                 </span>
-                                <strong>Maria Quitéria?</strong>
+                                <strong class="tw:[font-variation-settings:'wdth'_75] tw:max-md:whitespace-nowrap">Maria Quitéria?</strong>
                             </h1>
-                            <p>
+                            <p class="tw:max-md:max-w-80 tw:max-md:w-full tw:max-md:text-lg tw:max-md:font-medium tw:max-md:leading-6 tw:max-md:pt-[5px] tw:max-md:pb-0">
                                 O nome da ferramenta homenageia a heroína baiana
                                 Maria Quitéria de Jesus (1792–1853), primeira
                                 mulher a integrar o Exército Brasileiro. Em
@@ -223,27 +223,27 @@ const thematicPartitions = [
                                 legislativa.
                             </p>
                         </div>
-                        <div class="ia-hero__art">
-                            <div class="ia-hero__illustration">
-                                <div class="ia-hero__illustration-inner">
+                        <div class="ia-hero__art tw:items-center tw:flex tw:flex-none tw:h-95 tw:justify-center tw:absolute tw:w-145 tw:bottom-6 tw:overflow-visible tw:right-12 tw:p-2.5 tw:max-md:hidden">
+                            <div class="ia-hero__illustration tw:h-auto tw:w-125">
+                                <div class="ia-hero__illustration-inner tw:h-125 tw:absolute tw:-bottom-12.5 tw:right-[30%] tw:w-auto tw:[&>img]:object-contain tw:[&>img]:h-full tw:[&>img]:w-auto">
                                     <img
-                                        src={heroIllustration.src}
+                                        src={heroIllustration}
                                         alt="Ilustração de Maria Quitéria"
                                     />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="ia-hero__shadow" aria-hidden="true"></div>
+                    <div class="ia-hero__shadow tw:bottom-0 tw:flex-[0_0_24px] tw:h-6 tw:left-0 tw:absolute tw:w-full tw:z-3 tw:bg-[image:var(--ia-hero-halftone-shadow)] tw:bg-bottom-left tw:bg-repeat-x tw:bg-size-[1440px_24px] tw:block tw:mix-blend-multiply tw:pointer-events-none tw:max-[901px]:basis-6 tw:max-md:absolute tw:max-md:bottom-0 tw:max-md:left-0 tw:max-md:h-6 tw:max-md:w-full" aria-hidden="true"></div>
                 </section>
-                <section class="ia-section ia-differential">
-                    <header>
-                        <i></i>
-                        <h2>Diferencial tecnológico</h2>
+                <section class="ia-section ia-differential tw:flex tw:flex-col tw:gap-7 tw:py-16 tw:px-12 tw:[&_h2]:text-4xl tw:[&_h2]:leading-[42px] tw:[&_h2]:m-0 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:max-md:gap-[27.2px] tw:max-md:py-16 tw:max-md:px-6 tw:[&:has(>_.ia-wide)]:gap-[27.2px] tw:[&:has(>_.ia-wide)_>_.ia-wide]:contents tw:[&:has(>_.ia-wide)_.ia-wide_h3]:self-stretch tw:[&:has(>_.ia-wide)_.ia-wide_h3]:font-display tw:[&:has(>_.ia-wide)_.ia-wide_h3]:text-[28px] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:not-italic tw:[&:has(>_.ia-wide)_.ia-wide_h3]:font-bold tw:[&:has(>_.ia-wide)_.ia-wide_h3]:[font-variation-settings:'wdth'_75] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:leading-8 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:uppercase tw:[&:has(>_.ia-wide)_.ia-wide_h3]:w-full tw:[&:has(>_.ia-wide)_.ia-wide_h3]:pt-[12.8px] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:pb-0 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:px-0 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:m-0 tw:[&:has(>_.ia-wide)_.ia-wide_table]:w-336 tw:[&:has(>_.ia-wide)_.ia-wide_table]:mt-[4.8px] tw:[&:has(>_.ia-wide)_.ia-wide_table]:mb-0 tw:[&:has(>_.ia-wide)_.ia-wide_table]:mx-auto tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:text-[var(--Arapawa,_var(--color-blue-21,_#0b0f5e))] tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:font-display tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:text-lg tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:not-italic tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:font-light tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:[font-variation-settings:'wdth'_100] tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:tracking-normal tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:leading-normal tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:uppercase">
+                    <header class="tw:w-205 tw:m-auto tw:max-[901px]:w-full tw:max-md:w-full tw:max-md:m-0">
+                        <i class="tw:block tw:w-24 tw:h-1 tw:bg-ink tw:mb-4"></i>
+                        <h2 class="tw:max-md:text-4xl tw:max-md:leading-[42px]">Diferencial tecnológico</h2>
                     </header>
-                    <div class="ia-narrow">
-                        <div class="ia-differential__content">
-                            <p>
+                    <div class="ia-narrow tw:w-205 tw:flex tw:flex-col tw:gap-[19.2px] tw:m-auto tw:[&_h3]:text-[32px] tw:[&_h3]:leading-8 tw:[&_h3]:m-0 tw:max-md:[&_h3]:text-[28px] tw:[&_h5]:text-lg tw:[&_h5]:leading-[29.7px] tw:[&_h5]:mt-0 tw:[&_h5]:mb-1 tw:[&_h5]:mx-0 tw:[&_a]:text-accent tw:[&_a]:font-normal tw:[&_a]:no-underline tw:max-[901px]:w-full tw:min-[901px]:contents tw:max-md:w-full tw:max-md:gap-[19.2px] tw:max-md:m-0 tw:[&_li:before]:[content:'→'] tw:[&_li:before]:absolute tw:[&_li:before]:left-0 tw:[.ia-section:has(>_.ia-wide)_>_&]:h-102 tw:max-[901px]:[.ia-section:has(>_.ia-wide)_>_&]:h-auto">
+                        <div class="ia-differential__content tw:min-[901px]:flex tw:min-[901px]:flex-col tw:min-[901px]:gap-[19.2px] tw:min-[901px]:w-205 tw:min-[901px]:my-0 tw:min-[901px]:mx-auto tw:min-[901px]:[&>p]:leading-6 tw:contents tw:max-md:flex tw:max-md:flex-col tw:max-md:gap-[19.2px] tw:max-md:w-full">
+                            <p class="tw:max-md:text-lg! tw:max-md:leading-6">
                                 Diferente das IAs genéricas, treinadas com dados
                                 indeterminados da internet, a QuitérIA parte de
                                 um modelo de linguagem pré-treinado em português
@@ -252,7 +252,7 @@ const thematicPartitions = [
                                 avaliação humana de projetos de lei sensíveis a
                                 gênero na Câmara e no Senado.
                             </p>
-                            <p>
+                            <p class="tw:max-md:text-lg! tw:max-md:leading-6">
                                 O foco estratégico está no Processamento de
                                 Linguagem Natural (PLN) aplicado tanto às
                                 ementas quanto ao inteiro teor das matérias,
@@ -260,7 +260,7 @@ const thematicPartitions = [
                                 direitos sexuais e reprodutivos e igualdade no
                                 trabalho.
                             </p>
-                            <p>
+                            <p class="tw:max-md:text-lg! tw:max-md:leading-6">
                                 A escolha por modelos compactos e
                                 especializados, em vez de Large Language Models
                                 (LLMs), alia eficiência e soberania tecnológica:
@@ -268,32 +268,32 @@ const thematicPartitions = [
                                 poder computacional, garantem maior autonomia
                                 operacional e facilitam futuros retreinamentos.
                             </p>
-                            <h3 class="ia-flow__eyebrow">Veja como funciona</h3>
-                            <div class="ia-flow ia-flow--desktop">
-                                <img
-                                    src={fluxoProcessamento.src}
+                            <h3 class="ia-flow__eyebrow tw:min-[901px]:text-[28px]! tw:min-[901px]:leading-8! tw:min-[901px]:pt-[12.8px] tw:min-[901px]:m-0! tw:max-md:text-[28px]! tw:max-md:leading-8! tw:max-md:pt-[12.8px] tw:max-md:m-0!">Veja como funciona</h3>
+                            <div class="ia-flow ia-flow--desktop tw:w-full tw:max-md:hidden">
+                                <img class="tw:block tw:h-auto tw:max-w-full tw:w-205 tw:my-0 tw:mx-auto"
+                                    src={fluxoProcessamento}
                                     alt="Fluxo de processamento da QuitérIA em cinco etapas"
                                 />
                             </div>
-                            <div class="ia-flow ia-flow--mobile">
-                                <img
-                                    src={fluxoProcessamentoMobile.src}
-                                    width={fluxoProcessamentoMobile.width}
-                                    height={fluxoProcessamentoMobile.height}
-                                    style={`max-width:${fluxoProcessamentoMobile.width}px`}
+                            <div class="ia-flow ia-flow--mobile tw:w-full tw:hidden tw:max-md:flex tw:max-md:w-83 tw:max-md:max-w-[calc(100vw_-_43px)] tw:max-md:mx-auto tw:max-md:bg-white tw:max-md:flex-col tw:max-md:justify-center tw:max-md:items-center tw:max-md:overflow-hidden tw:max-md:pt-10">
+                                <img class="tw:block tw:h-auto tw:max-w-full tw:w-205 tw:my-0 tw:mx-auto tw:max-md:w-full tw:max-md:h-auto tw:max-md:block tw:max-md:m-0"
+                                    src={fluxoProcessamentoMobile}
+                                    width={524}
+                                    height={574}
+                                    style={`max-width:${524}px`}
                                     alt="Fluxo de processamento da QuitérIA em cinco etapas"
                                 />
                             </div>
                         </div>
-                        <header>
-                            <h3 class="ia-architecture__title">
+                        <header class="tw:w-205 tw:m-auto tw:max-[901px]:w-full tw:max-md:w-full tw:max-md:m-0">
+                            <h3 class="ia-architecture__title tw:min-[901px]:text-[32px] tw:min-[901px]:leading-8 tw:min-[901px]:mb-0 tw:min-[901px]:mt-0 tw:min-[901px]:min-h-10 tw:min-[901px]:pt-3 tw:max-md:text-[32px] tw:max-md:leading-8 tw:max-md:pt-[12.8px] tw:max-md:m-0">
                                 Arquitetura dos modelos
                             </h3>
                         </header>
-                        <div class="ia-cards ia-architecture__cards">
-                            <article>
+                        <div class="ia-cards ia-architecture__cards tw:flex tw:gap-6 tw:pt-1 tw:[&_h4]:text-2xl tw:[&_h4]:leading-8 tw:[&_h4]:m-0 tw:[&_p]:text-base tw:[&_p]:leading-6 tw:[&_p]:mt-3.5 tw:[&_b]:font-display tw:[&_b]:[font-variation-settings:'wdth'_75] tw:[&_b]:text-lg tw:[&_b]:leading-6 tw:[&_b]:mt-auto tw:[&_b]:uppercase tw:[&_small]:text-muted tw:[&_small]:text-sm tw:[&_small]:leading-[23.1px] tw:max-[901px]:flex-col tw:ml-auto tw:mr-auto tw:max-w-205 tw:w-full tw:min-[901px]:h-[271px] tw:min-[901px]:pt-1 tw:max-md:flex-col tw:max-md:gap-6 tw:max-md:w-full tw:max-md:max-w-83 tw:max-md:pt-1 tw:max-md:my-0 tw:max-md:mx-auto">
+                            <article class="tw:border-[2px] tw:border-solid tw:border-ink tw:flex-1 tw:min-h-[255px] tw:flex tw:flex-col tw:py-7.5 tw:px-6.5 tw:min-[901px]:h-[267px] tw:min-[901px]:min-h-0 tw:max-md:w-full tw:max-md:min-h-0 tw:max-md:h-auto">
                                 <h4>Modelo de Desfavorabilidade</h4>
-                                <p>
+                                <p class="tw:max-md:text-lg! tw:max-md:leading-6">
                                     Principal modelo da ferramenta. Baseado no
                                     BERTimbau Base, adaptado ao português
                                     brasileiro, com uma camada adicional de
@@ -304,9 +304,9 @@ const thematicPartitions = [
                                     na avaliação de matérias de gênero
                                 </small>
                             </article>
-                            <article>
+                            <article class="tw:border-[2px] tw:border-solid tw:border-ink tw:flex-1 tw:min-h-[255px] tw:flex tw:flex-col tw:py-7.5 tw:px-6.5 tw:min-[901px]:h-[267px] tw:min-[901px]:min-h-0 tw:max-md:w-full tw:max-md:min-h-0 tw:max-md:h-auto">
                                 <h4>Modelo de Temas</h4>
-                                <p>
+                                <p class="tw:max-md:text-lg! tw:max-md:leading-6">
                                     Mesma estratégia do modelo anterior, com o
                                     desafio adicional de classificação{" "}
                                     <em>multi-label</em>, cobrindo dez temas
@@ -316,23 +316,23 @@ const thematicPartitions = [
                         </div>
                     </div>
                 </section>
-                <section class="ia-section ia-section--border ia-categories">
-                    <header>
-                        <i></i>
-                        <h2>feminismo de dados e treinamento ético</h2>
+                <section class="ia-section ia-section--border ia-categories tw:flex tw:flex-col tw:py-16 tw:px-12 tw:[&_h2]:text-4xl tw:[&_h2]:leading-[42px] tw:[&_h2]:m-0 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:border-t-[2px] tw:border-solid tw:border-t-[rgba(66,_66,_246,_0.06)] tw:pt-16.5 tw:gap-[27.2px] tw:pb-16 tw:max-md:gap-[27.2px] tw:max-md:pt-16.5 tw:max-md:pb-16 tw:max-md:px-6 tw:[&:has(>_.ia-wide)]:gap-[27.2px] tw:[&:has(>_.ia-wide)_>_.ia-wide]:contents tw:[&:has(>_.ia-wide)_.ia-wide_h3]:self-stretch tw:[&:has(>_.ia-wide)_.ia-wide_h3]:font-display tw:[&:has(>_.ia-wide)_.ia-wide_h3]:text-[28px] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:not-italic tw:[&:has(>_.ia-wide)_.ia-wide_h3]:font-bold tw:[&:has(>_.ia-wide)_.ia-wide_h3]:[font-variation-settings:'wdth'_75] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:leading-8 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:uppercase tw:[&:has(>_.ia-wide)_.ia-wide_h3]:w-full tw:[&:has(>_.ia-wide)_.ia-wide_h3]:pt-[12.8px] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:pb-0 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:px-0 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:m-0 tw:[&:has(>_.ia-wide)_.ia-wide_table]:w-336 tw:[&:has(>_.ia-wide)_.ia-wide_table]:mt-[4.8px] tw:[&:has(>_.ia-wide)_.ia-wide_table]:mb-0 tw:[&:has(>_.ia-wide)_.ia-wide_table]:mx-auto tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:text-[var(--Arapawa,_var(--color-blue-21,_#0b0f5e))] tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:font-display tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:text-lg tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:not-italic tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:font-light tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:[font-variation-settings:'wdth'_100] tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:tracking-normal tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:leading-normal tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:uppercase">
+                    <header class="tw:w-205 tw:m-auto tw:max-[901px]:w-full tw:max-md:w-full tw:max-md:m-0">
+                        <i class="tw:block tw:w-24 tw:h-1 tw:bg-ink tw:mb-4"></i>
+                        <h2 class="tw:max-md:text-4xl tw:max-md:leading-[42px]">feminismo de dados e treinamento ético</h2>
                     </header>
-                    <div class="ia-narrow">
-                        <p>
+                    <div class="ia-narrow tw:w-205 tw:flex tw:flex-col tw:gap-[19.2px] tw:m-auto tw:[&_h3]:text-[32px] tw:[&_h3]:leading-8 tw:[&_h3]:m-0 tw:max-md:[&_h3]:text-[28px] tw:[&_h5]:text-lg tw:[&_h5]:leading-[29.7px] tw:[&_h5]:mt-0 tw:[&_h5]:mb-1 tw:[&_h5]:mx-0 tw:[&_a]:text-accent tw:[&_a]:font-normal tw:[&_a]:no-underline tw:max-[901px]:w-full tw:h-102 tw:max-[901px]:h-auto tw:max-md:w-full tw:max-md:gap-[19.2px] tw:max-md:h-auto tw:max-md:m-0 tw:[&_li:before]:[content:'→'] tw:[&_li:before]:absolute tw:[&_li:before]:left-0 tw:[.ia-section:has(>_.ia-wide)_>_&]:h-102 tw:max-[901px]:[.ia-section:has(>_.ia-wide)_>_&]:h-auto">
+                        <p class="tw:max-md:text-lg! tw:max-md:leading-6">
                             A QuitérIA aplica na prática os princípios do
                             Feminismo de Dados e, como integrante da Rede
                             Feminista de Inteligência Artificial da América
                             Latina e do Caribe,{" "}
-                            <a href="https://iafeminista.lat/declaracion-de-principios/">
+                            <a class="tw:underline tw:font-normal" href="https://iafeminista.lat/declaracion-de-principios/">
                                 reconhece e adota sua declaração de princípios
                             </a>
                             .
                         </p>
-                        <p>
+                        <p class="tw:max-md:text-lg! tw:max-md:leading-6">
                             Na prática, a IA faz a triagem, classifica as
                             proposições por categoria e calcula uma pontuação de
                             desfavorabilidade de 0 a 1. Mas nunca opera de forma
@@ -342,34 +342,30 @@ const thematicPartitions = [
                             retroalimentam o sistema em ciclos contínuos de
                             readequação e retreinamento.
                         </p>
-                        <p>
+                        <p class="tw:max-md:text-lg! tw:max-md:leading-6">
                             Esse processo prevê retreinamentos periódicos.{" "}
                             <b>Atualmente estamos no segundo ciclo.</b> A cada
                             ciclo, novas proposições são avaliadas e o modelo é
                             atualizado com os ajustes feitos pela equipe humana.
                         </p>
                     </div>
-                    <h3 class="ia-categories__title">
+                    <h3 class="ia-categories__title tw:self-stretch tw:text-ink tw:font-display tw:text-[28px] tw:not-italic tw:font-bold tw:[font-stretch:normal] tw:[font-variation-settings:'wdth'_75] tw:leading-8 tw:pt-[12.8px] tw:uppercase tw:w-full tw:m-0 tw:max-md:text-[28px] tw:max-md:leading-8">
                         As dez categorias temáticas
                     </h3>
-                    <div class="ia-categories__table">
-                        <table>
+                    <div class="ia-categories__table tw:self-stretch tw:pt-[4.8px] tw:w-full tw:max-[901px]:overflow-auto tw:max-md:overflow-x-auto tw:max-md:[-webkit-overflow-scrolling:touch] tw:max-md:w-full">
+                        <table class="tw:border-collapse tw:w-full tw:text-base tw:leading-[24.8px] tw:table-fixed tw:m-0 tw:max-[901px]:min-w-205 tw:max-md:min-w-[947px]">
                             <thead>
-                                <tr>
-                                    <th>Categoria</th>
-                                    <th>Conceito</th>
+                                <tr class="tw:h-12">
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-left tw:[vertical-align:top] tw:[font-family:Anybody,sans-serif] tw:font-[300] tw:uppercase tw:text-ink tw:text-lg tw:not-italic tw:[font-stretch:normal] tw:[font-variation-settings:'wdth'_100] tw:tracking-normal tw:[line-height:normal] tw:whitespace-nowrap tw:w-[407.44px] tw:pt-3.5 tw:pb-[15px] tw:px-5">Categoria</th>
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-left tw:[vertical-align:top] tw:[font-family:Anybody,sans-serif] tw:font-[300] tw:uppercase tw:text-ink tw:text-lg tw:not-italic tw:[font-stretch:normal] tw:[font-variation-settings:'wdth'_100] tw:tracking-normal tw:[line-height:normal] tw:whitespace-nowrap tw:w-[936.56px] tw:pt-3.5 tw:pb-[15px] tw:px-5">Conceito</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {categories.map(([name, text]) => (
-                                    <tr>
-                                        <th>{name}</th>
+                                    <tr class="tw:even:bg-accent/[0.06]">
+                                        <th class="tw:border-b tw:border-solid tw:border-b-[rgba(66,_66,_246,_0.25)] tw:text-left tw:[vertical-align:top] tw:font-bold tw:w-[30.3%] tw:py-4 tw:px-5">{name}</th>
                                         <td
-                                            class={
-                                                text === "[A produzir]"
-                                                    ? "pending"
-                                                    : ""
-                                            }
+                                            class:list={["tw:border-b tw:border-accent/25 tw:px-5 tw:py-4 tw:text-left tw:align-top", {"tw:text-muted tw:italic": text === "[A produzir]"}]}
                                         >
                                             {text}
                                         </td>
@@ -379,13 +375,13 @@ const thematicPartitions = [
                         </table>
                     </div>
                 </section>
-                <section class="ia-section ia-section--border ia-governance">
-                    <header>
-                        <i></i>
-                        <h2>Governança humana e transparência</h2>
+                <section class="ia-section ia-section--border ia-governance tw:flex tw:flex-col tw:gap-7 tw:py-16 tw:px-12 tw:[&_h2]:text-4xl tw:[&_h2]:leading-[42px] tw:[&_h2]:m-0 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:border-t-[2px] tw:border-solid tw:border-t-[rgba(66,_66,_246,_0.06)] tw:pt-16.5 tw:max-md:gap-[27.2px] tw:max-md:pt-16.5 tw:max-md:pb-16 tw:max-md:px-6 tw:[&:has(>_.ia-wide)]:gap-[27.2px] tw:[&:has(>_.ia-wide)_>_.ia-wide]:contents tw:[&:has(>_.ia-wide)_.ia-wide_h3]:self-stretch tw:[&:has(>_.ia-wide)_.ia-wide_h3]:font-display tw:[&:has(>_.ia-wide)_.ia-wide_h3]:text-[28px] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:not-italic tw:[&:has(>_.ia-wide)_.ia-wide_h3]:font-bold tw:[&:has(>_.ia-wide)_.ia-wide_h3]:[font-variation-settings:'wdth'_75] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:leading-8 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:uppercase tw:[&:has(>_.ia-wide)_.ia-wide_h3]:w-full tw:[&:has(>_.ia-wide)_.ia-wide_h3]:pt-[12.8px] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:pb-0 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:px-0 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:m-0 tw:[&:has(>_.ia-wide)_.ia-wide_table]:w-336 tw:[&:has(>_.ia-wide)_.ia-wide_table]:mt-[4.8px] tw:[&:has(>_.ia-wide)_.ia-wide_table]:mb-0 tw:[&:has(>_.ia-wide)_.ia-wide_table]:mx-auto tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:text-[var(--Arapawa,_var(--color-blue-21,_#0b0f5e))] tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:font-display tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:text-lg tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:not-italic tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:font-light tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:[font-variation-settings:'wdth'_100] tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:tracking-normal tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:leading-normal tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:uppercase">
+                    <header class="tw:w-205 tw:m-auto tw:max-[901px]:w-full tw:max-md:w-full tw:max-md:m-0">
+                        <i class="tw:block tw:w-24 tw:h-1 tw:bg-ink tw:mb-4"></i>
+                        <h2 class="tw:max-md:text-4xl tw:max-md:leading-[42px]">Governança humana e transparência</h2>
                     </header>
-                    <div class="ia-narrow">
-                        <p>
+                    <div class="ia-narrow tw:w-205 tw:flex tw:flex-col tw:m-auto tw:[&_h3]:text-[32px] tw:[&_h3]:leading-8 tw:[&_h3]:m-0 tw:max-md:[&_h3]:text-[28px] tw:[&_h5]:text-lg tw:[&_h5]:leading-[29.7px] tw:[&_h5]:mt-0 tw:[&_h5]:mb-1 tw:[&_h5]:mx-0 tw:[&_a]:text-accent tw:[&_a]:font-normal tw:[&_a]:no-underline tw:max-[901px]:w-full tw:gap-[15.3px] tw:max-md:w-full tw:max-md:gap-[15.3px] tw:max-md:m-0 tw:[.ia-section:has(>_.ia-wide)_>_&]:h-102 tw:max-[901px]:[.ia-section:has(>_.ia-wide)_>_&]:h-auto">
+                        <p class="tw:max-md:text-lg! tw:max-md:leading-6">
                             Infraestruturas de dados e sistemas de inteligência
                             artificial são, majoritariamente, orientados por
                             lógicas institucionais, corporativas ou opacas. A
@@ -393,7 +389,7 @@ const thematicPartitions = [
                             tecnologias a partir de uma perspectiva feminista e
                             voltada ao interesse público, concretizando, no
                             campo do monitoramento legislativo, os princípios da{" "}
-                            <a
+                            <a class="tw:underline tw:font-normal tw:text-accent tw:font-sans tw:text-lg tw:tracking-normal tw:leading-[29.7px] tw:[text-decoration-style:solid] tw:[text-underline-position:from-font] tw:hover:text-accent tw:hover:underline"
                                 href="https://azmina.com.br/revista-azmina/#uso-de-inteligencia-artificial"
                                 target="_blank"
                             >
@@ -404,7 +400,7 @@ const thematicPartitions = [
                             inegociável, o compromisso com a transparência e a
                             abertura de código sempre que possível.
                         </p>
-                        <p>
+                        <p class="tw:pt-[4.7px] tw:max-md:text-lg! tw:max-md:leading-6">
                             Por isso tornamos públicos não apenas os resultados
                             do monitoramento, mas também os processos, critérios
                             e metodologias usados na coleta, seleção e análise
@@ -418,69 +414,69 @@ const thematicPartitions = [
                             da IA também são públicos, permitindo escrutínio e
                             aperfeiçoamento contínuo.
                         </p>
-                        <h3>Duas instâncias de supervisão</h3>
-                        <div class="ia-cards">
-                            <article>
+                        <h3 class="tw:pt-[24.7px] tw:m-0 tw:max-md:text-[28px] tw:max-md:leading-8 tw:max-md:pt-[24.7px] tw:max-md:m-0">Duas instâncias de supervisão</h3>
+                        <div class="ia-cards tw:[&_p]:leading-[26.4px]! tw:[&_p]:m-0! tw:flex tw:gap-6 tw:[&_h4]:text-2xl tw:[&_h4]:leading-8 tw:[&_h4]:m-0 tw:[&_p]:text-base tw:[&_p]:leading-6 tw:[&_p]:mt-3.5 tw:[&_b]:font-display tw:[&_b]:[font-variation-settings:'wdth'_75] tw:[&_b]:text-lg tw:[&_b]:leading-6 tw:[&_b]:mt-auto tw:[&_b]:uppercase tw:[&_small]:text-muted tw:[&_small]:text-sm tw:[&_small]:leading-[23.1px] tw:max-[901px]:flex-col tw:pt-[8.7px] tw:max-md:flex tw:max-md:flex-row tw:max-md:gap-4 tw:max-md:overflow-x-auto tw:max-md:[scroll-snap-type:x_mandatory] tw:max-md:[-webkit-overflow-scrolling:touch] tw:max-md:pt-[8.7px] tw:max-md:w-full">
+                            <article class="tw:border-[2px] tw:border-solid tw:border-ink tw:flex-1 tw:min-h-0 tw:flex tw:flex-col tw:gap-[11px] tw:pt-7.5 tw:pb-[56.4px] tw:px-6.5 tw:max-md:flex-[0_0_85%] tw:max-md:[scroll-snap-align:start] tw:max-md:w-auto tw:max-md:min-h-0 tw:max-md:py-7.5 tw:max-md:px-6.5">
                                 <h4>Comitê de Governança</h4>
-                                <p>
+                                <p class="tw:text-base tw:leading-[26.4px] tw:pt-[2.085px] tw:m-0 tw:max-md:text-lg! tw:max-md:leading-6">
                                     Responsável pelas diretrizes estratégicas,
                                     aprovação de protocolos metodológicos,
                                     gestão de riscos tecnológicos e salvaguarda
                                     dos princípios éticos.
                                 </p>
-                                <small>
+                                <small class="tw:text-sm tw:font-normal tw:tracking-normal tw:leading-[23.1px] tw:mt-0">
                                     Atuação vigente de junho a setembro de 2026.
                                 </small>
                             </article>
-                            <article>
+                            <article class="tw:border-[2px] tw:border-solid tw:border-ink tw:flex-1 tw:min-h-0 tw:flex tw:flex-col tw:gap-[11px] tw:py-7.5 tw:px-6.5 tw:max-md:flex-[0_0_85%] tw:max-md:[scroll-snap-align:start] tw:max-md:w-auto tw:max-md:min-h-0 tw:max-md:py-7.5 tw:max-md:px-6.5">
                                 <h4>Comitê de Validação</h4>
-                                <p>
+                                <p class="tw:text-base tw:leading-[26.4px] tw:pt-[2.28px] tw:pb-[0.67px] tw:m-0 tw:max-md:text-lg! tw:max-md:leading-6">
                                     Instância técnica encarregada de auditar as
                                     classificações da IA, monitorar possíveis
                                     vieses tecnológicos, avaliar indicadores de
                                     desempenho e propor ajustes nos dados de
                                     treino.
                                 </p>
-                                <small>
+                                <small class="tw:text-sm tw:font-normal tw:tracking-normal tw:leading-[23.1px] tw:mt-0">
                                     Atuação vigente de agosto a setembro de
                                     2026.
                                 </small>
                             </article>
                         </div>
-                        <h3 class="ia-not-do__title">
+                        <h3 class="ia-not-do__title tw:items-start tw:flex tw:text-[28px]! tw:leading-8! tw:pt-[24.2px]! tw:whitespace-nowrap tw:m-0! tw:[&_span]:[background:linear-gradient(_104.044deg,_rgba(255,_88,_101,_0.25)_0%,_rgba(255,_88,_101,_0.5)_30%,_rgba(255,_88,_101,_0.5)_70%,_rgba(255,_88,_101,_0.25)_100%_)] tw:[&_span]:font-display tw:[&_span]:text-2xl tw:[&_span]:font-bold tw:[&_span]:[font-variation-settings:'wdth'_100] tw:[&_span]:leading-7 tw:[&_span]:ml-0 tw:[&_span]:uppercase tw:[&_span]:py-[0.5px] tw:[&_span]:px-2 tw:max-md:text-[28px]! tw:max-md:leading-8! tw:max-md:pt-[24.2px]! tw:max-md:whitespace-normal tw:max-md:m-0">
                             O que a QuitérIA&nbsp;
-                            <span>
+                            <span class="tw:max-md:text-2xl tw:max-md:leading-7">
                                 <strong>não faz</strong>
                             </span>
                         </h3>
-                        <p>
+                        <p class="tw:w-205 tw:m-0 tw:max-md:text-lg! tw:max-md:leading-6 tw:max-md:w-full">
                             O papel do sistema é apoiar a análise, a organização
                             e o monitoramento, e não automatizar decisões
                             políticas complexas. A QuitérIA:
                         </p>
-                        <ul class="ia-not-do__list">
-                            <li>
+                        <ul class="ia-not-do__list tw:flex tw:flex-col tw:h-[301.82px] tw:list-none tw:w-205 tw:m-0 tw:gap-[15px] tw:p-0 tw:mt-1 tw:mb-0 tw:mx-0 tw:max-md:w-full tw:max-md:h-auto">
+                            <li class="tw:pl-7 tw:relative tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:leading-[27.9px] tw:before:text-[#ff5865] tw:before:[content:'✕'] tw:before:font-bold tw:before:left-0 tw:before:leading-[27.9px] tw:before:absolute tw:before:top-4 tw:before:[transform:translateY(-50%)]">
                                 não substitui decisões humanas em temas
                                 políticos, jurídicos ou de direitos humanos;
                             </li>
-                            <li>
+                            <li class="tw:pl-7 tw:relative tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:leading-[27.9px] tw:before:text-[#ff5865] tw:before:[content:'✕'] tw:before:font-bold tw:before:left-0 tw:before:leading-[27.9px] tw:before:absolute tw:before:top-4 tw:before:[transform:translateY(-50%)]">
                                 não define sozinha, de forma definitiva, se uma
                                 proposta é favorável ou desfavorável;
                             </li>
-                            <li>
+                            <li class="tw:pl-7 tw:relative tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:leading-[27.9px] tw:before:text-[#ff5865] tw:before:[content:'✕'] tw:before:font-bold tw:before:left-0 tw:before:leading-[27.9px] tw:before:absolute tw:before:top-4 tw:before:[transform:translateY(-50%)]">
                                 não toma decisões de moderação sem supervisão
                                 nem atua como autoridade jurídica;
                             </li>
-                            <li>
+                            <li class="tw:pl-7 tw:relative tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:leading-[27.9px] tw:before:text-[#ff5865] tw:before:[content:'✕'] tw:before:font-bold tw:before:left-0 tw:before:leading-[27.9px] tw:before:absolute tw:before:top-4 tw:before:[transform:translateY(-50%)]">
                                 não invisibiliza divergências políticas
                                 legítimas;
                             </li>
-                            <li>
+                            <li class="tw:pl-7 tw:relative tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:leading-[27.9px] tw:before:text-[#ff5865] tw:before:[content:'✕'] tw:before:font-bold tw:before:left-0 tw:before:leading-[27.9px] tw:before:absolute tw:before:top-4 tw:before:[transform:translateY(-50%)]">
                                 não substitui a análise contextual
                                 especializada, e opera com transparência sobre
                                 suas limitações e margens de erro;
                             </li>
-                            <li>
+                            <li class="tw:pl-7 tw:relative tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:leading-[27.9px] tw:before:text-[#ff5865] tw:before:[content:'✕'] tw:before:font-bold tw:before:left-0 tw:before:leading-[27.9px] tw:before:absolute tw:before:top-4 tw:before:[transform:translateY(-50%)]">
                                 não reproduz vieses presentes nos dados
                                 legislativos ou nas anotações humanas sem
                                 mecanismos de auditoria e revisão crítica.
@@ -488,20 +484,20 @@ const thematicPartitions = [
                         </ul>
                     </div>
                 </section>
-                <section class="ia-section ia-section--border ia-performance">
-                    <header>
-                        <i></i>
-                        <h2>desempenho do modelo</h2>
+                <section class="ia-section ia-section--border ia-performance tw:flex tw:flex-col tw:py-16 tw:px-12 tw:[&_h2]:text-4xl tw:[&_h2]:leading-[42px] tw:[&_h2]:m-0 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:border-t-[2px] tw:border-solid tw:border-t-[rgba(66,_66,_246,_0.06)] tw:pt-16.5 tw:gap-0 tw:min-[901px]:gap-8 tw:min-[901px]:pt-16.5 tw:min-[901px]:pb-24 tw:min-[901px]:px-12 tw:max-md:gap-0 tw:max-md:pt-16.5 tw:max-md:pb-16 tw:max-md:px-6 tw:[&:has(>_.ia-wide)]:gap-[27.2px] tw:[&:has(>_.ia-wide)_>_.ia-wide]:contents tw:[&:has(>_.ia-wide)_.ia-wide_h3]:self-stretch tw:[&:has(>_.ia-wide)_.ia-wide_h3]:font-display tw:[&:has(>_.ia-wide)_.ia-wide_h3]:text-[28px] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:not-italic tw:[&:has(>_.ia-wide)_.ia-wide_h3]:font-bold tw:[&:has(>_.ia-wide)_.ia-wide_h3]:[font-variation-settings:'wdth'_75] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:leading-8 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:uppercase tw:[&:has(>_.ia-wide)_.ia-wide_h3]:w-full tw:[&:has(>_.ia-wide)_.ia-wide_h3]:pt-[12.8px] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:pb-0 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:px-0 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:m-0 tw:[&:has(>_.ia-wide)_.ia-wide_table]:w-336 tw:[&:has(>_.ia-wide)_.ia-wide_table]:mt-[4.8px] tw:[&:has(>_.ia-wide)_.ia-wide_table]:mb-0 tw:[&:has(>_.ia-wide)_.ia-wide_table]:mx-auto tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:text-[var(--Arapawa,_var(--color-blue-21,_#0b0f5e))] tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:font-display tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:text-lg tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:not-italic tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:font-light tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:[font-variation-settings:'wdth'_100] tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:tracking-normal tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:leading-normal tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:uppercase tw:[&_.placeholder]:h-[281px] tw:[&_.placeholder]:w-336 tw:[&_.placeholder]:mt-8 tw:[&_.placeholder]:mb-0 tw:[&_.placeholder]:mx-auto tw:max-md:[.ia-feminista-page_&_.placeholder]:hidden">
+                    <header class="tw:w-205 tw:m-auto tw:max-[901px]:w-full tw:max-md:w-full tw:max-md:m-0">
+                        <i class="tw:block tw:w-24 tw:h-1 tw:bg-ink tw:mb-4"></i>
+                        <h2 class="tw:max-md:text-4xl tw:max-md:leading-[42px]">desempenho do modelo</h2>
                     </header>
-                    <div class="ia-performance__title">
+                    <div class="ia-performance__title tw:ml-auto tw:mr-auto tw:w-205 tw:text-ink tw:font-sans tw:text-lg tw:font-bold tw:leading-[29.7px] tw:mt-8 tw:pt-1 tw:min-[901px]:w-205 tw:min-[901px]:pt-1 tw:min-[901px]:my-0 tw:min-[901px]:mx-auto tw:max-md:w-full tw:max-md:pt-1 tw:max-md:my-8 tw:max-md:mx-0">
                         Métricas do modelo de avaliação de desfavorabilidade
                     </div>
-                    <div class="ia-table-scroll">
-                        <table class="metrics ia-performance__metrics">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <a
+                    <div class="ia-table-scroll tw:max-md:w-full tw:max-md:overflow-x-auto tw:max-md:[-webkit-overflow-scrolling:touch]">
+                        <table class="metrics tw:[&_tbody_td]:border-b tw:[&_tbody_td]:border-accent/25 ia-performance__metrics tw:table-fixed tw:bg-white tw:mt-8 tw:mb-0 tw:mx-auto tw:min-[901px]:w-205 tw:min-[901px]:my-0 tw:min-[901px]:mx-auto tw:border-collapse tw:w-full tw:text-base tw:[line-height:normal] tw:before:bg-white tw:after:bg-white tw:min-[901px]:mb-0 tw:min-[901px]:mt-0 tw:max-md:min-w-205 tw:max-md:w-auto tw:max-md:m-0">
+                            <thead class="tw:bg-white">
+                                <tr class="tw:bg-white">
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-left tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:w-[252.34px] tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4 tw:max-md:whitespace-nowrap">
+                                        <a class="tw:text-accent tw:font-display tw:text-lg tw:font-bold tw:leading-6 tw:no-underline tw:[font-variation-settings:'wdth'_75] tw:uppercase"
                                             href="https://ia.wiki.br/machine-learning/avaliacao/metricas/"
                                             target="_blank"
                                             rel="noreferrer"
@@ -509,12 +505,12 @@ const thematicPartitions = [
                                             Métricas
                                         </a>
                                     </th>
-                                    <th>QuitérIA 1.0 (2025)</th>
-                                    <th>QuitérIA 2.0 (2026)</th>
-                                    <th></th>
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-center tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:w-[242.22px] tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4 tw:max-md:whitespace-nowrap">QuitérIA 1.0 (2025)</th>
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-center tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:w-[243.23px] tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4 tw:max-md:whitespace-nowrap">QuitérIA 2.0 (2026)</th>
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-center tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:w-[82.2px] tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4 tw:max-md:whitespace-nowrap"></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="tw:bg-white">
                                 {metrics.map(
                                     ({
                                         label,
@@ -524,25 +520,25 @@ const thematicPartitions = [
                                         current,
                                         trend,
                                     }) => (
-                                        <tr>
-                                            <td>
-                                                <a
+                                        <tr class="tw:bg-white">
+                                            <td class="tw:text-left tw:h-[45px] tw:[vertical-align:top] tw:w-[252.34px] tw:bg-white tw:font-sans tw:text-base tw:font-normal tw:[line-height:normal] tw:py-3 tw:px-4">
+                                                <a class="tw:text-accent tw:font-sans tw:text-base tw:font-normal tw:[line-height:normal] tw:no-underline"
                                                     href={href}
                                                     target="_blank"
                                                     rel="noreferrer"
                                                 >
-                                                    <span>{label}</span>
+                                                    <span class="tw:text-accent tw:underline tw:[text-decoration-style:solid] tw:[text-underline-position:from-font] tw:font-sans tw:text-base tw:font-normal tw:[line-height:normal]">{label}</span>
                                                 </a>
                                                 {suffix && (
-                                                    <span>{suffix}</span>
+                                                    <span class="tw:font-sans tw:text-base tw:font-normal tw:[line-height:normal]">{suffix}</span>
                                                 )}
                                             </td>
-                                            <td>{previous}</td>
-                                            <td>{current}</td>
-                                            <td>
+                                            <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[242.22px] tw:bg-white tw:py-3 tw:px-4">{previous}</td>
+                                            <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[243.23px] tw:bg-white tw:py-3 tw:px-4">{current}</td>
+                                            <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[82.2px] tw:bg-white tw:py-3 tw:px-4">
                                                 {trend && (
                                                     <span
-                                                        class={`ia-trend ia-trend--${trend}`}
+                                                        class:list={["tw:inline-flex tw:min-w-7 tw:items-start tw:justify-center tw:px-2 tw:py-0.5 tw:font-sans tw:text-base tw:font-bold tw:text-ink", {"tw:bg-lime/50": trend === "up", "tw:bg-[#ff5865]/25": trend === "down", "tw:min-w-0 tw:px-0": trend === "neutral"}]}
                                                     >
                                                         {trend === "up"
                                                             ? "↑"
@@ -558,70 +554,70 @@ const thematicPartitions = [
                             </tbody>
                         </table>
                     </div>
-                    <div class="ia-performance__title ia-performance__title--secondary">
+                    <div class="ia-performance__title ia-performance__title--secondary tw:ml-auto tw:mr-auto tw:w-205 tw:text-ink tw:font-sans tw:text-lg tw:font-bold tw:leading-[29.7px] tw:mt-8 tw:min-[901px]:w-205 tw:min-[901px]:my-0 tw:min-[901px]:mx-auto tw:pt-4 tw:min-[901px]:pt-4 tw:max-md:w-full tw:max-md:pt-4 tw:max-md:mt-8 tw:max-md:mb-0 tw:max-md:mx-0">
                         Partição dos dados
                     </div>
-                    <div class="ia-table-scroll">
-                        <table class="metrics partition ia-performance__partition">
-                            <thead>
-                                <tr>
-                                    <th>Partição</th>
-                                    <th>Acurácia</th>
-                                    <th>Percentual da base</th>
-                                    <th>Quantidade absoluta</th>
+                    <div class="ia-table-scroll tw:max-md:w-full tw:max-md:overflow-x-auto tw:max-md:[-webkit-overflow-scrolling:touch]">
+                        <table class="metrics tw:[&_tbody_td]:border-b tw:[&_tbody_td]:border-accent/25 partition ia-performance__partition tw:table-fixed tw:bg-white tw:mt-8 tw:mb-0 tw:mx-auto tw:min-[901px]:w-205 tw:min-[901px]:my-0 tw:min-[901px]:mx-auto tw:border-collapse tw:w-full tw:text-base tw:[line-height:normal] tw:min-[901px]:mb-0 tw:min-[901px]:mt-0 tw:max-md:min-w-205 tw:max-md:w-auto tw:max-md:m-0">
+                            <thead class="tw:bg-white">
+                                <tr class="tw:bg-white">
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-left tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:w-[138.63px] tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4">Partição</th>
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-center tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:w-[142.53px] tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4">Acurácia</th>
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-center tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:w-[259.98px] tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4">Percentual da base</th>
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-center tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:w-[278.86px] tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4">Quantidade absoluta</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Treino</td>
-                                    <td>0,92</td>
-                                    <td>80,93%</td>
-                                    <td>2.518</td>
+                            <tbody class="tw:bg-white">
+                                <tr class="tw:bg-white">
+                                    <td class="tw:text-left tw:h-[45px] tw:[vertical-align:top] tw:w-[138.63px] tw:bg-white tw:py-3 tw:px-4">Treino</td>
+                                    <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[142.53px] tw:bg-white tw:py-3 tw:px-4">0,92</td>
+                                    <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[259.98px] tw:bg-white tw:py-3 tw:px-4">80,93%</td>
+                                    <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[278.86px] tw:bg-white tw:py-3 tw:px-4">2.518</td>
                                 </tr>
-                                <tr>
-                                    <td>Validação</td>
-                                    <td>0,84</td>
-                                    <td>9,03%</td>
-                                    <td>281</td>
+                                <tr class="tw:[background:rgba(66,_66,_246,_0.06)] tw:bg-white">
+                                    <td class="tw:text-left tw:h-[45px] tw:[vertical-align:top] tw:w-[138.63px] tw:bg-white tw:py-3 tw:px-4">Validação</td>
+                                    <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[142.53px] tw:bg-white tw:py-3 tw:px-4">0,84</td>
+                                    <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[259.98px] tw:bg-white tw:py-3 tw:px-4">9,03%</td>
+                                    <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[278.86px] tw:bg-white tw:py-3 tw:px-4">281</td>
                                 </tr>
-                                <tr>
-                                    <td>Teste</td>
-                                    <td>0,87</td>
-                                    <td>10,06%</td>
-                                    <td>313</td>
+                                <tr class="tw:bg-white">
+                                    <td class="tw:text-left tw:h-[45px] tw:[vertical-align:top] tw:w-[138.63px] tw:bg-white tw:py-3 tw:px-4">Teste</td>
+                                    <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[142.53px] tw:bg-white tw:py-3 tw:px-4">0,87</td>
+                                    <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[259.98px] tw:bg-white tw:py-3 tw:px-4">10,06%</td>
+                                    <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:w-[278.86px] tw:bg-white tw:py-3 tw:px-4">313</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="ia-performance__title ia-performance__title--secondary">
+                    <div class="ia-performance__title ia-performance__title--secondary tw:ml-auto tw:mr-auto tw:w-205 tw:text-ink tw:font-sans tw:text-lg tw:font-bold tw:leading-[29.7px] tw:mt-8 tw:min-[901px]:w-205 tw:min-[901px]:my-0 tw:min-[901px]:mx-auto tw:pt-4 tw:min-[901px]:pt-4 tw:max-md:w-full tw:max-md:pt-4 tw:max-md:mt-8 tw:max-md:mb-0 tw:max-md:mx-0">
                         Métricas do modelo de categorização temática
                     </div>
-                    <div class="ia-table-scroll">
-                        <table class="metrics ia-performance__thematic-metrics">
+                    <div class="ia-table-scroll tw:max-md:w-full tw:max-md:overflow-x-auto tw:max-md:[-webkit-overflow-scrolling:touch]">
+                        <table class="metrics tw:[&_tbody_td]:border-b tw:[&_tbody_td]:border-accent/25 ia-performance__thematic-metrics tw:mt-3.5 tw:mb-4.5 tw:mx-0 tw:ml-auto tw:mr-auto tw:max-w-205 tw:w-full tw:min-[901px]:w-205 tw:min-[901px]:table-fixed tw:min-[901px]:my-0 tw:min-[901px]:mx-auto tw:border-collapse tw:text-base tw:[line-height:normal] tw:min-[901px]:mb-0 tw:min-[901px]:mt-0 tw:max-md:min-w-205 tw:max-md:w-auto tw:max-md:max-w-none tw:max-md:m-0 tw:[&_tbody_tr:nth-child(even)]:bg-white tw:min-[901px]:[&_tbody_tr:nth-child(even)]:bg-white">
                             <tbody>
                                 {thematicMetrics.map(([label, value]) => (
                                     <tr>
-                                        <td>{label}</td>
-                                        <td>{value}</td>
+                                        <td class="tw:text-left tw:h-[45px] tw:[vertical-align:top] tw:py-3 tw:px-4 tw:min-[901px]:w-[417px]">{label}</td>
+                                        <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:py-3 tw:px-4 tw:min-[901px]:w-[403px]">{value}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
-                    <div class="ia-performance__title ia-performance__title--secondary">
+                    <div class="ia-performance__title ia-performance__title--secondary tw:ml-auto tw:mr-auto tw:w-205 tw:text-ink tw:font-sans tw:text-lg tw:font-bold tw:leading-[29.7px] tw:mt-8 tw:min-[901px]:w-205 tw:min-[901px]:my-0 tw:min-[901px]:mx-auto tw:pt-4 tw:min-[901px]:pt-4 tw:max-md:w-full tw:max-md:pt-4 tw:max-md:mt-8 tw:max-md:mb-0 tw:max-md:mx-0">
                         Partição dos dados
                     </div>
-                    <div class="ia-table-scroll">
-                        <table class="metrics ia-performance__thematic-partition">
-                            <thead>
+                    <div class="ia-table-scroll tw:max-md:w-full tw:max-md:overflow-x-auto tw:max-md:[-webkit-overflow-scrolling:touch]">
+                        <table class="metrics tw:[&_tbody_td]:border-b tw:[&_tbody_td]:border-accent/25 ia-performance__thematic-partition tw:mt-3.5 tw:mb-4.5 tw:mx-0 tw:bg-white tw:ml-auto tw:mr-auto tw:max-w-205 tw:w-full tw:min-[901px]:w-205 tw:min-[901px]:table-fixed tw:min-[901px]:bg-white tw:min-[901px]:mb-0 tw:min-[901px]:mx-auto tw:border-collapse tw:text-base tw:[line-height:normal] tw:min-[901px]:mt-0 tw:max-md:min-w-205 tw:max-md:w-auto tw:max-md:max-w-none tw:max-md:m-0 tw:[&_tr]:bg-white tw:[&_tbody_tr:nth-child(even)]:bg-white tw:min-[901px]:[&_tbody_tr]:border-b tw:min-[901px]:[&_tbody_tr]:border-solid tw:min-[901px]:[&_tbody_tr]:border-b-[rgba(66,_66,_246,_0.25)] tw:min-[901px]:[&_tr.partition-row--45]:h-[45px] tw:min-[901px]:[&_tr.partition-row--65]:h-[65px]">
+                            <thead class="tw:bg-white">
                                 <tr>
-                                    <th>Base</th>
-                                    <th>Treino</th>
-                                    <th>Validação</th>
-                                    <th>Teste</th>
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-left tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4 tw:min-[901px]:border-b-[2px] tw:min-[901px]:border-solid tw:min-[901px]:border-b-ink tw:min-[901px]:w-62.5">Base</th>
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-center tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4 tw:min-[901px]:border-b-[2px] tw:min-[901px]:border-solid tw:min-[901px]:border-b-ink tw:min-[901px]:w-47.5">Treino</th>
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-center tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4 tw:min-[901px]:border-b-[2px] tw:min-[901px]:border-solid tw:min-[901px]:border-b-ink tw:min-[901px]:w-47.5">Validação</th>
+                                    <th class="tw:border-b-[2px] tw:border-solid tw:border-b-ink tw:text-center tw:[vertical-align:top] tw:font-display tw:font-bold tw:uppercase tw:h-[49px] tw:text-lg tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:bg-white tw:pt-3 tw:pb-[13px] tw:px-4 tw:min-[901px]:border-b-[2px] tw:min-[901px]:border-solid tw:min-[901px]:border-b-ink tw:min-[901px]:w-47.5">Teste</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="tw:bg-white">
                                 {thematicPartitions.map(
                                     ([base, training, validation, test]) => (
                                         <tr
@@ -638,10 +634,10 @@ const thematicPartitions = [
                                                     : "partition-row--65"
                                             }
                                         >
-                                            <td>{base}</td>
-                                            <td>{training}</td>
-                                            <td>{validation}</td>
-                                            <td>{test}</td>
+                                            <td class="tw:text-left tw:h-[45px] tw:[vertical-align:top] tw:bg-white tw:py-3 tw:px-4 tw:min-[901px]:w-62.5">{base}</td>
+                                            <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:bg-white tw:py-3 tw:px-4 tw:min-[901px]:w-47.5 tw:min-[901px]:[vertical-align:middle]">{training}</td>
+                                            <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:bg-white tw:py-3 tw:px-4 tw:min-[901px]:w-47.5 tw:min-[901px]:[vertical-align:middle]">{validation}</td>
+                                            <td class="tw:text-center tw:h-[45px] tw:[vertical-align:top] tw:bg-white tw:py-3 tw:px-4 tw:min-[901px]:w-47.5 tw:min-[901px]:[vertical-align:middle]">{test}</td>
                                         </tr>
                                     ),
                                 )}
@@ -649,1419 +645,38 @@ const thematicPartitions = [
                         </table>
                     </div>
                 </section>
-                <section class="ia-section ia-section--border">
-                    <header>
-                        <i></i>
-                        <h2>código e dados abertos</h2>
+                <section class="ia-section ia-section--border tw:flex tw:flex-col tw:gap-7 tw:py-16 tw:px-12 tw:[&_h2]:text-4xl tw:[&_h2]:leading-[42px] tw:[&_h2]:m-0 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:border-t-[2px] tw:border-solid tw:border-t-[rgba(66,_66,_246,_0.06)] tw:pt-16.5 tw:max-md:gap-[27.2px] tw:max-md:py-16 tw:max-md:px-6 tw:[&:has(>_.ia-wide)]:gap-[27.2px] tw:[&:has(>_.ia-wide)_>_.ia-wide]:contents tw:[&:has(>_.ia-wide)_.ia-wide_h3]:self-stretch tw:[&:has(>_.ia-wide)_.ia-wide_h3]:font-display tw:[&:has(>_.ia-wide)_.ia-wide_h3]:text-[28px] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:not-italic tw:[&:has(>_.ia-wide)_.ia-wide_h3]:font-bold tw:[&:has(>_.ia-wide)_.ia-wide_h3]:[font-variation-settings:'wdth'_75] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:leading-8 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:uppercase tw:[&:has(>_.ia-wide)_.ia-wide_h3]:w-full tw:[&:has(>_.ia-wide)_.ia-wide_h3]:pt-[12.8px] tw:[&:has(>_.ia-wide)_.ia-wide_h3]:pb-0 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:px-0 tw:[&:has(>_.ia-wide)_.ia-wide_h3]:m-0 tw:[&:has(>_.ia-wide)_.ia-wide_table]:w-336 tw:[&:has(>_.ia-wide)_.ia-wide_table]:mt-[4.8px] tw:[&:has(>_.ia-wide)_.ia-wide_table]:mb-0 tw:[&:has(>_.ia-wide)_.ia-wide_table]:mx-auto tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:text-[var(--Arapawa,_var(--color-blue-21,_#0b0f5e))] tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:font-display tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:text-lg tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:not-italic tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:font-light tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:[font-variation-settings:'wdth'_100] tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:tracking-normal tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:leading-normal tw:[&:has(>_.ia-wide)_.ia-wide_>_table_>_thead_th]:uppercase">
+                    <header class="tw:w-205 tw:m-auto tw:max-[901px]:w-full tw:max-md:w-full tw:max-md:m-0">
+                        <i class="tw:block tw:w-24 tw:h-1 tw:bg-ink tw:mb-4"></i>
+                        <h2 class="tw:max-md:text-4xl tw:max-md:leading-[42px]">código e dados abertos</h2>
                     </header>
-                    <div class="ia-narrow">
-                        <p>
+                    <div class="ia-narrow tw:w-205 tw:flex tw:flex-col tw:gap-[19.2px] tw:m-auto tw:[&_h3]:text-[32px] tw:[&_h3]:leading-8 tw:[&_h3]:m-0 tw:max-md:[&_h3]:text-[28px] tw:[&_h5]:text-lg tw:[&_h5]:leading-[29.7px] tw:[&_h5]:mt-0 tw:[&_h5]:mb-1 tw:[&_h5]:mx-0 tw:[&_a]:text-accent tw:[&_a]:font-normal tw:[&_a]:no-underline tw:max-[901px]:w-full tw:max-md:w-full tw:max-md:gap-[19.2px] tw:max-md:m-0 tw:[&_li:before]:[content:'→'] tw:[&_li:before]:absolute tw:[&_li:before]:left-0 tw:[.ia-section:has(>_.ia-wide)_>_&]:h-102 tw:max-[901px]:[.ia-section:has(>_.ia-wide)_>_&]:h-auto">
+                        <p class="tw:max-md:text-lg! tw:max-md:leading-6">
                             A QuitérIA é um ecossistema aberto, transparente e
                             replicável para outros campos da defesa dos direitos
                             humanos. Visite os dados, códigos e documentação:
                         </p>
-                        <ul>
-                            <li>
+                        <ul class="tw:list-none tw:flex tw:flex-col tw:gap-[15px] tw:p-0 tw:mt-1 tw:mb-0 tw:mx-0">
+                            <li class="tw:pl-6 tw:relative">
                                 <a href="https://github.com/institutoazmina/ia-feminista-elas-no-congresso">
-                                    Repositório de treinamento da QuitérIA
+                                    Código e repositório da QuitérIA
                                 </a>
                             </li>
-                            <li>
-                                <a href="https://github.com/institutoazmina/elasnocongressobot">
-                                    Código do raspador
+                            <li class="tw:pl-6 tw:relative">
+                                <a href="https://huggingface.co/azmina/quiteria-2.0">
+                                    Modelo da QuitérIA 2.0 no Hugging Face
                                 </a>
                             </li>
-                            <li>
+                            <li class="tw:pl-6 tw:relative">
                                 <a href="https://api.elasnocongresso.com.br/api/v1/docs">
-                                    API pública
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://github.com/institutoazmina/elasnocongressobot/blob/master/README.md">
-                                    Documentação
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://github.com/institutoazmina/elasnocongressobot/blob/master/LICENSE.txt">
-                                    Licença de uso
+                                    API pública e documentação
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </section>
             </main>
-            <RedesignFooter />
+            <Footer />
         </div>
     </body>
 </html>
-<style is:global>
-    @font-face {
-        font-family: "ETC Anybody";
-        font-style: normal;
-        font-weight: 50 1000;
-        font-display: swap;
-        src: url("/assets/fonts/ETCAnybodyVariable.woff2")
-            format("woff2-variations");
-    }
-    body:has(.ia-page) {
-        margin: 0;
-    }
-    .ia-page {
-        color: #0b0f5e;
-        font-family: "Plus Jakarta Sans", sans-serif;
-    }
-    .ia-page * {
-        box-sizing: border-box;
-    }
-    .ia-page p {
-        margin: 0;
-        font-size: 18px;
-        line-height: 29.7px;
-    }
-    .ia-page h1,
-    .ia-page h2,
-    .ia-page h3,
-    .ia-page h4 {
-        font-family: "ETC Anybody", sans-serif;
-        font-weight: 700;
-        font-variation-settings: "wdth" 75;
-        text-transform: uppercase;
-    }
-    .ia-hero {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 452px;
-        padding: 24px 48px;
-    }
-    .ia-hero > div:first-child {
-        width: 681px;
-    }
-    .ia-page i {
-        display: block;
-        width: 96px;
-        height: 4px;
-        background: #0b0f5e;
-        margin-bottom: 16px;
-    }
-    .ia-hero i {
-        height: 8px;
-        margin-bottom: 24px;
-    }
-    .ia-hero h1 {
-        font-size: 72px;
-        line-height: 72px;
-        margin: 0 0 24px;
-    }
-    .ia-hero h1 strong {
-        font-variation-settings: "wdth" 75;
-    }
-    .ia-hero h1 {
-        font-variation-settings: "wdth" 60;
-    }
-    .ia-hero p {
-        font-weight: 700;
-        line-height: 24px;
-        width: 640px;
-    }
-    .ia-hero-art {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 580px;
-        height: 380px;
-        background-image: var(--ia-hero-pattern);
-        background-size: cover;
-        overflow: hidden;
-    }
-    .ia-hero-art img {
-        width: 506px;
-        height: 487px;
-        object-fit: contain;
-    }
-    .ia-section {
-        display: flex;
-        flex-direction: column;
-        gap: 28px;
-        padding: 64px 48px;
-    }
-    .ia-section--border {
-        border-top: 2px solid rgba(66, 66, 246, 0.06);
-        padding-top: 66px;
-    }
-    .ia-section header,
-    .ia-narrow {
-        width: 820px;
-        margin: auto;
-    }
-    .ia-section h2 {
-        font-size: 36px;
-        line-height: 42px;
-        margin: 0;
-    }
-    .ia-narrow {
-        display: flex;
-        flex-direction: column;
-        gap: 19.2px;
-    }
-    .ia-narrow h3,
-    .ia-wide h3 {
-        font-size: 32px;
-        line-height: 32px;
-        margin: 12px 0 4px;
-    }
-    .ia-cards {
-        display: flex;
-        gap: 24px;
-        padding-top: 4px;
-    }
-    .ia-cards article {
-        border: 2px solid #0b0f5e;
-        flex: 1;
-        min-height: 255px;
-        padding: 30px 26px;
-        display: flex;
-        flex-direction: column;
-    }
-    .ia-cards h4 {
-        font-size: 24px;
-        line-height: 32px;
-        margin: 0;
-    }
-    .ia-cards p {
-        font-size: 16px;
-        line-height: 24px;
-        margin-top: 14px;
-    }
-    .ia-cards b {
-        font-family: "ETC Anybody";
-        font-variation-settings: "wdth" 75;
-        font-size: 18px;
-        line-height: 24px;
-        margin-top: auto;
-        text-transform: uppercase;
-    }
-    .ia-cards small {
-        color: #998d96;
-        font-size: 14px;
-        line-height: 23.1px;
-    }
-    .ia-wide {
-        width: 1344px;
-        margin: auto;
-    }
-    .ia-wide h3 {
-        font-size: 28px;
-        margin: 0 0 24px;
-    }
-    table {
-        border-collapse: collapse;
-        width: 100%;
-        font-size: 16px;
-        line-height: 24.8px;
-    }
-    th,
-    td {
-        border-bottom: 1px solid rgba(66, 66, 246, 0.25);
-        padding: 16px 20px;
-        text-align: left;
-        vertical-align: top;
-    }
-    thead th {
-        border-bottom: 2px solid #0b0f5e;
-        font-family: "ETC Anybody";
-        font-weight: 300;
-        text-transform: uppercase;
-    }
-    tbody th {
-        font-weight: 700;
-        width: 30.3%;
-    }
-    tbody tr:nth-child(even) {
-        background: rgba(66, 66, 246, 0.06);
-    }
-    td.pending {
-        color: #998d96;
-        font-style: italic;
-    }
-    .ia-narrow h5 {
-        font-size: 18px;
-        line-height: 29.7px;
-        margin: 0 0 4px;
-    }
-    .metrics {
-        margin: 14px 0 18px;
-    }
-    .metrics th,
-    .metrics td {
-        text-align: center;
-        padding: 12px 16px;
-    }
-    .metrics th:first-child,
-    .metrics td:first-child {
-        text-align: left;
-    }
-    .placeholder {
-        align-items: center;
-        border: 2px dashed rgba(66, 66, 246, 0.25);
-        display: flex;
-        height: 281px;
-        justify-content: center;
-        margin: auto;
-        width: 1344px;
-        color: #998d96;
-        font-family: "ETC Anybody";
-        font-size: 18px;
-        font-weight: 300;
-        letter-spacing: 0.9px;
-        text-transform: uppercase;
-    }
-    .ia-narrow ul {
-        list-style: none;
-        margin: 4px 0 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-    .ia-narrow li {
-        padding-left: 24px;
-        position: relative;
-    }
-    .ia-narrow li:before {
-        content: "→";
-        position: absolute;
-        left: 0;
-    }
-    .ia-narrow a {
-        color: #4242f6;
-        font-weight: 700;
-        text-decoration: none;
-    }
-    .ia-narrow p a {
-        text-decoration: underline;
-    }
-    @media (max-width: 900px) {
-        .ia-hero {
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 48px 24px;
-        }
-        .ia-hero > div:first-child,
-        .ia-hero p,
-        .ia-section header,
-        .ia-narrow,
-        .ia-wide,
-        .placeholder {
-            width: 100%;
-        }
-        .ia-hero h1 {
-            font-size: 52px;
-            line-height: 56px;
-        }
-        .ia-hero-art {
-            width: 100%;
-            margin-top: 24px;
-        }
-        .ia-section {
-            padding: 48px 24px;
-        }
-        .ia-section h2 {
-            font-size: 32px;
-            line-height: 36px;
-        }
-        .ia-wide {
-            overflow: auto;
-        }
-        .ia-wide table {
-            min-width: 820px;
-        }
-        .placeholder {
-            padding: 24px;
-            text-align: center;
-        }
-        .ia-cards {
-            flex-direction: column;
-        }
-    }
-    @media (max-width: 560px) {
-        .ia-hero h1 {
-            font-size: 40px;
-            line-height: 44px;
-        }
-        .ia-hero-art {
-            height: 300px;
-        }
-        .ia-hero-art img {
-            width: 100%;
-            height: auto;
-        }
-        .ia-page p {
-            font-size: 16px;
-            line-height: 25px;
-        }
-        .ia-section h2 {
-            font-size: 28px;
-            line-height: 32px;
-        }
-    }
-    .ia-hero {
-        align-items: flex-start;
-        display: flex;
-        flex-direction: column;
-        height: 452px;
-        justify-content: center;
-        padding: 0;
-    }
-    .ia-hero__top-row {
-        align-items: center;
-        display: flex;
-        flex: 0 0 428px;
-        height: 428px;
-        justify-content: space-between;
-        padding: 24px 48px;
-        width: 100%;
-        z-index: auto;
-    }
-    .ia-hero__shadow {
-        bottom: auto;
-        flex: 0 0 24px;
-        height: 24px;
-        left: auto;
-        position: relative;
-        width: 100%;
-        z-index: auto;
-    }
-    .ia-hero__art {
-        align-items: center;
-        display: flex;
-        flex: 0 0 auto;
-        height: 380px;
-        justify-content: center;
-        padding: 10px;
-        position: relative;
-        width: 580px;
-    }
-    .ia-hero__illustration {
-        height: auto;
-        width: 500px;
-    }
-    .ia-hero__illustration-inner {
-        height: 500px;
-        position: absolute;
-        bottom: -50px;
-        right: 30%;
-        width: auto;
-    }
-    .ia-hero__illustration-inner > img {
-        object-fit: contain;
-        height: 100%;
-        width: auto;
-    }
-
-    @media (max-width: 900px) {
-        .ia-hero {
-            height: 610px;
-        }
-        .ia-hero__top-row {
-            flex-basis: 586px;
-            height: 586px;
-            width: 100%;
-        }
-        .ia-hero__shadow {
-            flex-basis: 24px;
-        }
-    }
-    .ia-hero {
-        height: 500px;
-        overflow: hidden;
-        position: relative;
-        justify-content: flex-start;
-    }
-
-    .ia-hero__top-row {
-        align-items: center;
-        flex: 0 0 476px;
-        height: 476px;
-        padding: 48px;
-        position: relative;
-        width: 100%;
-        z-index: 2;
-    }
-
-    .ia-hero > div.ia-hero__top-row {
-        width: 100%;
-    }
-
-    .ia-hero__copy {
-        align-items: flex-start;
-        display: flex;
-        flex: 0 0 auto;
-        flex-direction: column;
-        gap: 24px;
-        justify-content: center;
-        max-width: 960px;
-        min-width: 0;
-        width: 681px;
-    }
-
-    .ia-hero__attention {
-        display: block;
-        height: 8px;
-        width: 96px;
-    }
-
-    .ia-hero h1 {
-        color: #0b0f5e;
-        font-size: 72px;
-        font-variation-settings: "wdth" 75;
-        font-weight: 700;
-        letter-spacing: 0;
-        line-height: 72px;
-        margin: 0;
-        mix-blend-mode: multiply;
-        white-space: nowrap;
-        width: 681px;
-    }
-
-    .ia-hero .hero__title-narrow {
-        font-variation-settings: "wdth" 60;
-        font-weight: 400;
-    }
-
-    .ia-hero h1 strong {
-        font-variation-settings: "wdth" 75;
-    }
-
-    .ia-hero__copy > p {
-        color: #0b0f5e;
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 18px;
-        font-weight: 500;
-        letter-spacing: 0;
-        line-height: 24px;
-        margin: 0;
-        mix-blend-mode: multiply;
-        width: 640px;
-    }
-
-    .ia-hero__art {
-        bottom: 24px;
-        flex: 0 0 auto;
-        overflow: visible;
-        position: absolute;
-        right: 48px;
-    }
-
-    .ia-hero__shadow {
-        background-image: var(--ia-hero-halftone-shadow);
-        background-position: left bottom;
-        background-repeat: repeat-x;
-        background-size: 1440px 24px;
-        bottom: 0;
-        display: block;
-        height: 24px;
-        left: 0;
-        mix-blend-mode: multiply;
-        pointer-events: none;
-        position: absolute;
-        width: 100%;
-        z-index: 3;
-    }
-
-    @media (max-width: 900px) {
-        .ia-hero__copy,
-        .ia-hero h1,
-        .ia-hero__copy > p {
-            width: 100%;
-        }
-
-        .ia-hero h1 {
-            white-space: normal;
-        }
-    }
-    /* Figma: IA Feminista — ajustes localizados */
-    .ia-section:has(> .ia-wide) {
-        gap: 27.2px;
-    }
-    .ia-wide h3 {
-        margin: 0 0 32px;
-        padding-top: 12.8px;
-    }
-    .ia-wide > table {
-        margin-bottom: 4.8px;
-        table-layout: fixed;
-    }
-    .ia-wide > table > thead > tr {
-        height: 48px;
-    }
-    .ia-wide > table > thead th {
-        color: #0b0f5e;
-        font-family: "ETC Anybody", sans-serif;
-        font-size: 18px;
-        font-weight: 300;
-        font-variation-settings: "wdth" 100;
-        letter-spacing: 0;
-        line-height: normal;
-        padding: 14px 20px 15px;
-        text-align: left;
-        text-transform: uppercase;
-        vertical-align: top;
-        white-space: nowrap;
-    }
-    .ia-wide > table > thead th:first-child {
-        width: 407.44px;
-    }
-    .ia-wide > table > thead th:nth-child(2) {
-        width: 936.56px;
-    }
-    .ia-narrow p a {
-        font-weight: 400;
-    }
-    .ia-governance .ia-narrow {
-        gap: 15.3px;
-    }
-    .ia-governance .ia-narrow > p:nth-of-type(2) {
-        padding-top: 4.7px;
-    }
-    .ia-governance .ia-narrow > p:first-child a {
-        color: #4242f6;
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 18px;
-        font-weight: 400;
-        letter-spacing: 0;
-        line-height: 29.7px;
-        text-decoration: underline;
-        text-decoration-style: solid;
-        text-underline-position: from-font;
-    }
-    .ia-governance .ia-narrow > p:first-child a:hover {
-        color: #4242f6;
-        text-decoration: underline;
-    }
-    .ia-governance .ia-narrow > h3:not(.ia-not-do__title) {
-        margin: 0;
-        padding-top: 24.7px;
-    }
-    .ia-governance .ia-cards {
-        gap: 24px;
-        padding-top: 8.7px;
-    }
-    .ia-governance .ia-cards article {
-        gap: 11px;
-        min-height: 0;
-        padding: 30px 26px;
-    }
-    .ia-governance .ia-cards article > p {
-        font-size: 16px;
-        line-height: 26.4px;
-        margin: 0;
-        padding-top: 2.085px;
-    }
-    .ia-governance .ia-cards article:nth-child(2) > p {
-        padding-bottom: 0.67px;
-        padding-top: 2.28px;
-    }
-    .ia-governance .ia-cards article > small {
-        font-size: 14px;
-        font-weight: 400;
-        letter-spacing: 0;
-        line-height: 23.1px;
-        margin-top: 0;
-    }
-    .ia-governance .ia-cards article:first-child {
-        padding-bottom: 56.4px;
-    }
-    .ia-not-do__title {
-        align-items: flex-start;
-        display: flex;
-        font-size: 28px !important;
-        line-height: 32px !important;
-        margin: 0 !important;
-        padding-top: 24.2px !important;
-        white-space: nowrap;
-    }
-    .ia-not-do__title span {
-        background: linear-gradient(
-            104.044deg,
-            rgba(255, 88, 101, 0.25) 0%,
-            rgba(255, 88, 101, 0.5) 30%,
-            rgba(255, 88, 101, 0.5) 70%,
-            rgba(255, 88, 101, 0.25) 100%
-        );
-        font-family: "ETC Anybody", sans-serif;
-        font-size: 24px;
-        font-weight: 700;
-        font-variation-settings: "wdth" 100;
-        line-height: 28px;
-        margin-left: 0;
-        padding: 0.5px 8px;
-        text-transform: uppercase;
-    }
-    .ia-governance .ia-not-do__title + p {
-        margin: 0;
-        width: 820px;
-    }
-    .ia-not-do__list {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        height: 301.82px;
-        list-style: none;
-        margin: 0;
-        padding: 8.69px 0 0;
-        width: 820px;
-    }
-    .ia-not-do__list li {
-        color: #0b0f5e;
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 18px;
-        font-weight: 400;
-        line-height: 27.9px;
-        padding-left: 28px;
-        position: relative;
-    }
-    .ia-not-do__list li::before {
-        color: #ff5865;
-        content: "✕";
-        font-weight: 700;
-        left: 0;
-        line-height: 27.9px;
-        position: absolute;
-        top: 16px;
-        transform: translateY(-50%);
-    }
-    /* Figma node 1051:25272 — categorias temáticas */
-    .ia-section:has(> .ia-wide) {
-        gap: 27.2px;
-    }
-    .ia-section:has(> .ia-wide) > .ia-narrow {
-        height: 408px;
-    }
-    .ia-section:has(> .ia-wide) > .ia-wide {
-        display: contents;
-    }
-    .ia-section:has(> .ia-wide) .ia-wide h3 {
-        align-self: stretch;
-        font-family: "ETC Anybody", Anybody, sans-serif;
-        font-size: 28px;
-        font-style: normal;
-        font-weight: 700;
-        font-variation-settings: "wdth" 75;
-        line-height: 32px;
-        margin: 0;
-        padding: 12.8px 0 0;
-        text-transform: uppercase;
-        width: 100%;
-    }
-    .ia-section:has(> .ia-wide) .ia-wide table {
-        margin: 4.8px auto 0;
-        width: 1344px;
-    }
-    .ia-section:has(> .ia-wide) .ia-wide > table > thead th {
-        color: var(--Arapawa, var(--color-blue-21, #0b0f5e));
-        font-family: "ETC Anybody", Anybody, sans-serif;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 300;
-        font-variation-settings: "wdth" 100;
-        letter-spacing: 0;
-        line-height: normal;
-        text-transform: uppercase;
-    }
-    @media (max-width: 900px) {
-        .ia-section:has(> .ia-wide) > .ia-narrow {
-            height: auto;
-        }
-    }
-
-    /* Figma node 1051:25397 — desempenho do modelo */
-    .ia-performance {
-        gap: 0;
-    }
-    .ia-performance__title,
-    .ia-performance__metrics,
-    .ia-performance__partition {
-        margin-left: auto;
-        margin-right: auto;
-        width: 820px;
-    }
-    .ia-performance__title {
-        color: #0b0f5e;
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 18px;
-        font-weight: 700;
-        line-height: 29.7px;
-        margin-top: 32px;
-        padding-top: 4px;
-    }
-    .ia-performance__metrics {
-        margin: 32px auto 0;
-        table-layout: fixed;
-    }
-    .ia-performance .metrics {
-        border-collapse: collapse;
-        font-size: 16px;
-        line-height: normal;
-    }
-    .ia-performance .ia-performance__metrics,
-    .ia-performance .ia-performance__metrics tbody tr {
-        background: #fff;
-    }
-    .ia-performance .metrics th,
-    .ia-performance .metrics td {
-        height: 45px;
-        padding: 12px 16px;
-        text-align: center;
-        vertical-align: top;
-    }
-    .ia-performance .metrics thead th {
-        height: 49px;
-        font-family: "ETC Anybody", sans-serif;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 700;
-        font-variation-settings: "wdth" 75;
-        line-height: 24px;
-        padding: 12px 16px 13px;
-        text-transform: uppercase;
-        vertical-align: top;
-    }
-    .ia-performance .metrics th:first-child,
-    .ia-performance .metrics td:first-child {
-        text-align: left;
-    }
-    .ia-performance__metrics th:nth-child(1),
-    .ia-performance__metrics td:nth-child(1) {
-        width: 252.34px;
-    }
-    .ia-performance__metrics th:nth-child(2),
-    .ia-performance__metrics td:nth-child(2) {
-        width: 242.22px;
-    }
-    .ia-performance__metrics th:nth-child(3),
-    .ia-performance__metrics td:nth-child(3) {
-        width: 243.23px;
-    }
-    .ia-performance__metrics th:nth-child(4),
-    .ia-performance__metrics td:nth-child(4) {
-        width: 82.2px;
-    }
-    .ia-performance .metrics a {
-        color: #4242f6;
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: normal;
-        text-decoration: none;
-    }
-    .ia-performance .metrics td:first-child a > span {
-        color: #4242f6;
-        text-decoration: underline;
-        text-decoration-style: solid;
-        text-underline-position: from-font;
-    }
-    .ia-performance .metrics thead th:first-child a {
-        font-family: "ETC Anybody", sans-serif;
-        font-size: 18px;
-        font-weight: 700;
-        font-variation-settings: "wdth" 75;
-        line-height: 24px;
-        text-transform: uppercase;
-    }
-    .ia-performance__title--secondary {
-        margin-top: 32px;
-        padding-top: 16px;
-    }
-    .ia-performance__partition {
-        margin: 32px auto 0;
-        table-layout: fixed;
-    }
-    .ia-performance__partition th:nth-child(1),
-    .ia-performance__partition td:nth-child(1) {
-        width: 138.63px;
-    }
-    .ia-performance__partition th:nth-child(2),
-    .ia-performance__partition td:nth-child(2) {
-        width: 142.53px;
-    }
-    .ia-performance__partition th:nth-child(3),
-    .ia-performance__partition td:nth-child(3) {
-        width: 259.98px;
-    }
-    .ia-performance__partition th:nth-child(4),
-    .ia-performance__partition td:nth-child(4) {
-        width: 278.86px;
-    }
-    .ia-performance .placeholder {
-        height: 281px;
-        margin: 32px auto 0;
-        width: 1344px;
-    }
-    .ia-trend {
-        align-items: flex-start;
-        color: #0b0f5e;
-        display: inline-flex;
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 16px;
-        font-weight: 700;
-        justify-content: center;
-        line-height: normal;
-        min-width: 28px;
-        padding: 2px 8px;
-    }
-    .ia-trend--up {
-        background: rgba(222, 242, 121, 0.5);
-    }
-    .ia-trend--down {
-        background: rgba(255, 88, 101, 0.25);
-    }
-
-    /* Nodes 1051:25285–1051:25292: categories title and table are siblings in the
-           section's auto-layout. Keeping that structure prevents a wrapper from adding
-           vertical space before the title. */
-    @font-face {
-        font-family: "Anybody";
-        font-style: normal;
-        font-weight: 100 900;
-        font-stretch: normal;
-        src: url("/assets/fonts/anybodyvariable.ttf") format("truetype");
-    }
-    .ia-categories {
-        gap: 27.2px;
-        padding: 66px 48px 64px;
-    }
-    .ia-categories > .ia-narrow {
-        height: 408px;
-    }
-    .ia-categories__title {
-        align-self: stretch;
-        color: #0b0f5e;
-        font-family: "Anybody", sans-serif;
-        font-size: 28px;
-        font-style: normal;
-        font-weight: 700;
-        font-stretch: normal;
-        font-variation-settings: "wdth" 75;
-        line-height: 32px;
-        margin: 0;
-        padding-top: 12.8px;
-        text-transform: uppercase;
-        width: 100%;
-    }
-    .ia-categories__table {
-        align-self: stretch;
-        padding-top: 4.8px;
-        width: 100%;
-    }
-    .ia-categories__table table {
-        margin: 0;
-        table-layout: fixed;
-        width: 100%;
-    }
-    .ia-categories__table thead tr {
-        height: 48px;
-    }
-    .ia-categories__table thead th {
-        border-bottom: 2px solid #0b0f5e;
-        color: #0b0f5e;
-        font-family: "Anybody", sans-serif;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 300;
-        font-stretch: normal;
-        font-variation-settings: "wdth" 100;
-        letter-spacing: 0;
-        line-height: normal;
-        padding: 14px 20px 15px;
-        text-align: left;
-        text-transform: uppercase;
-        vertical-align: top;
-        white-space: nowrap;
-    }
-    .ia-categories__table thead th:first-child {
-        width: 407.44px;
-    }
-    .ia-categories__table thead th:nth-child(2) {
-        width: 936.56px;
-    }
-    .ia-performance__metrics,
-    .ia-performance__metrics thead,
-    .ia-performance__metrics tbody,
-    .ia-performance__metrics tr,
-    .ia-performance__metrics th,
-    .ia-performance__metrics td,
-    .ia-performance__metrics::before,
-    .ia-performance__metrics::after {
-        background-color: #fff;
-    }
-    .ia-trend--neutral {
-        background: transparent;
-        min-width: auto;
-        padding: 2px 0;
-    }
-    .ia-performance__partition,
-    .ia-performance__partition thead,
-    .ia-performance__partition tbody,
-    .ia-performance__partition tr,
-    .ia-performance__partition th,
-    .ia-performance__partition td,
-    .ia-performance__partition tbody tr:nth-child(even),
-    .ia-performance__thematic-partition,
-    .ia-performance__thematic-partition thead,
-    .ia-performance__thematic-partition tbody,
-    .ia-performance__thematic-partition tr,
-    .ia-performance__thematic-partition th,
-    .ia-performance__thematic-partition td,
-    .ia-performance__thematic-partition tbody tr:nth-child(even) {
-        background-color: #fff;
-    }
-    .ia-performance__thematic-metrics tbody tr:nth-child(even) {
-        background-color: #fff;
-    }
-    .ia-performance__metrics tbody td:first-child,
-    .ia-performance__metrics tbody td:first-child a,
-    .ia-performance__metrics tbody td:first-child span {
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-size: 16px;
-        font-weight: 400;
-        line-height: normal;
-    }
-    @media (max-width: 900px) {
-        .ia-categories > .ia-narrow {
-            height: auto;
-        }
-        .ia-categories__table {
-            overflow: auto;
-        }
-        .ia-categories__table table {
-            min-width: 820px;
-        }
-    }
-
-    /* Figma nodes 1242:6105–1242:6233 — fluxo de processamento */
-    .ia-page .ia-flow {
-        width: 100%;
-    }
-    .ia-page .ia-flow img {
-        display: block;
-        height: auto;
-        margin: 0 auto;
-        max-width: 100%;
-        width: 820px;
-    }
-    .ia-page .ia-flow--mobile {
-        display: none;
-    }
-    .ia-differential__content {
-        display: contents;
-    }
-    .ia-architecture__cards {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 820px;
-        width: 100%;
-    }
-    .ia-performance__thematic-metrics,
-    .ia-performance__thematic-partition {
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 820px;
-        width: 100%;
-    }
-
-    @media (min-width: 901px) {
-        .ia-differential > .ia-narrow {
-            display: contents;
-        }
-        .ia-differential__content {
-            display: flex;
-            flex-direction: column;
-            gap: 19.2px;
-            margin: 0 auto;
-            width: 820px;
-        }
-        .ia-differential__content > p {
-            line-height: 24px;
-        }
-        .ia-flow__eyebrow {
-            font-size: 28px !important;
-            line-height: 32px !important;
-            margin: 0 !important;
-            padding-top: 12.8px;
-        }
-        .ia-architecture__title {
-            font-size: 32px;
-            line-height: 32px;
-            margin-bottom: 0;
-            margin-top: 0;
-            min-height: 40px;
-            padding-top: 12px;
-        }
-        .ia-architecture__cards {
-            height: 271px;
-            padding-top: 4px;
-        }
-        .ia-architecture__cards article {
-            height: 267px;
-            min-height: 0;
-        }
-
-        .ia-performance {
-            gap: 32px;
-            padding: 66px 48px 96px;
-        }
-        .ia-performance__title,
-        .ia-performance__metrics,
-        .ia-performance__partition,
-        .ia-performance__thematic-metrics,
-        .ia-performance__thematic-partition {
-            margin: 0 auto;
-            width: 820px;
-        }
-        .ia-performance__title {
-            padding-top: 4px;
-        }
-        .ia-performance__title--secondary {
-            padding-top: 16px;
-        }
-        .ia-performance .metrics {
-            margin-bottom: 0;
-            margin-top: 0;
-        }
-        .ia-performance__thematic-metrics {
-            table-layout: fixed;
-        }
-        .ia-performance__thematic-metrics td:first-child {
-            width: 417px;
-        }
-        .ia-performance__thematic-metrics td:nth-child(2) {
-            width: 403px;
-        }
-        .ia-performance__thematic-metrics tbody tr:nth-child(even) {
-            background-color: #fff;
-        }
-        .ia-performance__thematic-partition {
-            table-layout: fixed;
-            margin: 32px auto 0;
-            background: #fff;
-        }
-        .ia-performance__thematic-partition thead th {
-            border-bottom: 2px solid #0b0f5e;
-        }
-        .ia-performance__thematic-partition tbody tr {
-            border-bottom: 1px solid rgba(66, 66, 246, 0.25);
-        }
-        .ia-performance__thematic-partition th:nth-child(1),
-        .ia-performance__thematic-partition td:nth-child(1) {
-            width: 250px;
-        }
-        .ia-performance__thematic-partition th:nth-child(2),
-        .ia-performance__thematic-partition td:nth-child(2) {
-            width: 190px;
-        }
-        .ia-performance__thematic-partition th:nth-child(3),
-        .ia-performance__thematic-partition td:nth-child(3) {
-            width: 190px;
-        }
-        .ia-performance__thematic-partition th:nth-child(4),
-        .ia-performance__thematic-partition td:nth-child(4) {
-            width: 190px;
-        }
-        .ia-performance__thematic-partition tr.partition-row--45 {
-            height: 45px;
-        }
-        .ia-performance__thematic-partition tr.partition-row--65 {
-            height: 65px;
-        }
-        .ia-performance__thematic-partition td:nth-child(2),
-        .ia-performance__thematic-partition td:nth-child(3),
-        .ia-performance__thematic-partition td:nth-child(4) {
-            vertical-align: middle;
-        }
-    }
-
-    /* ==================================================
-           MOBILE — IA Feminista (referência Figma 375px)
-           ================================================== */
-    @media (max-width: 767px) {
-        .ia-feminista-page .ia-flow--desktop {
-            display: none;
-        }
-        .ia-feminista-page .ia-flow--mobile {
-            display: block;
-        }
-
-        /* base */
-        .ia-feminista-page .ia-section {
-            padding: 64px 24px;
-            gap: 27.2px;
-        }
-        .ia-feminista-page .ia-section header,
-        .ia-feminista-page .ia-narrow {
-            width: 100%;
-            margin: 0;
-        }
-        .ia-feminista-page .ia-section h2 {
-            font-size: 36px;
-            line-height: 42px;
-        }
-        .ia-feminista-page .ia-narrow {
-            gap: 19.2px;
-        }
-        .ia-feminista-page .ia-narrow h3,
-        .ia-feminista-page .ia-wide h3 {
-            font-size: 28px;
-            line-height: 32px;
-            margin: 0;
-            padding-top: 12.8px;
-        }
-        .ia-feminista-page .ia-narrow p {
-            font-size: 18px;
-            line-height: 24px;
-        }
-
-        /* Hero */
-        .ia-feminista-page .ia-hero {
-            height: auto;
-            min-height: 0;
-            padding: 24px 24px 48px;
-            overflow: hidden;
-            justify-content: flex-start;
-        }
-        .ia-feminista-page .ia-hero__top-row {
-            flex: 0 0 auto;
-            height: auto;
-            padding: 0;
-            flex-direction: column;
-            align-items: flex-start;
-            justify-content: flex-start;
-            gap: 12px;
-        }
-        .ia-feminista-page .ia-hero__copy {
-            width: 100%;
-            max-width: 100%;
-            gap: 12px;
-        }
-        .ia-feminista-page .ia-hero__attention {
-            width: 32px;
-            height: 4px;
-            margin: 0;
-        }
-        .ia-feminista-page .ia-hero h1 {
-            font-size: 32px;
-            line-height: 32px;
-            width: 100%;
-            max-width: 240px;
-            white-space: normal;
-        }
-        .ia-feminista-page .ia-hero h1 strong {
-            white-space: nowrap;
-        }
-        .ia-feminista-page .ia-hero__copy > p {
-            max-width: 320px;
-            width: 100%;
-            font-size: 18px;
-            font-weight: 500;
-            line-height: 24px;
-            padding-top: 5px;
-            padding-bottom: 0;
-        }
-        .ia-feminista-page .ia-hero__art {
-            display: none;
-        }
-        .ia-feminista-page .ia-hero__shadow {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            height: 24px;
-            width: 100%;
-        }
-
-        /* Diferencial tecnológico */
-        .ia-feminista-page .ia-differential {
-            padding: 64px 24px;
-        }
-        .ia-feminista-page .ia-differential__content {
-            display: flex;
-            flex-direction: column;
-            gap: 19.2px;
-            width: 100%;
-        }
-        .ia-feminista-page .ia-differential__content > p {
-            font-size: 18px;
-            line-height: 24px;
-        }
-
-        /* Fluxo mobile */
-        .ia-feminista-page .ia-flow__eyebrow {
-            font-size: 28px !important;
-            line-height: 32px !important;
-            margin: 0 !important;
-            padding-top: 12.8px;
-        }
-        .ia-feminista-page .ia-flow--mobile {
-            width: 332px;
-            max-width: calc(100vw - 43px);
-            margin-inline: auto;
-            background: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            padding-top: 40px;
-        }
-        .ia-feminista-page .ia-flow--mobile img {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin: 0;
-        }
-
-        /* Arquitetura */
-        .ia-feminista-page .ia-architecture__title {
-            font-size: 32px;
-            line-height: 32px;
-        }
-        .ia-feminista-page .ia-architecture__cards {
-            flex-direction: column;
-            gap: 24px;
-            width: 100%;
-            max-width: 332px;
-            margin: 0 auto;
-            padding-top: 4px;
-        }
-        .ia-feminista-page .ia-architecture__cards article {
-            width: 100%;
-            min-height: 0;
-            height: auto;
-        }
-
-        /* Feminismo de dados */
-        .ia-feminista-page .ia-categories {
-            padding: 66px 24px 64px;
-        }
-        .ia-feminista-page .ia-categories > .ia-narrow {
-            height: auto;
-        }
-        .ia-feminista-page .ia-categories__title {
-            font-size: 28px;
-            line-height: 32px;
-        }
-        .ia-feminista-page .ia-categories__table {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            width: 100%;
-        }
-        .ia-feminista-page .ia-categories__table table {
-            min-width: 947px;
-        }
-
-        /* Governança */
-        .ia-feminista-page .ia-governance {
-            padding: 66px 24px 64px;
-        }
-        .ia-feminista-page .ia-governance .ia-narrow {
-            gap: 15.3px;
-        }
-        .ia-feminista-page
-            .ia-governance
-            .ia-narrow
-            > h3:not(.ia-not-do__title) {
-            margin: 0;
-            padding-top: 24.7px;
-        }
-        .ia-feminista-page .ia-governance .ia-cards {
-            display: flex;
-            flex-direction: row;
-            gap: 16px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            padding-top: 8.7px;
-            width: 100%;
-        }
-        .ia-feminista-page .ia-governance .ia-cards article {
-            flex: 0 0 85%;
-            scroll-snap-align: start;
-            width: auto;
-            min-height: 0;
-            padding: 30px 26px;
-        }
-        .ia-feminista-page .ia-governance .ia-cards article:first-child {
-            padding-bottom: 30px;
-        }
-
-        /* O que não faz */
-        .ia-feminista-page .ia-not-do__title {
-            font-size: 28px !important;
-            line-height: 32px !important;
-            padding-top: 24.2px !important;
-            white-space: normal;
-        }
-        .ia-feminista-page .ia-not-do__title span {
-            font-size: 24px;
-            line-height: 28px;
-        }
-        .ia-feminista-page .ia-governance .ia-not-do__title + p {
-            width: 100%;
-        }
-        .ia-feminista-page .ia-not-do__list {
-            width: 100%;
-            height: auto;
-        }
-
-        /* Desempenho */
-        .ia-feminista-page .ia-performance {
-            padding: 66px 24px 64px;
-            gap: 0;
-        }
-        .ia-feminista-page .ia-performance__title {
-            width: 100%;
-            margin: 32px 0 0;
-            padding-top: 4px;
-        }
-        .ia-feminista-page
-            .ia-performance__title:not(.ia-performance__title--secondary) {
-            margin-bottom: 32px;
-        }
-        .ia-feminista-page .ia-performance__title--secondary {
-            margin-top: 32px;
-            padding-top: 16px;
-        }
-        .ia-feminista-page .ia-table-scroll {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .ia-feminista-page .ia-table-scroll .metrics {
-            margin: 0;
-            min-width: 820px;
-            width: auto;
-        }
-        .ia-feminista-page .ia-performance__metrics,
-        .ia-feminista-page .ia-performance__partition {
-            margin: 0;
-            min-width: 820px;
-        }
-        .ia-feminista-page .ia-performance__metrics thead th {
-            white-space: nowrap;
-        }
-        .ia-feminista-page .ia-performance__thematic-metrics,
-        .ia-feminista-page .ia-performance__thematic-partition {
-            margin: 0;
-            min-width: 820px;
-            width: auto;
-            max-width: none;
-        }
-        .ia-feminista-page .ia-performance .placeholder {
-            display: none;
-        }
-
-        /* Código e dados abertos */
-        .ia-feminista-page .ia-section:has(> .ia-narrow) > .ia-narrow {
-            width: 100%;
-        }
-    }
-</style>
