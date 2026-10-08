@@ -111,10 +111,10 @@ const loadImage = (src: string) =>
 
 // Um pile de 460 folhas sorteia 460 vezes entre as mesmas 10 artes, e a página
 // tem vários gráficos: carrega cada conjunto uma vez só.
-const sheetAssets = import.meta.glob<string>("../../assets/images/papelada/*.png", { eager: true, query: "?url", import: "default" });
 const sheetsCache = new Map<string, Promise<HTMLImageElement[]>>();
 
 function loadSheets(assetsPath: string, category: Category, asset: string) {
+    const sheetAssets = import.meta.glob<string>("../../assets/images/papelada/*.png", { eager: true, query: "?url", import: "default" });
     const prefix = category === "desfavoravel" ? "proposicao-desfavoravel" : "proposicao";
     const key = `${assetsPath}|${prefix}|${asset}`;
     let sheets = sheetsCache.get(key);

@@ -207,8 +207,6 @@ export function houseLabel(value: string | null | undefined): string {
 
 export type RatingGroup = { label: string; favorable: number; unfavorable: number };
 
-export type AuthorReport = { date?: string; modified?: string; link: string; title: { rendered: string }; _embedded?: { "wp:featuredmedia"?: Array<{ source_url?: string; link?: string; alt_text?: string; media_details?: { sizes?: Record<string, { source_url?: string }> } }> } };
-
 function sortReportsByDate<T extends { date?: string; modified?: string }>(reports: T[]): T[] {
     return [...reports].sort((a, b) => Date.parse(b.date || b.modified || "") - Date.parse(a.date || a.modified || ""));
 }
