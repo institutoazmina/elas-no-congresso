@@ -1,11 +1,12 @@
 ---
+import { Image } from "astro:assets";
 import PageLayout from "../layouts/PageLayout.astro";
 
 import HistoryTimeline from "../components/about/HistoryTimeline.astro";
-const heroIllustration = "/assets/images/passaros.png";
-const attention = "/assets/images/activity/attention.svg";
-const halftoneShadow = "/assets/images/hero/halftone-shadow.png";
-const partnerLogos = "/assets/images/sobre/partner-logos.png";
+import heroIllustration from "../assets/images/passaros.png";
+import attention from "../assets/images/activity/attention.svg";
+import halftoneShadow from "../assets/images/hero/halftone-shadow.png";
+import PartnerLogos from "../components/about/PartnerLogos.astro";
 
 const challenges = [
     [
@@ -37,16 +38,17 @@ const challenges = [
 >
             <main>
                 <section
-                    class="sobre-hero site-shared-background tw:flex tw:flex-col tw:h-125 tw:overflow-hidden tw:relative tw:[&_h1]:text-ink tw:[&_h1]:text-7xl tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:font-bold tw:[&_h1]:tracking-normal tw:[&_h1]:leading-18 tw:[&_h1]:mix-blend-multiply tw:[&_h1]:uppercase tw:[&_h1]:w-[682px] tw:[&_h1]:m-0 tw:max-[901px]:h-152.5 tw:max-[901px]:[&_h1]:w-full tw:max-[561px]:[&_h1]:text-[32px] tw:max-[561px]:[&_h1]:leading-8 tw:max-[701px]:h-auto tw:max-[701px]:min-h-[466px] tw:max-[701px]:overflow-hidden tw:max-[360px]:h-auto tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+                    class="sobre-hero site-shared-background tw:flex tw:flex-col tw:h-125 tw:overflow-hidden tw:relative tw:[&_h1]:text-ink tw:[&_h1]:text-7xl tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:font-bold tw:[&_h1]:tracking-normal tw:[&_h1]:leading-18 tw:[&_h1]:mix-blend-multiply tw:[&_h1]:uppercase tw:[&_h1]:w-[682px] tw:[&_h1]:m-0 tw:max-[901px]:h-152.5 tw:max-[901px]:[&_h1]:w-full tw:max-[561px]:[&_h1]:text-[32px] tw:max-[561px]:[&_h1]:leading-8 tw:max-[701px]:h-auto tw:max-[701px]:min-h-[466px] tw:max-[701px]:overflow-hidden tw:max-[360px]:h-auto tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
                     data-page-hero
                     aria-labelledby="sobre-hero-title"
-                    style={`--sobre-hero-halftone-shadow: url(${halftoneShadow})`}
+                    style={`--sobre-hero-halftone-shadow: url(${halftoneShadow.src})`}
                 >
                     <div class="sobre-hero__top-row tw:items-center tw:flex tw:flex-[0_0_428px] tw:h-107 tw:justify-between tw:w-full tw:py-6 tw:px-12 tw:max-[901px]:items-start tw:max-[901px]:basis-146.5 tw:max-[901px]:h-146.5 tw:max-[901px]:relative tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:max-[701px]:items-start tw:max-[701px]:block tw:max-[701px]:flex-auto tw:max-[701px]:h-auto tw:max-[701px]:relative tw:max-[701px]:p-6">
                         <div class="sobre-hero__copy tw:flex tw:flex-[0_0_682px] tw:flex-col tw:gap-6 tw:w-[682px] tw:max-[901px]:w-full tw:max-[701px]:flex tw:max-[701px]:flex-none tw:max-[701px]:gap-[16px] tw:max-[701px]:w-full">
-                            <img
+                            <Image
                                 class="sobre-hero__attention tw:block tw:h-2 tw:w-24 tw:max-[701px]:h-1 tw:max-[701px]:object-fill tw:max-[701px]:w-8"
                                 src={attention}
+                                loading="eager"
                                 alt=""
                             />
                             <h1 class="tw:max-[701px]:text-[32px] tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-8 tw:max-[701px]:w-full" id="sobre-hero-title">
@@ -86,7 +88,7 @@ const challenges = [
                         <div class="sobre-hero__art tw:items-center tw:flex tw:flex-none tw:h-95 tw:justify-center tw:relative tw:w-145 tw:p-2.5 tw:max-[901px]:bottom-4 tw:max-[901px]:absolute tw:max-[901px]:-right-22 tw:max-[901px]:[transform:scale(0.54)] tw:max-[901px]:origin-[bottom_right] tw:max-[701px]:hidden" aria-hidden="true">
                             <div class="sobre-hero__illustration tw:flex-none tw:h-[488px] tw:overflow-hidden tw:relative tw:w-126.5">
                                 <div class="sobre-hero__illustration-inner tw:h-[390px] tw:left-[50%] tw:absolute tw:top-[50%] tw:[transform:translate(-50%,_-50%)] tw:w-[410px] tw:[&_img]:h-[153.89%] tw:[&_img]:left-[-10.22%] tw:[&_img]:max-w-none tw:[&_img]:absolute tw:[&_img]:top-[-29.5%] tw:[&_img]:w-[116.85%]">
-                                    <img src={heroIllustration} alt="" />
+                                    <Image src={heroIllustration} loading="eager" alt="" />
                                 </div>
                             </div>
                         </div>
@@ -143,7 +145,7 @@ const challenges = [
                             .
                         </aside>
                         <div
-                            class="flow-placeholder tw:relative tw:mt-0 tw:h-129 tw:w-205 tw:overflow-hidden tw:bg-ink tw:bg-[url('/assets/images/sobre/keyword-notes.svg'),url('/assets/images/home-reportagens/bg-pattern-cutting-mat.svg')] tw:bg-size-[820px_516px,200px_200px] tw:[background-position:center,center_top] tw:[background-repeat:no-repeat,repeat] tw:max-[701px]:w-full tw:max-[701px]:min-h-129 tw:max-[701px]:bg-[url('/assets/images/home-reportagens/bg-pattern-cutting-mat.svg')] tw:max-[701px]:bg-size-[200px_200px] tw:max-[701px]:bg-top tw:max-[701px]:bg-repeat"
+                            class="flow-placeholder tw:relative tw:mt-0 tw:h-129 tw:w-205 tw:overflow-hidden tw:bg-ink tw:bg-[url('/src/assets/images/sobre/keyword-notes.svg'),url('/src/assets/images/home-reportagens/bg-pattern-cutting-mat.svg')] tw:bg-size-[820px_516px,200px_200px] tw:[background-position:center,center_top] tw:[background-repeat:no-repeat,repeat] tw:max-[701px]:w-full tw:max-[701px]:min-h-129 tw:max-[701px]:bg-[url('/src/assets/images/home-reportagens/bg-pattern-cutting-mat.svg')] tw:max-[701px]:bg-size-[200px_200px] tw:max-[701px]:bg-top tw:max-[701px]:bg-repeat"
                             role="img"
                             aria-label="Palavras-chave como stalking, meninas, útero, misoginia, transexual e feminicídio alimentam a API de coleta."
                         ></div>
@@ -293,11 +295,7 @@ const challenges = [
                             TretAqui.
                         </p>
                     </div>
-                    <img
-                        class="partner-logos tw:block tw:h-auto tw:max-w-329.5 tw:w-full tw:mt-12 tw:mb-0 tw:mx-auto tw:max-[901px]:max-w-full tw:[.partner-section_&]:block tw:[.partner-section_&]:h-180.5 tw:[.partner-section_&]:max-w-none tw:[.partner-section_&]:w-329.5 tw:[.partner-section_&]:m-0 tw:max-[901px]:[.partner-section_&]:h-auto tw:max-[901px]:[.partner-section_&]:max-w-full tw:max-[901px]:[.partner-section_&]:w-329.5 tw:[.sobre-page_.partner-section_&]:block tw:[.sobre-page_.partner-section_&]:h-180.5 tw:[.sobre-page_.partner-section_&]:max-w-none tw:[.sobre-page_.partner-section_&]:w-329.5 tw:[.sobre-page_.partner-section_&]:m-0 tw:max-[901px]:[.sobre-page_.partner-section_&]:h-auto tw:max-[901px]:[.sobre-page_.partner-section_&]:max-w-full tw:max-[901px]:[.sobre-page_.partner-section_&]:w-329.5"
-                        src={partnerLogos}
-                        alt="Marcas das organizações parceiras"
-                    />
+                    <PartnerLogos />
                 </section>
                 <section class="sobre-section tw:border-t-[2px] tw:border-solid tw:border-t-[rgba(66,_66,_246,_0.06)] tw:py-16 tw:px-12 tw:[&_h2]:text-4xl tw:[&_h2]:leading-[42px] tw:[&_h2]:m-0 tw:max-[901px]:py-12 tw:max-[901px]:px-6   tw:max-[701px]:border-t-[2px] tw:max-[701px]:border-solid tw:max-[701px]:border-t-[rgba(66,66,246,.06)] tw:max-[701px]:pt-16.5 tw:max-[701px]:pb-16 tw:max-[701px]:px-6 tw:[&:first-of-type]:border-0 tw:[.sobre-history_+_&_>_header]:h-11 tw:[.sobre-history_+_&_>_header]:relative tw:[.sobre-history_+_&_>_header]:w-205 tw:[.sobre-history_+_&_>_header]:m-0 tw:[.sobre-history_+_&_>_header_i]:bg-ink tw:[.sobre-history_+_&_>_header_i]:left-0 tw:[.sobre-history_+_&_>_header_i]:absolute tw:[.sobre-history_+_&_>_header_i]:top-0 tw:[.sobre-history_+_&_>_header_h2]:text-4xl tw:[.sobre-history_+_&_>_header_h2]:left-0 tw:[.sobre-history_+_&_>_header_h2]:leading-[42px] tw:[.sobre-history_+_&_>_header_h2]:absolute tw:[.sobre-history_+_&_>_header_h2]:top-2.5 tw:[.sobre-history_+_&_>_header_h2]:m-0 tw:[.sobre-page_.partner-section_+_&]:pt-16.5 tw:[.sobre-page_.partner-section_+_&]:pb-16 tw:[.sobre-page_.partner-section_+_&]:px-12 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:pt-16.5 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:pb-16 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:px-12 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:pt-16.5 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:pb-[32px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:px-6">
                     <div class="sobre-narrow tw:w-205 tw:flex tw:flex-col tw:gap-6 tw:m-auto tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:mt-1 tw:[&_h3]:mb-0 tw:[&_h3]:mx-0 tw:max-[901px]:w-full tw:max-[701px]:max-w-none tw:max-[701px]:w-full tw:[.partner-section_>_&]:gap-[20px] tw:[.partner-section_>_&]:w-205 tw:[.partner-section_>_&]:m-0 tw:[.partner-section_>_&_p]:text-ink tw:[.partner-section_>_&_p]:font-sans tw:[.partner-section_>_&_p]:text-lg tw:[.partner-section_>_&_p]:font-normal tw:[.partner-section_>_&_p]:tracking-normal tw:[.partner-section_>_&_p]:leading-6 tw:[.partner-section_>_&_p]:m-0 tw:[.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_>_&]:gap-[20px] tw:[.sobre-page_.partner-section_>_&]:w-205 tw:[.sobre-page_.partner-section_>_&]:m-0 tw:[.sobre-page_.partner-section_>_&_p]:text-ink tw:[.sobre-page_.partner-section_>_&_p]:font-sans tw:[.sobre-page_.partner-section_>_&_p]:text-lg tw:[.sobre-page_.partner-section_>_&_p]:font-normal tw:[.sobre-page_.partner-section_>_&_p]:tracking-normal tw:[.sobre-page_.partner-section_>_&_p]:leading-6 tw:[.sobre-page_.partner-section_>_&_p]:m-0 tw:[.sobre-page_.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.sobre-page_.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:h-11 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:m-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:bg-ink tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:shrink-0 tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:min-h-[184px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:pt-[6px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:h-11 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:m-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:bg-ink tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:shrink-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:gap-[20px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mt-[28px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:gap-7 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:w-full tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:m-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&>header]:h-21.5">
@@ -709,7 +707,6 @@ const challenges = [
             partnerSection.classList.add("partner-section");
             const partnerNarrow = partnerSection.querySelector(".sobre-narrow");
             const partnerHeader = partnerNarrow?.querySelector("header");
-            const partnerLogos = partnerSection.querySelector(".partner-logos");
             if (partnerHeader && partnerNarrow)
                 partnerSection.insertBefore(partnerHeader, partnerNarrow);
             const partnerIntro = partnerNarrow?.querySelector("p:last-child");
@@ -718,62 +715,6 @@ const challenges = [
                     "Fazem parte da rede:",
                     "<strong>Fazem parte da rede:</strong>",
                 );
-            if (
-                partnerLogos &&
-                !partnerLogos.parentElement?.classList.contains(
-                    "partner-logos-wrap",
-                )
-            ) {
-                const logosWrap = document.createElement("div");
-                logosWrap.className = "partner-logos-wrap tw:items-center tw:flex tw:justify-center tw:min-h-63 tw:w-full tw:py-20 tw:px-6.5 tw:max-[901px]:pl-0 tw:max-[901px]:pr-0 tw:[.sobre-page_&]:items-center tw:[.sobre-page_&]:flex tw:[.sobre-page_&]:justify-center tw:[.sobre-page_&]:min-h-63 tw:[.sobre-page_&]:w-full tw:[.sobre-page_&]:pt-20 tw:[.sobre-page_&]:pb-0 tw:[.sobre-page_&]:px-6.5 tw:max-[901px]:[.sobre-page_&]:pl-0 tw:max-[901px]:[.sobre-page_&]:pr-0 tw:[body:has(.sobre-page)_.sobre-page_&]:pb-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&:focus-visible]:outline-2 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&:focus-visible]:outline-accent tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&:focus-visible]:-outline-offset-1 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:items-start tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:block tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-63 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:justify-start tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:min-h-63 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:overflow-x-auto tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-screen tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:mt-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:py-12 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:pr-17 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:pl-6.5";
-                partnerLogos.before(logosWrap);
-                logosWrap.append(partnerLogos);
-            }
-            if (
-                partnerLogos &&
-                !partnerSection.querySelector(".partner-logos-layer")
-            ) {
-                const assets = [
-                    ["/assets/images/sobre/partners/frame8.png", 0, 25, 173, 90],
-                    ["/assets/images/sobre/partners/frame16.png", 455, 193, 162, 163],
-                    ["/assets/images/sobre/partners/frame19.png", 1137, 227, 150, 61],
-                    ["/assets/images/sobre/partners/frame10.png", 466, 0, 140, 141],
-                    ["/assets/images/sobre/partners/frame17.png", 686, 184, 149, 148],
-                    ["/assets/images/sobre/partners/frame13.png", 1123, 56, 173, 40],
-                    ["/assets/images/sobre/partners/frame11.png", 667, 7, 186, 125],
-                    ["/assets/images/sobre/partners/frame12.png", 909, 0, 152, 150],
-                    ["/assets/images/sobre/partners/frame15.png", 214, 221, 186, 71],
-                    ["/assets/images/sobre/partners/frame26.png", 3, 585, 168, 109],
-                    ["/assets/images/sobre/partners/frame22.png", 460, 411, 152, 81],
-                    ["/assets/images/logos/rede-liberdade.webp", 907, 434, 156, 35],
-                    ["/assets/images/sobre/partners/frame27.png", 248, 568, 125, 125],
-                    ["/assets/images/sobre/partners/frame25.png", 1132, 423, 156, 52],
-                    ["/assets/images/sobre/partners/frame28.png", 454, 615, 165, 49],
-                    ["/assets/images/sobre/partners/tIyTvX.png", 235, 37, 154, 66],
-                    ["/assets/images/sobre/partners/q0Z1he.png", 952, 187, 66, 142],
-                    ["/assets/images/sobre/partners/vk8Ttm.png", 22, 413, 131, 77],
-                    ["/assets/images/sobre/partners/pFSdNq.png", 235, 394, 152, 114],
-                    ["/assets/images/sobre/partners/frame14.png", 5, 210, 165, 96],
-                    ["/assets/images/sobre/partners/frame23.svg", 673, 423, 175, 58],
-                    ["/assets/images/sobre/partners/rectangle.png", 676.252, 434.197, 168.485, 35.599],
-                ];
-                const layer = document.createElement("div");
-                layer.className = "partner-logos-layer tw:[.sobre-page_&]:h-180.5 tw:[.sobre-page_&]:overflow-hidden tw:[.sobre-page_&]:relative tw:[.sobre-page_&]:w-329.5 tw:[.sobre-page_&_img]:block tw:[.sobre-page_&_img]:max-w-none tw:[.sobre-page_&_img]:object-fill tw:max-[901px]:[.sobre-page_&]:h-auto tw:max-[901px]:[.sobre-page_&]:max-w-full tw:max-[901px]:[.sobre-page_&]:origin-[top_left] tw:max-[901px]:[.sobre-page_&]:w-329.5 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-39 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:max-w-none tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:overflow-hidden tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-329.5";
-                assets.forEach(([src, left, top, width, height]) => {
-                    const logo = document.createElement("img");
-                    logo.alt = "";
-                    logo.src = String(src);
-                    Object.assign(logo.style, {
-                        height: `${height}px`,
-                        left: `${left}px`,
-                        position: "absolute",
-                        top: `${top}px`,
-                        width: `${width}px`,
-                    });
-                    layer.append(logo);
-                });
-                partnerLogos.replaceWith(layer);
-            }
         }
     })();
 </script>

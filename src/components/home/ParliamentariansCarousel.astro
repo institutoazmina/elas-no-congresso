@@ -1,12 +1,13 @@
 ---
-const arrowBack = "/assets/images/parliamentarians/arrow-back.svg";
-const arrowForward = "/assets/images/parliamentarians/arrow-forward.svg";
-const backgroundPattern = "/assets/images/parliamentarians/bg-pattern.svg";
-const halftoneShadow = "/assets/images/hero/halftone-shadow.png";
-const thumbDown = "/assets/images/thumbs-down.svg";
-const thumbUp = "/assets/images/thumbs-up.svg";
-const favorableProposal = "/assets/images/proposicao-favoravel.svg";
-const unfavorableProposal = "/assets/images/proposicao-desfavoravel.svg";
+import { Image } from "astro:assets";
+import arrowBack from "../../assets/images/parliamentarians/arrow-back.svg";
+import arrowForward from "../../assets/images/parliamentarians/arrow-forward.svg";
+import backgroundPattern from "../../assets/images/parliamentarians/bg-pattern.svg";
+import halftoneShadow from "../../assets/images/hero/halftone-shadow.png";
+import thumbDown from "../../assets/images/thumbs-down.svg";
+import thumbUp from "../../assets/images/thumbs-up.svg";
+import favorableProposal from "../../assets/images/proposicao-favoravel.svg";
+import unfavorableProposal from "../../assets/images/proposicao-desfavoravel.svg";
 import { authorRoute } from "../../lib/author-page";
 import { getCurrentParliamentarians } from "../../service/api/parliamentarians";
 
@@ -34,7 +35,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
     aria-labelledby="parliamentarians-title"
     data-parliamentarians
     data-item-count={itemCount}
-    style={`--parliamentarians-background: url(${backgroundPattern}); --parliamentarians-halftone-shadow: url(${halftoneShadow})`}
+    style={`--parliamentarians-background: url(${backgroundPattern.src}); --parliamentarians-halftone-shadow: url(${halftoneShadow.src})`}
 >
     <header class="
         parliamentarians__header tw:w-[min(100%,_816px)] tw:px-12 tw:flex tw:flex-col tw:gap-4 tw:mt-12 tw:mb-2.5
@@ -72,7 +73,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                     data-previous
                     disabled={itemCount <= 1}
                 >
-                    <img src={arrowBack} alt="" />
+                    <Image src={arrowBack} alt="" />
                 </button>
                 <button class="tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-[4px]"
                     type="button"
@@ -80,7 +81,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                     data-next
                     disabled={itemCount <= 1}
                 >
-                    <img src={arrowForward} alt="" />
+                    <Image src={arrowForward} alt="" />
                 </button>
             </div>
             <div class="parliamentarians__viewport tw:relative tw:z-2 tw:w-full">
@@ -129,9 +130,9 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                                         tw:[&>:first-child]:w-30 tw:[&>:first-child]:shrink-0 tw:max-md:[&>:first-child]:w-22
                                     ">
                                         {person.photoUrl !== "Indisponível" ? (
-                                            <img
+                                            <Image
                                                 class="parliamentarians__portrait tw:block tw:w-full tw:aspect-[120/161] tw:border tw:border-solid tw:border-muted tw:object-cover"
-                                                src={person.photoUrl}
+                                                src={person.photoUrl} width={240} height={322}
                                                 alt={`Foto de ${person.displayName}`}
                                                 loading="lazy"
                                                 draggable={false}
@@ -176,7 +177,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                                             class="parliamentarians__rating-art tw:relative tw:block tw:w-[var(--rating-art-width)] tw:h-[var(--rating-art-height)]"
                                             aria-hidden="true"
                                         >
-                                            <img
+                                            <Image
                                                 class="parliamentarians__proposal tw:absolute tw:top-0 tw:left-0 tw:block tw:w-[var(--proposal-width)] tw:h-[var(--rating-art-height)]"
                                                 src={unfavorableProposal}
                                                 alt=""
@@ -187,7 +188,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                                                 tw:top-[calc((var(--rating-art-height)_-_var(--thumb-size))_/_2)] tw:right-0 tw:w-[var(--thumb-size)]
                                                 tw:h-[var(--thumb-size)] tw:rounded-[50%] tw:[transform:rotate(-5deg)] tw:flex tw:items-center tw:justify-center
                                             ">
-                                                <img
+                                                <Image
                                                     class="parliamentarians__thumb tw:block tw:w-full tw:h-full"
                                                     src={thumbDown}
                                                     alt=""
@@ -212,7 +213,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                                             class="parliamentarians__rating-art tw:relative tw:block tw:w-[var(--rating-art-width)] tw:h-[var(--rating-art-height)]"
                                             aria-hidden="true"
                                         >
-                                            <img
+                                            <Image
                                                 class="parliamentarians__proposal tw:absolute tw:top-0 tw:left-0 tw:block tw:w-[var(--proposal-width)] tw:h-[var(--rating-art-height)]"
                                                 src={favorableProposal}
                                                 alt=""
@@ -223,7 +224,7 @@ const profileRoute = (name: string) => authorRoute(name) ?? "/atividade-legislat
                                                 tw:top-[calc((var(--rating-art-height)_-_var(--thumb-size))_/_2)] tw:right-0 tw:w-[var(--thumb-size)]
                                                 tw:h-[var(--thumb-size)] tw:rounded-[50%] tw:[transform:rotate(-5deg)] tw:flex tw:items-center tw:justify-center
                                             ">
-                                                <img
+                                                <Image
                                                     class="parliamentarians__thumb tw:block tw:w-full tw:h-full"
                                                     src={thumbUp}
                                                     alt=""

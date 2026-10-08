@@ -8,7 +8,7 @@ const walk = async (directory) => (await Promise.all(
     }),
 )).flat();
 
-// Knip follows imports; public URLs and CSS backgrounds need a separate check.
+// Astro/Vite resolve src asset imports and CSS URLs; check unbundled public URLs here.
 // Template substitutions match one path segment. A directory URL (papelada)
 // means the caller selects filenames at runtime, so keep its contents.
 const sources = (await walk('src')).filter((file) => /\.(astro|tsx?|css|less|js)$/.test(file));
@@ -16,7 +16,7 @@ const assets = await walk('public/assets');
 const references = new Map();
 for (const file of sources) {
     const source = await readFile(file, 'utf8');
-    for (const match of source.matchAll(/(?:public)?(\/assets\/(?:\$\{[^}]+\}|[^\s"'`()<>{};,])+)/g)) {
+    for (const match of source.matchAll(/(?<![\w./])(?:public)?(\/assets\/(?:\$\{[^}]+\}|[^\s"'`()<>{};,])+)/g)) {
         const reference = match[1].replace(/[?#].*$/, '');
         if (!references.has(reference)) references.set(reference, []);
         references.get(reference).push(file);

@@ -1,25 +1,26 @@
 ---
-const pattern = "/assets/images/explore/bg-pattern-cutting-mat.svg";
-const elasLogo = "/assets/images/footer/elas-no-congresso.svg";
-const creativeCommons = "/assets/images/footer/creative-commons.svg";
-const instagram = "/assets/images/footer/instagram.svg";
-const tiktok = "/assets/images/footer/tiktok.svg";
-const substack = "/assets/images/footer/substack.svg";
-const youtube = "/assets/images/footer/youtube.svg";
-const github = "/assets/images/footer/github.svg";
-const bluesky = "/assets/images/footer/bluesky.svg";
-const azminaLogo = "/assets/images/footer/azmina-footer.svg";
-const codesInfo = "/assets/images/funders/codesinfo.png";
-const iaFeminista = "/assets/images/funders/ia-feminista-figma-original.png";
-const projor = "/assets/images/funders/projor.png";
-const franceAfd = "/assets/images/funders/france-afd.png";
-const elasFunder = "/assets/images/funders/elas.png";
+import { Image } from "astro:assets";
+import pattern from "../../assets/images/explore/bg-pattern-cutting-mat.svg";
+import elasLogo from "../../assets/images/footer/elas-no-congresso.svg";
+import creativeCommons from "../../assets/images/footer/creative-commons.svg";
+import instagram from "../../assets/images/footer/instagram.svg";
+import tiktok from "../../assets/images/footer/tiktok.svg";
+import substack from "../../assets/images/footer/substack.svg";
+import youtube from "../../assets/images/footer/youtube.svg";
+import github from "../../assets/images/footer/github.svg";
+import bluesky from "../../assets/images/footer/bluesky.svg";
+import azminaLogo from "../../assets/images/footer/azmina-footer.svg";
+import codesInfo from "../../assets/images/funders/codesinfo.png";
+import iaFeminista from "../../assets/images/funders/ia-feminista-figma-original.png";
+import projor from "../../assets/images/funders/projor.png";
+import franceAfd from "../../assets/images/funders/france-afd.png";
+import elasFunder from "../../assets/images/funders/elas.png";
 ---
 
 <footer class="
     site-footer tw:w-full tw:text-white tw:[&_h2]:m-0 tw:[&_p]:m-0 tw:max-md:[body.alerts-email-modal-open_&]:mt-7.5
     tw:max-md:[body.alerts-email-modal-open_&]:[order:2]
-" style={`--footer-pattern: url(${pattern})`}>
+" style={`--footer-pattern: url(${pattern.src})`}>
     <div class="
         site-footer__main tw:flex tw:w-full tw:h-90 tw:items-start tw:justify-between tw:bg-[image:var(--footer-pattern)]
         tw:bg-repeat tw:bg-top tw:bg-size-[200px_200px] tw:py-6 tw:px-12 tw:max-md:h-auto tw:max-md:flex-col
@@ -58,7 +59,7 @@ const elasFunder = "/assets/images/funders/elas.png";
             "
                 href="/"
                 aria-label="Elas no Congresso"
-                style={`--site-footer-elas-logo: url("${elasLogo}")`}
+                style={`--site-footer-elas-logo: url("${elasLogo.src}")`}
             ></a>
             <div class="
                 site-footer__social tw:[&_h2]:text-white tw:[&_h2]:font-display tw:[&_h2]:text-2xl tw:[&_h2]:font-bold
@@ -67,12 +68,12 @@ const elasFunder = "/assets/images/funders/elas.png";
             ">
                 <h2 class="" id="footer-social-title">Siga AzMina</h2>
                 <nav class="tw:flex tw:items-center tw:gap-4 tw:max-md:flex-nowrap tw:max-md:justify-start" aria-label="Redes sociais da AzMina">
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://instagram.com/revistaazmina" target="_blank" rel="noopener noreferrer" aria-label="Instagram da AzMina"><img class="tw:block tw:w-6 tw:h-6" src={instagram} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://www.tiktok.com/@revistaazmina" target="_blank" rel="noopener noreferrer" aria-label="TikTok da AzMina"><img class="tw:block tw:w-6 tw:h-6" src={tiktok} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://substack.com/@institutoazmina" target="_blank" rel="noopener noreferrer" aria-label="Substack da AzMina"><img class="tw:block tw:w-6 tw:h-6" src={substack} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://www.youtube.com/channel/UCoyYnOCs_pr0oaXSitYi35g" target="_blank" rel="noopener noreferrer" aria-label="YouTube da AzMina"><img class="tw:block tw:w-6 tw:h-6" src={youtube} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://github.com/revistaazmina/" target="_blank" rel="noopener noreferrer" aria-label="GitHub da AzMina"><img class="tw:block tw:w-6 tw:h-6" src={github} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://bsky.app/profile/revistaazmina.bsky.social" target="_blank" rel="noopener noreferrer" aria-label="Bluesky da AzMina"><img class="tw:block tw:w-6 tw:h-6" src={bluesky} alt="" /></a>
+                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://instagram.com/revistaazmina" target="_blank" rel="noopener noreferrer" aria-label="Instagram da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={instagram} alt="" /></a>
+                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://www.tiktok.com/@revistaazmina" target="_blank" rel="noopener noreferrer" aria-label="TikTok da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={tiktok} alt="" /></a>
+                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://substack.com/@institutoazmina" target="_blank" rel="noopener noreferrer" aria-label="Substack da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={substack} alt="" /></a>
+                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://www.youtube.com/channel/UCoyYnOCs_pr0oaXSitYi35g" target="_blank" rel="noopener noreferrer" aria-label="YouTube da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={youtube} alt="" /></a>
+                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://github.com/revistaazmina/" target="_blank" rel="noopener noreferrer" aria-label="GitHub da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={github} alt="" /></a>
+                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://bsky.app/profile/revistaazmina.bsky.social" target="_blank" rel="noopener noreferrer" aria-label="Bluesky da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={bluesky} alt="" /></a>
                 </nav>
             </div>
         </section>
@@ -95,11 +96,11 @@ const elasFunder = "/assets/images/funders/elas.png";
             tw:max-md:[&_img]:h-auto tw:max-md:[&_img]:object-contain tw:max-md:w-[min(100%,_312px)] tw:max-md:gap-2
             tw:max-md:[body.alerts-email-modal-open_&]:h-12 tw:max-md:flex
         ">
-            <img class="site-footer__ia tw:w-[122px] tw:h-[60px] tw:md:block tw:md:w-[122px] tw:md:h-[60px] tw:md:flex-[0_0_122px] tw:md:object-contain tw:md:max-w-[122px]" src={iaFeminista} alt="IA Feminista" />
-            <img class="site-footer__codesinfo tw:w-34.5 tw:h-9.5 tw:md:block tw:md:w-34.5 tw:md:h-9.5 tw:md:flex-[0_0_138px] tw:md:object-contain tw:md:max-w-34.5" src={codesInfo} alt="Codesinfo" />
-            <img class="site-footer__projor tw:md:block tw:md:w-[62px] tw:md:h-[26px] tw:md:flex-[0_0_62px] tw:md:object-contain tw:md:max-w-[62px]" src={projor} alt="Projor" />
-            <img class="site-footer__afd tw:w-[90px] tw:h-[54px] " src={franceAfd} alt="Agence Française de Développement" />
-            <img class="site-footer__elas-funder tw:w-[58px] tw:h-[82px] tw:max-md:[body.alerts-email-modal-open_&]:h-12!" src={elasFunder} alt="Elas" />
+            <Image class="site-footer__ia tw:w-[122px] tw:h-[60px] tw:md:block tw:md:w-[122px] tw:md:h-[60px] tw:md:flex-[0_0_122px] tw:md:object-contain tw:md:max-w-[122px]" src={iaFeminista} alt="IA Feminista" />
+            <Image class="site-footer__codesinfo tw:w-34.5 tw:h-9.5 tw:md:block tw:md:w-34.5 tw:md:h-9.5 tw:md:flex-[0_0_138px] tw:md:object-contain tw:md:max-w-34.5" src={codesInfo} alt="Codesinfo" />
+            <Image class="site-footer__projor tw:md:block tw:md:w-[62px] tw:md:h-[26px] tw:md:flex-[0_0_62px] tw:md:object-contain tw:md:max-w-[62px]" src={projor} alt="Projor" />
+            <Image class="site-footer__afd tw:w-[90px] tw:h-[54px] " src={franceAfd} alt="Agence Française de Développement" />
+            <Image class="site-footer__elas-funder tw:w-[58px] tw:h-[82px] tw:max-md:[body.alerts-email-modal-open_&]:h-12!" src={elasFunder} alt="Elas" />
         </div>
     </section>
 
@@ -111,7 +112,7 @@ const elasFunder = "/assets/images/funders/elas.png";
         tw:max-md:gap-3.5 tw:max-md:py-4.5 tw:max-md:px-6 tw:max-md:[body.alerts-email-modal-open_&_p]:text-sm!
         tw:max-md:[body.alerts-email-modal-open_&_p]:leading-4!
     ">
-        <img class={String.raw`
+        <Image class={String.raw`
             site-footer__azmina tw:block tw:w-16 tw:h-[36px] tw:flex-none tw:max-md:w-11.5 tw:max-md:h-auto
             tw:max-md:[order:2] tw:max-md:[body.alerts-email-modal-open_.site-footer\_\_banner_>_&]:w-12.5!
             tw:max-md:[body.alerts-email-modal-open_.site-footer\_\_banner_>_&]:h-8.5!
@@ -124,7 +125,7 @@ const elasFunder = "/assets/images/funders/elas.png";
             tw:text-inherit tw:underline tw:[text-underline-position:from-font] tw:focus-visible:outline-2
             tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:max-md:block
         " href="https://creativecommons.org/licenses/by-nc-nd/2.0/deed.pt_BR" target="_blank" rel="noopener noreferrer">CC BY-NC-ND 2.0</a></p>
-        <img class="tw:max-md:hidden" src={creativeCommons} alt="Licença Creative Commons BY-NC-ND 2.0" />
+        <Image class="tw:max-md:hidden" src={creativeCommons} alt="Licença Creative Commons BY-NC-ND 2.0" />
     </div>
 </footer>
 

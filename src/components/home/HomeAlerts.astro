@@ -1,17 +1,18 @@
 ---
-const siren = "/assets/images/home-alerts/alert-siren.png";
-const chevron = "/assets/images/home-reportagens/chevron-right.svg";
+import { Image } from "astro:assets";
+import siren from "../../assets/images/home-alerts/alert-siren.png";
+import chevron from "../../assets/images/home-reportagens/chevron-right.svg";
 ---
 
 <section class="
     home-alerts tw:relative tw:flex tw:w-full tw:min-h-[606px] tw:items-center tw:justify-center tw:mt-12
-    tw:overflow-hidden tw:bg-ink tw:bg-[url('/assets/images/home-reportagens/bg-pattern-cutting-mat.svg')]
+    tw:overflow-hidden tw:bg-ink tw:bg-[url('/src/assets/images/home-reportagens/bg-pattern-cutting-mat.svg')]
     tw:bg-repeat tw:bg-top-left tw:bg-size-[200px_200px] tw:text-white tw:font-sans tw:p-8 tw:[&_h2]:font-display
     tw:[&_h2]:text-[28px] tw:[&_h2]:font-bold tw:[&_h2]:leading-8 tw:[&_h2]:uppercase
     tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:m-0 tw:[&_p]:m-0 tw:max-md:min-h-[606px]
     tw:max-md:items-stretch tw:max-md:p-8 tw:max-md:[&_h2]:w-full tw:max-md:[&_h2]:text-left
 " aria-labelledby="home-alerts-title">
-    <img class="
+    <Image class="
         home-alerts__siren tw:absolute tw:top-27 tw:left-[calc(50%_-_60px)] tw:block tw:w-30 tw:h-32 tw:max-md:top-12
         tw:max-md:left-6 tw:max-md:w-20 tw:max-md:h-auto
     " src={siren} alt="" />
@@ -30,7 +31,7 @@ const chevron = "/assets/images/home-reportagens/chevron-right.svg";
             tw:[&_img]:h-[10px] tw:[&_img]:[transform:rotate(-90deg)] tw:hover:bg-ink tw:hover:outline-1
             tw:hover:outline-white tw:focus-visible:outline-2 tw:focus-visible:outline-white
             tw:focus-visible:outline-offset-[4px]
-        " href="/alertas">Receba alertas <img class="" src={chevron} alt="" /></a>
+        " href="/alertas">Receba alertas <Image class="" src={chevron} alt="" /></a>
     </div>
 </section>
 

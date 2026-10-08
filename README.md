@@ -27,10 +27,10 @@ npm run build
 - `src/scripts/`: comportamento das páginas no navegador.
 - `src/service/api/`: acesso aos dados no build.
 - `src/styles/tailwind.css`: entrada do Tailwind, tokens de cores/fontes e fonte local.
-- `public/assets/images/`: imagens, agrupadas por assunto; inclui os mapas e a papelada.
+- `src/assets/images/`: imagens, agrupadas por assunto; inclui os mapas e a papelada.
 - `public/assets/fonts/`: fontes locais.
 
-Imagens usam URLs `/assets/images/...`, inclusive em CSS. Os arquivos WebP já estão otimizados: não são gerados nem importados pelo bundler. Os dois mapas SVG interativos são lidos no build para preservar seus paths inline.
+Imagens locais são importadas de `src/assets/images/`. Os templates usam `Image` de `astro:assets` para processá-las no build e gerar URLs em `dist/_astro/`. Fundos CSS e imagens de scripts usam URLs resolvidas pelo bundler; os mapas SVG interativos usam imports `?raw` para preservar seus paths inline. Imagens remotas da AzMina também são autorizadas para otimização. Fotos parlamentares continuam remotas, pois algumas URLs redirecionam e precisam do fallback no navegador.
 
 Os componentes usam utilitários Tailwind com prefixo `tw:` e flexbox para layout. Não há LESS nem folhas de estilo por página. Valores calculados em tempo de execução, como percentuais dos gráficos e deslocamentos dos carrosséis, continuam no JavaScript. O acompanhamento por página está em [CSS-TASKS.md](CSS-TASKS.md).
 

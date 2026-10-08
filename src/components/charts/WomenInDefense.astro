@@ -1,7 +1,8 @@
 ---
-const attention = "/assets/images/activity/attention.svg";
-const thumbsUp = "/assets/images/thumbs-up.svg";
-const thumbsDown = "/assets/images/thumbs-down.svg";
+import { Image } from "astro:assets";
+import attention from "../../assets/images/activity/attention.svg";
+import thumbsUp from "../../assets/images/thumbs-up.svg";
+import thumbsDown from "../../assets/images/thumbs-down.svg";
 import Papelada from "./Papelada.astro";
 import SectionDivider from "../shared/SectionDivider.astro";
 import { getStanceByGender, type StanceRatio } from "../../service/api/stats";
@@ -35,7 +36,7 @@ const charts = [
             tw:[&_p]:text-ink tw:[&_p]:text-lg tw:[&_p]:font-normal tw:[&_p]:leading-6 tw:max-md:[&_p]:text-sm
             tw:max-md:[&_p]:leading-6 tw:md:w-180 tw:md:h-33 tw:md:[&>img]:w-24 tw:md:[&>img]:h-1 tw:md:[&_p]:w-180
         ">
-            <img class="tw:h-1 tw:w-24" src={attention} alt="" />
+            <Image class="tw:h-1 tw:w-24" src={attention} alt="" />
             <h2 id="women-defense-title">Mulheres na defesa</h2>
             <p>O número de projetos protocolados por mulheres deu um salto na última legislatura, refletindo o aumento histórico de mulheres eleitas em 2022 e o seu engajamento em blindar direitos já conquistados.</p>
         </header>
@@ -67,7 +68,7 @@ const charts = [
                             <div class="tw:flex tw:h-8 tw:items-center tw:gap-2"><strong>{chart.favorable}%</strong><span class="
                                 women-defense__icon women-defense__icon--up tw:w-8 tw:h-8 tw:flex-none tw:overflow-hidden tw:rounded-[1000px]
                                 tw:[&_img]:w-full tw:[&_img]:h-full tw:flex tw:items-center tw:justify-center
-                            "><img src={thumbsUp} alt="" /></span></div>
+                            "><Image src={thumbsUp} alt="" /></span></div>
                             <b>Favoráveis</b>
                         </div>
                         <div class="women-defense__papers tw:w-full tw:[&_canvas]:block tw:[&_canvas]:w-full tw:[&_canvas]:h-auto">
@@ -89,7 +90,7 @@ const charts = [
                                 women-defense__icon tw:w-8 tw:h-8 tw:flex-none tw:overflow-hidden tw:rounded-[1000px] tw:[&_img]:w-full
                                 tw:[&_img]:h-full tw:max-md:w-[22px] tw:max-md:h-[22px] tw:max-md:aspect-[1/1] tw:flex tw:items-center
                                 tw:justify-center
-                            "><img class="tw:max-md:w-full tw:max-md:h-full" src={thumbsDown} alt="" /></span></div>
+                            "><Image class="tw:max-md:w-full tw:max-md:h-full" src={thumbsDown} alt="" /></span></div>
                             <b>Desfavoráveis</b>
                         </div>
                     </div>

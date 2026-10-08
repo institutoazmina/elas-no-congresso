@@ -1,8 +1,9 @@
 ---
+import { Image } from "astro:assets";
 import StanceSelect from "./StanceSelect";
-const thumbsDown = "/assets/images/thumbs-down.svg";
-const thumbsUp = "/assets/images/thumbs-up.svg";
-const chevron = "/assets/images/party-chart/chevron.svg";
+import thumbsDown from "../../assets/images/thumbs-down.svg";
+import thumbsUp from "../../assets/images/thumbs-up.svg";
+import chevron from "../../assets/images/party-chart/chevron.svg";
 import type { Stance } from "../../service/api/stats";
 
 interface Props {
@@ -16,7 +17,8 @@ const { labels } = Astro.props;
 <StanceSelect
     client:load
     labels={labels}
-    thumbsDownSrc={thumbsDown}
-    thumbsUpSrc={thumbsUp}
-    chevronSrc={chevron}
-/>
+>
+    <Image slot="thumbsDown" src={thumbsDown} alt="" width={32} height={32} class="stance-toggle__thumb tw:block tw:w-8 tw:h-8 tw:flex-none tw:rounded-[1000px]" />
+    <Image slot="thumbsUp" src={thumbsUp} alt="" width={32} height={32} class="stance-toggle__thumb tw:block tw:w-8 tw:h-8 tw:flex-none tw:rounded-[1000px]" />
+    <Image slot="chevron" src={chevron} alt="" width={16} height={8} class="stance-toggle__chevron tw:block tw:w-4 tw:h-2 tw:[transition:transform_160ms_ease] tw:[.stance-toggle[data-popup-open]_&]:transform-[rotate(180deg)]" />
+</StanceSelect>

@@ -1,7 +1,8 @@
 ---
-const pattern = "/assets/images/explore/bg-pattern-cutting-mat.svg";
-const chevron = "/assets/images/home-reportagens/chevron-right.svg";
-const screenTool = "/assets/images/explore/screen-tool-@3x.png";
+import { Image } from "astro:assets";
+import pattern from "../../assets/images/explore/bg-pattern-cutting-mat.svg";
+import chevron from "../../assets/images/home-reportagens/chevron-right.svg";
+import screenTool from "../../assets/images/explore/screen-tool-@3x.png";
 ---
 
 <section class="
@@ -13,52 +14,29 @@ const screenTool = "/assets/images/explore/screen-tool-@3x.png";
     tw:max-md:w-full tw:max-md:min-h-0 tw:max-md:items-start tw:max-md:justify-start tw:max-md:py-13
     tw:max-md:px-6 tw:max-md:[&_h2]:w-auto tw:max-md:[&_h2]:h-auto tw:max-md:[&_h2]:text-[28px]
     tw:max-md:[&_h2]:leading-8 tw:max-md:[&_h2]:text-left tw:md:p-[64px_max(24px,_calc((100vw_-_660px)_/_2))]
-" aria-labelledby="explore-congress-title" data-explore-link tabindex="0" role="link" style={`--explore-pattern: url(${pattern})`}>
-    <div class="explore-congress__content tw:flex tw:w-full tw:h-auto tw:min-w-0 tw:flex-col tw:items-center tw:gap-0 tw:max-md:items-start tw:md:w-165 tw:md:min-w-0 ">
+" aria-labelledby="explore-congress-title" style={`--explore-pattern: url(${pattern.src})`}>
+    <a href="/atividade-legislativa" aria-labelledby="explore-congress-title explore-congress-cta" class="explore-congress__content tw:group tw:no-underline tw:cursor-pointer tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-4 tw:flex tw:w-full tw:h-auto tw:min-w-0 tw:flex-col tw:items-center tw:gap-0 tw:max-md:items-start tw:md:w-165 tw:md:min-w-0 ">
         <h2 class="" id="explore-congress-title">Explore</h2>
         <p class="
             explore-congress__subtitle tw:max-md:max-w-full tw:max-md:text-lg tw:max-md:leading-6 tw:max-md:text-center
-            tw:md:w-165 tw:md:h-auto tw:w-full tw:h-auto tw:text-white tw:font-sans tw:cursor-pointer tw:text-lg
+            tw:md:w-165 tw:md:h-auto tw:w-full tw:h-auto tw:text-white tw:font-sans tw:text-lg
             tw:font-normal tw:leading-6 tw:text-center tw:mt-0 tw:mb-7 tw:mx-0
         ">Quer saber mais sobre o que tá tramitando sobre<br class="" />pautas de gênero, raça e LGBTQIAPN+?</p>
         <div class="
             explore-congress__screen-wrap tw:flex tw:w-full tw:max-w-165 tw:h-auto tw:items-start tw:justify-center tw:p-0
             tw:mt-0 tw:mb-7 tw:mx-0 tw:max-md:justify-start tw:md:w-165
         ">
-            <img class="explore-congress__screen tw:block tw:w-full tw:h-auto tw:flex-none tw:border-[2px] tw:border-solid tw:border-accent tw:rounded-2xl tw:bg-white " src={screenTool} alt="" />
+            <Image class="explore-congress__screen tw:block tw:w-full tw:h-auto tw:flex-none tw:border-[2px] tw:border-solid tw:border-accent tw:rounded-2xl tw:bg-white " src={screenTool} alt="" />
         </div>
-        <a class="
+        <span id="explore-congress-cta" class="
             explore-congress__button tw:flex tw:w-full tw:max-w-85 tw:h-14 tw:items-center tw:justify-center tw:gap-2
             tw:border-0 tw:rounded-none tw:bg-accent tw:text-white tw:font-display tw:text-xl tw:font-bold
             tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:text-left tw:uppercase tw:cursor-pointer tw:no-underline
             tw:pt-4.5 tw:pb-3.5 tw:px-6 tw:m-0 tw:[&_img]:block tw:[&_img]:w-[14px] tw:[&_img]:h-[10px]
-            tw:[&_img]:[transform:rotate(-90deg)] tw:hover:bg-ink tw:hover:outline-1 tw:hover:outline-white
-            tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-[4px] tw:max-md:w-max
+            tw:[&_img]:[transform:rotate(-90deg)] tw:group-hover:bg-ink tw:group-hover:outline-1 tw:group-hover:outline-white tw:group-focus-visible:bg-ink
+            tw:max-md:w-max
             tw:max-md:max-w-full tw:max-md:self-start tw:max-md:justify-start tw:max-md:text-base tw:max-md:whitespace-nowrap
             tw:md:w-85 tw:md:max-w-none
-        " href="/atividade-legislativa">Explore a produção do Congresso <img class="" src={chevron} alt="" /></a>
-    </div>
+        ">Explore a produção do Congresso <Image class="" src={chevron} alt="" /></span>
+    </a>
 </section>
-
-<script>
-    const initializeExploreLinks = () => {
-        document.querySelectorAll<HTMLElement>("[data-explore-link]:not([data-ready])").forEach((section) => {
-            section.dataset.ready = "true";
-            const navigate = () => { window.location.href = "/atividade-legislativa"; };
-            section.addEventListener("click", (event) => {
-                if ((event.target as Element).closest("a")) return;
-                navigate();
-            });
-            section.addEventListener("keydown", (event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    navigate();
-                }
-            });
-        });
-    };
-    initializeExploreLinks();
-    document.addEventListener("astro:page-load", initializeExploreLinks);
-</script>
-
-

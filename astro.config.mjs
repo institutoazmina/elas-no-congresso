@@ -9,6 +9,10 @@ export default defineConfig({
   site: 'https://www.elasnocongresso.com.br',
   trailingSlash: 'ignore',
   integrations: [sitemap(), react()],
+  image: {
+    // Parliamentary photo URLs may redirect; keep their browser-side fallback.
+    domains: ['azmina.com.br'],
+  },
   env: {
     schema: {
       // Site é estático: a API só é chamada no build, então a variável é de

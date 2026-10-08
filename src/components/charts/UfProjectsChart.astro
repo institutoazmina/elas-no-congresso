@@ -1,30 +1,30 @@
 ---
-import { existsSync, readFileSync } from "node:fs";
-const attention = "/assets/images/party-chart/attention.svg";
-const buttonChevron = "/assets/images/home-reportagens/chevron-right.svg";
-const mapBase = "/assets/images/charts/map/map-br-base@2.5x.webp";
-const mapLabels = "/assets/images/charts/map/map-br-labels@2.5x.webp";
-const mapHitboxes = readFileSync("public/assets/images/charts/map/map-br-ufs-vector.svg", "utf8");
-const rankingHighlighter1a = "/assets/images/charts/table-ranking-highlighter-1-a.svg";
-const rankingHighlighter1b = "/assets/images/charts/table-ranking-highlighter-1-b.svg";
-const rankingHighlighter2a = "/assets/images/charts/table-ranking-highlighter-2-a.svg";
-const rankingHighlighter2b = "/assets/images/charts/table-ranking-highlighter-2-b.svg";
-const rankingHighlighter3a = "/assets/images/charts/table-ranking-highlighter-3-a.svg";
-const rankingHighlighter3b = "/assets/images/charts/table-ranking-highlighter-3-b.svg";
-const rankingHighlighter4a = "/assets/images/charts/table-ranking-highlighter-4-a.svg";
-const rankingHighlighter4b = "/assets/images/charts/table-ranking-highlighter-4-b.svg";
-const rankingHighlighter5a = "/assets/images/charts/table-ranking-highlighter-5-a.svg";
-const rankingHighlighter5b = "/assets/images/charts/table-ranking-highlighter-5-b.svg";
-const favorableRankingHighlighter1a = "/assets/images/charts/table-ranking-highlighter-favorable-1-a.svg";
-const favorableRankingHighlighter1b = "/assets/images/charts/table-ranking-highlighter-favorable-1-b.svg";
-const favorableRankingHighlighter2a = "/assets/images/charts/table-ranking-highlighter-favorable-2-a.svg";
-const favorableRankingHighlighter2b = "/assets/images/charts/table-ranking-highlighter-favorable-2-b.svg";
-const favorableRankingHighlighter3a = "/assets/images/charts/table-ranking-highlighter-favorable-3-a.svg";
-const favorableRankingHighlighter3b = "/assets/images/charts/table-ranking-highlighter-favorable-3-b.svg";
-const favorableRankingHighlighter4a = "/assets/images/charts/table-ranking-highlighter-favorable-4-a.svg";
-const favorableRankingHighlighter4b = "/assets/images/charts/table-ranking-highlighter-favorable-4-b.svg";
-const favorableRankingHighlighter5a = "/assets/images/charts/table-ranking-highlighter-favorable-5-a.svg";
-const favorableRankingHighlighter5b = "/assets/images/charts/table-ranking-highlighter-favorable-5-b.svg";
+import { Image } from "astro:assets";
+import attention from "../../assets/images/party-chart/attention.svg";
+import buttonChevron from "../../assets/images/home-reportagens/chevron-right.svg";
+import mapBase from "../../assets/images/charts/map/map-br-base@2.5x.webp";
+import mapLabels from "../../assets/images/charts/map/map-br-labels@2.5x.webp";
+import mapHitboxes from "../../assets/images/charts/map/map-br-ufs-vector.svg?raw";
+import rankingHighlighter1a from "../../assets/images/charts/table-ranking-highlighter-1-a.svg";
+import rankingHighlighter1b from "../../assets/images/charts/table-ranking-highlighter-1-b.svg";
+import rankingHighlighter2a from "../../assets/images/charts/table-ranking-highlighter-2-a.svg";
+import rankingHighlighter2b from "../../assets/images/charts/table-ranking-highlighter-2-b.svg";
+import rankingHighlighter3a from "../../assets/images/charts/table-ranking-highlighter-3-a.svg";
+import rankingHighlighter3b from "../../assets/images/charts/table-ranking-highlighter-3-b.svg";
+import rankingHighlighter4a from "../../assets/images/charts/table-ranking-highlighter-4-a.svg";
+import rankingHighlighter4b from "../../assets/images/charts/table-ranking-highlighter-4-b.svg";
+import rankingHighlighter5a from "../../assets/images/charts/table-ranking-highlighter-5-a.svg";
+import rankingHighlighter5b from "../../assets/images/charts/table-ranking-highlighter-5-b.svg";
+import favorableRankingHighlighter1a from "../../assets/images/charts/table-ranking-highlighter-favorable-1-a.svg";
+import favorableRankingHighlighter1b from "../../assets/images/charts/table-ranking-highlighter-favorable-1-b.svg";
+import favorableRankingHighlighter2a from "../../assets/images/charts/table-ranking-highlighter-favorable-2-a.svg";
+import favorableRankingHighlighter2b from "../../assets/images/charts/table-ranking-highlighter-favorable-2-b.svg";
+import favorableRankingHighlighter3a from "../../assets/images/charts/table-ranking-highlighter-favorable-3-a.svg";
+import favorableRankingHighlighter3b from "../../assets/images/charts/table-ranking-highlighter-favorable-3-b.svg";
+import favorableRankingHighlighter4a from "../../assets/images/charts/table-ranking-highlighter-favorable-4-a.svg";
+import favorableRankingHighlighter4b from "../../assets/images/charts/table-ranking-highlighter-favorable-4-b.svg";
+import favorableRankingHighlighter5a from "../../assets/images/charts/table-ranking-highlighter-favorable-5-a.svg";
+import favorableRankingHighlighter5b from "../../assets/images/charts/table-ranking-highlighter-favorable-5-b.svg";
 import StanceToggle from "./StanceToggle.astro";
 import SectionDivider from "../shared/SectionDivider.astro";
 import { getStanceByState, type StateStat, type Stance } from "../../service/api/stats";
@@ -71,6 +71,7 @@ const views = [
 
 // O design entrega um PNG por UF/stance, todos no mesmo canvas 1800x1800 do
 // mapa base — destacar um estado é só empilhar o recorte dele sobre a base.
+const mapLayers = import.meta.glob<{ default: import("astro").ImageMetadata }>("../../assets/images/charts/map/map-br-ufs-*.webp", { eager: true });
 const layerSlug: Record<Stance, string> = { unfavorable: "desfavoravel", favorable: "favoravel" };
 
 const highlights = views.map((view) => {
@@ -79,8 +80,8 @@ const highlights = views.map((view) => {
         stance: view.stance,
         ufs: top,
         layers: top.flatMap((uf) => {
-            const image = `/assets/images/charts/map/map-br-ufs-${layerSlug[view.stance]}-${uf}@2.5x.webp`;
-            return existsSync(`public${image}`) ? [{ uf, image }] : [];
+            const layer = mapLayers[`../../assets/images/charts/map/map-br-ufs-${layerSlug[view.stance]}-${uf}@2.5x.webp`];
+            return layer ? [{ uf, image: layer.default }] : [];
         }),
     };
 });
@@ -134,7 +135,7 @@ const ufLabels: Record<string, string> = {
             tw:min-[821px]:[&>p]:w-180 tw:min-[821px]:[&>p]:h-18 tw:min-[821px]:[&>p]:text-lg
             tw:min-[821px]:[&>p]:font-normal tw:min-[821px]:[&>p]:leading-6 tw:min-[821px]:[&>p]:m-0
         ">
-            <img class="uf-projects-chart__attention tw:block tw:w-24 tw:h-1 tw:min-[821px]:w-24 tw:min-[821px]:h-1" src={attention} alt="" />
+            <Image class="uf-projects-chart__attention tw:block tw:w-24 tw:h-1 tw:min-[821px]:w-24 tw:min-[821px]:h-1" src={attention} alt="" />
             <div class={String.raw`
                 uf-projects-chart__heading uf-title-group tw:flex tw:w-180 tw:h-34.5 tw:flex-col tw:items-start tw:gap-4
                 tw:max-md:w-full tw:max-md:h-auto tw:max-md:items-start tw:max-md:gap-4 tw:max-md:text-left tw:min-[821px]:flex
@@ -220,15 +221,15 @@ const ufLabels: Record<string, string> = {
                         tw:max-md:aspect-[1] tw:max-md:border tw:max-md:border-solid tw:max-md:border-accent tw:min-[821px]:w-180
                         tw:min-[821px]:h-180
                     ">
-                        <img class="tw:relative" decoding="async" src={mapBase} alt="" width={720} height={720} loading="lazy" draggable={false} />
+                        <Image class="tw:relative" decoding="async" src={mapBase} alt="" width={720} height={720} loading="lazy" draggable={false} />
                         {highlights.map((view) => (
                             <div data-stance-view={view.stance} role="img" aria-label={`Mapa do Brasil com destaque para ${view.ufs.join(", ")}`}>
                                 {view.layers.map((layer) => (
-                                    <img decoding="async" src={layer.image} alt="" width={720} height={720} loading="lazy" draggable={false} />
+                                    <Image decoding="async" src={layer.image} alt="" width={720} height={720} loading="lazy" draggable={false} />
                                 ))}
                             </div>
                         ))}
-                        <img decoding="async" src={mapLabels} alt="" width={720} height={720} loading="lazy" draggable={false} />
+                        <Image decoding="async" src={mapLabels} alt="" width={720} height={720} loading="lazy" draggable={false} />
                         <div class="
                             uf-projects-chart__map-hitbox tw:absolute tw:inset-0 tw:z-2 tw:pointer-events-none tw:[&_svg]:block
                             tw:[&_svg]:w-full tw:[&_svg]:h-full tw:[&_svg]:pointer-events-none tw:[&_path]:[pointer-events:all]
@@ -305,7 +306,7 @@ const ufLabels: Record<string, string> = {
                                                             tw:in-[.uf-projects-chart__ranking-highlighter--4]:h-6
                                                             tw:in-[.uf-projects-chart__ranking-highlighter--5]:top-0.5
                                                             tw:in-[.uf-projects-chart__ranking-highlighter--5]:h-6
-                                                        `}><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--one tw:absolute tw:block tw:inset-0"><img src={rankingHighlighters[index][0]} alt="" /></span></span>
+                                                        `}><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--one tw:absolute tw:block tw:inset-0"><Image src={rankingHighlighters[index][0]} alt="" /></span></span>
                                                         <span class={String.raw`
                                                             uf-projects-chart__ranking-highlighter-layer uf-projects-chart__ranking-highlighter-layer--two tw:absolute
                                                             tw:block tw:mix-blend-darken tw:left-[1.9109%] tw:w-[98.0892%]
@@ -319,7 +320,7 @@ const ufLabels: Record<string, string> = {
                                                             tw:in-[.uf-projects-chart__ranking-highlighter--4]:h-6
                                                             tw:in-[.uf-projects-chart__ranking-highlighter--5]:top-1.5
                                                             tw:in-[.uf-projects-chart__ranking-highlighter--5]:h-6
-                                                        `}><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--two tw:absolute tw:block tw:inset-0"><img src={rankingHighlighters[index][1]} alt="" /></span></span>
+                                                        `}><span class="uf-projects-chart__ranking-highlighter-image uf-projects-chart__ranking-highlighter-image--two tw:absolute tw:block tw:inset-0"><Image src={rankingHighlighters[index][1]} alt="" /></span></span>
                                                     </span>
                                                 )}
                                                 <span class="uf-projects-chart__state-label tw:relative tw:z-1">{ufLabels[row.uf.trim().toUpperCase()] ?? row.uf}</span>
@@ -361,7 +362,7 @@ const ufLabels: Record<string, string> = {
         tw:[&_img]:transform-[rotate(-90deg)] tw:hover:bg-ink tw:focus-visible:outline-2 tw:focus-visible:outline-ink
         tw:focus-visible:outline-offset-1 tw:max-md:relative tw:max-md:bottom-auto tw:max-md:left-[50%]
         tw:max-md:max-w-full tw:min-[821px]:bottom-0 tw:min-[821px]:w-73.5 tw:min-[821px]:h-14
-    " href="/atividade-legislativa">Veja como está o seu estado <img src={buttonChevron} alt="" /></a>
+    " href="/atividade-legislativa">Veja como está o seu estado <Image src={buttonChevron} alt="" /></a>
     <div class="
         uf-projects-chart__tooltip tw:fixed tw:z-1000 tw:pointer-events-none tw:max-w-60 tw:bg-white tw:text-ink
         tw:border tw:border-solid tw:border-accent tw:shadow-[0_16px_30px_rgba(0,0,0,0.2)] tw:font-sans tw:text-sm

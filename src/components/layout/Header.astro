@@ -1,5 +1,5 @@
 ---
-const azmLogo = "/assets/images/charts/azm.svg";
+import azmLogo from "../../assets/images/charts/azm.svg";
 import HighlighterMarks from "../shared/HighlighterMarks.astro";
 
 const links = [
@@ -17,7 +17,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     site-header site-shared-background tw:text-ink tw:min-h-13 tw:min-[821px]:min-h-26 tw:sticky tw:top-0 tw:z-100
     tw:w-full tw:[transition:transform_180ms_ease,_background-color_180ms_ease] tw:[transform:translateY(0)]
     tw:[will-change:transform] tw:max-md:sticky tw:max-md:z-100 tw:max-md:top-0 tw:max-md:w-full tw:max-md:bg-white
-    tw:max-md:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:max-md:bg-top tw:max-md:bg-repeat
+    tw:max-md:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:max-md:bg-top tw:max-md:bg-repeat
     tw:max-md:bg-size-[400px_400px] tw:max-md:[transition:transform_180ms_ease,_background-color_180ms_ease]
     tw:max-md:[transform:translateY(0)] tw:max-md:[will-change:transform]
     tw:md:[transition:transform_180ms_ease,_background-color_180ms_ease]
@@ -35,7 +35,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     tw:md:[.site-header&.site-header--desktop-scrolled.site-header--desktop-hidden:not(.site-header--over-hero)]:[backdrop-filter:none]
     tw:md:[.site-header&.site-header--desktop-scrolled.site-header--desktop-hidden:not(.site-header--over-hero)]:shadow-none
     tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-[var(--header-hero-surface,_#fff)]
-    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')]
+    tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')]
     tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-top
     tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-repeat
     tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-size-[400px_400px]
@@ -43,7 +43,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
     tw:md:[.site-alerts-header-background_>_.site-header&.site-header--desktop-scrolled]:fixed
     tw:md:[.site-alerts-header-background_>_.site-header&.site-header--desktop-scrolled]:inset-[0_0_auto]
     tw:[body:has(&)]:m-0 tw:[.author-route-page_&]:box-border
- tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]">
+ tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]">
     <nav
         class="
             site-header__content container-fluid wrap tw:!max-w-screen tw:items-center tw:flex tw:gap-4 tw:justify-between
@@ -60,8 +60,8 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
             class="
                 site-header__brand logo-header tw:hover:bg-[#4745e8] tw:min-[821px]:h-[26px] tw:min-[821px]:w-57.5 tw:bg-ink
                 tw:bg-none tw:flex-none tw:h-3.5 tw:w-32
-                tw:[-webkit-mask:url('/assets/images/logo-header.svg')_center_/_contain_no-repeat]
-                tw:[mask:url('/assets/images/logo-header.svg')_center_/_contain_no-repeat]
+                tw:[-webkit-mask:url('/src/assets/images/logo-header.svg')_center_/_contain_no-repeat]
+                tw:[mask:url('/src/assets/images/logo-header.svg')_center_/_contain_no-repeat]
                 tw:[transition:background-color_0.4s_ease]
             "
             data-highlighter-target
@@ -99,7 +99,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
             "
             href="https://azmina.com.br/"
             aria-label="Revista AzMina"
-            style={`--site-header-azm-logo: url("${azmLogo}")`}
+            style={`--site-header-azm-logo: url("${azmLogo.src}")`}
         ></a>
 
         <HighlighterMarks />
@@ -124,7 +124,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
             tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--hidden:not(.site-header--over-hero):not(:has(&[open]))]:shadow-none
             tw:max-md:[.site-header--scrolled:not(:has(&[open]))_.highlighter-marks]:hidden
             tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:bg-[var(--header-hero-surface,_#fff)]
-            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')]
+            tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')]
             tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:bg-top
             tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:bg-repeat
             tw:max-md:[.site-header.site-shared-background.site-header--scrolled.site-header--over-hero:not(:has(&[open]))]:bg-size-[400px_400px]

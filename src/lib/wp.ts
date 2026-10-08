@@ -34,6 +34,7 @@ export async function fetchReportagensPage(
   perPage: number,
   page = 1,
   orderByDate = false,
+  search?: string,
 ): Promise<WpPostsPage> {
   const params = new URLSearchParams({
     _embed: "wp:featuredmedia",
@@ -41,6 +42,7 @@ export async function fetchReportagensPage(
     page: String(page),
   });
 
+  if (search) params.set("search", search);
   if (tagId !== undefined) params.append("tags[]", String(tagId));
   if (orderByDate) {
     params.set("orderby", "date");

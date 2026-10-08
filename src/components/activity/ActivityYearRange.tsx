@@ -1,6 +1,7 @@
+import PersistentPortal from "../shared/PersistentPortal";
 import { Popover } from "@base-ui/react/popover";
 import { Select } from "@base-ui/react/select";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
     YEAR_RANGE_CHANGE_EVENT,
     YEAR_RANGE_SYNC_EVENT,
@@ -21,20 +22,22 @@ function YearSelect({ label, defaultLabel, value, options, onChange }: {
     options: ActivityYearOption[];
     onChange: (value: string) => void;
 }) {
+    const listId = useId();
     const items = [{ value: "", label: defaultLabel }, ...options];
     return (
         <Select.Root items={items} value={value} onValueChange={(next) => onChange(next ?? "")}>
             <div className="activity-year-range__bound tw:min-w-0">
                 <Select.Label className="activity-year-range__label tw:mb-1.5 tw:text-[14px]">{label}</Select.Label>
-                <Select.Trigger className="activity-year-range__select tw:flex tw:w-full tw:h-9 tw:items-center tw:justify-between tw:gap-2 tw:border-2 tw:border-solid tw:border-[rgb(66_66_246/25%)] tw:rounded-none tw:bg-white tw:text-periwinkle tw:font-bold tw:font-sans tw:cursor-pointer tw:text-sm tw:py-1 tw:px-2.5 tw:hover:border-accent tw:data-popup-open:border-accent tw:focus-visible:outline-4 tw:focus-visible:outline-lime tw:focus-visible:outline-offset-1" type="button">
+                <Select.Trigger aria-controls={listId} className="activity-year-range__select tw:flex tw:w-full tw:h-9 tw:items-center tw:justify-between tw:gap-2 tw:border-2 tw:border-solid tw:border-[rgb(66_66_246/25%)] tw:rounded-none tw:bg-white tw:text-periwinkle tw:font-bold tw:font-sans tw:cursor-pointer tw:text-sm tw:py-1 tw:px-2.5 tw:hover:border-accent tw:data-popup-open:border-accent tw:focus-visible:outline-4 tw:focus-visible:outline-lime tw:focus-visible:outline-offset-1" type="button">
                     <Select.Value /><Select.Icon><Chevron /></Select.Icon>
                 </Select.Trigger>
             </div>
-            <Select.Portal>
+
+                <PersistentPortal>
                 <Select.Positioner className="activity-year-range__options-positioner tw:z-130" sideOffset={4} alignItemWithTrigger={false}>
                     <Select.Popup className="activity-year-range__options tw:min-w-(--anchor-width) tw:max-h-(--available-height) tw:border tw:border-solid tw:border-accent tw:bg-white tw:text-ink tw:shadow-[0_8px_24px_rgb(11_15_94/12%)]" onKeyDown={(event) => { if (event.key === "Escape") event.stopPropagation(); }}>
                         <Select.ScrollUpArrow className="activity-year-range__scroll-arrow tw:h-5 tw:bg-white tw:text-accent tw:flex tw:items-center tw:justify-center">▴</Select.ScrollUpArrow>
-                        <Select.List className="activity-year-range__list tw:max-h-[min(248px,var(--available-height))] tw:overflow-y-auto tw:p-1">
+                        <Select.List id={listId} aria-label={label} className="activity-year-range__list tw:max-h-[min(248px,var(--available-height))] tw:overflow-y-auto tw:p-1">
                             {items.map((item) => (
                                 <Select.Item className="activity-year-range__option tw:flex tw:min-h-8 tw:items-center tw:justify-between tw:gap-3 tw:font-normal tw:text-sm tw:leading-5 tw:font-sans tw:cursor-pointer tw:py-1 tw:px-2 tw:data-highlighted:bg-[#ededff] tw:data-highlighted:text-accent tw:data-highlighted:outline-none tw:data-selected:font-bold" key={item.value} value={item.value}>
                                     <Select.ItemText>{item.label}</Select.ItemText><Select.ItemIndicator>✓</Select.ItemIndicator>
@@ -44,7 +47,8 @@ function YearSelect({ label, defaultLabel, value, options, onChange }: {
                         <Select.ScrollDownArrow className="activity-year-range__scroll-arrow tw:h-5 tw:bg-white tw:text-accent tw:flex tw:items-center tw:justify-center">▾</Select.ScrollDownArrow>
                     </Select.Popup>
                 </Select.Positioner>
-            </Select.Portal>
+            </PersistentPortal>
+
         </Select.Root>
     );
 }

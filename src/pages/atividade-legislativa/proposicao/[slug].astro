@@ -1,10 +1,11 @@
 ---
+import { Image } from "astro:assets";
 import PageLayout from "../../../layouts/PageLayout.astro";
-const thumbsUp = "/assets/images/activity/thumbs-up.svg";
-const thumbsDown = "/assets/images/activity/thumbs-down.svg";
-const paper = "/assets/images/activity/author-hero-paper.png";
-const paperclip = "/assets/images/activity/author-paperclip.png";
-const statusLabel = "/assets/images/activity/proposition-status-label.svg";
+import thumbsUp from "../../../assets/images/activity/thumbs-up.svg";
+import thumbsDown from "../../../assets/images/activity/thumbs-down.svg";
+import paper from "../../../assets/images/activity/author-hero-paper.png";
+import paperclip from "../../../assets/images/activity/author-paperclip.png";
+import statusLabel from "../../../assets/images/activity/proposition-status-label.svg";
 import { authorRoute, normalizePhotoUrl } from "../../../lib/author-page";
 import { propositionSlug } from "../../../lib/proposition-utils";
 import { formatPresentedDate } from "../../../lib/canonical";
@@ -66,7 +67,7 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
 
 <PageLayout title={title} description={activity.ementa} fontVariant="medium"
     pageClass="proposition-page tw:min-w-80 tw:text-ink tw:font-sans"
-      pageStyle={`--proposition-paper: url(${paper}); --proposition-paperclip: url(${paperclip}); --proposition-status-label: url(${statusLabel})`}
+      pageStyle={`--proposition-paper: url(${paper.src}); --proposition-paperclip: url(${paperclip.src}); --proposition-status-label: url(${statusLabel.src})`}
 >
       <main class="tw:overflow-clip">
         <section class="proposition-hero tw:[&>a]:absolute tw:[&>a]:z-1 tw:[&>a]:top-3 tw:[&>a]:left-12 tw:[&>a]:text-[#d0d0fd] tw:[&>a]:text-base tw:[&>a]:font-bold tw:[&>a]:leading-6 tw:[&>a]:no-underline tw:[&_p]:font-display tw:[&_p]:font-bold tw:[&_p]:[font-variation-settings:'wdth'_75] tw:[&_p]:text-center tw:[&_p]:uppercase tw:[&_p]:text-2xl tw:[&_p]:leading-8 tw:[&_p]:m-0 tw:[&_h1]:font-display tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:text-center tw:[&_h1]:uppercase tw:[&_h1]:m-0 tw:max-md:h-55 tw:max-md:bg-center tw:max-md:bg-size-[cover] tw:max-md:[&>a]:top-3 tw:max-md:[&>a]:left-4 tw:max-md:[&>a]:text-sm tw:max-md:[&_p]:text-lg tw:max-md:[&_p]:leading-6 tw:max-md:[&_h1]:mt-1 tw:max-md:[&_h1]:text-[clamp(36px,_12vw,_48px)] tw:max-md:[&_h1]:leading-[1] tw:relative tw:h-53 tw:overflow-hidden tw:bg-[#3838d9] tw:bg-[image:var(--proposition-paper)] tw:[background-blend-mode:multiply] tw:bg-center tw:bg-no-repeat tw:bg-size-[cover] tw:text-white" data-page-hero aria-labelledby="proposition-title">
@@ -96,8 +97,8 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
                 "proposition-assessment__value tw:flex tw:min-h-8 tw:items-center tw:gap-2 tw:text-ink tw:[&_img]:block tw:[&_img]:w-8 tw:[&_img]:h-8 tw:[&_strong]:font-display tw:[&_strong]:text-lg tw:[&_strong]:font-bold tw:[&_strong]:[font-variation-settings:'wdth'_75] tw:[&_strong]:leading-6 tw:[&_strong]:uppercase",
                 { "is-favorable": assessment === "Favorável", "is-unfavorable": assessment === "Desfavorável", [String.raw`is-unrated tw:[.proposition-assessment\_\_value&]:text-muted tw:[.activity-table\_\_stance&]:text-muted tw:[.author-table\_\_stance&]:text-muted`]: assessment === "Sem avaliação" },
               ]}>
-                {assessment === "Favorável" && <img src={thumbsUp} alt="" />}
-                {assessment === "Desfavorável" && <img src={thumbsDown} alt="" />}
+                {assessment === "Favorável" && <Image src={thumbsUp} alt="" loading="eager" />}
+                {assessment === "Desfavorável" && <Image src={thumbsDown} alt="" loading="eager" />}
                 <strong>{assessment}</strong>
               </div>
               <p class="proposition-assessment__comment tw:text-ink tw:text-lg tw:leading-6 tw:mt-4 tw:mb-0 tw:mr-2 tw:ml-0">
@@ -112,13 +113,13 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
               <h2 class="tw:text-ink tw:font-display tw:text-[32px] tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-8 tw:[text-box-edge:cap_alphabetic] tw:[text-box-trim:trim-both] tw:uppercase tw:mt-0 tw:mb-[24px] tw:mx-0" id="proposition-authors-title">Autoria</h2>
               {authors.length > 0
                 ? <div class="proposition-authors__list tw:flex tw:flex-col tw:gap-4 tw:py-2 tw:px-0">
-                    {authors.map((author) => {
+                    {authors.map((author, index) => {
                       const photo = normalizePhotoUrl(author.foto);
                       const initials = author.nome.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
                       return <a class="proposition-author tw:flex tw:w-full tw:min-w-0 tw:items-start tw:gap-2 tw:text-ink tw:no-underline tw:[&_strong]:text-sm tw:[&_strong]:font-normal tw:[&_strong]:leading-4 tw:[&_small]:text-sm tw:[&_small]:font-normal tw:[&_small]:leading-4 tw:[&:hover_strong]:text-accent tw:[&:hover_strong]:underline tw:[&:focus-visible_strong]:text-accent tw:[&:focus-visible_strong]:underline" href={authorRoute(author.nome) || "/atividade-legislativa"} aria-label={`Ver autoria de ${author.nome}`}>
                         {photo
                           ? <span class="proposition-author__photo tw:w-7.5 tw:h-10 tw:flex-[0_0_30px] tw:border tw:border-solid tw:border-muted tw:overflow-hidden tw:[&_img]:w-full tw:[&_img]:h-full tw:[&_img]:object-cover tw:[&_img]:object-[top] tw:flex tw:items-center tw:justify-center">
-                              <img src={photo} alt={`Foto de ${author.nome}`} loading="lazy" onerror="this.hidden = true; this.nextElementSibling.hidden = false" />
+                              <Image src={photo} width={60} height={80} alt={`Foto de ${author.nome}`} loading={index < 6 ? "eager" : "lazy"} onerror="this.hidden = true; this.nextElementSibling.hidden = false" />
                               <span class={String.raw`proposition-author__fallback tw:flex-[0_0_30px] tw:border tw:border-solid tw:border-muted tw:bg-[#f1f1ff] tw:text-accent tw:text-[12px] tw:font-bold tw:w-full tw:h-full tw:object-cover tw:object-[top] tw:[.proposition-author\_\_photo_&[hidden]]:hidden tw:flex tw:items-center tw:justify-center`} aria-hidden="true" hidden>{initials}</span>
                             </span>
                           : <span class={String.raw`proposition-author__fallback tw:w-7.5 tw:h-10 tw:flex-[0_0_30px] tw:border tw:border-solid tw:border-muted tw:bg-[#f1f1ff] tw:text-accent tw:text-[12px] tw:font-bold tw:[.proposition-author\_\_photo_&[hidden]]:hidden tw:flex tw:items-center tw:justify-center`} aria-hidden="true">{initials}</span>}

@@ -1,8 +1,9 @@
 ---
-const markOne = "/assets/images/charts/highlighter-mark-1.svg";
-const markTwo = "/assets/images/charts/highlighter-mark-2.svg";
-const markThree = "/assets/images/charts/highlighter-mark-3.svg";
-const markFour = "/assets/images/charts/highlighter-mark-4.svg";
+import { Image } from "astro:assets";
+import markOne from "../../assets/images/charts/highlighter-mark-1.svg";
+import markTwo from "../../assets/images/charts/highlighter-mark-2.svg";
+import markThree from "../../assets/images/charts/highlighter-mark-3.svg";
+import markFour from "../../assets/images/charts/highlighter-mark-4.svg";
 ---
 
 <span class="
@@ -20,7 +21,7 @@ const markFour = "/assets/images/charts/highlighter-mark-4.svg";
             highlighter-marks__image-wrap highlighter-marks__image-wrap--one tw:block tw:absolute tw:h-full tw:inset-0
             tw:w-full tw:bottom-0 tw:left-[0.21%] tw:right-[0.29%] tw:top-0
         ">
-            <img src={markOne} alt="" />
+            <Image src={markOne} alt="" loading="eager" />
         </span>
     </span>
     <span class="highlighter-marks__layer highlighter-marks__layer--two tw:block tw:absolute tw:mix-blend-multiply tw:bottom-[9.8%] tw:left-0 tw:right-[0.46%] tw:top-0">
@@ -28,7 +29,7 @@ const markFour = "/assets/images/charts/highlighter-mark-4.svg";
             highlighter-marks__image-wrap highlighter-marks__image-wrap--two tw:block tw:absolute tw:h-full tw:inset-0
             tw:w-full tw:bottom-[0.37%] tw:left-[0.2%] tw:right-[0.28%] tw:top-[0.39%]
         ">
-            <img src={markTwo} alt="" />
+            <Image src={markTwo} alt="" loading="eager" />
         </span>
     </span>
     <span class="
@@ -39,7 +40,7 @@ const markFour = "/assets/images/charts/highlighter-mark-4.svg";
             highlighter-marks__image-wrap highlighter-marks__image-wrap--three tw:block tw:absolute tw:h-full tw:inset-0
             tw:w-full tw:bottom-0 tw:left-[0.19%] tw:right-0 tw:top-[0.17%]
         ">
-            <img src={markThree} alt="" />
+            <Image src={markThree} alt="" loading="eager" />
         </span>
     </span>
     <span class="
@@ -50,7 +51,7 @@ const markFour = "/assets/images/charts/highlighter-mark-4.svg";
             highlighter-marks__image-wrap highlighter-marks__image-wrap--four tw:block tw:absolute tw:h-full tw:inset-0
             tw:w-full tw:bottom-[0.17%] tw:left-[0.22%] tw:right-[0.22%] tw:top-0
         ">
-            <img src={markFour} alt="" />
+            <Image src={markFour} alt="" loading="eager" />
         </span>
     </span>
 </span>

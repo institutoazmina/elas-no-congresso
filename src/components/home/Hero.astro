@@ -1,19 +1,20 @@
 ---
-const attentionMark = "/assets/images/activity/attention.svg";
-const highlighterOne = "/assets/images/hero/highlighter-desfavoraveis-1.svg";
-const highlighterTwo = "/assets/images/hero/highlighter-desfavoraveis-2.svg";
-const halftoneShadow = "/assets/images/hero/halftone-shadow.png";
-const heroIllustration = "/assets/images/hero/hero-congresso-ilustracao.webp";
+import { Image } from "astro:assets";
+import attentionMark from "../../assets/images/activity/attention.svg";
+import highlighterOne from "../../assets/images/hero/highlighter-desfavoraveis-1.svg";
+import highlighterTwo from "../../assets/images/hero/highlighter-desfavoraveis-2.svg";
+import halftoneShadow from "../../assets/images/hero/halftone-shadow.png";
+import heroIllustration from "../../assets/images/hero/hero-congresso-ilustracao.webp";
 ---
 
 <section
     class="
         hero site-shared-background tw:text-ink tw:flex tw:flex-col tw:h-[436px] tw:overflow-hidden tw:relative
         tw:max-[761px]:h-auto tw:min-[761px]:block tw:min-[761px]:h-125
-     tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+     tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
     data-page-hero
     aria-labelledby="hero-title"
-    style={`--hero-halftone-shadow: url(${halftoneShadow})`}
+    style={`--hero-halftone-shadow: url(${halftoneShadow.src})`}
 >
     <div class="
         hero__top-row tw:items-start tw:flex tw:flex-col tw:h-auto tw:justify-start tw:relative tw:z-2 tw:pt-8 tw:pb-0
@@ -25,7 +26,7 @@ const heroIllustration = "/assets/images/hero/hero-congresso-ilustracao.webp";
             tw:min-w-0 tw:w-full tw:min-[761px]:flex-[1_0_0] tw:min-[761px]:gap-6 tw:min-[761px]:justify-center
             tw:min-[761px]:max-w-240 tw:min-[761px]:w-auto
         ">
-            <img class="hero__attention tw:block tw:h-1 tw:w-8 tw:min-[761px]:h-2 tw:min-[761px]:w-24" src={attentionMark} alt="" />
+            <Image class="hero__attention tw:block tw:h-1 tw:w-8 tw:min-[761px]:h-2 tw:min-[761px]:w-24" src={attentionMark} loading="eager" alt="" />
             <h1 id="hero-title" class="
                 hero__title tw:text-ink tw:font-display tw:text-[32px] tw:[font-variation-settings:'wdth'_75] tw:font-bold
                 tw:tracking-normal tw:leading-8 tw:mix-blend-multiply tw:uppercase tw:m-0 tw:min-[761px]:text-[58px]
@@ -48,7 +49,7 @@ const heroIllustration = "/assets/images/hero/hero-congresso-ilustracao.webp";
                         tw:left-[5.73%] tw:right-0 tw:top-[3.92%]
                     ">
                         <span class="hero__highlighter-image-wrap hero__highlighter-image-wrap--one tw:block tw:absolute tw:bottom-[0.14%] tw:left-[0.39%] tw:right-[0.54%] tw:top-[0.15%]">
-                            <img src={highlighterOne} alt="" />
+                            <Image src={highlighterOne} loading="eager" alt="" />
                         </span>
                     </span>
                     <span class="
@@ -56,7 +57,7 @@ const heroIllustration = "/assets/images/hero/hero-congresso-ilustracao.webp";
                         tw:left-[1.91%] tw:right-0 tw:top-[13.73%]
                     ">
                         <span class="hero__highlighter-image-wrap hero__highlighter-image-wrap--two tw:block tw:absolute tw:bottom-[0.15%] tw:left-[0.29%] tw:right-[0.56%] tw:top-[0.39%]">
-                            <img src={highlighterTwo} alt="" />
+                            <Image src={highlighterTwo} loading="eager" alt="" />
                         </span>
                     </span>
                 </span><span class="hero__highlighted-word-text tw:relative tw:z-1">desfavoráveis</span></span><span class="hero__description-text tw:relative tw:z-1">{`    aos direitos de mulheres, meninas e pessoas LGBTQIAPN+`}</span></p>
@@ -77,7 +78,7 @@ const heroIllustration = "/assets/images/hero/hero-congresso-ilustracao.webp";
             hero__illustration tw:hidden tw:flex-none tw:h-[390px] tw:relative tw:w-[514px] tw:m-2.5 tw:min-[761px]:block
             tw:min-[761px]:[transform:scale(0.86)] tw:min-[761px]:origin-[right_center] tw:min-[1101px]:[transform:none]
         " aria-hidden="true">
-            <span class="hero__illustration-image tw:inset-0 tw:absolute tw:[&_img]:block tw:[&_img]:h-auto tw:[&_img]:max-w-full tw:[&_img]:w-full"><img decoding="async" height={389} width={513} src={heroIllustration} alt="" loading="eager" /></span>
+            <span class="hero__illustration-image tw:inset-0 tw:absolute tw:[&_img]:block tw:[&_img]:h-auto tw:[&_img]:max-w-full tw:[&_img]:w-full"><Image decoding="async" height={389} width={513} src={heroIllustration} loading="eager" fetchpriority="high" alt="" /></span>
         </div>
     </div>
 

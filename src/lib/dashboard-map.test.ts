@@ -9,7 +9,7 @@ assert.strictEqual(MAP_UF_CODES.length, 27);
 
 // O vetor oficial exportado do Figma contém uma geometria identificada para
 // cada UF. A camada de interação referencia exatamente estes 27 IDs.
-const mapSvg = readFileSync(new URL("../../public/assets/images/activity/map/ufs-vector-diverging-elas-palette.svg", import.meta.url), "utf8");
+const mapSvg = readFileSync(new URL("../assets/images/activity/map/ufs-vector-diverging-elas-palette.svg", import.meta.url), "utf8");
 const vectorUfs = [...mapSvg.matchAll(/<path id="([A-Z]{2})"/g)].map((match) => match[1]);
 assert.strictEqual(vectorUfs.length, 27);
 assert.deepStrictEqual([...vectorUfs].sort(), [...MAP_UF_CODES].sort());

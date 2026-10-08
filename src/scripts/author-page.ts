@@ -16,19 +16,14 @@ import {
     type AuthorProposal,
     type ParliamentarianTerm,
     type RatingGroup,
-    selectAuthorReports,
-    type AuthorReport,
 } from "../lib/author-page";
 import { fetchActivity } from "../lib/activity-api";
 import { PUBLIC_API_BASE_URL } from "astro:env/client";
-import { resolveReportagemImage } from "../lib/wp";
 import { extractPropositionYear, formatPresentedDate } from "../lib/canonical";
 import { propositionRoute } from "../lib/proposition-utils";
 
 type AuthorSort = "number" | "author" | "summary" | "assessment" | "evaluator" | "progress" | "category" | "updated";
 type AuthorWindow = Window & { __authorPageAbortController?: AbortController };
-type WpMedia = { alt_text?: string; source_url?: string; link?: string; media_details?: { sizes?: Record<string, { source_url?: string }> } };
-type WpPost = AuthorReport;
 
 const authorWindow = window as AuthorWindow;
 const normalize = (value: unknown) => String(value ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -62,6 +57,8 @@ function initAuthorPage() {
     const { signal } = controller;
     const $ = <T extends Element = HTMLElement>(selector: string) => root.querySelector<T>(selector)!;
     const $$ = <T extends Element = HTMLElement>(selector: string) => [...root.querySelectorAll<T>(selector)];
+    const imageTemplates = new Map([...root.querySelectorAll<HTMLTemplateElement>("template[data-author-image]")].map(template => [template.dataset.authorImage!, template]));
+    const cloneImage = (src: string) => imageTemplates.get(src.replace(/^http:/, "https:"))?.content.querySelector("img")?.cloneNode(true) as HTMLImageElement | undefined;
     const authorId = Number(root.dataset.authorId);
     const mobileViewport = window.matchMedia("(max-width: 767px)");
     let activity: AuthorActivity | null = null;
@@ -162,10 +159,8 @@ function initAuthorPage() {
         const element = document.createElement("span");
         element.className = `activity-table__stance tw:flex tw:items-center tw:gap-1.5 tw:[&_img]:w-6 tw:[&_img]:h-6 ${data.className}`;
         if (data.icon) {
-            const icon = document.createElement("img");
-            icon.src = data.icon;
-            icon.alt = "";
-            element.append(icon);
+            const icon = cloneImage(data.icon);
+            if (icon) element.append(icon);
         }
         element.append(document.createTextNode(data.label));
         return element;
@@ -177,11 +172,8 @@ function initAuthorPage() {
         link.className = "activity-table__author tw:flex tw:items-center tw:gap-2 tw:text-inherit tw:no-underline tw:[&_img]:w-7.5 tw:[&_img]:h-10 tw:[&_img]:flex-none tw:[&_img]:border tw:[&_img]:border-solid tw:[&_img]:border-muted tw:[&_img]:object-cover tw:[&_img]:object-[top_center] tw:[&_>_span]:flex tw:[&_>_span]:min-w-0 tw:[&_>_span]:flex-col tw:[&_strong]:overflow-hidden tw:[&_strong]:text-ellipsis tw:[&_strong]:whitespace-nowrap tw:[&_small]:text-[rgb(11_15_94_/_65%)] tw:[&_small]:text-xs tw:[&_small]:leading-4";
         link.href = authorRoute(author.nome) || "/atividade-legislativa";
         link.setAttribute("aria-label", `Ver página de autoria de ${author.nome}`);
-        if (author.foto) {
-            const image = document.createElement("img");
-            image.src = author.foto.replace(/^http:/, "https:");
-            image.alt = "";
-            image.loading = "lazy";
+        const image = author.foto ? cloneImage(author.foto) : undefined;
+        if (image) {
             image.onerror = () => {
                 const fallback = document.createElement("span");
                 fallback.className = "activity-table__author-fallback tw:w-7.5 tw:h-10 tw:flex-none tw:border tw:border-solid tw:border-muted tw:object-cover tw:object-[top_center] tw:bg-[#f1f1ff] tw:text-accent tw:font-bold tw:flex tw:items-center tw:justify-center";
@@ -346,93 +338,6 @@ function initAuthorPage() {
         renderProposals();
         $("[data-author-status]").setAttribute("hidden", "");
         $("[data-author-content]").removeAttribute("hidden");
-        void loadReports(name);
-    }
-
-    function decodeHtml(value: string) {
-        return new DOMParser().parseFromString(value, "text/html").body.textContent?.trim() || "";
-    }
-
-    async function loadReports(name: string) {
-        const section = $("[data-author-reports]");
-        section.hidden = false;
-        const url = new URL("https://azmina.com.br/wp-json/wp/v2/az_reportagem");
-        url.searchParams.set("_embed", "wp:featuredmedia");
-        url.searchParams.set("orderby", "date");
-        url.searchParams.set("order", "desc");
-        url.searchParams.set("per_page", "3");
-        url.searchParams.set("search", name);
-        try {
-            const relatedPosts = await fetchJson<WpPost[]>(url.href, signal);
-            let latestPosts: WpPost[] = [];
-            if (relatedPosts.length === 0) {
-                const latestUrl = new URL(url.href);
-                latestUrl.searchParams.delete("search");
-                latestPosts = await fetchJson<WpPost[]>(latestUrl.href, signal);
-            }
-            const selected = selectAuthorReports(relatedPosts, latestPosts);
-            const posts = selected.reports;
-            if (selected.title === "latest") {
-                $("[data-author-reports-related-title]").setAttribute("hidden", "");
-                $("[data-author-reports-latest-title]").removeAttribute("hidden");
-            } else {
-                $("[data-author-reports-related-title]").removeAttribute("hidden");
-                $("[data-author-reports-latest-title]").setAttribute("hidden", "");
-            }
-            const grid = $("[data-author-reports-grid]");
-            grid.replaceChildren(...posts.map((post) => {
-                const media = post._embedded?.["wp:featuredmedia"]?.[0];
-                const imageSource = resolveReportagemImage(media);
-                const article = document.createElement("article");
-                article.className = "reportagem-card tw:[&_h3]:font-display tw:[&_h3]:font-bold tw:[&_h3]:[font-variation-settings:'wdth'_75] tw:[&_h3]:uppercase tw:[&_h3]:text-ink tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:min-h-16 tw:[&_h3]:m-0 tw:flex tw:flex-[0_0_384px] tw:flex-col tw:gap-4 tw:[scroll-snap-align:start]";
-                const imageLink = document.createElement("a");
-                imageLink.className = "reportagem-card__image";
-                imageLink.href = post.link;
-                imageLink.target = "_blank";
-                imageLink.rel = "noopener noreferrer";
-                imageLink.setAttribute("aria-label", `Ler: ${decodeHtml(post.title.rendered)}`);
-                if (imageSource) {
-                    const image = document.createElement("img");
-                    image.src = imageSource;
-                    image.alt = media?.alt_text?.trim() || decodeHtml(post.title.rendered);
-                    image.loading = "lazy";
-                    imageLink.append(image);
-                }
-                const title = document.createElement("h3");
-                const titleLink = document.createElement("a");
-                titleLink.className = "reportagem-card__title-link";
-                titleLink.href = post.link;
-                titleLink.target = "_blank";
-                titleLink.rel = "noopener noreferrer";
-                titleLink.setAttribute("aria-label", `Ler: ${decodeHtml(post.title.rendered)}`);
-                titleLink.textContent = decodeHtml(post.title.rendered);
-                title.append(titleLink);
-                const details = document.createElement("div");
-                details.className = "reportagem-card__details tw:items-start tw:flex tw:flex-col tw:gap-4 tw:justify-center tw:overflow-hidden";
-                const link = document.createElement("a");
-                link.className = "reportagem-card__link tw:font-display tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:uppercase tw:items-center tw:self-start tw:bg-accent tw:text-white tw:flex tw:text-lg tw:gap-2 tw:h-9.5 tw:justify-center tw:leading-6 tw:no-underline tw:pt-2 tw:pb-1.5 tw:pr-3 tw:pl-3.5 tw:[&_>_span:last-child]:items-center tw:[&_>_span:last-child]:flex tw:[&_>_span:last-child]:h-6 tw:[&_>_span:last-child]:justify-end tw:[&_>_span:last-child]:w-3 tw:[&_img]:block tw:[&_img]:h-1.5 tw:[&_img]:[transform:rotate(-90deg)] tw:[&_img]:w-3";
-                link.href = post.link;
-                link.target = "_blank";
-                link.rel = "noopener noreferrer";
-                link.innerHTML = `<span>Ler reportagem</span><span aria-hidden="true"><img src="${root.dataset.chevron || ""}" alt="" /></span>`;
-                details.append(link);
-                const reportDate = post.modified || post.date;
-                if (reportDate) {
-                    const time = document.createElement("time");
-                    time.className = "reportagem-card__date tw:text-navy tw:text-sm tw:font-normal tw:tracking-normal tw:leading-4 tw:m-0 tw:[.reportagem-card--dark_&]:text-white";
-                    time.dateTime = reportDate;
-                    time.textContent = `Atualizada em ${new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "long", year: "numeric", timeZone: "America/Sao_Paulo" }).format(new Date(reportDate))}`;
-                    details.append(time);
-                }
-                article.append(imageLink, title, details);
-                return article;
-            }));
-            $("[data-author-reports-empty]").toggleAttribute("hidden", posts.length !== 0);
-        } catch (error) {
-            if ((error as Error).name === "AbortError") return;
-            $("[data-author-reports-grid]").replaceChildren();
-            $("[data-author-reports-empty]").removeAttribute("hidden");
-        }
     }
 
     async function load() {

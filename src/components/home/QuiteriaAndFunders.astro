@@ -1,6 +1,7 @@
 ---
-const quiteria = "/assets/images/quiteria.png";
-const chevron = "/assets/images/home-reportagens/chevron-right.svg";
+import { Image } from "astro:assets";
+import quiteria from "../../assets/images/quiteria.png";
+import chevron from "../../assets/images/home-reportagens/chevron-right.svg";
 ---
 
 <section class="quiteria-funders tw:bg-white tw:shadow-[0_-24px_0_#fff,_0_48px_0_#fff] tw:text-ink tw:font-sans" aria-label="QuitérIA">
@@ -9,7 +10,7 @@ const chevron = "/assets/images/home-reportagens/chevron-right.svg";
         tw:overflow-hidden tw:mt-6 tw:mb-12 tw:mx-auto tw:max-md:py-7.5 tw:max-md:px-[16px] tw:max-md:my-0
         tw:max-md:mx-auto tw:md:w-180 tw:md:h-auto tw:md:pb-12 tw:md:mt-6 tw:md:mb-0 tw:md:mx-auto
     ">
-        <img
+        <Image
             class="
                 quiteria-funders__image tw:w-full tw:h-auto tw:object-contain tw:max-md:aspect-[2/1] tw:max-md:object-contain
                 tw:md:w-180 tw:md:h-90 tw:md:object-contain
@@ -62,7 +63,7 @@ const chevron = "/assets/images/home-reportagens/chevron-right.svg";
             tw:[&_img]:w-[14px] tw:[&_img]:h-[10px] tw:[&_img]:[transform:rotate(-90deg)] tw:hover:bg-ink
             tw:focus-visible:outline-2 tw:focus-visible:outline-ink tw:focus-visible:outline-offset-1
         " href="/ia-feminista">
-            Entenda a metodologia <img class="" src={chevron} alt="" />
+            Entenda a metodologia <Image class="" src={chevron} alt="" />
         </a>
     </div>
 </section>

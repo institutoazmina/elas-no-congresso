@@ -48,7 +48,7 @@ function resolve(options: PapeladaOptions): Config {
         size: options.size ?? "a4",
         category: options.category ?? "favoravel",
         gap: options.gap ?? 0.025,
-        assetsPath: options.assetsPath ?? "/assets/images/papelada/",
+        assetsPath: options.assetsPath ?? "",
         amount: options.amount ?? 0,
         amounts: options.amounts,
     };
@@ -111,6 +111,7 @@ const loadImage = (src: string) =>
 
 // Um pile de 460 folhas sorteia 460 vezes entre as mesmas 10 artes, e a página
 // tem vários gráficos: carrega cada conjunto uma vez só.
+const sheetAssets = import.meta.glob<string>("../../assets/images/papelada/*.png", { eager: true, query: "?url", import: "default" });
 const sheetsCache = new Map<string, Promise<HTMLImageElement[]>>();
 
 function loadSheets(assetsPath: string, category: Category, asset: string) {
@@ -119,7 +120,7 @@ function loadSheets(assetsPath: string, category: Category, asset: string) {
     let sheets = sheetsCache.get(key);
     if (!sheets) {
         sheets = Promise.all(
-            Array.from({ length: 10 }, (_, index) => loadImage(`${assetsPath}${prefix}-${index + 1}-${asset}.png`)),
+            Array.from({ length: 10 }, (_, index) => loadImage(assetsPath ? `${assetsPath}${prefix}-${index + 1}-${asset}.png` : sheetAssets[`../../assets/images/papelada/${prefix}-${index + 1}-${asset}.png`])),
         );
         sheetsCache.set(key, sheets);
     }

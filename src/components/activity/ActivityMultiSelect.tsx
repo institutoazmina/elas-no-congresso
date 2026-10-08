@@ -1,5 +1,5 @@
 import { Combobox } from "@base-ui/react/combobox";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import {
     MULTI_FILTER_CHANGE_EVENT,
     MULTI_FILTER_SYNC_EVENT,
@@ -12,6 +12,7 @@ import {
 type Props = { name: ActivityMultiFilterName; label: string; placeholder: string };
 
 export default function ActivityMultiSelect({ name, label, placeholder }: Props) {
+    const popupId = useId();
     const hostRef = useRef<HTMLDivElement>(null);
     const [options, setOptions] = useState<ActivityFilterOption[]>([]);
     const [values, setValues] = useState<string[]>([]);
@@ -63,6 +64,7 @@ export default function ActivityMultiSelect({ name, label, placeholder }: Props)
                 disabled={!options.length}
             >
                 <Combobox.Trigger
+                    aria-controls={popupId}
                     type="button"
                     className="activity-multiselect__trigger tw:in-[.activity-explorer]:flex tw:in-[.activity-explorer]:w-full tw:in-[.activity-explorer]:min-w-0 tw:in-[.activity-explorer]:h-9 tw:in-[.activity-explorer]:items-center tw:in-[.activity-explorer]:gap-2 tw:in-[.activity-explorer]:border-2 tw:in-[.activity-explorer]:border-solid tw:in-[.activity-explorer]:border-[rgb(66_66_246/25%)] tw:in-[.activity-explorer]:rounded-none tw:in-[.activity-explorer]:bg-white tw:in-[.activity-explorer]:text-periwinkle tw:in-[.activity-explorer]:font-bold tw:in-[.activity-explorer]:text-base tw:in-[.activity-explorer]:leading-6 tw:in-[.activity-explorer]:font-sans tw:in-[.activity-explorer]:text-left tw:in-[.activity-explorer]:cursor-pointer tw:in-[.activity-explorer]:py-1 tw:in-[.activity-explorer]:px-2.5 tw:hover:border-accent tw:data-popup-open:border-accent tw:disabled:cursor-not-allowed tw:disabled:opacity-55.00000000000001 tw:[&_svg]:flex-none"
                     aria-label={`${label}: ${selected.length ? selected.map((item) => item.label).join(", ") : placeholder}`}
@@ -72,9 +74,10 @@ export default function ActivityMultiSelect({ name, label, placeholder }: Props)
                     {selected.length > 1 && <span className="activity-multiselect__count tw:flex-none tw:bg-lime tw:text-ink tw:text-xs tw:leading-4.5 tw:py-px tw:px-1.5">+{selected.length - 1}</span>}
                     <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="m3 6 5 5 5-5" fill="none" stroke="currentColor" strokeWidth="2" /></svg>
                 </Combobox.Trigger>
-                <Combobox.Portal>
+                <Combobox.Portal keepMounted>
                     <Combobox.Positioner className="activity-multiselect__positioner tw:z-130 tw:outline-none" align="start" sideOffset={6} collisionPadding={16}>
                         <Combobox.Popup
+                            id={popupId}
                             className="activity-multiselect__popup tw:flex tw:w-[min(360px,calc(100vw-32px))] tw:max-h-(--available-height) tw:flex-col tw:border tw:border-solid tw:border-accent tw:bg-white tw:text-ink tw:shadow-[0_8px_24px_rgb(11_15_94/12%)] tw:font-normal tw:text-sm tw:leading-5 tw:font-sans tw:[&_button:focus-visible]:outline-4 tw:[&_button:focus-visible]:outline-lime tw:[&_button:focus-visible]:outline-offset-1"
                             aria-label={label}
                             onKeyDown={(event) => { if (event.key === "Escape") event.stopPropagation(); }}

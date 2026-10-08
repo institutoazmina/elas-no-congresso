@@ -1,9 +1,10 @@
 ---
-const attention = "/assets/images/party-chart/attention.svg";
+import { Image } from "astro:assets";
+import attention from "../../assets/images/party-chart/attention.svg";
 import StanceToggle from "./StanceToggle.astro";
 import SectionDivider from "../shared/SectionDivider.astro";
-const thumbsDown = "/assets/images/thumbs-down.svg";
-const thumbsUp = "/assets/images/thumbs-up.svg";
+import thumbsDown from "../../assets/images/thumbs-down.svg";
+import thumbsUp from "../../assets/images/thumbs-up.svg";
 import Papelada from "./Papelada.astro";
 import { pileGap } from "../../lib/papelada";
 import { getStanceByParty, type GroupStat, type Stance } from "../../service/api/stats";
@@ -77,7 +78,7 @@ const views = [
             tw:max-md:[&>p]:w-full tw:max-md:[&>p]:h-auto tw:max-md:[&>p]:text-sm tw:max-md:[&>p]:font-normal
             tw:max-md:[&>p]:leading-6
         ">
-            <img class="party-rights-chart__attention tw:w-24 tw:h-1" src={attention} alt="" />
+            <Image class="party-rights-chart__attention tw:w-24 tw:h-1" src={attention} alt="" />
             <h2 class="
                 tw:[--stance-toggle-font-size:36px] tw:flex tw:flex-wrap tw:w-162 tw:h-24 tw:items-center tw:gap-4 tw:font-display tw:text-4xl
                 tw:font-bold tw:leading-10.5 tw:uppercase tw:[font-variation-settings:'wdth'_75] tw:min-[984px]:w-162
@@ -136,7 +137,7 @@ const views = [
                                 party-rights-chart__value tw:flex tw:flex-col tw:items-center tw:[&_strong]:h-8 tw:[&_strong]:font-display
                                 tw:[&_strong]:text-[28px] tw:[&_strong]:font-bold tw:[&_strong]:leading-8
                                 tw:[&_strong]:[font-variation-settings:'wdth'_75]
-                            "><strong>{party.negative}</strong><img class="party-rights-chart__thumb tw:relative tw:block tw:w-8 tw:h-8 tw:flex-none tw:overflow-hidden tw:rounded-[1000px]" src={thumbsDown} alt="" /></div>
+                            "><strong>{party.negative}</strong><Image class="party-rights-chart__thumb tw:relative tw:block tw:w-8 tw:h-8 tw:flex-none tw:overflow-hidden tw:rounded-[1000px]" src={thumbsDown} alt="" /></div>
                             <Papelada class="party-rights-chart__paper tw:block tw:w-11.5 tw:h-auto" arrangement="pile" category="desfavoravel" size="a4" gap={gap} amount={party.negative} alt={`${party.negative} proposições desfavoráveis`} />
                         </div>
                         <div class="
@@ -147,7 +148,7 @@ const views = [
                                 party-rights-chart__value tw:flex tw:flex-col tw:items-center tw:[&_strong]:h-8 tw:[&_strong]:font-display
                                 tw:[&_strong]:text-[28px] tw:[&_strong]:font-bold tw:[&_strong]:leading-8
                                 tw:[&_strong]:[font-variation-settings:'wdth'_75]
-                            "><strong>{party.positive}</strong><img class="party-rights-chart__thumb tw:relative tw:block tw:w-8 tw:h-8 tw:flex-none tw:overflow-hidden tw:rounded-[1000px]" src={thumbsUp} alt="" /></div>
+                            "><strong>{party.positive}</strong><Image class="party-rights-chart__thumb tw:relative tw:block tw:w-8 tw:h-8 tw:flex-none tw:overflow-hidden tw:rounded-[1000px]" src={thumbsUp} alt="" /></div>
                             <Papelada class="party-rights-chart__paper tw:block tw:w-11.5 tw:h-auto" arrangement="pile" category="favoravel" size="a4" gap={gap} amount={party.positive} alt={`${party.positive} proposições favoráveis`} />
                         </div>
                     </div>

@@ -1,6 +1,7 @@
 ---
-const chevronRight = "/assets/images/home-reportagens/chevron-right.svg";
-const cuttingMatPattern = "/assets/images/home-reportagens/bg-pattern-cutting-mat.svg";
+import { Image } from "astro:assets";
+import chevronRight from "../../assets/images/home-reportagens/chevron-right.svg";
+import cuttingMatPattern from "../../assets/images/home-reportagens/bg-pattern-cutting-mat.svg";
 import { fetchReportagens } from "../../lib/wp";
 
 const reports = await fetchReportagens(1988, 3);
@@ -15,7 +16,7 @@ function formatDate(date: string) {
 }
 ---
 
-<section class="tw:overflow-hidden tw:bg-[#0B0F5E] tw:py-12 tw:text-white tw:lg:py-24" style={`background-image: url('${cuttingMatPattern}'); background-position: center top; background-repeat: repeat; background-size: 200px 200px;`} aria-labelledby="home-reportagens-title">
+<section class="tw:overflow-hidden tw:bg-[#0B0F5E] tw:py-12 tw:text-white tw:lg:py-24" style={`background-image: url('${cuttingMatPattern.src}'); background-position: center top; background-repeat: repeat; background-size: 200px 200px;`} aria-labelledby="home-reportagens-title">
     <header class="
         tw:mx-auto tw:flex tw:w-full tw:max-w-[720px] tw:flex-col tw:items-center tw:px-[16px] tw:text-center
         tw:lg:h-[62px] tw:lg:px-0 tw:max-md:items-start tw:max-md:text-left
@@ -40,7 +41,7 @@ function formatDate(date: string) {
                 <article class="tw:flex tw:w-[min(384px,calc(100vw-72px))] tw:shrink-0 tw:flex-col tw:gap-4 tw:lg:w-96">
                     <a href={report.link} class="home-reportagem-image-link tw:block tw:w-full tw:cursor-pointer" target="_blank" rel="noopener noreferrer" aria-label={`Ler: ${report.title.rendered.replace(/<[^>]*>/g, "").trim()}`}>
                         <figure class="tw:m-0 tw:w-full tw:border-2 tw:border-[#4242F6]">
-                            {imageUrl && <img class="tw:block tw:aspect-[384/216] tw:w-full tw:object-cover" src={imageUrl} alt={image?.alt_text ?? ""} loading="lazy" decoding="async" />}
+                            {imageUrl && <Image class="tw:block tw:aspect-[384/216] tw:w-full tw:object-cover" src={imageUrl} width={768} height={432} alt={image?.alt_text ?? ""} loading="lazy" decoding="async" />}
                         </figure>
                     </a>
                     <h3 class="tw:m-0 tw:text-2xl tw:font-bold tw:leading-8 tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75]">
@@ -58,7 +59,7 @@ function formatDate(date: string) {
                         " href={report.link} target="_blank" rel="noopener noreferrer">
                             <span>Ler reportagem</span>
                             <span class="tw:flex tw:h-6 tw:w-3 tw:items-center tw:justify-end" aria-hidden="true">
-                                <img class="tw:h-[6px] tw:w-3 tw:rotate-[-90deg]" src={chevronRight} alt="" />
+                                <Image class="tw:h-[6px] tw:w-3 tw:rotate-[-90deg]" src={chevronRight} alt="" />
                             </span>
                         </a>
                         <time datetime={date} class="tw:text-sm tw:font-normal tw:leading-4">Atualizada em {formatDate(date)}</time>

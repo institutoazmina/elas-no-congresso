@@ -1,12 +1,14 @@
 ---
+import { Image } from "astro:assets";
 import { resolveReportagemImage, type WpPost } from "../../lib/wp";
-const chevronRight = "/assets/images/home-reportagens/chevron-right.svg";
+import chevronRight from "../../assets/images/home-reportagens/chevron-right.svg";
 
 interface Props {
     post: WpPost;
     dark?: boolean;
+    imageLoading?: "eager" | "lazy";
 }
-const { post, dark = false } = Astro.props;
+const { post, dark = false, imageLoading = "lazy" } = Astro.props;
 const media = post._embedded?.["wp:featuredmedia"]?.[0];
 const image = resolveReportagemImage(media);
 const plainTitle = post.title.rendered.replace(/<[^>]*>/g, "").trim();
@@ -31,13 +33,13 @@ const updatedAt = post.modified
         aria-label={`Ler: ${plainTitle}`}
     >
         {image && (
-            <img
+            <Image
                 class="tw:block tw:size-full tw:object-cover"
                 src={image}
                 alt={imageAlt}
                 width="384"
                 height="216"
-                loading="lazy"
+                loading={imageLoading}
                 decoding="async"
                 data-reportagem-image
             />
@@ -75,7 +77,7 @@ const updatedAt = post.modified
         >
             <span>Ler reportagem</span>
             <span aria-hidden="true">
-                <img src={chevronRight} alt="" />
+                <Image src={chevronRight} alt="" />
             </span>
         </a>
         <time

@@ -1,4 +1,5 @@
 ---
+import siteIcon from "../assets/images/site-icon.png";
 import { ClientRouter } from "astro:transitions";
 import "../styles/tailwind.css";
 import Header from "../components/layout/Header.astro";
@@ -46,7 +47,7 @@ const fontUrl = `https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:${fo
         <title>{title}</title>
         {description && <meta name="description" content={description} />}
         {noindex && <meta name="robots" content="noindex" />}
-        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
+        <link rel="icon" type="image/png" href={siteIcon.src} />
         <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

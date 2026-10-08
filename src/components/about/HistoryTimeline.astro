@@ -1,20 +1,21 @@
 ---
-const label1a = "/assets/images/sobre/timeline/label-1a.svg";
-const label1b = "/assets/images/sobre/timeline/label-1b.svg";
-const label2a = "/assets/images/sobre/timeline/label-2a.svg";
-const label2b = "/assets/images/sobre/timeline/label-2b.svg";
-const label2c = "/assets/images/sobre/timeline/label-2c.svg";
-const label2d = "/assets/images/sobre/timeline/label-2d.svg";
-const label3a = "/assets/images/sobre/timeline/label-3a.svg";
-const label3b = "/assets/images/sobre/timeline/label-3b.svg";
-const label3c = "/assets/images/sobre/timeline/label-3c.svg";
-const label3d = "/assets/images/sobre/timeline/label-3d.svg";
-const label4a = "/assets/images/sobre/timeline/label-4a.svg";
-const label4b = "/assets/images/sobre/timeline/label-4b.svg";
-const label5a = "/assets/images/sobre/timeline/label-5a.svg";
-const label5b = "/assets/images/sobre/timeline/label-5b.svg";
-const label5c = "/assets/images/sobre/timeline/label-5c.svg";
-const label5d = "/assets/images/sobre/timeline/label-5d.svg";
+import { Image } from "astro:assets";
+import label1a from "../../assets/images/sobre/timeline/label-1a.svg";
+import label1b from "../../assets/images/sobre/timeline/label-1b.svg";
+import label2a from "../../assets/images/sobre/timeline/label-2a.svg";
+import label2b from "../../assets/images/sobre/timeline/label-2b.svg";
+import label2c from "../../assets/images/sobre/timeline/label-2c.svg";
+import label2d from "../../assets/images/sobre/timeline/label-2d.svg";
+import label3a from "../../assets/images/sobre/timeline/label-3a.svg";
+import label3b from "../../assets/images/sobre/timeline/label-3b.svg";
+import label3c from "../../assets/images/sobre/timeline/label-3c.svg";
+import label3d from "../../assets/images/sobre/timeline/label-3d.svg";
+import label4a from "../../assets/images/sobre/timeline/label-4a.svg";
+import label4b from "../../assets/images/sobre/timeline/label-4b.svg";
+import label5a from "../../assets/images/sobre/timeline/label-5a.svg";
+import label5b from "../../assets/images/sobre/timeline/label-5b.svg";
+import label5c from "../../assets/images/sobre/timeline/label-5c.svg";
+import label5d from "../../assets/images/sobre/timeline/label-5d.svg";
 
 const timeline = [
     [
@@ -120,7 +121,7 @@ const timelineLabelAssets = [
                     >
                         {timelineLabelAssets[index].map(
                             (asset, layerIndex) => (
-                                <img
+                                <Image
                                     class:list={["tw:absolute tw:z-0 tw:h-auto tw:max-w-none", timelineLabelClasses[index][layerIndex]]}
                                     src={asset}
                                     alt=""

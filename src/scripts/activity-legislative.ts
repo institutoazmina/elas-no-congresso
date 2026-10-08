@@ -50,6 +50,8 @@ function initActivity(root: HTMLElement) {
 
     const $ = <T extends Element = HTMLElement>(selector: string) => root.querySelector<T>(selector)!;
     const $$ = <T extends Element = HTMLElement>(selector: string) => [...root.querySelectorAll<T>(selector)];
+    const imageTemplates = new Map([...root.querySelectorAll<HTMLTemplateElement>("template[data-activity-image]")].map((template) => [template.dataset.activityImage!, template]));
+    const cloneImage = (src: string) => imageTemplates.get(src.replace(/^http:/, "https:"))?.content.querySelector("img")?.cloneNode(true) as HTMLImageElement | undefined;
     const filters = $("[data-filters]") as HTMLFormElement;
     const status = $("[data-status]");
     const tableBody = $("[data-table-body]");
@@ -58,10 +60,10 @@ function initActivity(root: HTMLElement) {
     const pagination = $("[data-pagination]");
     const dashboard = $("[data-dashboard]");
     const mapVisualPaths = new Map<string, SVGPathElement>();
-    const mapHitAreas = new Map<string, SVGUseElement>();
+    const mapHitAreas = new Map<string, HTMLButtonElement>();
     for (const uf of MAP_UF_CODES) {
         const visualPath = root.querySelector<SVGPathElement>(`[data-map-state-layers] #${uf}`);
-        const hitArea = root.querySelector<SVGUseElement>(`[data-map-hitboxes] [data-uf="${uf}"]`);
+        const hitArea = root.querySelector<HTMLButtonElement>(`[data-map-hitboxes] [data-uf="${uf}"]`);
         if (visualPath) {
             visualPath.dataset.uf = uf;
             mapVisualPaths.set(uf, visualPath);
@@ -225,10 +227,8 @@ function initActivity(root: HTMLElement) {
         const wrap = document.createElement("span");
         wrap.className = `activity-stance tw:flex tw:items-center tw:gap-1 tw:text-sm tw:leading-4 tw:[&_img]:w-6 tw:[&_img]:h-6 activity-stance--${data.className}`;
         if (data.icon) {
-            const image = document.createElement("img");
-            image.src = data.icon;
-            image.alt = "";
-            wrap.append(image);
+            const image = cloneImage(data.icon);
+            if (image) wrap.append(image);
         }
         const text = document.createElement("strong");
         text.textContent = data.label;
@@ -250,11 +250,8 @@ function initActivity(root: HTMLElement) {
         const fallback = document.createElement("span");
         fallback.className = "activity-author__fallback tw:w-7.5 tw:h-10 tw:flex-none tw:border tw:border-solid tw:border-muted tw:rounded-none tw:object-cover tw:object-[top_center] tw:bg-[#f1f1ff] tw:text-accent tw:text-[12px] tw:font-bold tw:flex tw:items-center tw:justify-center";
         fallback.textContent = initials(author.nome);
-        if (author.foto) {
-            const photo = document.createElement("img");
-            photo.src = author.foto.replace(/^http:/, "https:");
-            photo.alt = "";
-            photo.loading = "lazy";
+        const photo = author.foto ? cloneImage(author.foto) : undefined;
+        if (photo) {
             photo.addEventListener("error", () => photo.replaceWith(fallback), { once: true });
             button.append(photo);
         } else {
@@ -292,11 +289,8 @@ function initActivity(root: HTMLElement) {
             const fallback = document.createElement("span");
             fallback.className = "activity-dashboard-card__author-fallback tw:w-6 tw:h-8 tw:flex-none tw:border tw:border-solid tw:border-muted tw:object-cover tw:object-[top_center] tw:bg-[#f1f1ff] tw:text-accent tw:text-[10px] tw:font-bold tw:leading-[1] tw:flex tw:items-center tw:justify-center";
             fallback.textContent = initials(row.label);
-            if (row.photo) {
-                const image = document.createElement("img");
-                image.src = row.photo.replace(/^http:/, "https:");
-                image.alt = "";
-                image.loading = "lazy";
+            const image = row.photo ? cloneImage(row.photo) : undefined;
+            if (image) {
                 image.addEventListener("error", () => image.replaceWith(fallback), { once: true });
                 control.append(image);
             } else {
@@ -754,10 +748,10 @@ function initActivity(root: HTMLElement) {
     const mapTooltipTitle = $("[data-map-tooltip-title]");
     const mapTooltipSummary = $("[data-map-tooltip-summary]");
     const mapTooltipDetails = $("[data-map-tooltip-details]");
-    let activeMapTarget: SVGUseElement | null = null;
+    let activeMapTarget: HTMLButtonElement | null = null;
 
     const getMapTarget = (target: EventTarget | null) => target instanceof Element
-        ? target.closest<SVGUseElement>("[data-map-hitboxes] [data-uf]")
+        ? target.closest<HTMLButtonElement>("[data-map-hitboxes] [data-uf]")
         : null;
 
     const closeMapTooltip = (restoreFocus = false) => {
@@ -770,7 +764,7 @@ function initActivity(root: HTMLElement) {
         if (restoreFocus) target.focus();
     };
 
-    const showMapTooltip = (target: SVGUseElement, event?: PointerEvent, pinned = false) => {
+    const showMapTooltip = (target: HTMLButtonElement, event?: PointerEvent, pinned = false) => {
         const uf = target.dataset.uf!;
         const row = stateDashboard.get(uf);
         const favorablePercent = row?.favorable_percent ?? null;
@@ -786,7 +780,7 @@ function initActivity(root: HTMLElement) {
         mapTooltip.toggleAttribute("data-pinned", pinned);
         target.setAttribute("aria-expanded", "true");
         activeMapTarget = target;
-        const bounds = target.getBoundingClientRect();
+        const bounds = mapVisualPaths.get(target.dataset.uf || "")?.getBoundingClientRect() ?? target.getBoundingClientRect();
         const anchorX = event?.clientX ?? bounds.left + bounds.width / 2;
         const tooltipWidth = mapTooltip.offsetWidth;
         const tooltipHeight = mapTooltip.offsetHeight;

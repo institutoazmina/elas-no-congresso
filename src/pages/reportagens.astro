@@ -1,13 +1,14 @@
 ---
+import { Image } from "astro:assets";
 import PageLayout from "../layouts/PageLayout.astro";
 import ReportagemCard from "../components/shared/ReportagemCard.astro";
 import { fetchReportagensPage, WP_REPORTAGENS_ENDPOINT } from "../lib/wp";
-const heroIllustration = "/assets/images/catavento.png";
-const attention = "/assets/images/activity/attention.svg";
-const halftoneShadow = "/assets/images/hero/halftone-shadow.png";
-const cuttingMatPattern = "/assets/images/home-reportagens/bg-pattern-cutting-mat.svg";
-const paginationPrevious = "/assets/images/reportagens/pagination-previous.svg";
-const paginationNext = "/assets/images/reportagens/pagination-next.svg";
+import heroIllustration from "../assets/images/catavento.png";
+import attention from "../assets/images/activity/attention.svg";
+import halftoneShadow from "../assets/images/hero/halftone-shadow.png";
+import cuttingMatPattern from "../assets/images/home-reportagens/bg-pattern-cutting-mat.svg";
+import paginationPrevious from "../assets/images/reportagens/pagination-previous.svg";
+import paginationNext from "../assets/images/reportagens/pagination-next.svg";
 
 const POSTS_PER_PAGE = 9;
 const RECENT_POST_COUNT = 3;
@@ -28,20 +29,21 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
 
 <PageLayout title="Reportagens | Elas no Congresso"
     pageClass="reportagens-page tw:text-ink tw:font-sans"
-            pageStyle={`--reportagens-pattern: url(${cuttingMatPattern})`}
+            pageStyle={`--reportagens-pattern: url(${cuttingMatPattern.src})`}
 >
             <main>
                 <section
-                    class="reportagens-hero site-shared-background tw:text-ink tw:h-125 tw:overflow-hidden tw:relative tw:[&_h1]:mix-blend-multiply tw:[&_h1]:font-display tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:uppercase tw:[&_h1]:text-ink tw:[&_h1]:text-7xl tw:[&_h1]:tracking-normal tw:[&_h1]:leading-18 tw:[&_h1]:m-0 tw:[&_p]:mix-blend-multiply tw:[&_p]:text-lg tw:[&_p]:font-bold tw:[&_p]:tracking-normal tw:[&_p]:leading-6 tw:[&_p]:w-160 tw:[&_p]:m-0 tw:max-[901px]:h-152.5 tw:max-[901px]:[&_p]:w-full tw:max-[561px]:h-[252px] tw:max-[561px]:[&_p]:max-w-80 tw:max-[561px]:[&_p]:w-80 tw:max-[561px]:[&_p]:pt-[6px] tw:max-[561px]:[&_p]:pb-2.5 tw:max-[561px]:[&_p]:px-0 tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+                    class="reportagens-hero site-shared-background tw:text-ink tw:h-125 tw:overflow-hidden tw:relative tw:[&_h1]:mix-blend-multiply tw:[&_h1]:font-display tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:uppercase tw:[&_h1]:text-ink tw:[&_h1]:text-7xl tw:[&_h1]:tracking-normal tw:[&_h1]:leading-18 tw:[&_h1]:m-0 tw:[&_p]:mix-blend-multiply tw:[&_p]:text-lg tw:[&_p]:font-bold tw:[&_p]:tracking-normal tw:[&_p]:leading-6 tw:[&_p]:w-160 tw:[&_p]:m-0 tw:max-[901px]:h-152.5 tw:max-[901px]:[&_p]:w-full tw:max-[561px]:h-[252px] tw:max-[561px]:[&_p]:max-w-80 tw:max-[561px]:[&_p]:w-80 tw:max-[561px]:[&_p]:pt-[6px] tw:max-[561px]:[&_p]:pb-2.5 tw:max-[561px]:[&_p]:px-0 tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
                     data-page-hero
                     aria-labelledby="reportagens-hero-title"
-                    style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow})`}
+                    style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}
                 >
                     <div class="reportagens-hero__top-row tw:items-center tw:flex tw:h-119 tw:justify-between tw:relative tw:z-2 tw:p-12 tw:max-[901px]:items-start tw:max-[901px]:h-146.5 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:max-[561px]:items-start tw:max-[561px]:h-full tw:max-[561px]:p-6">
                         <div class="reportagens-hero__copy tw:items-start tw:flex tw:flex-[1_0_0] tw:flex-col tw:gap-6 tw:justify-center tw:max-w-240 tw:min-w-0 tw:max-[901px]:gap-5 tw:max-[901px]:max-w-full tw:max-[561px]:flex-none tw:max-[561px]:gap-[16px] tw:max-[561px]:justify-start tw:max-[561px]:max-w-full tw:max-[561px]:w-full">
-                            <img
+                            <Image
                                 class="reportagens-attention tw:block tw:h-2 tw:w-24 tw:max-[561px]:h-1 tw:max-[561px]:w-8"
                                 src={attention}
+                                loading="eager"
                                 alt=""
                             />
                             <h1 class="tw:max-[561px]:text-[32px]! tw:max-[561px]:leading-8! tw:max-[561px]:[text-box-edge:cap_alphabetic] tw:max-[561px]:[text-box-trim:trim-both]" id="reportagens-hero-title">Reportagens</h1>
@@ -56,7 +58,7 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
                                 aria-hidden="true"
                             >
                                 <div class="reportagens-hero__illustration-inner tw:h-[inherit] tw:bottom-0 tw:absolute tw:w-[inherit] tw:[&_img]:object-contain">
-                                    <img src={heroIllustration} alt="" />
+                                    <Image src={heroIllustration} loading="eager" alt="" />
                                 </div>
                             </div>
                         </div>
@@ -81,7 +83,7 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
                         >
                             <div class="reportagens-recent__track tw:flex tw:flex-none tw:gap-12 tw:max-[561px]:gap-12 tw:max-[561px]:w-max tw:max-[561px]:py-0 tw:max-[561px]:px-6">
                                 {recentPosts.map((post) => (
-                                    <ReportagemCard post={post} dark />
+                                    <ReportagemCard post={post} dark imageLoading="eager" />
                                 ))}
                             </div>
                         </div>
@@ -124,10 +126,10 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
                     {allPostsTotalPages > 1 && (
                         <div
                             class="reportagens-pagination-region tw:h-[196px] tw:ml-[calc(var(--reportagens-all-inline-padding)_*_-1)] tw:mt-7.5 tw:overflow-hidden tw:relative tw:w-[calc(100%_+_(var(--reportagens-all-inline-padding)_*_2))] tw:max-[561px]:-ml-6 tw:max-[561px]:mt-[70px] tw:max-[561px]:w-[calc(100%_+_48px)] tw:before:bg-[image:var(--reportagens-hero-halftone-shadow)] tw:before:bg-top-left tw:before:bg-repeat-x tw:before:bg-size-[1440px_24px] tw:before:content-[''] tw:before:h-6 tw:before:left-0 tw:before:mix-blend-multiply tw:before:pointer-events-none tw:before:absolute tw:before:right-0 tw:before:top-7.5 tw:before:[transform:rotate(180deg)] tw:before:z-1 tw:max-[561px]:before:bg-[image:var(--reportagens-hero-halftone-shadow)] tw:max-[561px]:before:bg-top-left tw:max-[561px]:before:bg-repeat-x tw:max-[561px]:before:bg-size-[720px_12px] tw:max-[561px]:before:content-[''] tw:max-[561px]:before:h-3 tw:max-[561px]:before:left-0 tw:max-[561px]:before:mix-blend-multiply tw:max-[561px]:before:pointer-events-none tw:max-[561px]:before:absolute tw:max-[561px]:before:right-0 tw:max-[561px]:before:z-1 tw:max-[561px]:before:top-7.5 tw:max-[561px]:before:[transform:rotate(180deg)] tw:max-[561px]:after:bg-[image:var(--reportagens-hero-halftone-shadow)] tw:max-[561px]:after:bg-top-left tw:max-[561px]:after:bg-repeat-x tw:max-[561px]:after:bg-size-[720px_12px] tw:max-[561px]:after:content-[''] tw:max-[561px]:after:h-3 tw:max-[561px]:after:left-0 tw:max-[561px]:after:mix-blend-multiply tw:max-[561px]:after:pointer-events-none tw:max-[561px]:after:absolute tw:max-[561px]:after:right-0 tw:max-[561px]:after:z-1 tw:max-[561px]:after:bottom-[30px]"
-                            style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow})`}
+                            style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}
                         >
                             <div
-                                class="reportagens-pagination-region__texture site-shared-background tw:max-[561px]:bottom-[30px] tw:max-[561px]:top-7.5 tw:[background-position:center_-30px] tw:bottom-0 tw:left-0 tw:pointer-events-none tw:absolute tw:right-0 tw:top-7.5 tw:z-0 tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+                                class="reportagens-pagination-region__texture site-shared-background tw:max-[561px]:bottom-[30px] tw:max-[561px]:top-7.5 tw:[background-position:center_-30px] tw:bottom-0 tw:left-0 tw:pointer-events-none tw:absolute tw:right-0 tw:top-7.5 tw:z-0 tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
                                 aria-hidden="true"
                             ></div>
                             <nav
@@ -142,7 +144,7 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
                                     disabled
                                 >
                                     <span>
-                                        <img
+                                        <Image
                                             src={paginationPrevious}
                                             alt=""
                                         />
@@ -155,7 +157,7 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
                                     aria-label="Pr&oacute;xima p&aacute;gina"
                                 >
                                     <span>
-                                        <img src={paginationNext} alt="" />
+                                        <Image src={paginationNext} alt="" />
                                     </span>
                                 </button>
                                 <span

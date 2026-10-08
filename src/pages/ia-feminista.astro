@@ -1,10 +1,11 @@
 ---
+import { Image } from "astro:assets";
 import PageLayout from "../layouts/PageLayout.astro";
-const heroIllustration = "/assets/images/quiteria.png";
-const fluxoProcessamento = "/assets/images/ia-feminista/fluxo-processamento.svg";
-const fluxoProcessamentoMobile = "/assets/images/ia-feminista/fluxo-processamento-mobile.png";
-const attention = "/assets/images/activity/attention.svg";
-const halftoneShadow = "/assets/images/hero/halftone-shadow.png";
+import heroIllustration from "../assets/images/quiteria.png";
+import fluxoProcessamento from "../assets/images/ia-feminista/fluxo-processamento.svg";
+import fluxoProcessamentoMobile from "../assets/images/ia-feminista/fluxo-processamento-mobile.png";
+import attention from "../assets/images/activity/attention.svg";
+import halftoneShadow from "../assets/images/hero/halftone-shadow.png";
 
 const categories = [
     [
@@ -168,16 +169,17 @@ const thematicPartitions = [
 >
             <main>
                 <section
-                    class="ia-hero site-shared-background tw:flex tw:items-start tw:justify-start tw:min-h-113 tw:flex-col tw:h-125 tw:overflow-hidden tw:relative tw:p-0 tw:[&_h1]:text-7xl tw:[&_h1]:leading-18 tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:text-ink tw:[&_h1]:font-bold tw:[&_h1]:tracking-normal tw:[&_h1]:mix-blend-multiply tw:[&_h1]:whitespace-nowrap tw:[&_h1]:w-[682px] tw:[&_h1]:m-0 tw:[&_p]:font-bold tw:[&_p]:leading-6 tw:[&_p]:w-160 tw:max-[901px]:flex-col tw:max-[901px]:items-start tw:max-[901px]:h-152.5 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:max-[901px]:[&_p]:w-full tw:max-[901px]:[&_h1]:text-[52px] tw:max-[901px]:[&_h1]:leading-[56px] tw:max-[901px]:[&_h1]:w-full tw:max-[901px]:[&_h1]:whitespace-normal tw:max-[561px]:[&_h1]:text-[40px] tw:max-[561px]:[&_h1]:leading-[44px] tw:max-md:h-auto tw:max-md:min-h-0 tw:max-md:overflow-hidden tw:max-md:justify-start tw:max-md:pt-6 tw:max-md:pb-12 tw:max-md:px-6 tw:[&_i]:h-2 tw:[&_i]:mb-6 tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+                    class="ia-hero site-shared-background tw:flex tw:items-start tw:justify-start tw:min-h-113 tw:flex-col tw:h-125 tw:overflow-hidden tw:relative tw:p-0 tw:[&_h1]:text-7xl tw:[&_h1]:leading-18 tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:text-ink tw:[&_h1]:font-bold tw:[&_h1]:tracking-normal tw:[&_h1]:mix-blend-multiply tw:[&_h1]:whitespace-nowrap tw:[&_h1]:w-[682px] tw:[&_h1]:m-0 tw:[&_p]:font-bold tw:[&_p]:leading-6 tw:[&_p]:w-160 tw:max-[901px]:flex-col tw:max-[901px]:items-start tw:max-[901px]:h-152.5 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:max-[901px]:[&_p]:w-full tw:max-[901px]:[&_h1]:text-[52px] tw:max-[901px]:[&_h1]:leading-[56px] tw:max-[901px]:[&_h1]:w-full tw:max-[901px]:[&_h1]:whitespace-normal tw:max-[561px]:[&_h1]:text-[40px] tw:max-[561px]:[&_h1]:leading-[44px] tw:max-md:h-auto tw:max-md:min-h-0 tw:max-md:overflow-hidden tw:max-md:justify-start tw:max-md:pt-6 tw:max-md:pb-12 tw:max-md:px-6 tw:[&_i]:h-2 tw:[&_i]:mb-6 tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
                     data-page-hero
                     aria-labelledby="ia-hero-title"
-                    style={`--ia-hero-halftone-shadow: url(${halftoneShadow})`}
+                    style={`--ia-hero-halftone-shadow: url(${halftoneShadow.src})`}
                 >
                     <div class="ia-hero__top-row tw:items-center tw:flex tw:flex-[0_0_476px] tw:h-119 tw:justify-between tw:w-full tw:z-2 tw:relative tw:p-12 tw:max-[901px]:basis-146.5 tw:max-[901px]:h-146.5 tw:max-[901px]:w-full tw:max-md:flex-none tw:max-md:h-auto tw:max-md:flex-col tw:max-md:items-start tw:max-md:justify-start tw:max-md:gap-3 tw:max-md:p-0">
                         <div class="ia-hero__copy tw:items-start tw:flex tw:flex-none tw:flex-col tw:gap-6 tw:justify-center tw:max-w-240 tw:min-w-0 tw:w-[682px] tw:[&>p]:text-ink tw:[&>p]:font-sans tw:[&>p]:text-lg tw:[&>p]:font-medium tw:[&>p]:tracking-normal tw:[&>p]:leading-6 tw:[&>p]:mix-blend-multiply tw:[&>p]:w-160 tw:[&>p]:m-0 tw:max-[901px]:w-full tw:max-[901px]:[&>p]:w-full tw:max-md:w-full tw:max-md:max-w-full tw:max-md:gap-3">
-                            <img
+                            <Image
                                 class="ia-hero__attention tw:block tw:h-2 tw:w-24 tw:max-md:w-8 tw:max-md:h-1 tw:max-md:m-0"
                                 src={attention}
+                                loading="eager"
                                 alt=""
                             />
                             <h1 class="tw:max-md:text-[32px]! tw:max-md:leading-8! tw:max-md:w-full tw:max-md:max-w-60 tw:max-md:whitespace-normal" id="ia-hero-title">
@@ -201,8 +203,8 @@ const thematicPartitions = [
                         <div class="ia-hero__art tw:items-center tw:flex tw:flex-none tw:h-95 tw:justify-center tw:absolute tw:w-145 tw:bottom-6 tw:overflow-visible tw:right-12 tw:p-2.5 tw:max-md:hidden">
                             <div class="ia-hero__illustration tw:h-auto tw:w-125">
                                 <div class="ia-hero__illustration-inner tw:h-125 tw:absolute tw:-bottom-12.5 tw:right-[30%] tw:w-auto tw:[&>img]:object-contain tw:[&>img]:h-full tw:[&>img]:w-auto">
-                                    <img
-                                        src={heroIllustration}
+                                    <Image
+                                        src={heroIllustration} loading="eager"
                                         alt="Ilustração de Maria Quitéria"
                                     />
                                 </div>
@@ -245,13 +247,13 @@ const thematicPartitions = [
                             </p>
                             <h3 class="ia-flow__eyebrow tw:min-[901px]:text-[28px]! tw:min-[901px]:leading-8! tw:min-[901px]:pt-[14px] tw:min-[901px]:m-0! tw:max-md:text-[28px]! tw:max-md:leading-8! tw:max-md:pt-[14px] tw:max-md:m-0!">Veja como funciona</h3>
                             <div class="ia-flow ia-flow--desktop tw:w-full tw:max-md:hidden">
-                                <img class="tw:block tw:h-auto tw:max-w-full tw:w-205 tw:my-0 tw:mx-auto"
+                                <Image class="tw:block tw:h-auto tw:max-w-full tw:w-205 tw:my-0 tw:mx-auto"
                                     src={fluxoProcessamento}
                                     alt="Fluxo de processamento da QuitérIA em cinco etapas"
                                 />
                             </div>
                             <div class="ia-flow ia-flow--mobile tw:w-full tw:hidden tw:max-md:flex tw:max-md:w-83 tw:max-md:max-w-[calc(100vw_-_44px)] tw:max-md:mx-auto tw:max-md:bg-white tw:max-md:flex-col tw:max-md:justify-center tw:max-md:items-center tw:max-md:overflow-hidden tw:max-md:pt-10">
-                                <img class="tw:block tw:h-auto tw:max-w-full tw:w-205 tw:my-0 tw:mx-auto tw:max-md:w-full tw:max-md:h-auto tw:max-md:block tw:max-md:m-0"
+                                <Image class="tw:block tw:h-auto tw:max-w-full tw:w-205 tw:my-0 tw:mx-auto tw:max-md:w-full tw:max-md:h-auto tw:max-md:block tw:max-md:m-0"
                                     src={fluxoProcessamentoMobile}
                                     width={524}
                                     height={574}

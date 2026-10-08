@@ -1,8 +1,9 @@
 ---
+import { Image } from "astro:assets";
 import Papelada from "./Papelada.astro";
 import { pileGap } from "../../lib/papelada";
-const thumbsDown = "/assets/images/thumbs-down.svg";
-const attention = "/assets/images/activity/attention.svg";
+import thumbsDown from "../../assets/images/thumbs-down.svg";
+import attention from "../../assets/images/activity/attention.svg";
 import { getUnfavorableByLegislature } from "../../service/api/stats";
 
 // Escala do design: pilhas de 94px de largura, a mais alta com 644px.
@@ -10,14 +11,13 @@ const PILE_WIDTH = 92.5;
 const PILE_PEAK = 643.5;
 
 const legislatures = await getUnfavorableByLegislature();
+const peak = Math.max(...legislatures.map((legislature) => legislature.unfavorable), 1);
 const gap = pileGap({
     width: PILE_WIDTH,
     height: PILE_PEAK,
-    peak: Math.max(
-        ...legislatures.map((legislature) => legislature.unfavorable),
-        1,
-    ),
+    peak,
 });
+import imageAsset2 from "../../assets/images/papelada/proposicao-desfavoravel-9-192w.png";
 ---
 
 <section
@@ -38,7 +38,7 @@ const gap = pileGap({
             tw:flex tw:w-full tw:flex-col tw:items-start tw:gap-4 tw:lg:mx-auto tw:lg:h-auto tw:lg:max-w-240
             tw:lg:justify-center tw:max-md:w-full tw:max-md:h-auto tw:max-md:gap-4
         ">
-            <img class="tw:h-1 tw:w-24" src={attention} alt="" />
+            <Image class="tw:h-1 tw:w-24" src={attention} alt="" loading="eager" />
             <h2
                 id="rights-under-attack-title"
                 class="
@@ -96,9 +96,10 @@ const gap = pileGap({
                                     {legislature.unfavorable}
                                 </span>
                                 <span class="tw:relative tw:block tw:size-8 tw:rounded-full tw:max-md:w-5.5! tw:max-md:h-5.5! tw:max-md:aspect-square">
-                                    <img
+                                    <Image
                                         class="tw:block tw:size-full tw:max-md:inset-0! tw:max-md:w-full! tw:max-md:h-full! tw:max-md:m-auto"
                                         src={thumbsDown}
+                                        loading={legislature.unfavorable === peak ? "eager" : "lazy"}
                                         alt=""
                                     />
                                 </span>
@@ -172,9 +173,9 @@ const gap = pileGap({
         ">
             <div class="tw:flex tw:h-7 tw:items-center tw:gap-2 tw:lg:absolute tw:lg:left-0 tw:lg:top-3 tw:max-md:hidden">
                 <span class="tw:flex tw:h-7 tw:w-5.5 tw:items-center tw:justify-center">
-                    <img
+                    <Image
                         class="tw:h-6.5 tw:w-4.5 tw:rotate-[5deg] tw:border tw:border-[#4242F6] tw:object-cover"
-                        src="/assets/images/papelada/proposicao-desfavoravel-9-192w.png"
+                        src={imageAsset2}
                         alt=""
                     />
                 </span>
@@ -192,7 +193,7 @@ const gap = pileGap({
                     tw:h-3 tw:w-28.5 tw:self-end tw:bg-[#0B0F5E] tw:lg:absolute tw:lg:right-0 tw:lg:top-2
                     tw:max-md:w-28.5 tw:max-md:h-6 tw:max-md:self-center tw:max-md:box-border tw:max-md:py-1.5 tw:max-md:px-0
                 "
-                style="mask: url('/assets/images/logo-header.svg') center / contain no-repeat; -webkit-mask: url('/assets/images/logo-header.svg') center / contain no-repeat;"
+                style="mask: url('/src/assets/images/logo-header.svg') center / contain no-repeat; -webkit-mask: url('/src/assets/images/logo-header.svg') center / contain no-repeat;"
                 role="img"
                 aria-label="Elas no Congresso"
             ></span>
@@ -220,5 +221,3 @@ const gap = pileGap({
         </a>
     </div>
 </section>
-
-
