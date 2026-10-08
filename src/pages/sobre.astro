@@ -1,14 +1,11 @@
 ---
-import { ClientRouter } from "astro:transitions";
+import PageLayout from "../layouts/PageLayout.astro";
 
-import Header from "../components/layout/Header.astro";
-import Footer from "../components/layout/Footer.astro";
 import HistoryTimeline from "../components/about/HistoryTimeline.astro";
 const heroIllustration = "/assets/images/passaros.png";
 const attention = "/assets/images/activity/attention.svg";
 const halftoneShadow = "/assets/images/hero/halftone-shadow.png";
 const partnerLogos = "/assets/images/sobre/partner-logos.png";
-import "../styles/tailwind.css";
 
 const challenges = [
     [
@@ -35,31 +32,9 @@ const challenges = [
 
 ---
 
-<!doctype html>
-<html class="tw:max-[701px]:max-w-full tw:max-[701px]:overflow-x-clip" lang="pt-BR">
-    <head>
-        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Sobre | Elas no Congresso</title>
-        <link
-            rel="preload"
-            href="/assets/fonts/ETCAnybodyVariable.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap"
-            rel="stylesheet"
-        />
-        <ClientRouter fallback="swap" />
-    </head>
-    <body class="tw:!pt-0 tw:!bg-white tw:m-0 tw:max-[701px]:max-w-full tw:max-[701px]:overflow-x-clip">
-        <div class="sobre-page tw:text-ink tw:font-sans tw:text-lg tw:leading-6  tw:[&_h1]:font-display tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:font-bold tw:[&_h1]:uppercase tw:[&_h2]:font-display tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:font-bold tw:[&_h2]:uppercase tw:[&_h3]:font-display tw:[&_h3]:[font-variation-settings:'wdth'_75] tw:[&_h3]:font-bold tw:[&_h3]:uppercase tw:max-[701px]:w-full tw:max-[701px]:overflow-x-clip tw:[&_.partner-section]:items-center tw:[&_.partner-section]:[border-top-color:rgba(66,_66,_246,_0.06)] tw:[&_.partner-section]:flex tw:[&_.partner-section]:flex-col tw:[&_.partner-section]:gap-[27.4px] tw:[&_.partner-section]:pt-16.5 tw:[&_.partner-section]:pb-[41.2px] tw:[&_.partner-section]:px-0 tw:[&_.partner-section_>_header]:h-11 tw:[&_.partner-section_>_header]:w-205 tw:[&_.partner-section_>_header]:m-0 tw:[&_.partner-section_>_header_i]:bg-ink tw:[&_.partner-section_>_header_i]:shrink-0 tw:[&_.partner-section_>_header_h2]:font-display tw:[&_.partner-section_>_header_h2]:text-4xl tw:[&_.partner-section_>_header_h2]:[font-stretch:normal] tw:[&_.partner-section_>_header_h2]:[font-variation-settings:'wdth'_75] tw:[&_.partner-section_>_header_h2]:font-bold tw:[&_.partner-section_>_header_h2]:tracking-normal tw:[&_.partner-section_>_header_h2]:leading-[42px] tw:[&_.partner-section_>_header_h2]:w-180 tw:max-[901px]:[&_.partner-section]:pl-6 tw:max-[901px]:[&_.partner-section]:pr-6 tw:max-[901px]:[&_.partner-section_>_header]:w-full tw:[body:has(.sobre-page)_&_.partner-section]:pb-[41.2px] tw:[&_.timeline-scroll]:contents tw:[&_.channels-scroll]:contents tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:block tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:mt-[85.8125px] tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:overflow-x-auto tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:[overscroll-behavior-inline:contain] tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:[scrollbar-width:thin] tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:w-full tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll:focus-visible]:outline-2 tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll:focus-visible]:outline-accent tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll:focus-visible]:-outline-offset-0.5 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll:focus-visible]:outline-2 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll:focus-visible]:outline-accent tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll:focus-visible]:-outline-offset-0.5 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:block tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:overflow-x-auto tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:[overscroll-behavior-inline:contain] tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:w-screen tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:mt-[59.3px] tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:-mx-6 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:gap-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:pt-16.5 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:pb-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:px-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:h-21.5 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:my-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header_h2]:text-4xl tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header_h2]:leading-[42px] tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header_h2]:w-full">
-            <Header />
+<PageLayout title="Sobre | Elas no Congresso" htmlClass="tw:max-[701px]:max-w-full tw:max-[701px]:overflow-x-clip" bodyClass="tw:max-[701px]:max-w-full tw:max-[701px]:overflow-x-clip" fontVariant="editorial"
+    pageClass="sobre-page tw:text-ink tw:font-sans tw:text-lg tw:leading-6  tw:[&_h1]:font-display tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:font-bold tw:[&_h1]:uppercase tw:[&_h2]:font-display tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:font-bold tw:[&_h2]:uppercase tw:[&_h3]:font-display tw:[&_h3]:[font-variation-settings:'wdth'_75] tw:[&_h3]:font-bold tw:[&_h3]:uppercase tw:max-[701px]:w-full tw:max-[701px]:overflow-x-clip tw:[&_.partner-section]:items-center tw:[&_.partner-section]:[border-top-color:rgba(66,_66,_246,_0.06)] tw:[&_.partner-section]:flex tw:[&_.partner-section]:flex-col tw:[&_.partner-section]:gap-[27.4px] tw:[&_.partner-section]:pt-16.5 tw:[&_.partner-section]:pb-[41.2px] tw:[&_.partner-section]:px-0 tw:[&_.partner-section_>_header]:h-11 tw:[&_.partner-section_>_header]:w-205 tw:[&_.partner-section_>_header]:m-0 tw:[&_.partner-section_>_header_i]:bg-ink tw:[&_.partner-section_>_header_i]:shrink-0 tw:[&_.partner-section_>_header_h2]:font-display tw:[&_.partner-section_>_header_h2]:text-4xl tw:[&_.partner-section_>_header_h2]:[font-stretch:normal] tw:[&_.partner-section_>_header_h2]:[font-variation-settings:'wdth'_75] tw:[&_.partner-section_>_header_h2]:font-bold tw:[&_.partner-section_>_header_h2]:tracking-normal tw:[&_.partner-section_>_header_h2]:leading-[42px] tw:[&_.partner-section_>_header_h2]:w-180 tw:max-[901px]:[&_.partner-section]:pl-6 tw:max-[901px]:[&_.partner-section]:pr-6 tw:max-[901px]:[&_.partner-section_>_header]:w-full tw:[body:has(.sobre-page)_&_.partner-section]:pb-[41.2px] tw:[&_.timeline-scroll]:contents tw:[&_.channels-scroll]:contents tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:block tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:mt-[85.8125px] tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:overflow-x-auto tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:[overscroll-behavior-inline:contain] tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:[scrollbar-width:thin] tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:w-full tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll:focus-visible]:outline-2 tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll:focus-visible]:outline-accent tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll:focus-visible]:-outline-offset-0.5 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll:focus-visible]:outline-2 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll:focus-visible]:outline-accent tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll:focus-visible]:-outline-offset-0.5 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:block tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:overflow-x-auto tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:[overscroll-behavior-inline:contain] tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:w-screen tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:mt-[59.3px] tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:-mx-6 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:gap-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:pt-16.5 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:pb-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:px-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:h-21.5 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:my-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header_h2]:text-4xl tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header_h2]:leading-[42px] tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header_h2]:w-full"
+>
             <main>
                 <section
                     class="sobre-hero site-shared-background tw:flex tw:flex-col tw:h-125 tw:overflow-hidden tw:relative tw:[&_h1]:text-ink tw:[&_h1]:text-7xl tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:font-bold tw:[&_h1]:tracking-normal tw:[&_h1]:leading-18 tw:[&_h1]:mix-blend-multiply tw:[&_h1]:uppercase tw:[&_h1]:w-[681px] tw:[&_h1]:m-0 tw:max-[901px]:h-152.5 tw:max-[901px]:[&_h1]:w-full tw:max-[561px]:[&_h1]:text-[32px] tw:max-[561px]:[&_h1]:leading-8 tw:max-[701px]:h-auto tw:max-[701px]:min-h-[465px] tw:max-[701px]:overflow-hidden tw:max-[360px]:h-auto tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
@@ -674,10 +649,7 @@ const challenges = [
                     </div>
                 </section>
             </main>
-            <Footer />
-        </div>
-    </body>
-</html>
+    <Fragment slot="scripts">
 <script is:inline data-astro-rerun>
     (() => {
         const page = document.querySelector(".sobre-page");
@@ -805,3 +777,5 @@ const challenges = [
         }
     })();
 </script>
+    </Fragment>
+</PageLayout>

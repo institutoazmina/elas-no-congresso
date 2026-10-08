@@ -1,56 +1,30 @@
 ---
-import { ClientRouter } from "astro:transitions";
-import Header from "../components/layout/Header.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 import AlertsHero from "../components/alerts/AlertsHero.astro";
 import AlertsToolbar from "../components/alerts/AlertsToolbar.astro";
 import AlertsList from "../components/alerts/AlertsList.astro";
 import AlertsEmailModal from "../components/alerts/AlertsEmailModal.astro";
-import Footer from "../components/layout/Footer.astro";
 import { getAlertPropositions } from "../service/api/alerts";
-import "../styles/tailwind.css";
 
 const propositionPage = await getAlertPropositions();
 ---
 
-<!doctype html>
-<html lang="pt-BR">
-    <head>
-        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Alertas | Elas no Congresso</title>
-        <link
-            rel="preload"
-            href="/assets/fonts/ETCAnybodyVariable.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap"
-            rel="stylesheet"
-        />
-        <ClientRouter fallback="swap" />
-    </head>
-    <body class="tw:!pt-0 tw:!bg-white">
-        <div class={String.raw`site-alerts-page tw:max-md:[body.alerts-email-modal-open_&]:flex tw:max-md:[body.alerts-email-modal-open_&]:flex-col tw:max-md:[&_.site-header.site-header--scrolled]:inset-[0_0_auto] tw:max-md:[&_.site-header.site-header--scrolled]:fixed tw:max-md:[&_.site-header_.highlighter-marks]:hidden! tw:max-md:[&_.site-header:not(.site-header--scrolled):has(_.site-header\_\_mobile-menu[open]_)]:inset-auto tw:max-md:[&_.site-header:not(.site-header--scrolled):has(_.site-header\_\_mobile-menu[open]_)]:relative tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])]:block tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])]:p-0 tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:left-4 tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:absolute tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:top-[19px] tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:z-2 tw:max-md:[&_.site-header\_\_mobile-menu[open]]:block tw:max-md:[&_.site-header\_\_mobile-menu[open]]:pt-3 tw:max-md:[&_.site-header\_\_mobile-menu[open]]:w-full tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_summary]:ml-auto tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_summary]:mr-4 tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:h-auto tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:inset-auto tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:mt-3 tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:min-h-0 tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:overflow-y-visible tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:static tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']]:bg-transparent tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']]:text-white tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']]:no-underline tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:bg-lime tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:text-ink tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:underline tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:[text-decoration-thickness:2px] tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:underline-offset-1`}>
-            <div class="site-alerts-header-background site-shared-background tw:relative tw:z-12 tw:max-md:[body.alerts-email-modal-open_&]:[order:0] tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]">
-                <Header />
-            </div>
-            <main class="site-alerts-main tw:bg-white tw:[body.alerts-email-modal-open_&]:hidden">
-                <AlertsHero />
-                <section class="alerts-content tw:flex tw:flex-col tw:gap-8 tw:w-224 tw:pt-25 tw:pb-14 tw:px-10 tw:my-0 tw:mx-auto tw:max-[941px]:w-full tw:max-[941px]:py-16 tw:max-[941px]:px-8 tw:max-md:gap-8 tw:max-md:py-12 tw:max-md:px-6" aria-label="Alertas recentes">
-                    <AlertsToolbar />
-                    <AlertsList
-                        propositions={propositionPage.items}
-                        total={propositionPage.count}
-                    />
-                </section>
-            </main>
-            <AlertsEmailModal />
-            <Footer />
-        </div>
-    </body>
-</html>
+<PageLayout title="Alertas | Elas no Congresso"
+    pageClass={String.raw`site-alerts-page tw:max-md:[body.alerts-email-modal-open_&]:flex tw:max-md:[body.alerts-email-modal-open_&]:flex-col tw:max-md:[&_.site-header.site-header--scrolled]:inset-[0_0_auto] tw:max-md:[&_.site-header.site-header--scrolled]:fixed tw:max-md:[&_.site-header_.highlighter-marks]:hidden! tw:max-md:[&_.site-header:not(.site-header--scrolled):has(_.site-header\_\_mobile-menu[open]_)]:inset-auto tw:max-md:[&_.site-header:not(.site-header--scrolled):has(_.site-header\_\_mobile-menu[open]_)]:relative tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])]:block tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])]:p-0 tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:left-4 tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:absolute tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:top-[19px] tw:max-md:[&_.site-header\_\_content:has(.site-header\_\_mobile-menu[open])_>_.site-header\_\_brand]:z-2 tw:max-md:[&_.site-header\_\_mobile-menu[open]]:block tw:max-md:[&_.site-header\_\_mobile-menu[open]]:pt-3 tw:max-md:[&_.site-header\_\_mobile-menu[open]]:w-full tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_summary]:ml-auto tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_summary]:mr-4 tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:h-auto tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:inset-auto tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:mt-3 tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:min-h-0 tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:overflow-y-visible tw:max-md:[&_.site-header\_\_mobile-menu[open]_>_.site-header\_\_mobile-panel]:static tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']]:bg-transparent tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']]:text-white tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']]:no-underline tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:bg-lime tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:text-ink tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:underline tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:[text-decoration-thickness:2px] tw:max-md:[&_.site-header\_\_mobile-panel_a[href='/alertas']_>_span]:underline-offset-1`}
+    headerClass="site-alerts-header-background site-shared-background tw:relative tw:z-12 tw:max-md:[body.alerts-email-modal-open_&]:[order:0] tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+>
+        <main class="site-alerts-main tw:bg-white tw:[body.alerts-email-modal-open_&]:hidden">
+            <AlertsHero />
+            <section
+                class="alerts-content tw:flex tw:flex-col tw:gap-8 tw:w-224 tw:pt-25 tw:pb-14 tw:px-10 tw:my-0 tw:mx-auto tw:max-[941px]:w-full tw:max-[941px]:py-16 tw:max-[941px]:px-8 tw:max-md:gap-8 tw:max-md:py-12 tw:max-md:px-6"
+                aria-label="Alertas recentes"
+            >
+                <AlertsToolbar />
+                <AlertsList
+                    propositions={propositionPage.items}
+                    total={propositionPage.count}
+                />
+            </section>
+        </main>
+        <AlertsEmailModal />
+</PageLayout>

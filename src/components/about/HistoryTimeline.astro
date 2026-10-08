@@ -64,13 +64,13 @@ const timelineLabelAssets = [
 ];
 ---
 
-<div class="timeline tw:w-[1344px] tw:max-w-full tw:pt-[38.8px] tw:pb-0 tw:max-[701px]:w-[1510px] tw:max-[701px]:max-w-none tw:max-[701px]:px-6 tw:max-[701px]:pb-6" aria-label="Linha do tempo do projeto">
+<div class="timeline tw:w-336 tw:max-w-full tw:pt-[38.8px] tw:pb-0 tw:max-[701px]:w-377.5 tw:max-[701px]:max-w-none tw:max-[701px]:px-6 tw:max-[701px]:pb-6" aria-label="Linha do tempo do projeto">
     <div class="tw:relative tw:flex tw:items-stretch">
-        <span aria-hidden="true" class="tw:absolute tw:inset-x-0 tw:top-[11px] tw:h-0.5 tw:bg-ink tw:after:absolute tw:after:right-0 tw:after:-top-[7px] tw:after:border-y-8 tw:after:border-y-transparent tw:after:border-l-[14px] tw:after:border-l-ink tw:after:content-['']"></span>
+        <span aria-hidden="true" class="tw:absolute tw:inset-x-0 tw:top-2.75 tw:h-0.5 tw:bg-ink tw:after:absolute tw:after:right-0 tw:after:-top-1.75 tw:after:border-y-8 tw:after:border-y-transparent tw:after:border-l-14 tw:after:border-l-ink tw:after:content-['']"></span>
         {timeline.map(([prefix, year, text, tag], index) => (
             <article class="tw:relative tw:flex tw:min-w-0 tw:flex-1 tw:flex-col tw:gap-3.5">
                 <span aria-hidden="true" class:list={["tw:relative tw:z-1 tw:block tw:size-6 tw:shrink-0 tw:border-2 tw:border-ink", index === timeline.length - 1 ? "tw:bg-lime" : "tw:bg-white"]}></span>
-                <div class:list={["tw:relative tw:flex tw:min-h-[348px] tw:flex-1 tw:flex-col tw:gap-3 tw:pr-7 tw:pb-[22.4px]", index > 0 && "tw:pl-6 tw:before:absolute tw:before:inset-y-0 tw:before:left-0 tw:before:w-0.5 tw:before:bg-accent/25 tw:before:content-['']"]}>
+                <div class:list={["tw:relative tw:flex tw:min-h-87 tw:flex-1 tw:flex-col tw:gap-3 tw:pr-7 tw:pb-[22.4px]", index > 0 && "tw:pl-6 tw:before:absolute tw:before:inset-y-0 tw:before:left-0 tw:before:w-0.5 tw:before:bg-accent/25 tw:before:content-['']"]}>
                     <h3 class="tw:m-0 tw:flex tw:min-h-[57.5px] tw:flex-col tw:gap-[5.5px] tw:font-display tw:text-xl tw:font-bold tw:uppercase tw:leading-6 tw:[font-variation-settings:'wdth'_75]">
                         <em class="tw:block tw:font-sans tw:text-sm tw:font-light tw:not-italic tw:uppercase tw:leading-7 tw:tracking-[0.84px]">{prefix}</em>
                         {year}
@@ -78,7 +78,7 @@ const timelineLabelAssets = [
                     {index === 0 ? (
                         <p class="tw:m-0 tw:text-sm tw:leading-[22.4px]">
                             Lançamento da{" "}
-                            <a class="tw:text-accent tw:underline tw:[text-decoration-thickness:1px] tw:[text-underline-position:from-font]"
+                            <a class="tw:text-accent tw:underline tw:decoration-1 tw:[text-underline-position:from-font]"
                                 href="https://azmina.com.br/reportagens/uma-robo-para-monitorar-direitos-das-mulheres-azmina-lanca-o-elas-no-congresso/"
                                 target="_blank"
                             >
@@ -100,7 +100,7 @@ const timelineLabelAssets = [
                             Edições periódicas do Ranking
                             dos Parlamentares,
                             metodologicamente inspirado no{" "}
-                            <a class="tw:text-accent tw:underline tw:[text-decoration-thickness:1px] tw:[text-underline-position:from-font]"
+                            <a class="tw:text-accent tw:underline tw:decoration-1 tw:[text-underline-position:from-font]"
                                 href="https://ruralometro.reporterbrasil.org.br/"
                                 target="_blank"
                             >
@@ -115,7 +115,7 @@ const timelineLabelAssets = [
                         class:list={[
                             "timeline__tag tw:relative tw:h-5 tw:shrink-0 tw:self-start tw:overflow-visible",
                             `timeline__tag--${index + 1}`,
-                            ["tw:w-[131px]", "tw:w-[110px]", "tw:w-[73px]", "tw:w-[120px] tw:-left-0.5 tw:-top-[0.47px]", "tw:w-[98px]"][index],
+                            ["tw:w-32.75", "tw:w-27.5", "tw:w-18.25", "tw:w-30 tw:-left-0.5 tw:top-[-0.47px]", "tw:w-24.5"][index],
                         ]}
                     >
                         {timelineLabelAssets[index].map(
@@ -128,14 +128,14 @@ const timelineLabelAssets = [
                                 />
                             ),
                         )}
-                        <b class="tw:relative tw:z-1 tw:inline-block tw:whitespace-nowrap tw:px-2 tw:py-[3px] tw:font-sans tw:text-[11px] tw:font-bold tw:uppercase tw:leading-[14px] tw:tracking-[0.88px]">{tag}</b>
+                        <b class="tw:relative tw:z-1 tw:inline-block tw:whitespace-nowrap tw:px-2 tw:py-0.75 tw:font-sans tw:text-[11px] tw:font-bold tw:uppercase tw:leading-3.5 tw:tracking-[0.88px]">{tag}</b>
                     </span>
 
                 </div>
             </article>
         ))}
     </div>
-    <small class="tw:mt-3.5 tw:block tw:w-[431px] tw:text-sm tw:leading-[23.1px] tw:text-muted">
-        <a class="tw:text-accent tw:underline tw:[text-decoration-thickness:1px] tw:[text-underline-position:from-font]" href="https://www.instagram.com/p/DFVVODpRP9A/" target="_blank">Em 2025, a AzMina encerrou definitivamente suas atividades no X</a>.
+    <small class="tw:mt-3.5 tw:block tw:w-107.75 tw:text-sm tw:leading-[23.1px] tw:text-muted">
+        <a class="tw:text-accent tw:underline tw:decoration-1 tw:[text-underline-position:from-font]" href="https://www.instagram.com/p/DFVVODpRP9A/" target="_blank">Em 2025, a AzMina encerrou definitivamente suas atividades no X</a>.
     </small>
 </div>

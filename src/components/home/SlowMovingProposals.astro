@@ -10,7 +10,7 @@ const turtleEmoji = "/assets/images/home/turtle.png";
 import { fetchSlowFavorable } from "../../lib/activity-api";
 import { API_BASE_URL } from "astro:env/server";
 
-let proposals = [];
+let proposals: Awaited<ReturnType<typeof fetchSlowFavorable>> = [];
 try {
     proposals = await fetchSlowFavorable(API_BASE_URL);
 } catch {

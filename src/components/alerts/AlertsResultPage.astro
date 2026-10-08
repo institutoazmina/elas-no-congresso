@@ -1,14 +1,11 @@
 ---
+import PageLayout from "../../layouts/PageLayout.astro";
 /**
  * Página de aterrissagem dos links de e-mail (confirmar / cancelar).
  *
  * A API redireciona para cá com `?status=ok|invalido`, então a mensagem é
  * escolhida no browser — a página em si é estática.
  */
-import { ClientRouter } from "astro:transitions";
-import Header from "../layout/Header.astro";
-import Footer from "../layout/Footer.astro";
-import "../../styles/tailwind.css";
 
 interface Props {
     title: string;
@@ -19,37 +16,20 @@ interface Props {
 const { title, ok, invalido } = Astro.props;
 ---
 
-<!doctype html>
-<html lang="pt-BR">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{title} | Elas no Congresso</title>
-        <meta name="robots" content="noindex" />
-        <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet" />
-        <ClientRouter fallback="swap" />
-    </head>
-    <body class="tw:!pt-0 tw:!bg-white">
-        <div class="site-alerts-header-background site-shared-background tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]">
-            <Header />
-        </div>
-        <main class="alerts-result tw:w-156 tw:max-w-[calc(100%_-_48px)] tw:text-navy tw:pt-24 tw:pb-30 tw:px-0 tw:my-0 tw:mx-auto tw:[&_h1]:text-navy tw:[&_h1]:font-display tw:[&_h1]:text-[33px] tw:[&_h1]:font-extrabold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:leading-[45px] tw:[&_h1]:m-0 tw:[&_p]:text-muted tw:[&_p]:font-normal tw:[&_p]:text-lg tw:[&_p]:leading-7 tw:[&_p]:font-sans tw:[&_p]:mt-4 tw:[&_p]:mb-0 tw:[&_p]:mx-0 tw:max-[681px]:max-w-[calc(100%_-_32px)] tw:max-[681px]:pt-14 tw:max-[681px]:pb-20 tw:max-[681px]:px-0 tw:max-[681px]:[&_h1]:text-[26px] tw:max-[681px]:[&_h1]:leading-[34px]">
+<PageLayout title={`${title} | Elas no Congresso`} noindex
+    headerClass="site-alerts-header-background site-shared-background tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+>
+        <main class="alerts-result tw:w-156 tw:max-w-[calc(100%-48px)] tw:text-navy tw:pt-24 tw:pb-30 tw:px-0 tw:my-0 tw:mx-auto tw:[&_h1]:text-navy tw:[&_h1]:font-display tw:[&_h1]:text-[33px] tw:[&_h1]:font-extrabold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:leading-11.25 tw:[&_h1]:m-0 tw:[&_p]:text-muted tw:[&_p]:font-normal tw:[&_p]:text-lg tw:[&_p]:leading-7 tw:[&_p]:font-sans tw:[&_p]:mt-4 tw:[&_p]:mb-0 tw:[&_p]:mx-0 tw:max-[681px]:max-w-[calc(100%-32px)] tw:max-[681px]:pt-14 tw:max-[681px]:pb-20 tw:max-[681px]:px-0 tw:max-[681px]:[&_h1]:text-[26px] tw:max-[681px]:[&_h1]:leading-8.5">
             <h1 data-alerts-result-heading>{ok.heading}</h1>
             <p data-alerts-result-body>{ok.body}</p>
             <a class="alerts-result__link tw:inline-block tw:mt-8 tw:bg-accent tw:text-white tw:font-display tw:text-lg tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:no-underline tw:uppercase tw:pt-4.5 tw:pb-3.5 tw:px-6" href="/alertas">Voltar para os alertas</a>
         </main>
-        <Footer />
-
-        <script is:inline define:vars={{ ok, invalido }}>
+    <Fragment slot="scripts">
+<script is:inline define:vars={{ ok, invalido }}>
             const invalido_ = new URLSearchParams(location.search).get("status") === "invalido";
             const copy = invalido_ ? invalido : ok;
             document.querySelector("[data-alerts-result-heading]").textContent = copy.heading;
             document.querySelector("[data-alerts-result-body]").textContent = copy.body;
         </script>
-
-        
-    </body>
-</html>
+    </Fragment>
+</PageLayout>

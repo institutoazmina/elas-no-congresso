@@ -18,7 +18,7 @@ const formatDate = (date: string) => {
 ---
 
 <div class="alerts-results tw:flex tw:flex-col tw:gap-8" data-alerts-results data-page-size={pageSize} data-total={total}>
-    <section class="alerts-list tw:flex tw:flex-col tw:w-204 tw:max-[941px]:w-full tw:[&_>_div_+_div]:-mt-0.5" aria-label="Alertas recentes" aria-live="polite">
+    <section class="alerts-list tw:flex tw:flex-col tw:w-204 tw:max-[941px]:w-full tw:[&_>_div+div]:-mt-0.5" aria-label="Alertas recentes" aria-live="polite">
         {propositions.slice(0, pageSize).map((proposition, index) => (
             <div data-alert-item>
                 <AlertCard
@@ -36,14 +36,14 @@ const formatDate = (date: string) => {
         ))}
     </section>
     {pageCount > 1 && (
-        <nav class="alerts-pagination tw:items-center tw:flex tw:gap-4 tw:justify-center tw:w-204 tw:[&_button]:items-center tw:[&_button]:bg-white tw:[&_button]:border-[2px] tw:[&_button]:border-solid tw:[&_button]:border-transparent tw:[&_button]:text-accent tw:[&_button]:cursor-pointer tw:[&_button]:flex tw:[&_button]:font-bold tw:[&_button]:text-lg tw:[&_button]:leading-6 tw:[&_button]:font-display tw:[&_button]:h-10 tw:[&_button]:justify-center tw:[&_button]:min-w-10 tw:[&_button]:p-1.5 tw:[&_span]:text-navy tw:[&_span]:font-bold tw:[&_span]:text-lg tw:[&_span]:leading-6 tw:[&_span]:font-display tw:[&_span]:min-w-40 tw:[&_span]:text-center tw:[&_span]:uppercase tw:max-[941px]:w-full tw:[&[hidden]]:hidden" aria-label="Paginação das proposições">
+        <nav class="alerts-pagination tw:items-center tw:flex tw:gap-4 tw:justify-center tw:w-204 tw:[&_button]:items-center tw:[&_button]:bg-white tw:[&_button]:border-2 tw:[&_button]:border-solid tw:[&_button]:border-transparent tw:[&_button]:text-accent tw:[&_button]:cursor-pointer tw:[&_button]:flex tw:[&_button]:font-bold tw:[&_button]:text-lg tw:[&_button]:leading-6 tw:[&_button]:font-display tw:[&_button]:h-10 tw:[&_button]:justify-center tw:[&_button]:min-w-10 tw:[&_button]:p-1.5 tw:[&_span]:text-navy tw:[&_span]:font-bold tw:[&_span]:text-lg tw:[&_span]:leading-6 tw:[&_span]:font-display tw:[&_span]:min-w-40 tw:[&_span]:text-center tw:[&_span]:uppercase tw:max-[941px]:w-full tw:[[hidden]]:hidden" aria-label="Paginação das proposições">
             <button class="tw:hover:border-accent tw:focus-visible:outline-2 tw:focus-visible:outline-accent tw:focus-visible:outline-offset-0.5 tw:disabled:cursor-not-allowed tw:disabled:opacity-30" type="button" data-previous aria-label="Página anterior">&larr;</button>
             <span data-page-status>Página 1 de {pageCount}</span>
             <button class="tw:hover:border-accent tw:focus-visible:outline-2 tw:focus-visible:outline-accent tw:focus-visible:outline-offset-0.5 tw:disabled:cursor-not-allowed tw:disabled:opacity-30" type="button" data-next aria-label="Próxima página">&rarr;</button>
         </nav>
     )}
-    <p class="alerts-results__empty tw:text-navy tw:font-bold tw:text-base tw:leading-6 tw:font-sans tw:text-center tw:m-0 tw:[&[hidden]]:hidden" data-empty hidden>Nenhuma proposição encontrada para essa busca.</p>
-    <p class="alerts-results__error tw:text-navy tw:font-bold tw:text-base tw:leading-6 tw:font-sans tw:text-center tw:m-0 tw:[&[hidden]]:hidden" data-load-error hidden>Não foi possível carregar esta página. Tente novamente.</p>
+    <p class="alerts-results__empty tw:text-navy tw:font-bold tw:text-base tw:leading-6 tw:font-sans tw:text-center tw:m-0 tw:[[hidden]]:hidden" data-empty hidden>Nenhuma proposição encontrada para essa busca.</p>
+    <p class="alerts-results__error tw:text-navy tw:font-bold tw:text-base tw:leading-6 tw:font-sans tw:text-center tw:m-0 tw:[[hidden]]:hidden" data-load-error hidden>Não foi possível carregar esta página. Tente novamente.</p>
     <template data-alert-template>
         <div data-alert-item>
             <AlertCard alert={{ category: "", date: "", dateIso: "", title: "", description: "", href: "" }} />

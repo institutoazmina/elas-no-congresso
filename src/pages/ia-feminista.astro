@@ -1,13 +1,10 @@
 ---
-import { ClientRouter } from "astro:transitions";
-import Header from "../components/layout/Header.astro";
-import Footer from "../components/layout/Footer.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 const heroIllustration = "/assets/images/quiteria.png";
 const fluxoProcessamento = "/assets/images/ia-feminista/fluxo-processamento.svg";
 const fluxoProcessamentoMobile = "/assets/images/ia-feminista/fluxo-processamento-mobile.png";
 const attention = "/assets/images/activity/attention.svg";
 const halftoneShadow = "/assets/images/hero/halftone-shadow.png";
-import "../styles/tailwind.css";
 
 const categories = [
     [
@@ -166,31 +163,9 @@ const thematicPartitions = [
 ];
 ---
 
-<!doctype html>
-<html lang="pt-BR">
-    <head>
-        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>IA Feminista | Elas no Congresso</title>
-        <link
-            rel="preload"
-            href="/assets/fonts/ETCAnybodyVariable.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,700;1,400&display=swap"
-            rel="stylesheet"
-        />
-        <ClientRouter fallback="swap" />
-    </head>
-    <body class="tw:!pt-0 tw:!bg-white tw:m-0">
-        <div class="ia-page ia-feminista-page tw:text-ink tw:font-sans tw:text-lg tw:leading-[29.7px]  tw:[&_h1]:font-display tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:uppercase tw:[&_h2]:font-display tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:uppercase tw:[&_h3]:font-display tw:[&_h3]:font-bold tw:[&_h3]:[font-variation-settings:'wdth'_75] tw:[&_h3]:uppercase tw:[&_h4]:font-display tw:[&_h4]:font-bold tw:[&_h4]:[font-variation-settings:'wdth'_75] tw:[&_h4]:uppercase tw:max-md:[&_.ia-wide_h3]:text-[28px] tw:max-md:[&_.ia-wide_h3]:leading-8 tw:max-md:[&_.ia-wide_h3]:pt-[12.8px] tw:max-md:[&_.ia-wide_h3]:m-0">
-            <Header />
+<PageLayout title="IA Feminista | Elas no Congresso" fontVariant="italic"
+    pageClass="ia-page ia-feminista-page tw:text-ink tw:font-sans tw:text-lg tw:leading-[29.7px]  tw:[&_h1]:font-display tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:uppercase tw:[&_h2]:font-display tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:uppercase tw:[&_h3]:font-display tw:[&_h3]:font-bold tw:[&_h3]:[font-variation-settings:'wdth'_75] tw:[&_h3]:uppercase tw:[&_h4]:font-display tw:[&_h4]:font-bold tw:[&_h4]:[font-variation-settings:'wdth'_75] tw:[&_h4]:uppercase tw:max-md:[&_.ia-wide_h3]:text-[28px] tw:max-md:[&_.ia-wide_h3]:leading-8 tw:max-md:[&_.ia-wide_h3]:pt-[12.8px] tw:max-md:[&_.ia-wide_h3]:m-0"
+>
             <main>
                 <section
                     class="ia-hero site-shared-background tw:flex tw:items-start tw:justify-start tw:min-h-113 tw:flex-col tw:h-125 tw:overflow-hidden tw:relative tw:p-0 tw:[&_h1]:text-7xl tw:[&_h1]:leading-18 tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:text-ink tw:[&_h1]:font-bold tw:[&_h1]:tracking-normal tw:[&_h1]:mix-blend-multiply tw:[&_h1]:whitespace-nowrap tw:[&_h1]:w-[681px] tw:[&_h1]:m-0 tw:[&_p]:font-bold tw:[&_p]:leading-6 tw:[&_p]:w-160 tw:max-[901px]:flex-col tw:max-[901px]:items-start tw:max-[901px]:h-152.5 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:max-[901px]:[&_p]:w-full tw:max-[901px]:[&_h1]:text-[52px] tw:max-[901px]:[&_h1]:leading-[56px] tw:max-[901px]:[&_h1]:w-full tw:max-[901px]:[&_h1]:whitespace-normal tw:max-[561px]:[&_h1]:text-[40px] tw:max-[561px]:[&_h1]:leading-[44px] tw:max-md:h-auto tw:max-md:min-h-0 tw:max-md:overflow-hidden tw:max-md:justify-start tw:max-md:pt-6 tw:max-md:pb-12 tw:max-md:px-6 tw:[&_i]:h-2 tw:[&_i]:mb-6 tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
@@ -676,7 +651,4 @@ const thematicPartitions = [
                     </div>
                 </section>
             </main>
-            <Footer />
-        </div>
-    </body>
-</html>
+</PageLayout>

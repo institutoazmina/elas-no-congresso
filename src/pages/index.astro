@@ -1,5 +1,5 @@
 ---
-import Header from "../components/layout/Header.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 import Hero from "../components/home/Hero.astro";
 import RightsUnderAttack from "../components/charts/RightsUnderAttack.astro";
 import LegislativeSetbacks from "../components/charts/LegislativeSetbacks.astro";
@@ -13,37 +13,12 @@ import EnactedProjects from "../components/home/EnactedProjects.astro";
 import ExploreCongress from "../components/home/ExploreCongress.astro";
 import ParliamentariansCarousel from "../components/home/ParliamentariansCarousel.astro";
 import QuiteriaAndFunders from "../components/home/QuiteriaAndFunders.astro";
-import Footer from "../components/layout/Footer.astro";
 import HomeReportagens from "../components/home/HomeReportagens.astro";
-import { ClientRouter } from "astro:transitions";
-import "../styles/tailwind.css";
 ---
 
-<!doctype html>
-<html class="tw:motion-safe:[scroll-behavior:smooth]" lang="pt-BR">
-    <head>
-        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Elas no Congresso</title>
-        <link
-            rel="preload"
-            href="/assets/fonts/ETCAnybodyVariable.woff2"
-            as="font"
-            type="font/woff2"
-            crossorigin
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap"
-            rel="stylesheet"
-        />
-        <ClientRouter fallback="swap" />
-    </head>
-    <body class="tw:!pt-0 tw:!bg-white">
-        <div class="site-home-background site-shared-background tw:[.site-home-background_>_&]:bg-transparent tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]">
-            <Header />
+<PageLayout title="Elas no Congresso" htmlClass="tw:motion-safe:[scroll-behavior:smooth]"
+    pageClass="site-home-background site-shared-background tw:[.site-home-background_>_&]:bg-transparent tw:bg-white tw:bg-[url('/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+>
             <Hero />
             <RightsUnderAttack />
             <LegislativeSetbacks />
@@ -58,7 +33,4 @@ import "../styles/tailwind.css";
             <ExploreCongress />
             <ParliamentariansCarousel />
             <QuiteriaAndFunders />
-            <Footer />
-        </div>
-    </body>
-</html>
+</PageLayout>

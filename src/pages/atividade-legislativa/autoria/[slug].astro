@@ -1,7 +1,5 @@
 ---
-import { ClientRouter } from "astro:transitions";
-import Header from "../../../components/layout/Header.astro";
-import Footer from "../../../components/layout/Footer.astro";
+import PageLayout from "../../../layouts/PageLayout.astro";
 import AuthorPage from "../../../components/activity/AuthorPage.astro";
 import {
     buildAuthorActivityFromApi,
@@ -13,7 +11,6 @@ import {
 } from "../../../lib/author-page";
 import { fetchActivity } from "../../../lib/activity-api";
 import { API_BASE_URL } from "astro:env/server";
-import "../../../styles/tailwind.css";
 
 export async function getStaticPaths() {
     const activityData = await fetchActivity(API_BASE_URL);
@@ -102,25 +99,8 @@ interface Props { authorId: number; house: string; initial: AuthorInitialData | 
 const { authorId, house, initial } = Astro.props;
 ---
 
-<!doctype html>
-<html lang="pt-BR">
-    <head>
-        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Consulte o perfil e a atividade legislativa desta pessoa parlamentar." />
-        <title>Autoria | Atividade Legislativa | Elas no Congresso</title>
-        <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet" />
-        <ClientRouter fallback="swap" />
-    </head>
-    <body class="tw:!m-0 tw:!bg-white tw:!pt-0">
-        <div class="author-route-page tw:min-w-80 tw:overflow-x-clip tw:[body:has(&)]:bg-white tw:[body:has(&)]:m-0">
-            <Header />
+<PageLayout title="Autoria | Atividade Legislativa | Elas no Congresso" description="Consulte o perfil e a atividade legislativa desta pessoa parlamentar."
+    pageClass="author-route-page tw:min-w-80 tw:overflow-x-clip tw:[body:has(&)]:bg-white tw:[body:has(&)]:m-0"
+>
             <AuthorPage authorId={authorId} house={house} initial={initial} />
-            <Footer />
-        </div>
-    </body>
-</html>
+</PageLayout>

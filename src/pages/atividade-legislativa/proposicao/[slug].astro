@@ -1,7 +1,5 @@
 ---
-import { ClientRouter } from "astro:transitions";
-import Header from "../../../components/layout/Header.astro";
-import Footer from "../../../components/layout/Footer.astro";
+import PageLayout from "../../../layouts/PageLayout.astro";
 const thumbsUp = "/assets/images/activity/thumbs-up.svg";
 const thumbsDown = "/assets/images/activity/thumbs-down.svg";
 const paper = "/assets/images/activity/author-hero-paper.png";
@@ -12,7 +10,6 @@ import { propositionSlug } from "../../../lib/proposition-utils";
 import { formatPresentedDate } from "../../../lib/canonical";
 import { fetchActivity, fetchFastUnfavorable, type ActivityProposition } from "../../../lib/activity-api";
 import { API_BASE_URL } from "astro:env/server";
-import "../../../styles/tailwind.css";
 
 export async function getStaticPaths() {
   const paths = new Map<string, { params: { slug: string }; props: { activity: ActivityProposition } }>();
@@ -67,26 +64,10 @@ const themes = activity.themes?.filter(Boolean) || (category ? [category] : []);
 const title = `${activity.number_label} | Atividade Legislativa | Elas no Congresso`;
 ---
 
-<!doctype html>
-<html lang="pt-BR">
-  <head>
-        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={activity.ementa} />
-    <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
-    <ClientRouter fallback="swap" />
-  </head>
-  <body class="tw:!m-0 tw:!bg-white tw:!pt-0">
-    <div
-      class="proposition-page tw:min-w-80 tw:text-ink tw:font-sans"
-      style={`--proposition-paper: url(${paper}); --proposition-paperclip: url(${paperclip}); --proposition-status-label: url(${statusLabel})`}
-    >
-      <Header />
+<PageLayout title={title} description={activity.ementa} fontVariant="medium"
+    pageClass="proposition-page tw:min-w-80 tw:text-ink tw:font-sans"
+      pageStyle={`--proposition-paper: url(${paper}); --proposition-paperclip: url(${paperclip}); --proposition-status-label: url(${statusLabel})`}
+>
       <main class="tw:overflow-clip">
         <section class="proposition-hero tw:[&>a]:absolute tw:[&>a]:z-1 tw:[&>a]:top-3 tw:[&>a]:left-12 tw:[&>a]:text-[#d0d0fd] tw:[&>a]:text-base tw:[&>a]:font-bold tw:[&>a]:leading-6 tw:[&>a]:no-underline tw:[&_p]:font-display tw:[&_p]:font-bold tw:[&_p]:[font-variation-settings:'wdth'_75] tw:[&_p]:text-center tw:[&_p]:uppercase tw:[&_p]:text-2xl tw:[&_p]:leading-8 tw:[&_p]:m-0 tw:[&_h1]:font-display tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:text-center tw:[&_h1]:uppercase tw:[&_h1]:m-0 tw:max-md:h-55 tw:max-md:bg-center tw:max-md:bg-size-[cover] tw:max-md:[&>a]:top-3 tw:max-md:[&>a]:left-4 tw:max-md:[&>a]:text-sm tw:max-md:[&_p]:text-lg tw:max-md:[&_p]:leading-6 tw:max-md:[&_h1]:mt-1 tw:max-md:[&_h1]:text-[clamp(36px,_12vw,_48px)] tw:max-md:[&_h1]:leading-[1] tw:relative tw:h-53 tw:overflow-hidden tw:bg-[#3838d9] tw:bg-[image:var(--proposition-paper)] tw:[background-blend-mode:multiply] tw:bg-center tw:bg-no-repeat tw:bg-size-[cover] tw:text-white" data-page-hero aria-labelledby="proposition-title">
           <a class="tw:hover:text-white tw:hover:underline tw:focus-visible:text-white tw:focus-visible:underline" href="/atividade-legislativa" data-history-back>←&nbsp; Voltar ao painel</a>
@@ -182,9 +163,8 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
           </div>
         </section>
       </main>
-      <Footer />
-    </div>
-    <script>
+    <Fragment slot="scripts">
+<script>
       import { PUBLIC_API_BASE_URL } from "astro:env/client";
 
       type ActivityEvent = {
@@ -338,21 +318,9 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
         });
       };
 
-      const initializeHistoryBackLinks = () => {
-        document.querySelectorAll<HTMLAnchorElement>("[data-history-back]:not([data-history-back-ready])").forEach((link) => {
-          link.dataset.historyBackReady = "true";
-          link.addEventListener("click", (event) => {
-            if (window.history.length < 2) return;
-            event.preventDefault();
-            window.history.back();
-          });
-        });
-      };
 
-      initializeHistoryBackLinks();
       document.addEventListener("astro:page-load", initializePropositionProgress);
-      document.addEventListener("astro:page-load", initializeHistoryBackLinks);
       initializePropositionProgress();
     </script>
-  </body>
-</html>
+    </Fragment>
+</PageLayout>

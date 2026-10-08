@@ -32,7 +32,8 @@ function formatDate(date: string) {
         <div class="tw:flex tw:w-max tw:justify-start tw:gap-4 tw:pb-2 tw:lg:w-full tw:lg:justify-center-safe tw:lg:gap-12 tw:lg:pb-0">
             {reports.map((report) => {
                 const image = report._embedded?.["wp:featuredmedia"]?.[0];
-                const imageUrl = image && new URL(image.source_url ?? image.link, report.link).href;
+                const imageSource = image?.source_url ?? image?.link;
+                const imageUrl = imageSource ? new URL(imageSource, report.link).href : undefined;
                 const date = report.modified || report.date;
 
                 return (

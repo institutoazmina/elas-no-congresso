@@ -1,0 +1,68 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "../styles/tailwind.css";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+
+interface Props {
+    title: string;
+    description?: string;
+    noindex?: boolean;
+    htmlClass?: string;
+    bodyClass?: string;
+    pageClass?: string;
+    pageStyle?: string;
+    headerClass?: string;
+    fontVariant?: "default" | "medium" | "editorial" | "italic";
+}
+
+const {
+    title,
+    description,
+    noindex = false,
+    htmlClass,
+    bodyClass,
+    pageClass,
+    pageStyle,
+    headerClass,
+    fontVariant = "default",
+} = Astro.props;
+
+// Preserve the weights used by each page while sharing font loading and preconnects.
+const fontVariants = {
+    default: "wght@400;700",
+    medium: "wght@400;500;700",
+    editorial: "wght@400;500;700;800",
+    italic: "ital,wght@0,400;0,700;1,400",
+};
+const fontUrl = `https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:${fontVariants[fontVariant]}&display=swap`;
+---
+
+<!doctype html>
+<html lang="pt-BR" class={htmlClass}>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{title}</title>
+        {description && <meta name="description" content={description} />}
+        {noindex && <meta name="robots" content="noindex" />}
+        <link rel="icon" type="image/png" href="/assets/images/site-icon.png" />
+        <link rel="preload" href="/assets/fonts/ETCAnybodyVariable.woff2" as="font" type="font/woff2" crossorigin />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href={fontUrl} rel="stylesheet" />
+        <ClientRouter fallback="swap" />
+        <slot name="head" />
+    </head>
+    <body class:list={["tw:m-0! tw:pt-0! tw:bg-white!", bodyClass]}>
+        <div class={pageClass} style={pageStyle}>
+            {headerClass ? <div class={headerClass}><Header /></div> : <Header />}
+            <slot />
+            <Footer />
+        </div>
+        <slot name="scripts" />
+        <script>
+            import "../scripts/history-back";
+        </script>
+    </body>
+</html>

@@ -247,12 +247,12 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
 
     const updateHighlighter = () => {
         const nav = document.querySelector(".site-header__content");
-        const highlighter = nav?.querySelector(".highlighter-marks");
+        const highlighter = nav?.querySelector<HTMLElement>(".highlighter-marks");
 
         if (!nav || !highlighter) return;
 
         const currentPath = (window.location.pathname.replace(/\/+$/, "") || "/");
-        nav.querySelectorAll(
+        nav.querySelectorAll<HTMLAnchorElement>(
             ".site-header__desktop-links a[data-highlighter-routes], .site-header__mobile-panel a[data-highlighter-routes]",
         ).forEach((link) => {
             const routes = link.dataset.highlighterRoutes?.split(",") ?? [];
@@ -266,7 +266,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
         const matchesMobileDesign = window.matchMedia("(max-width: 767px)").matches;
         const target = isMobile
             ? (["/sobre", "/ia-feminista", "/reportagens"].includes(currentPath) ? null : nav.querySelector(".site-header__brand"))
-            : [...nav.querySelectorAll("[data-highlighter-target]")].find(
+            : [...nav.querySelectorAll<HTMLElement>("[data-highlighter-target]")].find(
                 (element) => {
                     const styles = window.getComputedStyle(element);
                     const routes = element.dataset.highlighterRoutes?.split(",") ?? [];
@@ -571,7 +571,7 @@ const currentPath = Astro.url.pathname.replace(/\/+$/, "") || "/";
         highlighterLayoutObserver?.disconnect();
         highlighterLayoutObserver = new ResizeObserver(scheduleHighlighterUpdate);
         highlighterLayoutObserver.observe(nav);
-        nav.querySelectorAll("[data-highlighter-target]").forEach((target) => {
+        nav.querySelectorAll<HTMLElement>("[data-highlighter-target]").forEach((target) => {
             highlighterLayoutObserver?.observe(target);
         });
 

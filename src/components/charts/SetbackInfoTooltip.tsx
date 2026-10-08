@@ -14,7 +14,7 @@ export function SetbackInfoTooltip({ count, iconSrc, title }: SetbackInfoTooltip
             </Tooltip.Trigger>
             <Tooltip.Portal>
                 <Tooltip.Positioner side="top" sideOffset={8}>
-                    <Tooltip.Popup className="setback-info-tooltip__popup tw:flex tw:z-20 tw:max-w-55 tw:flex-col tw:gap-1 tw:bg-ink tw:text-white tw:[font:14px/18px_'Plus_Jakarta_Sans',_sans-serif] tw:shadow-[2px_2px_0_#4242f6] tw:py-2.5 tw:px-3">
+                    <Tooltip.Popup className="setback-info-tooltip__popup tw:flex tw:z-20 tw:max-w-55 tw:flex-col tw:gap-1 tw:bg-ink tw:text-white tw:[font:14px/18px_'Plus_Jakarta_Sans',sans-serif] tw:shadow-[2px_2px_0_#4242f6] tw:py-2.5 tw:px-3">
                         <strong>{title}</strong>
                         <span>{count} proposições desfavoráveis nesta categoria.</span>
                     </Tooltip.Popup>
