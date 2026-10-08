@@ -50,3 +50,11 @@ run reuses the author data in `dist` if available, otherwise loads the API. Data
 and the original portrait are cached in `node_modules/.cache/og-render`, allowing
 subsequent design iterations offline. Add `--refresh` to reload API data and the
 portrait. You can pass another author slug; Sâmia is the default if omitted.
+
+## Deployment origin
+
+`OG_IMAGE_BASE_URL` overrides the origin of OG/Twitter image URLs only. The
+current workflow deploys to `homologacao.elasnocongresso.com.br`, so it sets that
+value explicitly. Without the override, images use Astro’s configured site URL.
+When deploying to production, update or remove this workflow override. Canonical
+URLs are unaffected.

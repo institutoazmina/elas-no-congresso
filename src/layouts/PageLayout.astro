@@ -34,7 +34,8 @@ const {
     fontVariant = "default",
 } = Astro.props;
 
-const ogImageUrl = new URL(ogImage.src, Astro.site ?? Astro.url);
+// Images must resolve on the deployed host, which may differ from the canonical site.
+const ogImageUrl = new URL(ogImage.src, import.meta.env.OG_IMAGE_BASE_URL || Astro.site || Astro.url);
 const pageUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url);
 
 // Preserve the weights used by each page while sharing font loading and preconnects.
