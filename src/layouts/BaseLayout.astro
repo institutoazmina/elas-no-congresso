@@ -1,7 +1,7 @@
 ---
 import "../styles/tailwind.css";
 import Header from "../components/layout/Header.astro";
-import ArticleFooter from "../components/layout/ArticleFooter.astro";
+import Footer from "../components/layout/Footer.astro";
 
 interface Props {
     title?: string;
@@ -64,7 +64,7 @@ const canonicalUrl = currentUrl ?? Astro.url.href;
     <body class="tw:font-lato tw:text-navy tw:bg-white">
         <Header />
         <slot />
-        <ArticleFooter />
+        <Footer />
         {
             hasForm && (
                 <script src="https://www.google.com/recaptcha/api.js" async defer />
