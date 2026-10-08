@@ -145,8 +145,8 @@ const title = `${activity.number_label} | Atividade Legislativa | Elas no Congre
                   <span class="tw:block tw:text-muted tw:text-sm tw:leading-4">Última movimentação:</span>
                   {activity.celerity.last_event_at ? formatPresentedDate(activity.celerity.last_event_at) : activity.current_status?.trim() || "Indisponível"}
                 </p>
-                <p class="proposition-details__themes tw:flex tw:gap-[0_6px] tw:text-accent tw:mb-0">
-                  {themes.length > 0 ? themes.map((theme) => <span class="tw:block tw:text-muted tw:text-sm tw:leading-4">{theme.replace(/^#/, "")}</span>) : "Indisponível"}
+                <p class="proposition-details__themes tw:flex tw:flex-col tw:gap-1.5 tw:text-accent tw:mb-0">
+                  {themes.length > 0 ? themes.map((theme) => <span class="tw:block tw:text-accent tw:text-sm tw:leading-4">#{theme.replace(/^#+/, "")}</span>) : "Indisponível"}
                 </p>
               </div>
             </aside>
