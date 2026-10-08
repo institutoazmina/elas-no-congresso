@@ -13,7 +13,8 @@
     "knip": "knip",
     "test": "node --test \"src/**/*.test.ts\"",
     "check:assets": "node scripts/check-assets.mjs",
-    "check": "npm run knip && npm run check:assets && npm test"
+    "check": "npm run knip && npm run check:assets && npm test",
+    "og:render": "node scripts/render-author-og.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.5",
@@ -23,9 +24,11 @@
     "astro": "^6.1.8",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "satori": "^0.38.2",
     "tailwindcss": "^4.2.3"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
     "knip": "^6.40.0",
     "sharp": "^0.35.1"
   }

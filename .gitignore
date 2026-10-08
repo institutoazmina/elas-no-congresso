@@ -30,3 +30,6 @@ unlighthouse-reports/
 
 # local deepwork progress
 .slim/deepwork/
+
+# Local OG image previews
+previews/

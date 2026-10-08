@@ -1,106 +1,29 @@
 ---
 import PageLayout from "../../../layouts/PageLayout.astro";
 import AuthorPage from "../../../components/activity/AuthorPage.astro";
-import {
-    buildAuthorActivityFromApi,
-    authorSlug,
-    partyForTerm,
-    type ApiParliamentarian,
-    type ApiParty,
-    type AuthorInitialData,
-} from "../../../lib/author-page";
-import { fetchActivity } from "../../../lib/activity-api";
+import { getAuthorPaths, type AuthorPageProps } from "../../../lib/author-paths";
 import { API_BASE_URL } from "astro:env/server";
 
 export async function getStaticPaths() {
-    const activityData = await fetchActivity(API_BASE_URL);
-    let directory: { parliamentarians: ApiParliamentarian[]; parties: ApiParty[] } = { parliamentarians: [], parties: [] };
-    try {
-        const apiBase = API_BASE_URL.replace(/\/$/, "");
-        const apiJson = async <T>(url: string): Promise<T> => {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`API ${response.status}: ${url}`);
-            return response.json() as Promise<T>;
-        };
-        const [parliamentarians, parties] = await Promise.all([
-            Promise.all(["camara", "senado"].map((house) => apiJson<{ items: ApiParliamentarian[] }>(`${apiBase}/legislatures/parliamentarians?house=${house}&limit=2000&offset=0`))),
-            apiJson<{ items: ApiParty[] }>(`${apiBase}/legislatures/parties?limit=100&offset=0`),
-        ]);
-        directory = {
-            parliamentarians: parliamentarians.flatMap((result) => result.items || []),
-            parties: parties.items || [],
-        };
-    } catch (error) {
-        console.warn("Não foi possível carregar o diretório de parlamentares durante o build:", error);
-    }
-
-    const authors = new Map<number, { name: string; party: string | null; state: string | null; gender: string | null; photoUrl: string | null; role: string | null; house: string }>();
-    for (const proposition of activityData) {
-        for (const author of proposition.authors) {
-            if (author.id === null || authors.has(author.id)) continue;
-            authors.set(author.id, {
-                name: author.name,
-                party: author.party,
-                state: author.state,
-                gender: author.gender,
-                photoUrl: author.photo_url,
-                role: author.role,
-                house: proposition.house,
-            });
-        }
-    }
-    const paths = new Map<string, { params: { slug: string }; props: Props }>();
-    for (const [authorId, author] of authors) {
-        const slug = authorSlug(author.name);
-        if (!slug || paths.has(slug)) continue;
-        const activity = buildAuthorActivityFromApi(activityData, authorId);
-        if (!activity) continue;
-        const person = directory.parliamentarians.find((item) => item.id === authorId);
-        const fallbackTerm = {
-            id: null,
-            parliamentarian: authorId,
-            legislature_number: 0,
-            party: 0,
-            house: author.house,
-            role: author.role || "Parlamentar",
-            state: author.state || "",
-            external_id: authorId,
-            start_date: "",
-            end_date: null,
-        } as const;
-        const term = person?.terms.find((item) => item.end_date === null) ?? person?.terms[0] ?? fallbackTerm;
-        const initialPerson = person || {
-            id: authorId,
-            full_name: author.name,
-            social_name: author.name,
-            photo_url: author.photoUrl,
-            gender: author.gender,
-            birth_date: null,
-            race: null,
-            education: null,
-            birthplace: null,
-            profession: null,
-            religion: null,
-            bio: null,
-            favorable_propositions_count: activity.favorable,
-            unfavorable_propositions_count: activity.unfavorable,
-            terms: [fallbackTerm],
-        } satisfies ApiParliamentarian;
-        const parties = person ? directory.parties : author.party ? [{ id: 0, acronym: author.party, name: author.party }] : [];
-        paths.set(slug, {
-            params: { slug },
-            props: { authorId, house: author.role || "Parlamentar", initial: { person: initialPerson, term, parties, activity } },
-        });
-    }
-    return [...paths.values()];
+    return getAuthorPaths(API_BASE_URL);
 }
 
-interface Props { authorId: number; house: string; initial: AuthorInitialData | null; }
+type Props = AuthorPageProps;
 const { authorId, house, initial } = Astro.props;
+const name = initial.person.social_name || initial.person.full_name || initial.activity.author.nome;
+const title = `${name} | Atividade Legislativa | Elas no Congresso`;
+const description = `Consulte o perfil e a atividade legislativa de ${name}.`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(`${Astro.url.pathname.replace(/\/$/, "")}/og.png`, Astro.site);
 ---
 
-<PageLayout title="Autoria | Atividade Legislativa | Elas no Congresso" description="Consulte o perfil e a atividade legislativa desta pessoa parlamentar."
+<PageLayout title={title} description={description}
+    ogType="profile"
+    ogImage={{ src: ogImage, width: 1200, height: 630, alt: `Foto, partido, estado e favorabilidade de ${name}` }}
     pageClass="author-route-page tw:min-w-80 tw:overflow-x-clip tw:[body:has(&)]:bg-white tw:[body:has(&)]:m-0"
 >
+    <Fragment slot="head">
+        <link rel="canonical" href={canonical} />
+    </Fragment>
             <AuthorPage authorId={authorId} house={house} initial={initial} />
 </PageLayout>
