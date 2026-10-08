@@ -7,6 +7,7 @@ import thumbsDown from "../../assets/images/thumbs-down.svg";
 import info from "../../assets/images/home-chart/info.svg";
 import attention from "../../assets/images/activity/attention.svg";
 import { getUnfavorableByCategory } from "../../service/api/stats";
+import { categories as categoryDefinitions } from "../../lib/categories";
 import { SetbackInfoTooltip } from "./SetbackInfoTooltip";
 
 // A API devolve 10 categorias; o gráfico do design tem 8 colunas.
@@ -27,6 +28,7 @@ const themes = categories.map((category, index) => {
     return {
         count: category.unfavorable,
         title: category.label,
+        description: categoryDefinitions.find(([name]) => name === category.label)?.[1],
         // ponytail: largura pelo tamanho do rótulo. Se algum título novo quebrar
         // feio, vira um mapa de largura por categoria.
         width:
@@ -180,7 +182,7 @@ const themes = categories.map((category, index) => {
                                 tw:min-[821px]:py-2 tw:min-[821px]:px-0 tw:min-[821px]:flex
                                 tw:min-[821px]:flex-col
                             ">
-                                <SetbackInfoTooltip client:load count={theme.count} title={theme.title}><Image src={info} alt="" width={24} height={24} /></SetbackInfoTooltip>
+                                <SetbackInfoTooltip client:load description={theme.description ?? `${theme.count} proposições desfavoráveis nesta categoria.`} title={theme.title}><Image src={info} alt="" width={24} height={24} /></SetbackInfoTooltip>
                                 <h3 class="
                                     tw:m-0 tw:text-center tw:text-xl tw:font-bold tw:leading-6 tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75]
                                     tw:max-md:w-full tw:max-md:min-w-24 tw:max-md:max-w-48 tw:max-md:min-h-12 tw:max-md:text-[#0B0F5E]
