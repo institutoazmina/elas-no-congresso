@@ -9,6 +9,9 @@ import substack from "../../assets/images/footer/substack.svg";
 import youtube from "../../assets/images/footer/youtube.svg";
 import github from "../../assets/images/footer/github.svg";
 import bluesky from "../../assets/images/footer/bluesky.svg";
+import linkedin from "../../assets/images/footer/linkedin.svg";
+import whatsapp from "../../assets/images/footer/whatsapp.svg";
+
 import azminaLogo from "../../assets/images/footer/azmina-footer.svg";
 import codesInfo from "../../assets/images/funders/codesinfo.png";
 import iaFeminista from "../../assets/images/funders/ia-feminista-figma-original.png";
@@ -30,7 +33,7 @@ import elasFunder from "../../assets/images/funders/elas.png";
             site-footer__alerts tw:flex tw:w-105 tw:flex-col tw:items-start tw:gap-7.5 tw:overflow-clip tw:text-inherit
             tw:no-underline tw:p-8 tw:[&_h2]:text-white tw:[&_h2]:font-display tw:[&_h2]:text-2xl tw:[&_h2]:font-bold
             tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:leading-8 tw:[&_h2]:uppercase tw:[&_h2]:whitespace-nowrap
-            tw:[&_p]:w-89 tw:[&_p]:text-white tw:[&_p]:font-sans tw:[&_p]:text-base tw:[&_p]:font-normal 
+            tw:[&_p]:w-89 tw:[&_p]:text-white tw:[&_p]:font-sans tw:[&_p]:text-base tw:[&_p]:font-normal
             tw:max-md:w-full tw:max-md:p-0 tw:max-md:[&_p]:w-79 tw:max-md:[&_p]:max-w-full tw:focus-visible:outline-2
             tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px]
             tw:max-md:[body.alerts-email-modal-open_&]:pb-8
@@ -64,16 +67,18 @@ import elasFunder from "../../assets/images/funders/elas.png";
             <div class="
                 site-footer__social tw:[&_h2]:text-white tw:[&_h2]:font-display tw:[&_h2]:text-2xl tw:[&_h2]:font-bold
                 tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:leading-8 tw:[&_h2]:uppercase tw:[&_h2]:whitespace-nowrap
-                tw:flex tw:flex-col tw:items-start tw:gap-8 tw:max-md:gap-4
+                tw:flex tw:flex-col tw:items-start tw:gap-4 tw:max-md:gap-4
             ">
                 <h2 class="" id="footer-social-title">Siga AzMina</h2>
-                <nav class="tw:flex tw:items-center tw:gap-4 tw:max-md:flex-nowrap tw:max-md:justify-start" aria-label="Redes sociais da AzMina">
+                <nav class="tw:grid  tw:grid-cols-8 tw:md:grid-cols-4 tw:gap-6" aria-label="Redes sociais da AzMina">
                     <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://instagram.com/revistaazmina" target="_blank" rel="noopener noreferrer" aria-label="Instagram da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={instagram} alt="" /></a>
                     <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://www.tiktok.com/@revistaazmina" target="_blank" rel="noopener noreferrer" aria-label="TikTok da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={tiktok} alt="" /></a>
                     <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://substack.com/@institutoazmina" target="_blank" rel="noopener noreferrer" aria-label="Substack da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={substack} alt="" /></a>
                     <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://www.youtube.com/channel/UCoyYnOCs_pr0oaXSitYi35g" target="_blank" rel="noopener noreferrer" aria-label="YouTube da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={youtube} alt="" /></a>
                     <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://github.com/institutoazmina" target="_blank" rel="noopener noreferrer" aria-label="GitHub da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={github} alt="" /></a>
                     <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://bsky.app/profile/revistaazmina.bsky.social" target="_blank" rel="noopener noreferrer" aria-label="Bluesky da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={bluesky} alt="" /></a>
+                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://br.linkedin.com/company/instituto-azmina" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={linkedin} alt="" /></a>
+                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://whatsapp.com/channel/0029VaNjCFjAe5VhB6mbY844" target="_blank" rel="noopener noreferrer" aria-label="Comuniadade no WhatsApp da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={whatsapp} alt="" /></a>
                 </nav>
             </div>
         </section>
@@ -106,7 +111,7 @@ import elasFunder from "../../assets/images/funders/elas.png";
 
     <div class="
         site-footer__banner tw:flex tw:w-full tw:h-[84px] tw:items-center tw:justify-center tw:gap-4
-        tw:overflow-clip tw:bg-lime tw:text-ink tw:py-6 tw:px-12 tw:[&_p]:text-ink tw:[&_p]:font-sans 
+        tw:overflow-clip tw:bg-lime tw:text-ink tw:py-6 tw:px-12 tw:[&_p]:text-ink tw:[&_p]:font-sans
         tw:[&_p]:font-bold  tw:[&_p]:whitespace-nowrap tw:md:[&>img]:block tw:md:[&>img]:w-[76px]
         tw:md:[&>img]:h-[24px] tw:md:[&>img]:flex-none tw:max-md:h-auto tw:max-md:flex-col tw:max-md:flex-nowrap
         tw:max-md:gap-3.5 tw:max-md:py-4.5 tw:max-md:px-6 tw:max-md:[body.alerts-email-modal-open_&_p]:text-sm!
@@ -128,5 +133,3 @@ import elasFunder from "../../assets/images/funders/elas.png";
         <Image class="tw:max-md:hidden" src={creativeCommons} alt="Licença Creative Commons BY-NC-ND 2.0" />
     </div>
 </footer>
-
-
