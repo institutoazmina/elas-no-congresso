@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { AlertProposition } from "../../service/api/alerts";
-import { clientApiBase } from "../../lib/client-api";
+import { clientApiBase, SEARCH_MAX_LENGTH } from "../../lib/client-api";
 import {
     parseAlertsQueryState,
     updateAlertsQueryState,
@@ -116,6 +116,7 @@ export default function AlertsList({
                         className="tw:border-0 tw:text-navy tw:flex-[1_0_0] tw:font-normal tw:text-sm tw:leading-4 tw:font-sans tw:min-w-0 tw:[outline:0] tw:pt-3.5 tw:pb-4 tw:px-4 tw:placeholder:text-[#949494] tw:placeholder:opacity-100 tw:focus-visible:outline-2 tw:focus-visible:outline-accent tw:focus-visible:-outline-offset-1"
                         type="search"
                         name="q"
+                        maxLength={SEARCH_MAX_LENGTH}
                         aria-label="Buscar por termo, proposta ou parlamentar"
                         placeholder="Buscar por termo, proposta ou parlamentar"
                         value={draft}

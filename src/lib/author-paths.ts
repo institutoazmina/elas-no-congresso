@@ -1,5 +1,6 @@
 import { buildAuthorActivityFromApi, authorSlug, type ApiParliamentarian, type ApiParty, type AuthorInitialData } from "./author-page";
 import { fetchActivity } from "./activity-api";
+import { fetchAllPages } from "./api-pages";
 
 export interface AuthorPageProps { authorId: number; house: string; initial: AuthorInitialData; }
 
@@ -21,13 +22,14 @@ async function loadAuthorPaths(apiBaseUrl: string) {
             if (!response.ok) throw new Error(`API ${response.status}: ${url}`);
             return response.json() as Promise<T>;
         };
+        const apiPages = <T>(path: string) => fetchAllPages<T>(`${apiBase}${path}`, apiJson);
         const [parliamentarians, parties] = await Promise.all([
-            Promise.all(["camara", "senado"].map((house) => apiJson<{ items: ApiParliamentarian[] }>(`${apiBase}/legislatures/parliamentarians?house=${house}&limit=2000&offset=0`))),
-            apiJson<{ items: ApiParty[] }>(`${apiBase}/legislatures/parties?limit=100&offset=0`),
+            Promise.all(["camara", "senado"].map((house) => apiPages<ApiParliamentarian>(`/legislatures/parliamentarians?house=${house}`))),
+            apiPages<ApiParty>("/legislatures/parties"),
         ]);
         directory = {
-            parliamentarians: parliamentarians.flatMap((result) => result.items || []),
-            parties: parties.items || [],
+            parliamentarians: parliamentarians.flat(),
+            parties,
         };
     } catch (error) {
         console.warn("Não foi possível carregar o diretório de parlamentares durante o build:", error);

@@ -60,7 +60,11 @@ export default function AlertsEmailModal({
             });
             if (controller.signal.aborted) return;
             if (response.status === 429) {
-                setStatus("Muitas tentativas deste dispositivo. Tente de novo daqui a pouco.");
+                // 429 means either a burst from this device or a confirmation already
+                // sent to this address in the last few minutes; both resolve by waiting.
+                setStatus(
+                    "Já recebemos um pedido recente para este e-mail ou deste dispositivo. Confira sua caixa de entrada (e o spam) ou tente de novo em alguns minutos.",
+                );
                 return;
             }
             if (!response.ok) throw new Error(String(response.status));

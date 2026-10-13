@@ -1,5 +1,5 @@
 import { Combobox } from "@base-ui/react/combobox";
-import { clientApiBase } from "../../lib/client-api";
+import { clientApiBase, SEARCH_MAX_LENGTH } from "../../lib/client-api";
 import { useEffect, useState } from "react";
 
 type Proposal = {
@@ -113,6 +113,7 @@ export default function AlertsProposalCombobox() {
                             <Combobox.Input
                                 className="alerts-email-modal__proposal-input tw:block tw:w-full tw:h-12.5 tw:border tw:border-solid tw:border-[rgba(30,37,70,.15)] tw:rounded-none tw:bg-white tw:text-ink tw:font-normal tw:text-base tw:leading-5 tw:font-sans tw:py-3 tw:px-4 tw:placeholder:text-muted tw:placeholder:opacity-100 tw:focus-visible:outline-2 tw:focus-visible:outline-lime tw:focus-visible:outline-offset-1"
                                 aria-label="Buscar proposição por número ou assunto"
+                                maxLength={SEARCH_MAX_LENGTH}
                                 placeholder="Buscar por número ou assunto..."
                                 autoComplete="off"
                             />

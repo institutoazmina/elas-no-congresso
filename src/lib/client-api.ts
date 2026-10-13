@@ -7,3 +7,6 @@ export function clientApiBase() {
             : PUBLIC_API_BASE_URL
     ).replace(/\/$/, "");
 }
+
+/** Longest free-text search the API accepts (`q`/`search`); longer queries get a 422. */
+export const SEARCH_MAX_LENGTH = 200;

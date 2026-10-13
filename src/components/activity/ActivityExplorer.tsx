@@ -47,7 +47,7 @@ import imageAsset12 from "../../assets/images/papelada/proposicao-1-96w.png";
 import imageAsset13 from "../../assets/images/papelada/proposicao-desfavoravel-9-96w.png";
 
 import { useEffect, useRef, useState } from "react";
-import { clientApiBase } from "../../lib/client-api";
+import { clientApiBase, SEARCH_MAX_LENGTH } from "../../lib/client-api";
 import type { ActivityExplorerResponse } from "../../lib/activity-api";
 import { DashboardRows, PropositionCard, PropositionRow } from "./ActivityResults";
 import InfoPopover from "../shared/InfoPopover";
@@ -249,6 +249,7 @@ export default function ActivityExplorer() {
                         <input
                             className="tw:min-[1400px]:col-start-1 tw:min-[1400px]:col-span-2 tw:min-[1400px]:row-start-2 tw:min-[1400px]:pr-10 tw:w-full tw:h-9 tw:border-2 tw:border-solid tw:rounded-none tw:bg-white tw:text-periwinkle tw:text-base tw:font-normal tw:leading-6 tw:border-accent tw:py-1 tw:px-3 tw:focus-visible:outline-4 tw:focus-visible:outline-lime tw:focus-visible:outline-offset-1 tw:hover:border-accent tw:focus:border-accent tw:focus:[outline:0] tw:min-[1400px]:h-9 tw:min-[1400px]:border-[rgb(66_66_246/25%)] tw:min-[1400px]:font-sans tw:min-[1400px]:font-bold tw:min-[1400px]:tracking-normal tw:min-[1400px]:leading-6 tw:min-[1400px]:py-1 tw:min-[1400px]:px-3 tw:placeholder:text-periwinkle tw:placeholder:opacity-100 tw:max-md:w-full tw:max-md:pr-3 tw:max-md:text-sm"
                             name="search"
+                            maxLength={SEARCH_MAX_LENGTH}
                             value={filters.search}
                             onChange={(event) => change("search", event.target.value)}
                             type="search"
