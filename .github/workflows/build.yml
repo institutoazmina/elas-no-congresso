@@ -45,7 +45,7 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          OG_IMAGE_BASE_URL: https://homologacao.elasnocongresso.com.br
+          OG_IMAGE_BASE_URL: https://www.elasnocongresso.com.br
 
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
