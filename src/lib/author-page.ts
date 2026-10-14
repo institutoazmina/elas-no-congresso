@@ -1,35 +1,35 @@
 type ActivityParliamentarian = {
-    nome: string;
-    numero: number;
-    foto?: string;
-    genero?: string;
-    partido?: string;
-    cargo?: string;
-    estado?: string;
-    legislatura?: string[];
+    name: string;
+    id: number;
+    photo?: string;
+    gender?: string;
+    party?: string;
+    role?: string;
+    state?: string;
+    legislatures?: string[];
     slug?: string;
 };
 
 type ActivityProposal = {
-    i: number;
-    casa: string;
-    numero: string;
+    id: number;
+    house: string;
+    number: string;
     link?: string;
-    comentario?: string | null;
+    comment?: string | null;
     slug: string;
-    resumo: string;
-    avaliador?: string | null;
-    favoravel: number;
-    relevancia?: number;
-    autores?: Record<string, number>;
-    legislatura: number;
-    quiteria_prob?: number | null;
-    categoria?: string | null;
-    tema?: string | string[] | null;
+    summary: string;
+    assessor?: string | null;
+    stance: number;
+    relevance?: number;
+    authorIds?: Record<string, number>;
+    legislature: number;
+    quiteriaProbability?: number | null;
+    category?: string | null;
+    theme?: string | string[] | null;
     /** Situação oficial da API (current_status). Nunca derivado de quiteria_prob. */
-    situacao?: string | null;
+    status?: string | null;
     /** Data de apresentação (presented_at da API, YYYY-MM-DD). Alimenta "Atualização". */
-    apresentadaEm?: string | null;
+    presentedAt?: string | null;
 };
 
 export type AuthorProposal = ActivityProposal & {
@@ -132,53 +132,53 @@ export function buildAuthorActivityFromApi(
     if (!sourceAuthor) return null;
 
     const author: ActivityParliamentarian = {
-        nome: sourceAuthor.name,
-        numero: authorId,
-        foto: sourceAuthor.photo_url || undefined,
-        genero: sourceAuthor.gender || undefined,
-        partido: sourceAuthor.party || undefined,
-        cargo: sourceAuthor.role || undefined,
-        estado: sourceAuthor.state || undefined,
+        name: sourceAuthor.name,
+        id: authorId,
+        photo: sourceAuthor.photo_url || undefined,
+        gender: sourceAuthor.gender || undefined,
+        party: sourceAuthor.party || undefined,
+        role: sourceAuthor.role || undefined,
+        state: sourceAuthor.state || undefined,
         slug: authorSlug(sourceAuthor.name) || undefined,
     };
     const proposals = new Map<string, AuthorProposal>();
     for (const item of data) {
         if (!item.authors.some((proposalAuthor) => proposalAuthor.id === authorId)) continue;
         const authors = item.authors.map((proposalAuthor) => ({
-            nome: proposalAuthor.name,
-            numero: proposalAuthor.id ?? 0,
-            foto: proposalAuthor.photo_url || undefined,
-            genero: proposalAuthor.gender || undefined,
-            partido: proposalAuthor.party || undefined,
-            cargo: proposalAuthor.role || undefined,
-            estado: proposalAuthor.state || undefined,
+            name: proposalAuthor.name,
+            id: proposalAuthor.id ?? 0,
+            photo: proposalAuthor.photo_url || undefined,
+            gender: proposalAuthor.gender || undefined,
+            party: proposalAuthor.party || undefined,
+            role: proposalAuthor.role || undefined,
+            state: proposalAuthor.state || undefined,
             slug: authorSlug(proposalAuthor.name) || undefined,
         }));
         const proposal: AuthorProposal = {
-            i: item.id,
-            casa: item.house === "senado" ? "Senador" : item.house === "camara" ? "Deputado" : item.house,
-            numero: item.number_label,
+            id: item.id,
+            house: item.house === "senado" ? "Senador" : item.house === "camara" ? "Deputado" : item.house,
+            number: item.number_label,
             link: item.tramitation_url || undefined,
-            comentario: item.assessment_comments,
+            comment: item.assessment_comments,
             slug: item.number_label,
-            resumo: item.ementa,
-            avaliador: item.assessment_organization,
-            favoravel: item.is_favorable === true ? 1 : item.is_favorable === false ? -1 : 0,
-            legislatura: 0,
-            categoria: item.category_label || item.category,
-            tema: item.themes?.length ? item.themes : item.category_label || item.category,
-            situacao: item.current_status,
-            apresentadaEm: item.presented_at,
+            summary: item.ementa,
+            assessor: item.assessment_organization,
+            stance: item.is_favorable === true ? 1 : item.is_favorable === false ? -1 : 0,
+            legislature: 0,
+            category: item.category_label || item.category,
+            theme: item.themes?.length ? item.themes : item.category_label || item.category,
+            status: item.current_status,
+            presentedAt: item.presented_at,
             celerity: item.celerity,
-            quiteria_prob: item.celerity.movements_last_90_days,
+            quiteriaProbability: item.celerity.movements_last_90_days,
             authors,
         };
-        proposals.set(`${proposal.casa}:${proposal.numero}`, proposal);
+        proposals.set(`${proposal.house}:${proposal.number}`, proposal);
     }
 
     const items = [...proposals.values()];
-    const favorable = items.filter((proposal) => proposal.favoravel > 0).length;
-    const unfavorable = items.filter((proposal) => proposal.favoravel < 0).length;
+    const favorable = items.filter((proposal) => proposal.stance > 0).length;
+    const unfavorable = items.filter((proposal) => proposal.stance < 0).length;
     const unrated = items.length - favorable - unfavorable;
     const rated = favorable + unfavorable;
     return {
@@ -233,7 +233,7 @@ export function selectAuthorReports<T extends { date?: string; modified?: string
 
 export function groupProposalRatings(
     proposals: AuthorProposal[],
-    field: "categoria" | "tema",
+    field: "category" | "theme",
 ): RatingGroup[] {
     const groups = new Map<string, RatingGroup>();
     for (const proposal of proposals) {
@@ -243,8 +243,8 @@ export function groupProposalRatings(
             const label = rawLabel?.trim();
             if (!label) continue;
             const group = groups.get(label) || { label, favorable: 0, unfavorable: 0 };
-            if (proposal.favoravel > 0) group.favorable += 1;
-            if (proposal.favoravel < 0) group.unfavorable += 1;
+            if (proposal.stance > 0) group.favorable += 1;
+            if (proposal.stance < 0) group.unfavorable += 1;
             groups.set(label, group);
         }
     }

@@ -9,10 +9,10 @@ export function propositionSlug(value: unknown): string | null {
 }
 
 export function propositionRoute(
-  proposition: { numero: string; house?: string } | string,
+  proposition: { number: string; house?: string } | string,
   house?: string,
 ): string | null {
-  const number = typeof proposition === "string" ? proposition : proposition.numero;
+  const number = typeof proposition === "string" ? proposition : proposition.number;
   const slug = propositionSlug(number);
   const propositionHouse = typeof proposition === "string" ? house : proposition.house;
   const houseSlug = propositionSlug(propositionHouse);

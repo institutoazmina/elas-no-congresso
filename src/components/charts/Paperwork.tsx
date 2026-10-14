@@ -1,18 +1,18 @@
 import { useEffect, useRef } from "react";
-import { papelada, papeladaSize, type PapeladaOptions } from "../../lib/papelada";
+import { paperwork, paperworkSize, type PaperworkOptions } from "../../lib/paperwork";
 
-export default function Papelada({
+export default function Paperwork({
     className,
     alt,
     ...options
-}: PapeladaOptions & { className?: string; alt?: string }) {
+}: PaperworkOptions & { className?: string; alt?: string }) {
     const ref = useRef<HTMLCanvasElement>(null);
     const serialized = JSON.stringify(options);
-    const dimensions = papeladaSize(options);
+    const dimensions = paperworkSize(options);
     useEffect(() => {
         const canvas = ref.current;
         const controller = new AbortController();
-        if (canvas) void papelada(canvas, JSON.parse(serialized), controller.signal).catch(console.error);
+        if (canvas) void paperwork(canvas, JSON.parse(serialized), controller.signal).catch(console.error);
         return () => controller.abort();
     }, [serialized]);
     return (

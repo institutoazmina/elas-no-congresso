@@ -29,15 +29,13 @@ jobs:
 
       # Restore after npm ci, which removes node_modules. Each successful run
       # saves a fresh snapshot; compatible earlier runs supply the warm cache.
-      - name: Cache generated pages and author images
+      - name: Cache generated pages
         uses: actions/cache@v4
         with:
-          path: |
-            node_modules/.astro
-            node_modules/.cache/author-og
-          key: ${{ runner.os }}-site-output-v1-${{ hashFiles('package-lock.json') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: node_modules/.astro
+          key: ${{ runner.os }}-site-output-v2-${{ hashFiles('package-lock.json') }}-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: |
-            ${{ runner.os }}-site-output-v1-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-site-output-v2-${{ hashFiles('package-lock.json') }}-
 
       - name: Check unused code, assets and tests
         run: npm run check
@@ -53,9 +51,14 @@ jobs:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
           aws-region: us-east-2
 
+      # ~15k small files: the CLI default of 10 parallel requests dominates the sync time.
+      - name: Tune S3 transfers
+        run: aws configure set default.s3.max_concurrent_requests 64
+
       # Hashed build files → cache 1 year. Public assets have stable URLs.
       # Exclude HTML, JSON and the sitemap/robots, which are not fingerprinted
-      # and must be revalidated when content changes.
+      # and must be revalidated when content changes. Author og.png images are
+      # published by the API straight to the bucket: never delete them here.
       - name: Sync immutable assets
         run: |
           aws s3 sync dist/ s3://$BUCKET/ --delete \
@@ -91,7 +94,7 @@ jobs:
         run: |
           aws s3 sync dist/ s3://$BUCKET/ \
             --exclude "*" \
-            --include "*.json" --include "*.xml" --include "robots.txt" --include "*/og.png" \
+            --include "*.json" --include "*.xml" --include "robots.txt" \
             --cache-control "public,max-age=3600,must-revalidate"
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}

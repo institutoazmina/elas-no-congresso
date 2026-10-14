@@ -1,0 +1,5 @@
+---
+import Paperwork from "./Paperwork";
+const { class: className, ...props } = Astro.props;
+---
+<Paperwork {...props} className={className} client:visible={{ rootMargin: "400px" }} />

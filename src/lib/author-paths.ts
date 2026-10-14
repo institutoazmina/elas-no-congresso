@@ -4,10 +4,15 @@ import { fetchAllPages } from "./api-pages";
 
 export interface AuthorPageProps { authorId: number; house: string; initial: AuthorInitialData; }
 
-// Page and OG endpoint share the same snapshot and slug collision handling.
+// Every author route shares the same snapshot and slug collision handling.
 const snapshots = new Map<string, ReturnType<typeof loadAuthorPaths>>();
 export async function getAuthorPaths(apiBaseUrl: string) {
-    if (!snapshots.has(apiBaseUrl)) snapshots.set(apiBaseUrl, loadAuthorPaths(apiBaseUrl));
+    if (!snapshots.has(apiBaseUrl)) {
+        const snapshot = loadAuthorPaths(apiBaseUrl);
+        // A failed load (e.g. API timeout) must not stick for the dev server's lifetime.
+        snapshot.catch(() => snapshots.delete(apiBaseUrl));
+        snapshots.set(apiBaseUrl, snapshot);
+    }
     // Astro attaches a route-specific index to the returned array.
     return [...(await snapshots.get(apiBaseUrl)!)];
 }

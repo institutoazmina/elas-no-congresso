@@ -24,27 +24,42 @@ export type WpPostsPage = {
   unavailable?: true;
 };
 
-export const WP_REPORTAGENS_ENDPOINT = "https://azmina.com.br/wp-json/wp/v2/az_reportagem";
+export const WP_NEWS_ENDPOINT = "https://azmina.com.br/wp-json/wp/v2/az_reportagem";
 
-export function resolveReportagemImage(media: WpFeaturedMedia | undefined, baseUrl = "https://azmina.com.br"): string | undefined {
+export function resolveNewsImage(media: WpFeaturedMedia | undefined, baseUrl = "https://azmina.com.br"): string | undefined {
   const imagePath = media?.media_details?.sizes?.["az-article-thumbnail-large"]?.source_url ?? media?.source_url ?? media?.link;
   if (!imagePath) return undefined;
   try { return new URL(imagePath, baseUrl).href; } catch { return undefined; }
 }
 
-export async function fetchReportagensPage(
-  tagId: number | undefined,
-  perPage: number,
+export type NewsQuery = {
+  perPage: number;
+  page?: number;
+  /** Skips this many posts; takes precedence over ``page`` in WordPress. */
+  offset?: number;
+  tagId?: number;
+  search?: string;
+  orderByDate?: boolean;
+  signal?: AbortSignal;
+};
+
+// Called from the browser: reports are never fetched at build time.
+export async function fetchNewsPage({
+  perPage,
   page = 1,
+  offset,
+  tagId,
+  search,
   orderByDate = false,
-  search?: string,
-): Promise<WpPostsPage> {
+  signal,
+}: NewsQuery): Promise<WpPostsPage> {
   const params = new URLSearchParams({
     _embed: "wp:featuredmedia",
     per_page: String(perPage),
     page: String(page),
   });
 
+  if (offset !== undefined) params.set("offset", String(offset));
   if (search) params.set("search", search);
   if (tagId !== undefined) params.append("tags[]", String(tagId));
   if (orderByDate) {
@@ -53,7 +68,7 @@ export async function fetchReportagensPage(
   }
 
   try {
-    const res = await fetchPublicData(`${WP_REPORTAGENS_ENDPOINT}?${params}`);
+    const res = await fetchPublicData(`${WP_NEWS_ENDPOINT}?${params}`, signal);
     if (!res.ok) return { posts: [], total: 0, totalPages: 0, unavailable: true };
 
     return {
@@ -64,8 +79,4 @@ export async function fetchReportagensPage(
   } catch {
     return { posts: [], total: 0, totalPages: 0, unavailable: true };
   }
-}
-
-export async function fetchReportagens(tagId: number, perPage: number, orderByDate = false): Promise<WpPost[]> {
-  return (await fetchReportagensPage(tagId, perPage, 1, orderByDate)).posts;
 }

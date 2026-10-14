@@ -1,101 +1,66 @@
 ---
 import { Image } from "astro:assets";
 import PageLayout from "../layouts/PageLayout.astro";
-import ReportagemCard from "../components/shared/ReportagemCard.astro";
-import { fetchReportagensPage } from "../lib/wp";
-import heroIllustration from "../assets/images/catavento.png";
+import heroIllustration from "../assets/images/pinwheel.png";
 import attention from "../assets/images/activity/attention.svg";
 import halftoneShadow from "../assets/images/hero/halftone-shadow.png";
-import cuttingMatPattern from "../assets/images/home-reportagens/bg-pattern-cutting-mat.svg";
+import cuttingMatPattern from "../assets/images/home-news/bg-pattern-cutting-mat.svg";
 import ReportsList from "../components/home/ReportsList";
-
-
-const POSTS_PER_PAGE = 9;
-const RECENT_POST_COUNT = 3;
-const [recentPage, allPage] = await Promise.all([
-    fetchReportagensPage(undefined, RECENT_POST_COUNT, 1, true),
-    fetchReportagensPage(
-        undefined,
-        POSTS_PER_PAGE + RECENT_POST_COUNT,
-        1,
-        true,
-    ),
-]);
-const recentPosts = recentPage.posts;
-const posts = allPage.posts.slice(RECENT_POST_COUNT);
-const allPostsTotal = Math.max(allPage.total - RECENT_POST_COUNT, 0);
-const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
+import RecentReports from "../components/home/RecentReports";
 ---
 
 <PageLayout title="Reportagens: Congresso e política de gênero | AzMina"
     description="Leia reportagens da Revista AzMina sobre o Congresso Nacional, projetos de lei, política de gênero e direitos das mulheres e pessoas LGBTQIAPN+."
     canonical="https://www.elasnocongresso.com.br/reportagens"
-    pageClass="reportagens-page tw:text-ink tw:font-sans"
-            pageStyle={`--reportagens-pattern: url(${cuttingMatPattern.src})`}
+    pageClass="news-page tw:text-ink tw:font-sans"
+            pageStyle={`--news-pattern: url(${cuttingMatPattern.src})`}
 >
             <main>
                 <section
-                    class="reportagens-hero site-shared-background tw:text-ink tw:h-125 tw:overflow-hidden tw:relative tw:[&_h1]:mix-blend-multiply tw:[&_h1]:font-display tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:uppercase tw:[&_h1]:text-ink tw:[&_h1]:text-7xl tw:[&_h1]:tracking-normal tw:[&_h1]:leading-18 tw:[&_h1]:m-0 tw:[&_p]:mix-blend-multiply tw:[&_p]:text-lg tw:[&_p]:font-bold tw:[&_p]:tracking-normal tw:[&_p]:leading-6 tw:[&_p]:w-160 tw:[&_p]:m-0 tw:max-[901px]:h-152.5 tw:max-[901px]:[&_p]:w-full tw:max-[561px]:h-[252px] tw:max-[561px]:[&_p]:max-w-80 tw:max-[561px]:[&_p]:w-80 tw:max-[561px]:[&_p]:pt-[6px] tw:max-[561px]:[&_p]:pb-2.5 tw:max-[561px]:[&_p]:px-0 tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+                    class="news-hero site-shared-background tw:text-ink tw:h-125 tw:overflow-hidden tw:relative tw:[&_h1]:mix-blend-multiply tw:[&_h1]:font-display tw:[&_h1]:font-bold tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:uppercase tw:[&_h1]:text-ink tw:[&_h1]:text-7xl tw:[&_h1]:tracking-normal tw:[&_h1]:leading-18 tw:[&_h1]:m-0 tw:[&_p]:mix-blend-multiply tw:[&_p]:text-lg tw:[&_p]:font-bold tw:[&_p]:tracking-normal tw:[&_p]:leading-6 tw:[&_p]:w-160 tw:[&_p]:m-0 tw:max-[901px]:h-152.5 tw:max-[901px]:[&_p]:w-full tw:max-[561px]:h-[252px] tw:max-[561px]:[&_p]:max-w-80 tw:max-[561px]:[&_p]:w-80 tw:max-[561px]:[&_p]:pt-[6px] tw:max-[561px]:[&_p]:pb-2.5 tw:max-[561px]:[&_p]:px-0 tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
                     data-page-hero
-                    aria-labelledby="reportagens-hero-title"
-                    style={`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`}
+                    aria-labelledby="news-hero-title"
+                    style={`--news-hero-halftone-shadow: url(${halftoneShadow.src})`}
                 >
-                    <div class="reportagens-hero__top-row tw:items-center tw:flex tw:h-119 tw:justify-between tw:relative tw:z-2 tw:p-12 tw:max-[901px]:items-start tw:max-[901px]:h-146.5 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:max-[561px]:items-start tw:max-[561px]:h-full tw:max-[561px]:p-6">
-                        <div class="reportagens-hero__copy tw:items-start tw:flex tw:flex-[1_0_0] tw:flex-col tw:gap-6 tw:justify-center tw:max-w-240 tw:min-w-0 tw:max-[901px]:gap-5 tw:max-[901px]:max-w-full tw:max-[561px]:flex-none tw:max-[561px]:gap-[16px] tw:max-[561px]:justify-start tw:max-[561px]:max-w-full tw:max-[561px]:w-full">
+                    <div class="news-hero__top-row tw:items-center tw:flex tw:h-119 tw:justify-between tw:relative tw:z-2 tw:p-12 tw:max-[901px]:items-start tw:max-[901px]:h-146.5 tw:max-[901px]:py-12 tw:max-[901px]:px-6 tw:max-[561px]:items-start tw:max-[561px]:h-full tw:max-[561px]:p-6">
+                        <div class="news-hero__copy tw:items-start tw:flex tw:flex-[1_0_0] tw:flex-col tw:gap-6 tw:justify-center tw:max-w-240 tw:min-w-0 tw:max-[901px]:gap-5 tw:max-[901px]:max-w-full tw:max-[561px]:flex-none tw:max-[561px]:gap-[16px] tw:max-[561px]:justify-start tw:max-[561px]:max-w-full tw:max-[561px]:w-full">
                             <Image
-                                class="reportagens-attention tw:block tw:h-2 tw:w-24 tw:max-[561px]:h-1 tw:max-[561px]:w-8"
+                                class="news-attention tw:block tw:h-2 tw:w-24 tw:max-[561px]:h-1 tw:max-[561px]:w-8"
                                 src={attention}
                                 loading="eager"
                                 alt=""
                             />
-                            <h1 class="tw:max-[561px]:text-[32px]! tw:max-[561px]:leading-8! tw:max-[561px]:[text-box-edge:cap_alphabetic] tw:max-[561px]:[text-box-trim:trim-both]" id="reportagens-hero-title">Reportagens</h1>
+                            <h1 class="tw:max-[561px]:text-[32px]! tw:max-[561px]:leading-8! tw:max-[561px]:[text-box-edge:cap_alphabetic] tw:max-[561px]:[text-box-trim:trim-both]" id="news-hero-title">Reportagens</h1>
                             <p>
                                 Veja as histórias que os dados do Congresso nos
                                 contam.
                             </p>
                         </div>
-                        <div class="reportagens-hero__art tw:items-center tw:flex tw:flex-none tw:h-95 tw:justify-center tw:overflow-hidden tw:relative tw:w-145 tw:p-2.5 tw:max-[901px]:bottom-4 tw:max-[901px]:absolute tw:max-[901px]:-right-22 tw:max-[901px]:[transform:scale(0.54)] tw:max-[901px]:origin-[bottom_right] tw:max-[901px]:m-0 tw:max-[561px]:hidden">
+                        <div class="news-hero__art tw:items-center tw:flex tw:flex-none tw:h-95 tw:justify-center tw:overflow-hidden tw:relative tw:w-145 tw:p-2.5 tw:max-[901px]:bottom-4 tw:max-[901px]:absolute tw:max-[901px]:-right-22 tw:max-[901px]:[transform:scale(0.54)] tw:max-[901px]:origin-[bottom_right] tw:max-[901px]:m-0 tw:max-[561px]:hidden">
                             <div
-                                class="reportagens-hero__illustration tw:h-125 tw:relative tw:w-125"
+                                class="news-hero__illustration tw:h-125 tw:relative tw:w-125"
                                 aria-hidden="true"
                             >
-                                <div class="reportagens-hero__illustration-inner tw:h-[inherit] tw:bottom-0 tw:absolute tw:w-[inherit] tw:[&_img]:object-contain">
+                                <div class="news-hero__illustration-inner tw:h-[inherit] tw:bottom-0 tw:absolute tw:w-[inherit] tw:[&_img]:object-contain">
                                     <Image src={heroIllustration} loading="eager" alt="" />
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div
-                        class="reportagens-hero__shadow tw:bg-[image:var(--reportagens-hero-halftone-shadow)] tw:bg-bottom-left tw:bg-repeat-x tw:bg-size-[1440px_24px] tw:bottom-0 tw:block tw:h-6 tw:left-0 tw:mix-blend-multiply tw:pointer-events-none tw:absolute tw:w-full tw:z-1"
+                        class="news-hero__shadow tw:bg-[image:var(--news-hero-halftone-shadow)] tw:bg-bottom-left tw:bg-repeat-x tw:bg-size-[1440px_24px] tw:bottom-0 tw:block tw:h-6 tw:left-0 tw:mix-blend-multiply tw:pointer-events-none tw:absolute tw:w-full tw:z-1"
                         aria-hidden="true"
                     ></div>
                 </section>
                 <section
-                    class={String.raw`reportagens-recent tw:[&_h2]:font-display tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:uppercase tw:[&_h2]:text-[32px] tw:[&_h2]:leading-8 tw:[&_h2]:text-center tw:[&_h2]:w-180 tw:[&_h2]:my-0 tw:[&_h2]:mx-auto tw:[background:#0b0f5e_var(--reportagens-pattern)_center_top_/_200px_200px_repeat] tw:text-white tw:min-h-[648px] tw:relative tw:pt-24 tw:pb-26.5 tw:px-0 tw:max-[901px]:py-16 tw:max-[901px]:px-0 tw:max-[901px]:[&_h2]:w-auto tw:max-[561px]:[background:#0b0f5e_var(--reportagens-pattern)_center_top_/_200px_200px_repeat] tw:max-[561px]:min-h-0 tw:max-[561px]:overflow-hidden tw:max-[561px]:pt-[66px] tw:max-[561px]:pb-[50px] tw:max-[561px]:px-0 tw:before:[background:linear-gradient(_to_bottom,_rgba(66,_66,_246,_0.25),_transparent_)] tw:before:content-[''] tw:before:h-3 tw:before:left-0 tw:before:absolute tw:before:right-0 tw:before:top-0 tw:max-[561px]:after:[content:none] tw:max-[561px]:before:z-1 tw:max-[561px]:[&_.reportagem-card]:flex-[0_0_384px] tw:max-[561px]:[&_.reportagem-card]:w-96 tw:max-[561px]:[&_.reportagem-card\_\_image]:aspect-[384/216] tw:max-[561px]:[&_.reportagem-card\_\_image]:h-54 tw:max-[561px]:[&_.reportagem-card\_\_image]:w-96 tw:max-[561px]:[&_.reportagem-card_h3]:min-h-0`}
-                    aria-labelledby="reportagens-recentes-title"
+                    class={String.raw`news-recent tw:[&_h2]:font-display tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:uppercase tw:[&_h2]:text-[32px] tw:[&_h2]:leading-8 tw:[&_h2]:text-center tw:[&_h2]:w-180 tw:[&_h2]:my-0 tw:[&_h2]:mx-auto tw:[background:#0b0f5e_var(--news-pattern)_center_top_/_200px_200px_repeat] tw:text-white tw:min-h-[648px] tw:relative tw:pt-24 tw:pb-26.5 tw:px-0 tw:max-[901px]:py-16 tw:max-[901px]:px-0 tw:max-[901px]:[&_h2]:w-auto tw:max-[561px]:[background:#0b0f5e_var(--news-pattern)_center_top_/_200px_200px_repeat] tw:max-[561px]:min-h-0 tw:max-[561px]:overflow-hidden tw:max-[561px]:pt-[66px] tw:max-[561px]:pb-[50px] tw:max-[561px]:px-0 tw:before:[background:linear-gradient(_to_bottom,_rgba(66,_66,_246,_0.25),_transparent_)] tw:before:content-[''] tw:before:h-3 tw:before:left-0 tw:before:absolute tw:before:right-0 tw:before:top-0 tw:max-[561px]:after:[content:none] tw:max-[561px]:before:z-1 tw:max-[561px]:[&_.news-card]:flex-[0_0_384px] tw:max-[561px]:[&_.news-card]:w-96 tw:max-[561px]:[&_.news-card\_\_image]:aspect-[384/216] tw:max-[561px]:[&_.news-card\_\_image]:h-54 tw:max-[561px]:[&_.news-card\_\_image]:w-96 tw:max-[561px]:[&_.news-card_h3]:min-h-0`}
+                    aria-labelledby="recent-news-title"
                 >
-                    <h2 class="tw:max-[561px]:relative tw:max-[561px]:text-left! tw:max-[561px]:[text-box-edge:cap_alphabetic] tw:max-[561px]:[text-box-trim:trim-both] tw:max-[561px]:whitespace-nowrap tw:max-[561px]:w-full tw:max-[561px]:z-2 tw:max-[561px]:py-0 tw:max-[561px]:px-6 tw:max-[561px]:m-0" id="reportagens-recentes-title">
+                    <h2 class="tw:max-[561px]:relative tw:max-[561px]:text-left! tw:max-[561px]:[text-box-edge:cap_alphabetic] tw:max-[561px]:[text-box-trim:trim-both] tw:max-[561px]:whitespace-nowrap tw:max-[561px]:w-full tw:max-[561px]:z-2 tw:max-[561px]:py-0 tw:max-[561px]:px-6 tw:max-[561px]:m-0" id="recent-news-title">
                         Reportagens mais recentes
                     </h2>
-                    {recentPosts.length > 0 ? (
-                        <div
-                            class="reportagens-recent__scroll tw:max-[901px]:pl-6 tw:max-[901px]:pr-6 tw:flex tw:gap-12 tw:justify-center tw:overflow-x-auto tw:[scroll-snap-type:x_mandatory] tw:w-full tw:pt-0 tw:pb-4 tw:px-12 tw:mt-12 tw:mb-0 tw:mx-auto tw:max-[561px]:block tw:max-[561px]:overflow-x-auto tw:max-[561px]:overflow-y-hidden tw:max-[561px]:relative tw:max-[561px]:[scroll-snap-type:none] tw:max-[561px]:[scrollbar-width:thin] tw:max-[561px]:w-full tw:max-[561px]:z-2 tw:max-[561px]:pt-0 tw:max-[561px]:pb-4 tw:max-[561px]:px-0 tw:max-[561px]:mt-14.5 tw:max-[561px]:mb-0 tw:max-[561px]:mx-0"
-                            tabindex="0"
-                            aria-label="Lista de reportagens mais recentes"
-                        >
-                            <div class="reportagens-recent__track tw:flex tw:flex-none tw:gap-12 tw:max-[561px]:gap-12 tw:max-[561px]:w-max tw:max-[561px]:py-0 tw:max-[561px]:px-6">
-                                {recentPosts.map((post) => (
-                                    <ReportagemCard post={post} dark imageLoading="eager" />
-                                ))}
-                            </div>
-                        </div>
-                    ) : (
-                        <p class="reportagens-feedback tw:text-white tw:text-base tw:leading-6 tw:relative tw:z-2 tw:mt-12 tw:mb-0 tw:mx-6" role="status">
-                            N&atilde;o foi poss&iacute;vel carregar as
-                            reportagens mais recentes.
-                        </p>
-                    )}
+                    <RecentReports client:load />
                 </section>
-                <ReportsList initialPosts={posts} totalPages={allPostsTotalPages} client:load />
+                <ReportsList client:load />
             </main>
 </PageLayout>

@@ -1,5 +1,5 @@
 import { Image } from "../shared/react-utils";
-import chevron from "../../assets/images/home-reportagens/chevron-right.svg";
+import chevron from "../../assets/images/home-news/chevron-right.svg";
 import type { CategoryOption } from "../../service/api/alerts";
 import AlertsEmailDialog from "./AlertsEmailDialog";
 import AlertsProposalCombobox from "./AlertsProposalCombobox";
@@ -50,9 +50,9 @@ export default function AlertsEmailModal({
                         {
                             frequency: "daily",
                             ast: buildAst({
-                                categorias: topics,
-                                casa: String(data.get("casa") ?? ""),
-                                proposicoes: data.getAll("proposicao").map(Number),
+                                categories: topics,
+                                house: String(data.get("house") ?? ""),
+                                propositions: data.getAll("propositions").map(Number),
                             }),
                         },
                     ],

@@ -12,7 +12,7 @@ import {
     DEFAULT_DASHBOARD_ORDER,
     MAP_UF_CODES,
     MOBILE_ITEMS_PER_PAGE,
-    MIN_PROPOSICOES_POR_PARLAMENTAR,
+    MIN_PROPOSITIONS_PER_PARLIAMENTARIAN,
 } from "../../lib/dashboard-utils";
 import mapBase from "../../assets/images/activity/map/map-br-base@2.5x.png";
 import mapLegend from "../../assets/images/activity/map/legend-diverging-elas-palette.svg";
@@ -39,12 +39,12 @@ const dashboardSortOptions = [
     { value: "favorable", label: "Mais Favorável (%)" },
     { value: "total", label: "Mais proposições" },
 ];
-const authorMinimumOptions = [1, MIN_PROPOSICOES_POR_PARLAMENTAR, 10, 20].map((value) => ({
+const authorMinimumOptions = [1, MIN_PROPOSITIONS_PER_PARLIAMENTARIAN, 10, 20].map((value) => ({
     value: String(value),
     label: `Com ${value}+ ${value === 1 ? "proposição" : "proposições"}`,
 }));
-import imageAsset12 from "../../assets/images/papelada/proposicao-1-96w.png";
-import imageAsset13 from "../../assets/images/papelada/proposicao-desfavoravel-9-96w.png";
+import imageAsset12 from "../../assets/images/paperwork/proposition-1-96w.png";
+import imageAsset13 from "../../assets/images/paperwork/proposition-unfavorable-9-96w.png";
 
 import { useEffect, useRef, useState } from "react";
 import { clientApiBase, SEARCH_MAX_LENGTH } from "../../lib/client-api";
@@ -90,7 +90,7 @@ const defaultControls = {
     items: "10",
     party_sort: DEFAULT_DASHBOARD_ORDER,
     author_sort: DEFAULT_DASHBOARD_ORDER,
-    author_minimum: String(MIN_PROPOSICOES_POR_PARLAMENTAR),
+    author_minimum: String(MIN_PROPOSITIONS_PER_PARLIAMENTARIAN),
 };
 export default function ActivityExplorer() {
     const rootRef = useRef<HTMLElement>(null);
@@ -1101,7 +1101,7 @@ export default function ActivityExplorer() {
                                         <InfoPopover label="Saiba mais">
                                             <strong>Por autoria</strong>
                                             <p>
-                                                Mostra parlamentares com {MIN_PROPOSICOES_POR_PARLAMENTAR} ou
+                                                Mostra parlamentares com {MIN_PROPOSITIONS_PER_PARLIAMENTARIAN} ou
                                                 mais proposições relacionadas a gênero.
                                             </p>
                                             <small>Inclui autorias institucionais.</small>

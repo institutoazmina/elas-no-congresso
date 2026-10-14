@@ -7,10 +7,10 @@ export function isValidLegislativeYear(value: unknown): value is number {
 }
 
 /** Extrai o ano de `presented_at` (YYYY-MM-DD) ou de `/AAAA` do número. */
-export function extractPropositionYear(presentedAt: unknown, numero: unknown): number {
+export function extractPropositionYear(presentedAt: unknown, numberLabel: unknown): number {
     const iso = String(presentedAt ?? "").match(/^(\d{4})-\d{2}-\d{2}/);
     if (iso && isValidLegislativeYear(Number(iso[1]))) return Number(iso[1]);
-    const num = String(numero ?? "").match(/\/(\d{4})/);
+    const num = String(numberLabel ?? "").match(/\/(\d{4})/);
     if (num && isValidLegislativeYear(Number(num[1]))) return Number(num[1]);
     return 0;
 }

@@ -1,7 +1,7 @@
 import { Image, cx } from "../shared/react-utils";
 import type { ActivityProposition, EnactedProject } from "../../lib/activity-api";
 import { propositionRoute } from "../../lib/proposition-utils";
-import documentImage from "../../assets/images/hero/proposicao-9.png";
+import documentImage from "../../assets/images/hero/proposition-9.png";
 import thumbsUp from "../../assets/images/thumbs-up.svg";
 import thumbsDown from "../../assets/images/thumbs-down.svg";
 import bookIcon from "../../assets/images/enacted-projects/book.svg";

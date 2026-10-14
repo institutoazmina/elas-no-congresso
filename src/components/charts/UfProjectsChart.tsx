@@ -1,6 +1,6 @@
 import { Image, cx } from "../shared/react-utils";
 import attention from "../../assets/images/party-chart/attention.svg";
-import buttonChevron from "../../assets/images/home-reportagens/chevron-right.svg";
+import buttonChevron from "../../assets/images/home-news/chevron-right.svg";
 import mapBase from "../../assets/images/charts/map/map-br-base@2.5x.webp";
 import mapLabels from "../../assets/images/charts/map/map-br-labels@2.5x.webp";
 import mapHitboxes from "../../assets/images/charts/map/map-br-ufs-vector.svg?raw";

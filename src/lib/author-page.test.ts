@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { assertSuccessfulApiStatus, authorRoute, authorSlug, formatApiDate, genderLabel, partyForTerm, normalizePhotoUrl, paginateItems, selectAuthorReports } from "./author-page.ts";
-import { resolveReportagemImage } from "./wp.ts";
+import { resolveNewsImage } from "./wp.ts";
 
 test("resolve a imagem WordPress pela mesma prioridade da página Reportagens", () => {
-    assert.equal(resolveReportagemImage({ media_details: { sizes: { "az-article-thumbnail-large": { source_url: "/large.jpg" } } } }), "https://azmina.com.br/large.jpg");
-    assert.equal(resolveReportagemImage({ source_url: "https://cdn.example/image.jpg" }), "https://cdn.example/image.jpg");
-    assert.equal(resolveReportagemImage(undefined), undefined);
+    assert.equal(resolveNewsImage({ media_details: { sizes: { "az-article-thumbnail-large": { source_url: "/large.jpg" } } } }), "https://azmina.com.br/large.jpg");
+    assert.equal(resolveNewsImage({ source_url: "https://cdn.example/image.jpg" }), "https://cdn.example/image.jpg");
+    assert.equal(resolveNewsImage(undefined), undefined);
 });
 
 test("slugs públicos normalizam nomes sem acentos nem caracteres inválidos", () => {
