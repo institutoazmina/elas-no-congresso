@@ -6,8 +6,8 @@ import backgroundPattern from "../../assets/images/parliamentarians/bg-pattern.s
 import halftoneShadow from "../../assets/images/hero/halftone-shadow.png";
 import thumbDown from "../../assets/images/thumbs-down.svg";
 import thumbUp from "../../assets/images/thumbs-up.svg";
-import favorableProposal from "../../assets/images/proposicao-favoravel.svg";
-import unfavorableProposal from "../../assets/images/proposicao-desfavoravel.svg";
+import favorableProposal from "../../assets/images/proposition-favorable.svg";
+import unfavorableProposal from "../../assets/images/proposition-unfavorable.svg";
 import { authorRoute } from "../../lib/author-page";
 import type { getCurrentParliamentarians } from "../../service/api/parliamentarians";
 

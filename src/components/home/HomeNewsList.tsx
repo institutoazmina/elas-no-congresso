@@ -1,6 +1,6 @@
 import { Image } from "../shared/react-utils";
-import chevronRight from "../../assets/images/home-reportagens/chevron-right.svg";
-import { fetchNewsPage, resolveReportagemImage, type WpPost } from "../../lib/wp";
+import chevronRight from "../../assets/images/home-news/chevron-right.svg";
+import { fetchNewsPage, resolveNewsImage, type WpPost } from "../../lib/wp";
 import { useNews } from "../../hooks/useNews";
 
 const HOME_TAG_ID = 1988;
@@ -21,13 +21,13 @@ const figureClass = "tw:m-0 tw:w-full tw:border-2 tw:border-[#4242F6]";
 function ReportCard({ report }: { report: WpPost }) {
     const image = report._embedded?.["wp:featuredmedia"]?.[0];
     // WordPress's large thumbnail, not the full upload: there is no build-time resize anymore.
-    const imageUrl = resolveReportagemImage(image);
+    const imageUrl = resolveNewsImage(image);
     const date = report.modified || report.date;
     const label = `Ler: ${report.title.rendered.replace(/<[^>]*>/g, "").trim()}`;
 
     return (
         <article className={cardClass}>
-            <a href={report.link} className="home-reportagem-image-link tw:block tw:w-full tw:cursor-pointer" target="_blank" rel="noopener noreferrer" aria-label={label}>
+            <a href={report.link} className="home-news-image-link tw:block tw:w-full tw:cursor-pointer" target="_blank" rel="noopener noreferrer" aria-label={label}>
                 <figure className={figureClass}>
                     {imageUrl && <img className="tw:block tw:aspect-[384/216] tw:w-full tw:object-cover" src={imageUrl} width={768} height={432} alt={image?.alt_text ?? ""} loading="lazy" decoding="async" />}
                 </figure>
@@ -36,7 +36,7 @@ function ReportCard({ report }: { report: WpPost }) {
                 <a
                     href={report.link}
                     className="
-                        home-reportagem-title-link tw:text-inherit tw:no-underline tw:hover:text-inherit tw:hover:no-underline
+                        home-news-title-link tw:text-inherit tw:no-underline tw:hover:text-inherit tw:hover:no-underline
                         tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-1
                     "
                     target="_blank"

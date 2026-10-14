@@ -1,11 +1,11 @@
-// Port TS de https://github.com/vsueiro/papelada — a lib que gerou as artes de
-// papelada do projeto. O original roda sobre p5.js, mas só usa
+// Port TS de https://github.com/vsueiro/paperwork — a lib que gerou as artes de
+// paperwork do projeto. O original roda sobre p5.js, mas só usa
 // translate/rotate/drawImage e um blend MULTIPLY: tudo Canvas 2D nativo. O
 // algoritmo (ordem dos sorteios, fórmulas de tamanho) é o mesmo, então as
 // pilhas saem com a mesma geometria dos PNGs que elas substituem.
 
 type Arrangement = "pile" | "waffle";
-type Category = "favoravel" | "desfavoravel";
+type Category = "favorable" | "unfavorable";
 type Amounts = [Category, number][];
 
 /** Dimensões da folha em px e a resolução do asset correspondente. */
@@ -18,7 +18,7 @@ const SHEETS = {
 
 export type SheetSize = keyof typeof SHEETS;
 
-export interface PapeladaOptions {
+export interface PaperworkOptions {
     arrangement?: Arrangement;
     size?: SheetSize;
     /** Categoria das folhas no `pile` (o `waffle` usa `amounts`). */
@@ -28,7 +28,7 @@ export interface PapeladaOptions {
     assetsPath?: string;
     /** Quantas folhas empilhar no `pile`. */
     amount?: number;
-    /** Categorias e quantidades do `waffle`, ex.: `[["favoravel", 75], ["desfavoravel", 25]]`. */
+    /** Categorias e quantidades do `waffle`, ex.: `[["favorable", 75], ["unfavorable", 25]]`. */
     amounts?: Amounts;
 }
 
@@ -40,13 +40,13 @@ const ANGLE_CHANCE = 0.125;
 // Deslocamento lateral de um bloco de folhas (% da largura).
 const HORIZONTAL_SHIFTS = [0, 0.025, 0.05];
 
-type Config = Required<Omit<PapeladaOptions, "amounts">> & { amounts?: Amounts };
+type Config = Required<Omit<PaperworkOptions, "amounts">> & { amounts?: Amounts };
 
-function resolve(options: PapeladaOptions): Config {
+function resolve(options: PaperworkOptions): Config {
     return {
         arrangement: options.arrangement ?? "pile",
         size: options.size ?? "a4",
-        category: options.category ?? "favoravel",
+        category: options.category ?? "favorable",
         gap: options.gap ?? 0.025,
         assetsPath: options.assetsPath ?? "",
         amount: options.amount ?? 0,
@@ -65,7 +65,7 @@ const diagonal = ({ width, height }: { width: number; height: number }) =>
  * Dimensões naturais do gráfico. Serve para dimensionar o `<canvas>` no
  * servidor (evita layout shift) e para o chamador calcular escala.
  */
-export function papeladaSize(options: PapeladaOptions): { width: number; height: number } {
+export function paperworkSize(options: PaperworkOptions): { width: number; height: number } {
     const config = resolve(options);
     const sheet = SHEETS[config.size];
 
@@ -94,7 +94,7 @@ export function pileGap(options: { size?: SheetSize; width: number; height: numb
     if (options.peak <= 1) return 0.025;
     // A largura natural do canvas é a diagonal da folha — a altura de uma pilha
     // de uma folha só, e portanto o piso da escala.
-    const base = papeladaSize({ arrangement: "pile", size, amount: 1 }).width;
+    const base = paperworkSize({ arrangement: "pile", size, amount: 1 }).width;
     const scale = options.width / base;
     return Math.max(0, options.height / scale - base) / ((options.peak - 1) * SHEETS[size].width);
 }
@@ -105,7 +105,7 @@ const loadImage = (src: string) =>
     new Promise<HTMLImageElement>((resolve, reject) => {
         const image = new Image();
         image.onload = () => resolve(image);
-        image.onerror = () => reject(new Error(`papelada: falha ao carregar ${src}`));
+        image.onerror = () => reject(new Error(`paperwork: falha ao carregar ${src}`));
         image.src = src;
     });
 
@@ -114,24 +114,24 @@ const loadImage = (src: string) =>
 const sheetsCache = new Map<string, Promise<HTMLImageElement[]>>();
 
 function loadSheets(assetsPath: string, category: Category, asset: string) {
-    const sheetAssets = import.meta.glob<string>("../../assets/images/papelada/*.png", { eager: true, query: "?url", import: "default" });
-    const prefix = category === "desfavoravel" ? "proposicao-desfavoravel" : "proposicao";
+    const sheetAssets = import.meta.glob<string>("../../assets/images/paperwork/*.png", { eager: true, query: "?url", import: "default" });
+    const prefix = category === "unfavorable" ? "proposition-unfavorable" : "proposition";
     const key = `${assetsPath}|${prefix}|${asset}`;
     let sheets = sheetsCache.get(key);
     if (!sheets) {
         sheets = Promise.all(
-            Array.from({ length: 10 }, (_, index) => loadImage(assetsPath ? `${assetsPath}${prefix}-${index + 1}-${asset}.png` : sheetAssets[`../../assets/images/papelada/${prefix}-${index + 1}-${asset}.png`])),
+            Array.from({ length: 10 }, (_, index) => loadImage(assetsPath ? `${assetsPath}${prefix}-${index + 1}-${asset}.png` : sheetAssets[`../../assets/images/paperwork/${prefix}-${index + 1}-${asset}.png`])),
         );
         sheetsCache.set(key, sheets);
     }
     return sheets;
 }
 
-/** Desenha o gráfico de papelada dentro do `<canvas>` informado. */
-export async function papelada(canvas: HTMLCanvasElement, options: PapeladaOptions, signal?: AbortSignal): Promise<void> {
+/** Desenha o gráfico de paperwork dentro do `<canvas>` informado. */
+export async function paperwork(canvas: HTMLCanvasElement, options: PaperworkOptions, signal?: AbortSignal): Promise<void> {
     const config = resolve(options);
     const sheet = SHEETS[config.size];
-    const { width, height } = papeladaSize(options);
+    const { width, height } = paperworkSize(options);
 
     const categories: Category[] = config.amounts
         ? [...new Set(config.amounts.map(([category]) => category))]

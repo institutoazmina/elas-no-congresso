@@ -49,10 +49,10 @@ const activity = activityFromProps ?? (await (async () => {
 if (!activity) throw new Error(`A API não retornou a proposição ${Astro.params.slug ?? "solicitada"}`);
 
 const authors = activity.authors.map((author) => ({
-  nome: author.name,
-  partido: author.party,
-  estado: author.state,
-  foto: author.photo_url,
+  name: author.name,
+  party: author.party,
+  state: author.state,
+  photo: author.photo_url,
 }));
 const assessment = activity.is_favorable === true ? "Favorável" : activity.is_favorable === false ? "Desfavorável" : "Sem avaliação";
 const house = /sen/i.test(activity.house)
@@ -118,18 +118,18 @@ const description = `Consulte a ementa, a autoria e a tramitação do ${activity
               {authors.length > 0
                 ? <div class="proposition-authors__list tw:flex tw:flex-col tw:gap-4 tw:py-2 tw:px-0">
                     {authors.map((author) => {
-                      const photo = normalizePhotoUrl(author.foto);
-                      const initials = author.nome.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
-                      return <a class="proposition-author tw:flex tw:w-full tw:min-w-0 tw:items-start tw:gap-2 tw:text-ink tw:no-underline tw:[&_strong]:text-sm tw:[&_strong]:font-normal tw:[&_strong]:leading-4 tw:[&_small]:text-sm tw:[&_small]:font-normal tw:[&_small]:leading-4 tw:[&:hover_strong]:text-accent tw:[&:hover_strong]:underline tw:[&:focus-visible_strong]:text-accent tw:[&:focus-visible_strong]:underline" href={authorRoute(author.nome) || "/atividade-legislativa"} aria-label={`Ver autoria de ${author.nome}`}>
+                      const photo = normalizePhotoUrl(author.photo);
+                      const initials = author.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+                      return <a class="proposition-author tw:flex tw:w-full tw:min-w-0 tw:items-start tw:gap-2 tw:text-ink tw:no-underline tw:[&_strong]:text-sm tw:[&_strong]:font-normal tw:[&_strong]:leading-4 tw:[&_small]:text-sm tw:[&_small]:font-normal tw:[&_small]:leading-4 tw:[&:hover_strong]:text-accent tw:[&:hover_strong]:underline tw:[&:focus-visible_strong]:text-accent tw:[&:focus-visible_strong]:underline" href={authorRoute(author.name) || "/atividade-legislativa"} aria-label={`Ver autoria de ${author.name}`}>
                         {photo
                           ? <span class="proposition-author__photo tw:w-7.5 tw:h-10 tw:flex-[0_0_30px] tw:border tw:border-solid tw:border-muted tw:overflow-hidden tw:[&_img]:w-full tw:[&_img]:h-full tw:[&_img]:object-cover tw:[&_img]:object-[top] tw:flex tw:items-center tw:justify-center">
-                              <Photo src={photo} name={author.nome} client:visible />
+                              <Photo src={photo} name={author.name} client:visible />
                               <span class={String.raw`proposition-author__fallback tw:flex-[0_0_30px] tw:border tw:border-solid tw:border-muted tw:bg-[#f1f1ff] tw:text-accent tw:text-[12px] tw:font-bold tw:w-full tw:h-full tw:object-cover tw:object-[top] tw:[.proposition-author\_\_photo_&[hidden]]:hidden tw:flex tw:items-center tw:justify-center`} aria-hidden="true" hidden>{initials}</span>
                             </span>
                           : <span class={String.raw`proposition-author__fallback tw:w-7.5 tw:h-10 tw:flex-[0_0_30px] tw:border tw:border-solid tw:border-muted tw:bg-[#f1f1ff] tw:text-accent tw:text-[12px] tw:font-bold tw:[.proposition-author\_\_photo_&[hidden]]:hidden tw:flex tw:items-center tw:justify-center`} aria-hidden="true">{initials}</span>}
                         <span class="tw:flex tw:min-w-0 tw:flex-col">
-                          <strong>{author.nome}</strong>
-                          <small>{[author.partido, author.estado].filter(Boolean).join("/") || "Indisponível"}</small>
+                          <strong>{author.name}</strong>
+                          <small>{[author.party, author.state].filter(Boolean).join("/") || "Indisponível"}</small>
                         </span>
                       </a>;
                     })}

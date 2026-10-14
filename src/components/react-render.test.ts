@@ -24,7 +24,7 @@ const components = [
     "home/ParliamentariansCarousel",
     "home/ReportsList",
     "layout/Header",
-    "charts/Papelada",
+    "charts/Paperwork",
 ];
 const bundle = await build({
     stdin: {

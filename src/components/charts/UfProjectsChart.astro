@@ -34,7 +34,6 @@ const views = [
 // O design entrega um PNG por UF/stance, todos no mesmo canvas 1800x1800 do
 // mapa base — destacar um estado é só empilhar o recorte dele sobre a base.
 const mapLayers = import.meta.glob<{ default: import("astro").ImageMetadata }>("../../assets/images/charts/map/map-br-ufs-*.webp", { eager: true });
-const layerSlug: Record<Stance, string> = { unfavorable: "desfavoravel", favorable: "favoravel" };
 
 const highlights = views.map((view) => {
     const top = view.rows.slice(0, MAP_HIGHLIGHTS).map((row) => row.uf.trim().toUpperCase());
@@ -42,7 +41,7 @@ const highlights = views.map((view) => {
         stance: view.stance,
         ufs: top,
         layers: top.flatMap((uf) => {
-            const layer = mapLayers[`../../assets/images/charts/map/map-br-ufs-${layerSlug[view.stance]}-${uf}@2.5x.webp`];
+            const layer = mapLayers[`../../assets/images/charts/map/map-br-ufs-${view.stance}-${uf}@2.5x.webp`];
             return layer ? [{ uf, image: layer.default }] : [];
         }),
     };

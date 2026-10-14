@@ -3,7 +3,7 @@ import { Image } from "astro:assets";
 import attention from "../../assets/images/activity/attention.svg";
 import thumbsUp from "../../assets/images/thumbs-up.svg";
 import thumbsDown from "../../assets/images/thumbs-down.svg";
-import Papelada from "./Papelada.astro";
+import Paperwork from "./Paperwork.astro";
 import SectionDivider from "../shared/SectionDivider.astro";
 import { getStanceByGender, type StanceRatio } from "../../service/api/stats";
 
@@ -72,10 +72,10 @@ const charts = [
                             <b>Favoráveis</b>
                         </div>
                         <div class="women-defense__papers tw:w-full tw:[&_canvas]:block tw:[&_canvas]:w-full tw:[&_canvas]:h-auto">
-                            <Papelada
+                            <Paperwork
                                 arrangement="waffle"
                                 size="a8"
-                                amounts={[["favoravel", chart.favorable], ["desfavoravel", chart.unfavorable]]}
+                                amounts={[["favorable", chart.favorable], ["unfavorable", chart.unfavorable]]}
                                 alt={`${chart.favorable} de cada 100 proposições de autoria ${chart.authorship.toLowerCase()} são favoráveis`}
                             />
                         </div>

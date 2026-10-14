@@ -5,7 +5,7 @@ import circles from "../../assets/images/activity/parliamentarian-card-circles.s
 import paperclip from "../../assets/images/activity/author-paperclip.png";
 import arrowBack from "../../assets/images/parliamentarians/arrow-back.svg";
 import arrowForward from "../../assets/images/parliamentarians/arrow-forward.svg";
-import ReportagemCard from "../shared/ReportagemCard";
+import NewsCard from "../shared/NewsCard";
 import { fetchNewsPage } from "../../lib/wp";
 import { useNews } from "../../hooks/useNews";
 import heroPaper from "../../assets/images/activity/author-hero-paper.png";
@@ -17,8 +17,8 @@ import {
     partyForTerm,
     type AuthorInitialData,
 } from "../../lib/author-page";
-import imageAsset8 from "../../assets/images/papelada/proposicao-1-96w.png";
-import imageAsset9 from "../../assets/images/papelada/proposicao-desfavoravel-9-96w.png";
+import imageAsset8 from "../../assets/images/paperwork/proposition-1-96w.png";
+import imageAsset9 from "../../assets/images/paperwork/proposition-unfavorable-9-96w.png";
 import { useMemo, useState } from "react";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import BackLink from "../shared/BackLink";
@@ -35,7 +35,7 @@ export default function AuthorPage({
     house,
     initial,
 }: Props) {
-    const authorName = initial?.person.social_name || initial?.person.full_name || initial?.activity.author.nome || "";
+    const authorName = initial?.person.social_name || initial?.person.full_name || initial?.activity.author.name || "";
     const initialName = authorName || "Carregando…";
     // Reports citing the author, or the latest ones when none do.
     const reports = useNews(`author:${authorName}`, async (signal) => {
@@ -47,9 +47,9 @@ export default function AuthorPage({
             : await fetchNewsPage({ perPage: 3, orderByDate: true, signal });
         return selectAuthorReports(related?.posts ?? [], latest?.posts ?? []);
     });
-    const initialPhoto = normalizePhotoUrl(initial?.person.photo_url, initial?.activity.author.foto);
+    const initialPhoto = normalizePhotoUrl(initial?.person.photo_url, initial?.activity.author.photo);
     const initialParty = initial ? partyForTerm(initial.parties, initial.term) : "";
-    const initialState = initial?.term.state || initial?.activity.author.estado || "";
+    const initialState = initial?.term.state || initial?.activity.author.state || "";
     const initialShare =
         initial && initial.activity.favorable + initial.activity.unfavorable > 0
             ? `${initial.activity.favorabilityRate * 100}%`
@@ -65,7 +65,7 @@ export default function AuthorPage({
                 initial?.activity.proposals ?? [],
                 sort,
                 direction,
-                initial?.activity.author.nome ?? "",
+                initial?.activity.author.name ?? "",
             ),
         [initial, sort, direction],
     );
@@ -186,7 +186,7 @@ export default function AuthorPage({
                                                 {initial
                                                     ? genderLabel(
                                                           initial.person.gender ||
-                                                              initial.activity.author.genero,
+                                                              initial.activity.author.gender,
                                                       )
                                                     : ""}
                                             </dd>
@@ -231,7 +231,7 @@ export default function AuthorPage({
                                             <dt className="tw:m-0">Cargos</dt>
                                             <dd className="tw:wrap-anywhere tw:m-0" data-author-role>
                                                 {initial?.term.role ||
-                                                    initial?.activity.author.cargo ||
+                                                    initial?.activity.author.role ||
                                                     "Indisponível"}
                                             </dd>
                                         </div>
@@ -312,7 +312,7 @@ export default function AuthorPage({
                                             <AuthorGroups
                                                 groups={groupProposalRatings(
                                                     initial?.activity.proposals ?? [],
-                                                    "categoria",
+                                                    "category",
                                                 )}
                                             />
                                         </div>
@@ -336,7 +336,7 @@ export default function AuthorPage({
                                             <AuthorGroups
                                                 groups={groupProposalRatings(
                                                     initial?.activity.proposals ?? [],
-                                                    "tema",
+                                                    "theme",
                                                 )}
                                             />
                                         </div>
@@ -449,7 +449,7 @@ export default function AuthorPage({
                             <tbody className="" data-author-table>
                                 {shown.items.map((proposal) => (
                                     <AuthorRow
-                                        key={proposal.i}
+                                        key={proposal.id}
                                         proposal={proposal}
                                         author={initial!.activity.author}
                                     />
@@ -463,7 +463,7 @@ export default function AuthorPage({
                     >
                         {shown.items.map((proposal) => (
                             <AuthorCard
-                                key={proposal.i}
+                                key={proposal.id}
                                 proposal={proposal}
                                 author={initial!.activity.author}
                             />
@@ -515,7 +515,7 @@ export default function AuthorPage({
                 </section>
 
                 <section
-                    className={String.raw`author-reports tw:bg-white tw:pt-12 tw:pb-24 tw:px-12 tw:[&_h2]:max-w-205 tw:[&_h2]:font-display tw:[&_h2]:text-[32px] tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:leading-8 tw:[&_h2]:text-center tw:[&_h2]:uppercase tw:[&_h2]:mt-0 tw:[&_h2]:mb-8 tw:[&_h2]:mx-auto tw:[&>p]:text-muted tw:[&>p]:text-center tw:[&>p]:m-0 tw:max-md:pt-12 tw:max-md:pb-18 tw:max-md:px-4 tw:max-md:[&_h2]:text-[28px] tw:max-md:[&_h2]:leading-8 tw:max-md:[&_h2]:text-left tw:[&_h2_[data-author-reports-name]::before]:[content:'“'] tw:[&_h2_[data-author-reports-name]::after]:[content:'”'] tw:[&_.reportagem-card]:flex tw:[&_.reportagem-card]:min-w-0 tw:[&_.reportagem-card]:flex-col tw:[&_.reportagem-card]:gap-4 tw:[&_.reportagem-card\_\_image]:block tw:[&_.reportagem-card\_\_image]:aspect-384/216 tw:[&_.reportagem-card\_\_image]:overflow-hidden tw:[&_.reportagem-card\_\_image]:border-2 tw:[&_.reportagem-card\_\_image]:border-solid tw:[&_.reportagem-card\_\_image]:border-accent tw:[&_.reportagem-card\_\_image]:cursor-pointer tw:[&_.reportagem-card\_\_image_img]:w-full tw:[&_.reportagem-card\_\_image_img]:h-full tw:[&_.reportagem-card\_\_image_img]:object-cover tw:[&_.reportagem-card_h3]:min-h-16 tw:[&_.reportagem-card_h3]:text-ink tw:[&_.reportagem-card_h3]:font-display tw:[&_.reportagem-card_h3]:text-2xl tw:[&_.reportagem-card_h3]:font-bold tw:[&_.reportagem-card_h3]:[font-variation-settings:'wdth'_75] tw:[&_.reportagem-card_h3]:leading-8 tw:[&_.reportagem-card_h3]:uppercase tw:[&_.reportagem-card_h3]:m-0 tw:[&_.reportagem-card_h3_a]:text-inherit tw:[&_.reportagem-card_h3_a]:no-underline tw:[&_.reportagem-card_h3_a:hover]:text-inherit tw:[&_.reportagem-card_h3_a:hover]:no-underline tw:[&_.reportagem-card_h3_a:focus-visible]:outline-2 tw:[&_.reportagem-card_h3_a:focus-visible]:outline-accent tw:[&_.reportagem-card_h3_a:focus-visible]:outline-offset-1 tw:[&_.reportagem-card\_\_details]:flex tw:[&_.reportagem-card\_\_details]:flex-col tw:[&_.reportagem-card\_\_details]:gap-4 tw:[&_.reportagem-card\_\_link]:inline-flex tw:[&_.reportagem-card\_\_link]:self-start tw:[&_.reportagem-card\_\_link]:h-9.5 tw:[&_.reportagem-card\_\_link]:items-center tw:[&_.reportagem-card\_\_link]:gap-2 tw:[&_.reportagem-card\_\_link]:bg-accent tw:[&_.reportagem-card\_\_link]:text-white tw:[&_.reportagem-card\_\_link]:font-display tw:[&_.reportagem-card\_\_link]:text-lg tw:[&_.reportagem-card\_\_link]:font-bold tw:[&_.reportagem-card\_\_link]:[font-variation-settings:'wdth'_75] tw:[&_.reportagem-card\_\_link]:leading-6 tw:[&_.reportagem-card\_\_link]:no-underline tw:[&_.reportagem-card\_\_link]:uppercase tw:[&_.reportagem-card\_\_link]:pt-2 tw:[&_.reportagem-card\_\_link]:pb-1.5 tw:[&_.reportagem-card\_\_link]:pr-3 tw:[&_.reportagem-card\_\_link]:pl-3.5 tw:[&_.reportagem-card\_\_link_img]:w-3 tw:[&_.reportagem-card\_\_link_img]:h-1.5 tw:[&_.reportagem-card\_\_link_img]:transform-[rotate(-90deg)] tw:[&_.reportagem-card\_\_date]:text-navy tw:[&_.reportagem-card\_\_date]:text-sm tw:[&_.reportagem-card\_\_date]:leading-4 tw:max-md:[&_.reportagem-card]:flex-[0_0_min(320px,calc(100vw-48px))] tw:max-md:[&_.reportagem-card]:snap-start tw:max-md:[&_.reportagem-card_h3]:min-h-0 tw:max-md:[&_.reportagem-card_h3]:text-xl tw:max-md:[&_.reportagem-card_h3]:leading-6`}
+                    className={String.raw`author-reports tw:bg-white tw:pt-12 tw:pb-24 tw:px-12 tw:[&_h2]:max-w-205 tw:[&_h2]:font-display tw:[&_h2]:text-[32px] tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:leading-8 tw:[&_h2]:text-center tw:[&_h2]:uppercase tw:[&_h2]:mt-0 tw:[&_h2]:mb-8 tw:[&_h2]:mx-auto tw:[&>p]:text-muted tw:[&>p]:text-center tw:[&>p]:m-0 tw:max-md:pt-12 tw:max-md:pb-18 tw:max-md:px-4 tw:max-md:[&_h2]:text-[28px] tw:max-md:[&_h2]:leading-8 tw:max-md:[&_h2]:text-left tw:[&_h2_[data-author-reports-name]::before]:[content:'“'] tw:[&_h2_[data-author-reports-name]::after]:[content:'”'] tw:[&_.news-card]:flex tw:[&_.news-card]:min-w-0 tw:[&_.news-card]:flex-col tw:[&_.news-card]:gap-4 tw:[&_.news-card\_\_image]:block tw:[&_.news-card\_\_image]:aspect-384/216 tw:[&_.news-card\_\_image]:overflow-hidden tw:[&_.news-card\_\_image]:border-2 tw:[&_.news-card\_\_image]:border-solid tw:[&_.news-card\_\_image]:border-accent tw:[&_.news-card\_\_image]:cursor-pointer tw:[&_.news-card\_\_image_img]:w-full tw:[&_.news-card\_\_image_img]:h-full tw:[&_.news-card\_\_image_img]:object-cover tw:[&_.news-card_h3]:min-h-16 tw:[&_.news-card_h3]:text-ink tw:[&_.news-card_h3]:font-display tw:[&_.news-card_h3]:text-2xl tw:[&_.news-card_h3]:font-bold tw:[&_.news-card_h3]:[font-variation-settings:'wdth'_75] tw:[&_.news-card_h3]:leading-8 tw:[&_.news-card_h3]:uppercase tw:[&_.news-card_h3]:m-0 tw:[&_.news-card_h3_a]:text-inherit tw:[&_.news-card_h3_a]:no-underline tw:[&_.news-card_h3_a:hover]:text-inherit tw:[&_.news-card_h3_a:hover]:no-underline tw:[&_.news-card_h3_a:focus-visible]:outline-2 tw:[&_.news-card_h3_a:focus-visible]:outline-accent tw:[&_.news-card_h3_a:focus-visible]:outline-offset-1 tw:[&_.news-card\_\_details]:flex tw:[&_.news-card\_\_details]:flex-col tw:[&_.news-card\_\_details]:gap-4 tw:[&_.news-card\_\_link]:inline-flex tw:[&_.news-card\_\_link]:self-start tw:[&_.news-card\_\_link]:h-9.5 tw:[&_.news-card\_\_link]:items-center tw:[&_.news-card\_\_link]:gap-2 tw:[&_.news-card\_\_link]:bg-accent tw:[&_.news-card\_\_link]:text-white tw:[&_.news-card\_\_link]:font-display tw:[&_.news-card\_\_link]:text-lg tw:[&_.news-card\_\_link]:font-bold tw:[&_.news-card\_\_link]:[font-variation-settings:'wdth'_75] tw:[&_.news-card\_\_link]:leading-6 tw:[&_.news-card\_\_link]:no-underline tw:[&_.news-card\_\_link]:uppercase tw:[&_.news-card\_\_link]:pt-2 tw:[&_.news-card\_\_link]:pb-1.5 tw:[&_.news-card\_\_link]:pr-3 tw:[&_.news-card\_\_link]:pl-3.5 tw:[&_.news-card\_\_link_img]:w-3 tw:[&_.news-card\_\_link_img]:h-1.5 tw:[&_.news-card\_\_link_img]:transform-[rotate(-90deg)] tw:[&_.news-card\_\_date]:text-navy tw:[&_.news-card\_\_date]:text-sm tw:[&_.news-card\_\_date]:leading-4 tw:max-md:[&_.news-card]:flex-[0_0_min(320px,calc(100vw-48px))] tw:max-md:[&_.news-card]:snap-start tw:max-md:[&_.news-card_h3]:min-h-0 tw:max-md:[&_.news-card_h3]:text-xl tw:max-md:[&_.news-card_h3]:leading-6`}
                     data-author-reports
                     aria-labelledby="author-reports-title"
                     aria-busy={!reports}
@@ -545,7 +545,7 @@ export default function AuthorPage({
                         data-author-reports-grid
                     >
                         {reports?.reports.map((post) => (
-                            <ReportagemCard key={post.link} post={post} />
+                            <NewsCard key={post.link} post={post} />
                         ))}
                     </div>
                     <p className="" data-author-reports-empty hidden={!reports || reports.reports.length > 0}>

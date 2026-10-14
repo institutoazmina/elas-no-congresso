@@ -4,7 +4,7 @@ import StanceToggle from "./StanceToggle";
 import SectionDivider from "../shared/SectionDivider";
 import thumbsDown from "../../assets/images/thumbs-down.svg";
 import thumbsUp from "../../assets/images/thumbs-up.svg";
-import Papelada from "./Papelada";
+import Paperwork from "./Paperwork";
 
 import type { Stance } from "../../service/api/stats";
 import { Fragment, useState } from "react";
@@ -163,10 +163,10 @@ export default function PartyRightsChart({
                                                 alt=""
                                             />
                                         </div>
-                                        <Papelada
+                                        <Paperwork
                                             className="party-rights-chart__paper tw:block tw:w-11.5 tw:h-auto"
                                             arrangement="pile"
-                                            category="desfavoravel"
+                                            category="unfavorable"
                                             size="a4"
                                             gap={gap}
                                             amount={party.negative}
@@ -193,10 +193,10 @@ export default function PartyRightsChart({
                                                 alt=""
                                             />
                                         </div>
-                                        <Papelada
+                                        <Paperwork
                                             className="party-rights-chart__paper tw:block tw:w-11.5 tw:h-auto"
                                             arrangement="pile"
-                                            category="favoravel"
+                                            category="favorable"
                                             size="a4"
                                             gap={gap}
                                             amount={party.positive}

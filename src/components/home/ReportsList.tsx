@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Image, css } from "../shared/react-utils";
-import ReportagemCard from "../shared/ReportagemCard";
-import { WP_REPORTAGENS_ENDPOINT, fetchNewsPage, type WpPost } from "../../lib/wp";
+import NewsCard from "../shared/NewsCard";
+import { WP_NEWS_ENDPOINT, fetchNewsPage, type WpPost } from "../../lib/wp";
 import { RECENT_REPORT_COUNT } from "./RecentReports";
-import paginationPrevious from "../../assets/images/reportagens/pagination-previous.svg";
-import paginationNext from "../../assets/images/reportagens/pagination-next.svg";
+import paginationPrevious from "../../assets/images/news/pagination-previous.svg";
+import paginationNext from "../../assets/images/news/pagination-next.svg";
 import halftoneShadow from "../../assets/images/hero/halftone-shadow.png";
 const POSTS_PER_PAGE = 9;
 
@@ -56,17 +56,17 @@ export default function ReportsList() {
     }, [page, retry]);
     return (
         <section
-            className="reportagens-all tw:[&_h2]:items-start tw:[&_h2]:flex tw:[&_h2]:font-display tw:[&_h2]:text-[32px] tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:leading-[42px] tw:[&_h2]:max-w-full tw:[&_h2]:uppercase tw:[&_h2]:w-205 tw:[&_h2]:mt-0 tw:[&_h2]:mb-12 tw:[&_h2]:mx-0 tw:max-[901px]:[&_h2]:mb-10 tw:[--reportagens-all-inline-padding:48px] tw:p-[72px_var(--reportagens-all-inline-padding)_0] tw:max-[901px]:[--reportagens-all-inline-padding:24px] tw:max-[901px]:p-[64px_var(--reportagens-all-inline-padding)_0] tw:max-[561px]:[--reportagens-all-inline-padding:24px] tw:max-[561px]:pt-18 tw:max-[561px]:pb-[86px] tw:max-[561px]:pr-[24px] tw:max-[561px]:pl-6"
-            aria-labelledby="todas-reportagens-title"
-            data-reportagens-pagination
+            className="news-all tw:[&_h2]:items-start tw:[&_h2]:flex tw:[&_h2]:font-display tw:[&_h2]:text-[32px] tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:leading-[42px] tw:[&_h2]:max-w-full tw:[&_h2]:uppercase tw:[&_h2]:w-205 tw:[&_h2]:mt-0 tw:[&_h2]:mb-12 tw:[&_h2]:mx-0 tw:max-[901px]:[&_h2]:mb-10 tw:[--news-all-inline-padding:48px] tw:p-[72px_var(--news-all-inline-padding)_0] tw:max-[901px]:[--news-all-inline-padding:24px] tw:max-[901px]:p-[64px_var(--news-all-inline-padding)_0] tw:max-[561px]:[--news-all-inline-padding:24px] tw:max-[561px]:pt-18 tw:max-[561px]:pb-[86px] tw:max-[561px]:pr-[24px] tw:max-[561px]:pl-6"
+            aria-labelledby="all-news-title"
+            data-news-pagination
             aria-busy={loading}
-            data-pagination-endpoint={WP_REPORTAGENS_ENDPOINT}
+            data-pagination-endpoint={WP_NEWS_ENDPOINT}
             data-pagination-total-pages={allPostsTotalPages}
         >
-            <div className="reportagens-all__content tw:max-w-336 tw:w-full tw:my-0 tw:mx-auto">
+            <div className="news-all__content tw:max-w-336 tw:w-full tw:my-0 tw:mx-auto">
                 <h2
                     className="tw:max-[561px]:leading-8 tw:max-[561px]:mb-12 tw:max-[561px]:min-h-10.5 tw:max-[561px]:[text-box-edge:cap_alphabetic] tw:max-[561px]:[text-box-trim:trim-both] tw:max-[561px]:w-full"
-                    id="todas-reportagens-title"
+                    id="all-news-title"
                 >
                     <span className="tw:flex-[0_0_292px] tw:text-center tw:max-[561px]:basis-73 tw:max-[561px]:text-left tw:max-[561px]:leading-8">
                         Todas as reportagens
@@ -82,15 +82,15 @@ export default function ReportsList() {
                 )}
                 {posts.length > 0 ? (
                     <div
-                        className={String.raw`reportagens-all__grid tw:mx-auto tw:flex tw:max-w-336 tw:flex-wrap tw:justify-between tw:gap-24 tw:[&>*]:min-w-0 tw:[&>*]:flex-none tw:[&>*]:w-[calc((100%_-_192px)/3)] tw:max-[901px]:gap-x-6 tw:max-[901px]:gap-y-16 tw:max-[901px]:[&>*]:w-[calc((100%_-_24px)/2)] tw:max-[901px]:[&_.reportagem-card]:w-full tw:max-[901px]:[&_.reportagem-card\_\_image]:w-full tw:max-[561px]:w-full tw:max-[561px]:max-w-none tw:max-[561px]:flex-col tw:max-[561px]:gap-24 tw:max-[561px]:[&>*]:w-full tw:max-[561px]:[&_.reportagem-card]:flex-none tw:max-[561px]:[&_.reportagem-card\_\_image]:aspect-[384/216] tw:max-[561px]:[&_.reportagem-card\_\_image]:h-auto tw:max-[561px]:[&_.reportagem-card_h3]:min-h-0`}
+                        className={String.raw`news-all__grid tw:mx-auto tw:flex tw:max-w-336 tw:flex-wrap tw:justify-between tw:gap-24 tw:[&>*]:min-w-0 tw:[&>*]:flex-none tw:[&>*]:w-[calc((100%_-_192px)/3)] tw:max-[901px]:gap-x-6 tw:max-[901px]:gap-y-16 tw:max-[901px]:[&>*]:w-[calc((100%_-_24px)/2)] tw:max-[901px]:[&_.news-card]:w-full tw:max-[901px]:[&_.news-card\_\_image]:w-full tw:max-[561px]:w-full tw:max-[561px]:max-w-none tw:max-[561px]:flex-col tw:max-[561px]:gap-24 tw:max-[561px]:[&>*]:w-full tw:max-[561px]:[&_.news-card]:flex-none tw:max-[561px]:[&_.news-card\_\_image]:aspect-[384/216] tw:max-[561px]:[&_.news-card\_\_image]:h-auto tw:max-[561px]:[&_.news-card_h3]:min-h-0`}
                     >
                         {posts.map((post) => (
                             <div
                                 key={post.link}
                                 className="tw:max-[561px]:w-full"
-                                data-reportagem-pagination-card
+                                data-news-pagination-card
                             >
-                                <ReportagemCard post={post} />
+                                <NewsCard post={post} />
                             </div>
                         ))}
                     </div>
@@ -100,7 +100,7 @@ export default function ReportsList() {
                 ) : (
                     !error && (
                         <p
-                            className="reportagens-feedback reportagens-feedback--light tw:text-base tw:leading-6 tw:relative tw:z-2 tw:text-navy tw:my-12 tw:mx-0"
+                            className="news-feedback news-feedback--light tw:text-base tw:leading-6 tw:relative tw:z-2 tw:text-navy tw:my-12 tw:mx-0"
                             role="status"
                         >
                             N&atilde;o foi poss&iacute;vel carregar as reportagens.
@@ -110,19 +110,19 @@ export default function ReportsList() {
             </div>
             {allPostsTotalPages > 1 && (
                 <div
-                    className="reportagens-pagination-region tw:h-[196px] tw:ml-[calc(var(--reportagens-all-inline-padding)_*_-1)] tw:mt-7.5 tw:overflow-hidden tw:relative tw:w-[calc(100%_+_(var(--reportagens-all-inline-padding)_*_2))] tw:max-[561px]:-ml-6 tw:max-[561px]:mt-[70px] tw:max-[561px]:w-[calc(100%_+_48px)] tw:before:bg-[image:var(--reportagens-hero-halftone-shadow)] tw:before:bg-top-left tw:before:bg-repeat-x tw:before:bg-size-[1440px_24px] tw:before:content-[''] tw:before:h-6 tw:before:left-0 tw:before:mix-blend-multiply tw:before:pointer-events-none tw:before:absolute tw:before:right-0 tw:before:top-7.5 tw:before:[transform:rotate(180deg)] tw:before:z-1 tw:max-[561px]:before:bg-[image:var(--reportagens-hero-halftone-shadow)] tw:max-[561px]:before:bg-top-left tw:max-[561px]:before:bg-repeat-x tw:max-[561px]:before:bg-size-[720px_12px] tw:max-[561px]:before:content-[''] tw:max-[561px]:before:h-3 tw:max-[561px]:before:left-0 tw:max-[561px]:before:mix-blend-multiply tw:max-[561px]:before:pointer-events-none tw:max-[561px]:before:absolute tw:max-[561px]:before:right-0 tw:max-[561px]:before:z-1 tw:max-[561px]:before:top-7.5 tw:max-[561px]:before:[transform:rotate(180deg)] tw:max-[561px]:after:bg-[image:var(--reportagens-hero-halftone-shadow)] tw:max-[561px]:after:bg-top-left tw:max-[561px]:after:bg-repeat-x tw:max-[561px]:after:bg-size-[720px_12px] tw:max-[561px]:after:content-[''] tw:max-[561px]:after:h-3 tw:max-[561px]:after:left-0 tw:max-[561px]:after:mix-blend-multiply tw:max-[561px]:after:pointer-events-none tw:max-[561px]:after:absolute tw:max-[561px]:after:right-0 tw:max-[561px]:after:z-1 tw:max-[561px]:after:bottom-[30px]"
-                    style={css(`--reportagens-hero-halftone-shadow: url(${halftoneShadow.src})`)}
+                    className="news-pagination-region tw:h-[196px] tw:ml-[calc(var(--news-all-inline-padding)_*_-1)] tw:mt-7.5 tw:overflow-hidden tw:relative tw:w-[calc(100%_+_(var(--news-all-inline-padding)_*_2))] tw:max-[561px]:-ml-6 tw:max-[561px]:mt-[70px] tw:max-[561px]:w-[calc(100%_+_48px)] tw:before:bg-[image:var(--news-hero-halftone-shadow)] tw:before:bg-top-left tw:before:bg-repeat-x tw:before:bg-size-[1440px_24px] tw:before:content-[''] tw:before:h-6 tw:before:left-0 tw:before:mix-blend-multiply tw:before:pointer-events-none tw:before:absolute tw:before:right-0 tw:before:top-7.5 tw:before:[transform:rotate(180deg)] tw:before:z-1 tw:max-[561px]:before:bg-[image:var(--news-hero-halftone-shadow)] tw:max-[561px]:before:bg-top-left tw:max-[561px]:before:bg-repeat-x tw:max-[561px]:before:bg-size-[720px_12px] tw:max-[561px]:before:content-[''] tw:max-[561px]:before:h-3 tw:max-[561px]:before:left-0 tw:max-[561px]:before:mix-blend-multiply tw:max-[561px]:before:pointer-events-none tw:max-[561px]:before:absolute tw:max-[561px]:before:right-0 tw:max-[561px]:before:z-1 tw:max-[561px]:before:top-7.5 tw:max-[561px]:before:[transform:rotate(180deg)] tw:max-[561px]:after:bg-[image:var(--news-hero-halftone-shadow)] tw:max-[561px]:after:bg-top-left tw:max-[561px]:after:bg-repeat-x tw:max-[561px]:after:bg-size-[720px_12px] tw:max-[561px]:after:content-[''] tw:max-[561px]:after:h-3 tw:max-[561px]:after:left-0 tw:max-[561px]:after:mix-blend-multiply tw:max-[561px]:after:pointer-events-none tw:max-[561px]:after:absolute tw:max-[561px]:after:right-0 tw:max-[561px]:after:z-1 tw:max-[561px]:after:bottom-[30px]"
+                    style={css(`--news-hero-halftone-shadow: url(${halftoneShadow.src})`)}
                 >
                     <div
-                        className="reportagens-pagination-region__texture site-shared-background tw:max-[561px]:bottom-[30px] tw:max-[561px]:top-7.5 tw:[background-position:center_-30px] tw:bottom-0 tw:left-0 tw:pointer-events-none tw:absolute tw:right-0 tw:top-7.5 tw:z-0 tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+                        className="news-pagination-region__texture site-shared-background tw:max-[561px]:bottom-[30px] tw:max-[561px]:top-7.5 tw:[background-position:center_-30px] tw:bottom-0 tw:left-0 tw:pointer-events-none tw:absolute tw:right-0 tw:top-7.5 tw:z-0 tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
                         aria-hidden="true"
                     ></div>
                     <nav
-                        className="reportagens-pagination tw:items-start tw:flex tw:gap-1 tw:justify-center tw:left-0 tw:absolute tw:right-0 tw:top-19.5 tw:z-2 tw:m-0"
+                        className="news-pagination tw:items-start tw:flex tw:gap-1 tw:justify-center tw:left-0 tw:absolute tw:right-0 tw:top-19.5 tw:z-2 tw:m-0"
                         aria-label="Pagina&#231;&#227;o das reportagens"
                     >
                         <button
-                            className="reportagens-pagination__button tw:items-center tw:bg-white tw:border-[2px] tw:border-solid tw:border-accent tw:text-accent tw:cursor-pointer tw:flex tw:h-10 tw:justify-center tw:[transition:background-color_150ms_ease,_color_150ms_ease] tw:w-14 tw:py-2 tw:px-4 tw:[&>span]:items-center tw:[&>span]:flex tw:[&>span]:h-6 tw:[&>span]:justify-center tw:[&>span]:w-6 tw:[&_img]:block tw:[&_img]:h-4 tw:[&_img]:w-4 tw:focus-visible:bg-accent tw:focus-visible:outline-2 tw:focus-visible:outline-ink tw:focus-visible:outline-offset-1 tw:disabled:cursor-default tw:disabled:opacity-40 tw:[&:hover:not(:disabled)]:bg-accent tw:[&:hover:not(:disabled)]:outline-none tw:[&:hover:not(:disabled)_img]:[filter:brightness(0)_invert(1)] tw:[&:focus-visible_img]:[filter:brightness(0)_invert(1)]"
+                            className="news-pagination__button tw:items-center tw:bg-white tw:border-[2px] tw:border-solid tw:border-accent tw:text-accent tw:cursor-pointer tw:flex tw:h-10 tw:justify-center tw:[transition:background-color_150ms_ease,_color_150ms_ease] tw:w-14 tw:py-2 tw:px-4 tw:[&>span]:items-center tw:[&>span]:flex tw:[&>span]:h-6 tw:[&>span]:justify-center tw:[&>span]:w-6 tw:[&_img]:block tw:[&_img]:h-4 tw:[&_img]:w-4 tw:focus-visible:bg-accent tw:focus-visible:outline-2 tw:focus-visible:outline-ink tw:focus-visible:outline-offset-1 tw:disabled:cursor-default tw:disabled:opacity-40 tw:[&:hover:not(:disabled)]:bg-accent tw:[&:hover:not(:disabled)]:outline-none tw:[&:hover:not(:disabled)_img]:[filter:brightness(0)_invert(1)] tw:[&:focus-visible_img]:[filter:brightness(0)_invert(1)]"
                             type="button"
                             onClick={() => navigate(page - 1)}
                             data-pagination-previous
@@ -134,7 +134,7 @@ export default function ReportsList() {
                             </span>
                         </button>
                         <button
-                            className="reportagens-pagination__button tw:items-center tw:bg-white tw:border-[2px] tw:border-solid tw:border-accent tw:text-accent tw:cursor-pointer tw:flex tw:h-10 tw:justify-center tw:[transition:background-color_150ms_ease,_color_150ms_ease] tw:w-14 tw:py-2 tw:px-4 tw:[&>span]:items-center tw:[&>span]:flex tw:[&>span]:h-6 tw:[&>span]:justify-center tw:[&>span]:w-6 tw:[&_img]:block tw:[&_img]:h-4 tw:[&_img]:w-4 tw:focus-visible:bg-accent tw:focus-visible:outline-2 tw:focus-visible:outline-ink tw:focus-visible:outline-offset-1 tw:disabled:cursor-default tw:disabled:opacity-40 tw:[&:hover:not(:disabled)]:bg-accent tw:[&:hover:not(:disabled)]:outline-none tw:[&:hover:not(:disabled)_img]:[filter:brightness(0)_invert(1)] tw:[&:focus-visible_img]:[filter:brightness(0)_invert(1)]"
+                            className="news-pagination__button tw:items-center tw:bg-white tw:border-[2px] tw:border-solid tw:border-accent tw:text-accent tw:cursor-pointer tw:flex tw:h-10 tw:justify-center tw:[transition:background-color_150ms_ease,_color_150ms_ease] tw:w-14 tw:py-2 tw:px-4 tw:[&>span]:items-center tw:[&>span]:flex tw:[&>span]:h-6 tw:[&>span]:justify-center tw:[&>span]:w-6 tw:[&_img]:block tw:[&_img]:h-4 tw:[&_img]:w-4 tw:focus-visible:bg-accent tw:focus-visible:outline-2 tw:focus-visible:outline-ink tw:focus-visible:outline-offset-1 tw:disabled:cursor-default tw:disabled:opacity-40 tw:[&:hover:not(:disabled)]:bg-accent tw:[&:hover:not(:disabled)]:outline-none tw:[&:hover:not(:disabled)_img]:[filter:brightness(0)_invert(1)] tw:[&:focus-visible_img]:[filter:brightness(0)_invert(1)]"
                             type="button"
                             disabled={loading || page >= allPostsTotalPages}
                             onClick={() => navigate(page + 1)}
@@ -146,7 +146,7 @@ export default function ReportsList() {
                             </span>
                         </button>
                         <span
-                            className="reportagens-pagination__status tw:h-[1px] tw:overflow-hidden tw:absolute tw:w-[1px] tw:[clip:rect(0_0_0_0)] tw:m-[-1px]"
+                            className="news-pagination__status tw:h-[1px] tw:overflow-hidden tw:absolute tw:w-[1px] tw:[clip:rect(0_0_0_0)] tw:m-[-1px]"
                             aria-live="polite"
                             data-pagination-status
                         >

@@ -73,7 +73,7 @@ export default function AlertsProposalCombobox() {
                 <div className="alerts-email-modal__daily-select-wrap tw:relative tw:mt-2 tw:max-md:w-full">
                     <select
                         id="alerts-house"
-                        name="casa"
+                        name="house"
                         className="alerts-email-modal__proposal-input tw:cursor-pointer tw:block tw:w-full tw:h-12.5 tw:border tw:border-solid tw:border-[rgba(30,37,70,.15)] tw:rounded-none tw:bg-white tw:text-ink tw:font-normal tw:text-base tw:leading-5 tw:font-sans tw:py-3 tw:px-4 tw:placeholder:text-muted tw:placeholder:opacity-100 tw:focus-visible:outline-2 tw:focus-visible:outline-lime tw:focus-visible:outline-offset-1"
                         value={house}
                         onChange={(event) => {
@@ -138,7 +138,7 @@ export default function AlertsProposalCombobox() {
                                                     </Combobox.ChipRemove>
                                                     <input
                                                         type="hidden"
-                                                        name="proposicao"
+                                                        name="propositions"
                                                         data-alerts-proposal-id
                                                         value={proposal.id}
                                                     />

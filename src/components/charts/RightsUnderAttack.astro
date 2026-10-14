@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import Papelada from "./Papelada.astro";
-import { pileGap } from "../../lib/papelada";
+import Paperwork from "./Paperwork.astro";
+import { pileGap } from "../../lib/paperwork";
 import thumbsDown from "../../assets/images/thumbs-down.svg";
 import attention from "../../assets/images/activity/attention.svg";
 import { getUnfavorableByLegislature } from "../../service/api/stats";
@@ -17,11 +17,11 @@ const gap = pileGap({
     height: PILE_PEAK,
     peak,
 });
-import imageAsset2 from "../../assets/images/papelada/proposicao-desfavoravel-9-192w.png";
+import imageAsset2 from "../../assets/images/paperwork/proposition-unfavorable-9-192w.png";
 ---
 
 <section
-    id="rights-under-attack"
+    id="o-que-descobrimos"
     class="
         rights-under-attack tw:relative tw:h-auto tw:overflow-hidden tw:py-12 tw:text-[#0B0F5E] tw:lg:h-auto
         tw:lg:overflow-visible tw:lg:bg-white tw:lg:pt-12 tw:lg:pb-0 tw:max-md:h-auto tw:max-md:overflow-visible
@@ -108,12 +108,12 @@ import imageAsset2 from "../../assets/images/papelada/proposicao-desfavoravel-9-
                                 Desfavoráveis
                             </span>
                         </div>
-                        <Papelada
+                        <Paperwork
                             class={String.raw`
                                 rights-under-attack__papers tw:w-23.5 tw:max-md:w-16
                                 `}
                             arrangement="pile"
-                            category="desfavoravel"
+                            category="unfavorable"
                             size="a4"
                             gap={gap}
                             amount={legislature.unfavorable}

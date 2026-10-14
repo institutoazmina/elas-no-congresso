@@ -24,9 +24,9 @@ export type WpPostsPage = {
   unavailable?: true;
 };
 
-export const WP_REPORTAGENS_ENDPOINT = "https://azmina.com.br/wp-json/wp/v2/az_reportagem";
+export const WP_NEWS_ENDPOINT = "https://azmina.com.br/wp-json/wp/v2/az_reportagem";
 
-export function resolveReportagemImage(media: WpFeaturedMedia | undefined, baseUrl = "https://azmina.com.br"): string | undefined {
+export function resolveNewsImage(media: WpFeaturedMedia | undefined, baseUrl = "https://azmina.com.br"): string | undefined {
   const imagePath = media?.media_details?.sizes?.["az-article-thumbnail-large"]?.source_url ?? media?.source_url ?? media?.link;
   if (!imagePath) return undefined;
   try { return new URL(imagePath, baseUrl).href; } catch { return undefined; }
@@ -68,7 +68,7 @@ export async function fetchNewsPage({
   }
 
   try {
-    const res = await fetchPublicData(`${WP_REPORTAGENS_ENDPOINT}?${params}`, signal);
+    const res = await fetchPublicData(`${WP_NEWS_ENDPOINT}?${params}`, signal);
     if (!res.ok) return { posts: [], total: 0, totalPages: 0, unavailable: true };
 
     return {

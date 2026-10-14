@@ -1,8 +1,8 @@
 import { Image, css } from "../shared/react-utils";
 import attention from "../../assets/images/activity/attention.svg";
 import halftoneShadow from "../../assets/images/hero/halftone-shadow.png";
-import ilustracoesSixteen from "../../assets/images/aviao-papel.png";
-import chevron from "../../assets/images/home-reportagens/chevron-right.svg";
+import ilustracoesSixteen from "../../assets/images/paper-plane.png";
+import chevron from "../../assets/images/home-news/chevron-right.svg";
 
 export default function AlertsHero({ onOpen }: { onOpen: () => void }) {
     return (
