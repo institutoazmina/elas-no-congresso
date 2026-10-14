@@ -1,30 +1,12 @@
 ---
 import { Image } from "astro:assets";
 import PageLayout from "../layouts/PageLayout.astro";
-import ReportagemCard from "../components/shared/ReportagemCard.astro";
-import { fetchReportagensPage } from "../lib/wp";
 import heroIllustration from "../assets/images/catavento.png";
 import attention from "../assets/images/activity/attention.svg";
 import halftoneShadow from "../assets/images/hero/halftone-shadow.png";
 import cuttingMatPattern from "../assets/images/home-reportagens/bg-pattern-cutting-mat.svg";
 import ReportsList from "../components/home/ReportsList";
-
-
-const POSTS_PER_PAGE = 9;
-const RECENT_POST_COUNT = 3;
-const [recentPage, allPage] = await Promise.all([
-    fetchReportagensPage(undefined, RECENT_POST_COUNT, 1, true),
-    fetchReportagensPage(
-        undefined,
-        POSTS_PER_PAGE + RECENT_POST_COUNT,
-        1,
-        true,
-    ),
-]);
-const recentPosts = recentPage.posts;
-const posts = allPage.posts.slice(RECENT_POST_COUNT);
-const allPostsTotal = Math.max(allPage.total - RECENT_POST_COUNT, 0);
-const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
+import RecentReports from "../components/home/RecentReports";
 ---
 
 <PageLayout title="Reportagens: Congresso e política de gênero | AzMina"
@@ -77,25 +59,8 @@ const allPostsTotalPages = Math.ceil(allPostsTotal / POSTS_PER_PAGE);
                     <h2 class="tw:max-[561px]:relative tw:max-[561px]:text-left! tw:max-[561px]:[text-box-edge:cap_alphabetic] tw:max-[561px]:[text-box-trim:trim-both] tw:max-[561px]:whitespace-nowrap tw:max-[561px]:w-full tw:max-[561px]:z-2 tw:max-[561px]:py-0 tw:max-[561px]:px-6 tw:max-[561px]:m-0" id="reportagens-recentes-title">
                         Reportagens mais recentes
                     </h2>
-                    {recentPosts.length > 0 ? (
-                        <div
-                            class="reportagens-recent__scroll tw:max-[901px]:pl-6 tw:max-[901px]:pr-6 tw:flex tw:gap-12 tw:justify-center tw:overflow-x-auto tw:[scroll-snap-type:x_mandatory] tw:w-full tw:pt-0 tw:pb-4 tw:px-12 tw:mt-12 tw:mb-0 tw:mx-auto tw:max-[561px]:block tw:max-[561px]:overflow-x-auto tw:max-[561px]:overflow-y-hidden tw:max-[561px]:relative tw:max-[561px]:[scroll-snap-type:none] tw:max-[561px]:[scrollbar-width:thin] tw:max-[561px]:w-full tw:max-[561px]:z-2 tw:max-[561px]:pt-0 tw:max-[561px]:pb-4 tw:max-[561px]:px-0 tw:max-[561px]:mt-14.5 tw:max-[561px]:mb-0 tw:max-[561px]:mx-0"
-                            tabindex="0"
-                            aria-label="Lista de reportagens mais recentes"
-                        >
-                            <div class="reportagens-recent__track tw:flex tw:flex-none tw:gap-12 tw:max-[561px]:gap-12 tw:max-[561px]:w-max tw:max-[561px]:py-0 tw:max-[561px]:px-6">
-                                {recentPosts.map((post) => (
-                                    <ReportagemCard post={post} dark imageLoading="eager" />
-                                ))}
-                            </div>
-                        </div>
-                    ) : (
-                        <p class="reportagens-feedback tw:text-white tw:text-base tw:leading-6 tw:relative tw:z-2 tw:mt-12 tw:mb-0 tw:mx-6" role="status">
-                            N&atilde;o foi poss&iacute;vel carregar as
-                            reportagens mais recentes.
-                        </p>
-                    )}
+                    <RecentReports client:load />
                 </section>
-                <ReportsList initialPosts={posts} totalPages={allPostsTotalPages} client:load />
+                <ReportsList client:load />
             </main>
 </PageLayout>

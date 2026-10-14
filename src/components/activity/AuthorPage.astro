@@ -1,15 +1,9 @@
 ---
 import AuthorPage from "./AuthorPage";
 
-import type { AuthorReports } from "../../lib/author-build-cache";
-
 import { type AuthorInitialData } from "../../lib/author-page";
 
-interface Props { authorId: number; house: string; initial: AuthorInitialData | null; reports: AuthorReports; }
-const { authorId, house, initial, reports } = Astro.props;
-// The offline OG renderer reads this inert data payload from built pages.
-const ogData = JSON.stringify(initial).replace(/</g, "\\u003c");
+interface Props { authorId: number; house: string; initial: AuthorInitialData | null; }
+const { authorId, house, initial } = Astro.props;
 ---
-<AuthorPage authorId={authorId} house={house} initial={initial} reports={reports} client:load />
-
-<script type="application/json" data-author-initial set:html={ogData} />
+<AuthorPage authorId={authorId} house={house} initial={initial} client:load />

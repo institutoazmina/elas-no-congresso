@@ -1,32 +1,30 @@
 import { useEffect, useState } from "react";
 import { Image, css } from "../shared/react-utils";
 import ReportagemCard from "../shared/ReportagemCard";
-import { WP_REPORTAGENS_ENDPOINT, type WpPost } from "../../lib/wp";
+import { WP_REPORTAGENS_ENDPOINT, fetchNewsPage, type WpPost } from "../../lib/wp";
+import { RECENT_REPORT_COUNT } from "./RecentReports";
 import paginationPrevious from "../../assets/images/reportagens/pagination-previous.svg";
 import paginationNext from "../../assets/images/reportagens/pagination-next.svg";
 import halftoneShadow from "../../assets/images/hero/halftone-shadow.png";
-export default function ReportsList({
-    initialPosts,
-    totalPages,
-}: {
-    initialPosts: WpPost[];
-    totalPages: number;
-}) {
-    const [posts, setPosts] = useState(initialPosts);
-    const [allPostsTotalPages, setTotalPages] = useState(totalPages);
+const POSTS_PER_PAGE = 9;
+
+export default function ReportsList() {
+    const [posts, setPosts] = useState<WpPost[]>([]);
+    // Unknown until the first response arrives.
+    const [allPostsTotalPages, setTotalPages] = useState(0);
     const [page, setPage] = useState(1);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [retry, setRetry] = useState(0);
     useEffect(() => {
         const read = () => {
             const value = Number(new URLSearchParams(location.search).get("pagina"));
-            setPage(Number.isInteger(value) && value > 0 ? Math.min(value, Math.max(1, totalPages)) : 1);
+            setPage(Number.isInteger(value) && value > 0 ? value : 1);
         };
         read();
         window.addEventListener("popstate", read);
         return () => window.removeEventListener("popstate", read);
-    }, [totalPages]);
+    }, []);
     function navigate(next: number) {
         setPage(next);
         const url = new URL(location.href);
@@ -37,37 +35,25 @@ export default function ReportsList({
     useEffect(() => {
         const controller = new AbortController();
         setError(false);
-        if (page === 1) {
-            setPosts(initialPosts);
-            setLoading(false);
-            return () => controller.abort();
-        }
         setLoading(true);
-        const query = new URLSearchParams({
-            _embed: "wp:featuredmedia",
-            per_page: "9",
-            offset: String(3 + (page - 1) * 9),
-            orderby: "date",
-            order: "desc",
+        // The first posts are shown by RecentReports, above this list.
+        fetchNewsPage({
+            perPage: POSTS_PER_PAGE,
+            offset: RECENT_REPORT_COUNT + (page - 1) * POSTS_PER_PAGE,
+            orderByDate: true,
+            signal: controller.signal,
+        }).then((result) => {
+            if (controller.signal.aborted) return;
+            setLoading(false);
+            if (result.unavailable) {
+                setError(true);
+                return;
+            }
+            setPosts(result.posts);
+            setTotalPages(Math.ceil(Math.max(result.total - RECENT_REPORT_COUNT, 0) / POSTS_PER_PAGE));
         });
-        fetch(`${WP_REPORTAGENS_ENDPOINT}?${query}`, { signal: controller.signal })
-            .then(async (response) => {
-                if (!response.ok) throw new Error(String(response.status));
-                const data = (await response.json()) as WpPost[];
-                if (controller.signal.aborted) return;
-                setPosts(data);
-                setTotalPages(
-                    Math.ceil(Math.max(Number(response.headers.get("x-wp-total") ?? 0) - 3, 0) / 9),
-                );
-            })
-            .catch(() => {
-                if (!controller.signal.aborted) setError(true);
-            })
-            .finally(() => {
-                if (!controller.signal.aborted) setLoading(false);
-            });
         return () => controller.abort();
-    }, [page, retry, initialPosts]);
+    }, [page, retry]);
     return (
         <section
             className="reportagens-all tw:[&_h2]:items-start tw:[&_h2]:flex tw:[&_h2]:font-display tw:[&_h2]:text-[32px] tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:leading-[42px] tw:[&_h2]:max-w-full tw:[&_h2]:uppercase tw:[&_h2]:w-205 tw:[&_h2]:mt-0 tw:[&_h2]:mb-12 tw:[&_h2]:mx-0 tw:max-[901px]:[&_h2]:mb-10 tw:[--reportagens-all-inline-padding:48px] tw:p-[72px_var(--reportagens-all-inline-padding)_0] tw:max-[901px]:[--reportagens-all-inline-padding:24px] tw:max-[901px]:p-[64px_var(--reportagens-all-inline-padding)_0] tw:max-[561px]:[--reportagens-all-inline-padding:24px] tw:max-[561px]:pt-18 tw:max-[561px]:pb-[86px] tw:max-[561px]:pr-[24px] tw:max-[561px]:pl-6"
@@ -108,13 +94,18 @@ export default function ReportsList({
                             </div>
                         ))}
                     </div>
+                ) : loading ? (
+                    // Keeps the section height while the first page arrives.
+                    <div className="tw:min-h-96" aria-hidden="true" />
                 ) : (
-                    <p
-                        className="reportagens-feedback reportagens-feedback--light tw:text-base tw:leading-6 tw:relative tw:z-2 tw:text-navy tw:my-12 tw:mx-0"
-                        role="status"
-                    >
-                        N&atilde;o foi poss&iacute;vel carregar as reportagens.
-                    </p>
+                    !error && (
+                        <p
+                            className="reportagens-feedback reportagens-feedback--light tw:text-base tw:leading-6 tw:relative tw:z-2 tw:text-navy tw:my-12 tw:mx-0"
+                            role="status"
+                        >
+                            N&atilde;o foi poss&iacute;vel carregar as reportagens.
+                        </p>
+                    )
                 )}
             </div>
             {allPostsTotalPages > 1 && (

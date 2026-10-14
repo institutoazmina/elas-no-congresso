@@ -4,19 +4,17 @@ import AuthorPage from "../../../components/activity/AuthorPage.astro";
 import { getAuthorPaths, type AuthorPageProps } from "../../../lib/author-paths";
 import { API_BASE_URL } from "astro:env/server";
 import { PUBLIC_API_BASE_URL } from "astro:env/client";
-import { withAuthorReports, type AuthorReports } from "../../../lib/author-build-cache";
-import { fetchReportagensPage } from "../../../lib/wp";
+import { withAuthorCacheKeys } from "../../../lib/author-build-cache";
 
 export async function getStaticPaths() {
-    return withAuthorReports(
+    return withAuthorCacheKeys(
         await getAuthorPaths(API_BASE_URL),
-        (search) => fetchReportagensPage(undefined, 3, 1, true, search),
         JSON.stringify([import.meta.env.OG_IMAGE_BASE_URL || '', PUBLIC_API_BASE_URL]),
     );
 }
 
-type Props = AuthorPageProps & { reports: AuthorReports };
-const { authorId, house, initial, reports } = Astro.props;
+type Props = AuthorPageProps;
+const { authorId, house, initial } = Astro.props;
 const name = initial.person.social_name || initial.person.full_name || initial.activity.author.nome;
 const title = `${name} | Atividade Legislativa | Elas no Congresso`;
 const description = `Acompanhe a atuação de ${name} no Congresso Nacional e consulte suas propostas sobre gênero e direitos das mulheres e pessoas LGBTQIAPN+.`;
@@ -33,5 +31,5 @@ const ogImage = `${Astro.url.pathname.replace(/\/$/, "")}/og.png`;
     <Fragment slot="head">
         <link rel="canonical" href={canonical} />
     </Fragment>
-            <AuthorPage authorId={authorId} house={house} initial={initial} reports={reports} />
+            <AuthorPage authorId={authorId} house={house} initial={initial} />
 </PageLayout>
