@@ -1,6 +1,6 @@
 # Elas no Congresso
 
-Site estático em Astro para acompanhar a atividade legislativa e as pautas de gênero no Congresso Nacional.
+[Site](https://elasnocongresso.com.br) estático em Astro para acompanhar a atividade legislativa e as pautas de gênero no Congresso Nacional.
 
 ## Desenvolvimento
 
