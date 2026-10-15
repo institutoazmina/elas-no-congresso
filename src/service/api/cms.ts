@@ -8,11 +8,12 @@
 import { apiGet } from './client';
 
 type CmsImage = { url: string; width: number; height: number };
-export type AlertsPageContent = { title: string; subtitle: string; heroImage: CmsImage };
+export type PageHeroContent = { title: string; subtitle: string; heroImage: CmsImage };
 
-type AlertsPageResponse = { title: string; subtitle: string; hero_image: CmsImage };
+type HeroResponse = { title: string; subtitle: string; hero_image: CmsImage };
 
-export async function getAlertsPageContent(): Promise<AlertsPageContent> {
-  const page = await apiGet<AlertsPageResponse>('/cms/alerts');
-  return { title: page.title, subtitle: page.subtitle, heroImage: page.hero_image };
+/** Top of `/alertas` (`alerts`) or `/reportagens` (`reports`). */
+export async function getPageHero(page: 'alerts' | 'reports'): Promise<PageHeroContent> {
+  const hero = await apiGet<HeroResponse>(`/cms/${page}`);
+  return { title: hero.title, subtitle: hero.subtitle, heroImage: hero.hero_image };
 }

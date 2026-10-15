@@ -1,14 +1,15 @@
 ---
 import PageLayout from "../layouts/PageLayout.astro";
-import AlertsHero from "../components/alerts/AlertsHero.astro";
+import PageHero from "../components/shared/PageHero.astro";
+import AlertsSignup from "../components/alerts/AlertsSignup";
 import AlertsList from "../components/alerts/AlertsList.astro";
 import { getCategoryOptions, getAlertPropositions } from "../service/api/alerts";
-import { getAlertsPageContent } from "../service/api/cms";
+import { getPageHero } from "../service/api/cms";
 
-const [propositionPage, categories, content] = await Promise.all([
+const [propositionPage, categories, hero] = await Promise.all([
     getAlertPropositions(),
     getCategoryOptions(),
-    getAlertsPageContent(),
+    getPageHero("alerts"),
 ]);
 ---
 
@@ -18,7 +19,9 @@ const [propositionPage, categories, content] = await Promise.all([
     canonical="https://www.elasnocongresso.com.br/alertas"
 >
     <main class="tw:bg-white">
-        <AlertsHero content={content} categories={categories} />
+        <PageHero content={hero}>
+            <AlertsSignup categories={categories} client:load />
+        </PageHero>
         <section
             class="tw:mx-auto tw:flex tw:w-full tw:max-w-224 tw:flex-col tw:gap-8 tw:px-6 tw:py-12 tw:md:px-8 tw:md:py-16 tw:lg:px-10 tw:lg:pt-25 tw:lg:pb-14"
             aria-label="Alertas recentes"
