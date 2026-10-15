@@ -1,20 +1,20 @@
 ---
 import { Image } from "astro:assets";
-import pattern from "../../assets/images/explore/bg-pattern-cutting-mat.svg";
+import CuttingMat from "../shared/CuttingMat.astro";
 import chevron from "../../assets/images/home-news/chevron-right.svg";
 import screenTool from "../../assets/images/explore/screen-tool-@3x.png";
 ---
 
-<section class="
+<CuttingMat class="
     explore-congress tw:flex tw:w-full tw:min-h-0 tw:h-auto tw:mt-12 tw:items-center tw:justify-center
-    tw:overflow-clip tw:shadow-[0_-48px_0_#fff] tw:bg-[image:var(--explore-pattern)] tw:bg-repeat tw:bg-top
-    tw:bg-size-[200px_200px] tw:py-16 tw:px-6 tw:[&_h2]:w-auto tw:[&_h2]:h-auto tw:[&_h2]:text-white
+    tw:overflow-clip tw:shadow-[0_-48px_0_#fff]
+    tw:py-16 tw:px-6 tw:[&_h2]:w-auto tw:[&_h2]:h-auto tw:[&_h2]:text-white
     tw:[&_h2]:font-display tw:[&_h2]:text-[32px] tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75]
     tw:[&_h2]:leading-8 tw:[&_h2]:text-center tw:[&_h2]:uppercase tw:[&_h2]:mt-0 tw:[&_h2]:mb-3 tw:[&_h2]:mx-0
     tw:max-md:w-full tw:max-md:min-h-0 tw:max-md:items-start tw:max-md:justify-start tw:max-md:py-13
     tw:max-md:px-6 tw:max-md:[&_h2]:w-auto tw:max-md:[&_h2]:h-auto tw:max-md:[&_h2]:text-[28px]
     tw:max-md:[&_h2]:leading-8 tw:max-md:[&_h2]:text-left tw:md:p-[64px_max(24px,_calc((100vw_-_660px)_/_2))]
-" aria-labelledby="explore-congress-title" style={`--explore-pattern: url(${pattern.src})`}>
+" aria-labelledby="explore-congress-title">
     <a href="/atividade-legislativa" aria-labelledby="explore-congress-title explore-congress-cta" class="explore-congress__content tw:group tw:no-underline tw:cursor-pointer tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-4 tw:flex tw:w-full tw:h-auto tw:min-w-0 tw:flex-col tw:items-center tw:gap-0 tw:max-md:items-start tw:md:w-165 tw:md:min-w-0 ">
         <h2 class="" id="explore-congress-title">Explore</h2>
         <p class="
@@ -39,4 +39,4 @@ import screenTool from "../../assets/images/explore/screen-tool-@3x.png";
             tw:md:w-85 tw:md:max-w-none
         ">Explore a produção do Congresso <Image class="" src={chevron} alt="" /></span>
     </a>
-</section>
+</CuttingMat>

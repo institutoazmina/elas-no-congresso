@@ -69,6 +69,14 @@ const localPreviewData = (path: string, params: Record<string, string | number |
     };
   }
 
+  if (path === '/cms/reports') {
+    return {
+      title: 'Reportagens',
+      subtitle: 'Veja as histórias que os dados do Congresso nos contam.',
+      hero_image: { url: 'https://www.elasnocongresso.com.br/cms/reportagens/hero.webp', width: 1080, height: 1350 },
+    };
+  }
+
   if (path === '/cms/alerts') {
     return {
       title: 'Alertas',

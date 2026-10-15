@@ -24,7 +24,7 @@ export type WpPostsPage = {
   unavailable?: true;
 };
 
-export const WP_NEWS_ENDPOINT = "https://azmina.com.br/wp-json/wp/v2/az_reportagem";
+const WP_NEWS_ENDPOINT = "https://azmina.com.br/wp-json/wp/v2/az_reportagem";
 
 export function resolveNewsImage(media: WpFeaturedMedia | undefined, baseUrl = "https://azmina.com.br"): string | undefined {
   const imagePath = media?.media_details?.sizes?.["az-article-thumbnail-large"]?.source_url ?? media?.source_url ?? media?.link;

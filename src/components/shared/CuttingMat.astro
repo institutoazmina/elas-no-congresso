@@ -1,0 +1,18 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"section"> & { as?: "section" | "footer" | "div" };
+
+// The site's blue cutting-mat background, with white text on top.
+const { as: Tag = "section", class: className, ...attrs } = Astro.props;
+---
+
+<Tag
+    class:list={[
+        "tw:bg-ink tw:bg-[url('/src/assets/images/background/bg-pattern-cutting-mat.svg')] tw:bg-size-[200px] tw:bg-top tw:text-white",
+        className,
+    ]}
+    {...attrs}
+>
+    <slot />
+</Tag>
