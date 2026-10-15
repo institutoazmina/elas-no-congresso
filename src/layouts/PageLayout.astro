@@ -17,7 +17,6 @@ interface Props {
     bodyClass?: string;
     pageClass?: string;
     pageStyle?: string;
-    headerClass?: string;
     fontVariant?: "default" | "medium" | "editorial" | "italic";
 }
 
@@ -32,7 +31,6 @@ const {
     bodyClass,
     pageClass,
     pageStyle,
-    headerClass,
     fontVariant = "default",
 } = Astro.props;
 
@@ -92,7 +90,7 @@ const fontUrl = `https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:${fo
     </head>
     <body class:list={["tw:m-0! tw:pt-0! tw:bg-white!", bodyClass]}>
         <div class={pageClass} style={pageStyle}>
-            {headerClass ? <div class={headerClass}><Header /></div> : <Header />}
+            <Header />
             <slot />
             <Footer />
         </div>

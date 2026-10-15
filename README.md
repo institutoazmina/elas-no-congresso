@@ -44,11 +44,13 @@ O deploy configura cache de uma hora com revalidação para `/assets/`, e um ano
 
 `https://api.elasnocongresso.com.br/api/v1` fornece os dados legislativos para o build e as interações no navegador. Veja [a documentação dos filtros](docs/activity-explorer-api.md).
 
+Textos e imagens editáveis vêm do CMS no admin da API (`GET /cms/<página>`, em `src/service/api/cms.ts`); hoje, título, subtítulo e ilustração do topo de `/alertas`. Cada salvamento no admin dispara este workflow via `repository_dispatch`; os deploys rodam um por vez. As imagens do CMS ficam no bucket em `cms/`, um arquivo por campo (a API publica os originais e o admin só os substitui); o deploy nunca as apaga.
+
 ## Interatividade
 
 A interface interativa usa ilhas React em arquivos `.tsx`. Astro continua responsável pelas rotas, pelo layout, pelo conteúdo estático e pelas consultas de build. Cada área interativa tem um único proprietário de estado; controles filhos recebem valores e callbacks. Evite scripts de página, eventos globais para sincronizar componentes e reconstrução de HTML por seletores.
 
-Use `client:load` para filtros, navegação e formulários; `client:visible` para carrosséis e gráficos abaixo da primeira dobra. Componentes dentro de uma ilha React não recebem outra diretiva `client:`. O slot de conteúdo da página de alertas permanece Astro e hospeda a ilha independente da lista.
+Use `client:load` para filtros, navegação e formulários; `client:visible` para carrosséis e gráficos abaixo da primeira dobra. Componentes dentro de uma ilha React não recebem outra diretiva `client:`. Na página de alertas, o topo e a lista são Astro; a ilha `AlertsSignup` é o botão do topo e o diálogo de inscrição, renderizado no `<body>`.
 
 Efeitos devem cancelar requisições, observadores, timers e listeners ao desmontar. Leituras de layout e desenho em canvas podem usar refs e APIs do navegador dentro de efeitos. O bootstrap do Google Analytics é a única exceção de script inline de fornecedor.
 

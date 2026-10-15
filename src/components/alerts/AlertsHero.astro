@@ -1,0 +1,56 @@
+---
+import { Image } from "astro:assets";
+import attention from "../../assets/images/activity/attention.svg";
+import type { CategoryOption } from "../../service/api/alerts";
+import type { AlertsPageContent } from "../../service/api/cms";
+import AlertsSignup from "./AlertsSignup";
+
+interface Props {
+    content: AlertsPageContent;
+    categories: CategoryOption[];
+}
+
+// Title, subtitle and illustration come from the CMS.
+const { content, categories } = Astro.props;
+const { heroImage } = content;
+---
+
+<section
+    class="tw:relative tw:overflow-hidden tw:pb-6 tw:text-ink tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-size-[400px] tw:bg-top tw:md:h-125 tw:md:pb-0"
+    data-page-hero
+    aria-labelledby="alerts-hero-title"
+>
+    <div class="tw:relative tw:z-2 tw:flex tw:items-start tw:justify-between tw:px-4 tw:py-12 tw:md:h-119 tw:md:items-center tw:md:p-12">
+        <div class="tw:flex tw:min-w-0 tw:max-w-86.5 tw:flex-1 tw:flex-col tw:items-start tw:gap-4 tw:md:max-w-240 tw:md:gap-6">
+            <Image class="tw:h-1 tw:w-24 tw:md:h-2" src={attention} loading="eager" alt="" />
+            <h1
+                id="alerts-hero-title"
+                class="tw:m-0 tw:w-max tw:font-display tw:text-[clamp(42px,11vw,58px)] tw:leading-[0.98] tw:font-bold tw:uppercase tw:[font-variation-settings:'wdth'_75] tw:mix-blend-multiply tw:md:w-auto tw:md:text-[58px] tw:md:leading-15 tw:lg:text-7xl tw:lg:leading-18"
+            >
+                {content.title}
+            </h1>
+            <p class="tw:m-0 tw:w-full tw:font-sans tw:text-lg tw:leading-6 tw:font-bold tw:mix-blend-multiply tw:md:w-160">
+                {content.subtitle}
+            </p>
+            <AlertsSignup categories={categories} client:load />
+        </div>
+
+        <div class="tw:relative tw:top-5 tw:mx-9.5 tw:hidden tw:h-122 tw:w-126.5 tw:flex-none tw:origin-right tw:scale-86 tw:overflow-hidden tw:md:block tw:lg:scale-100" aria-hidden="true">
+            <span class="tw:absolute tw:top-[calc(50%-40px)] tw:left-[calc(50%-16px)] tw:h-144.5 tw:w-88 tw:-translate-1/2">
+                <img
+                    class="tw:absolute tw:top-[-1.63%] tw:left-[-16.01%] tw:h-[104.39%] tw:w-[136.91%] tw:max-w-none"
+                    src={heroImage.url}
+                    width={heroImage.width}
+                    height={heroImage.height}
+                    loading="eager"
+                    alt=""
+                />
+            </span>
+        </div>
+    </div>
+    <div
+        class="tw:pointer-events-none tw:absolute tw:bottom-0 tw:left-0 tw:z-3 tw:h-6 tw:w-full tw:bg-[url('/src/assets/images/hero/halftone-shadow.png')] tw:bg-size-[1440px_24px] tw:bg-bottom-left tw:bg-repeat-x tw:mix-blend-multiply"
+        aria-hidden="true"
+    >
+    </div>
+</section>
