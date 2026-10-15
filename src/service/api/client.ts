@@ -69,6 +69,14 @@ const localPreviewData = (path: string, params: Record<string, string | number |
     };
   }
 
+  if (path === '/cms/alerts') {
+    return {
+      title: 'Alertas',
+      subtitle: 'Acompanhe as movimentações do Legislativo no Radar do Congresso',
+      hero_image: { url: 'https://www.elasnocongresso.com.br/cms/alertas/hero.webp', width: 1080, height: 1350 },
+    };
+  }
+
   if (path === '/legislatures/parties') {
     return { count: 1, items: [{ id: 1, acronym: 'PSOL', name: 'Partido Socialismo e Liberdade' }] };
   }

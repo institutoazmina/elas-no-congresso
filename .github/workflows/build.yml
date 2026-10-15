@@ -3,14 +3,20 @@ name: Build & Deploy
 on:
   push:
     branches: [main]
+  # The API admin dispatches this on every CMS save.
+  repository_dispatch:
+    types: [cms-content-updated]
 
 permissions:
   id-token: write # OIDC
   contents: read
 
+# One deploy at a time: a running deploy is never cancelled. GitHub keeps a
+# single pending run per group, so a burst of saves collapses into one queued
+# build, which reads the latest content when it starts.
 concurrency:
   group: deploy-site
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
@@ -57,12 +63,14 @@ jobs:
 
       # Hashed build files → cache 1 year. Public assets have stable URLs.
       # Exclude HTML, JSON and the sitemap/robots, which are not fingerprinted
-      # and must be revalidated when content changes. Author og.png images are
-      # published by the API straight to the bucket: never delete them here.
+      # and must be revalidated when content changes. Author og.png images and
+      # CMS images (cms/) are published by the API straight to the bucket:
+      # never delete them here.
       - name: Sync immutable assets
         run: |
           aws s3 sync dist/ s3://$BUCKET/ --delete \
             --exclude "assets/*" \
+            --exclude "cms/*" \
             --exclude "*.html" \
             --exclude "*.json" \
             --exclude "*/og.png" \

@@ -17,7 +17,7 @@ const components = [
     "activity/AuthorPage",
     "activity/PropositionProgress",
     "alerts/AlertsList",
-    "alerts/AlertsExperience",
+    "alerts/AlertsSignup",
     "charts/PartyRightsChart",
     "charts/UfProjectsChart",
     "home/ProposalCarousel",
@@ -194,6 +194,12 @@ test("interactive islands render without browser globals or hydration-only data"
         [11, { currentPath: "/alertas" }],
     ];
     for (const [index, props] of fixtures) assert.ok(render(index, props).length > 0, components[index]);
+});
+
+test("alerts signup renders its trigger without the dialog open", () => {
+    const html = render(5, { categories: [{ value: "saude", label: "Saúde" }] });
+    assert.match(html, /<button[^>]*>Receber alertas por e-mail/);
+    assert.doesNotMatch(html, /alerts-email-modal-title/);
 });
 
 test("paper canvases keep a CSS aspect ratio independent of their pixel buffer", () => {

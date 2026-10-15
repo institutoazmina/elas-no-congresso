@@ -17,8 +17,6 @@ interface Props {
 const { title, ok, invalido } = Astro.props;
 ---
 
-<PageLayout title={`${title} | Elas no Congresso`} noindex
-    headerClass="site-alerts-header-background site-shared-background tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
->
+<PageLayout title={`${title} | Elas no Congresso`} noindex>
         <AlertsResult ok={ok} invalido={invalido} client:load />
 </PageLayout>

@@ -127,8 +127,6 @@ export default function Header({ currentPath }: { currentPath: string }) {
     tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-repeat
     tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:bg-size-[400px_400px]
     tw:md:[.site-header&.site-header--desktop-scrolled.site-header--over-hero]:[background-blend-mode:multiply]
-    tw:md:[.site-alerts-header-background_>_.site-header&.site-header--desktop-scrolled]:fixed
-    tw:md:[.site-alerts-header-background_>_.site-header&.site-header--desktop-scrolled]:inset-[0_0_auto]
     tw:[body:has(&)]:m-0 tw:[.author-route-page_&]:box-border
  tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]`}
         >
@@ -228,14 +226,6 @@ export default function Header({ currentPath }: { currentPath: string }) {
             tw:max-md:[&[open]_summary_span:nth-child(1)]:[transform:rotate(45deg)]
             tw:max-md:[&[open]_summary_span:nth-child(2)]:opacity-0 tw:max-md:[&[open]_summary_span:nth-child(3)]:top-[14px]
             tw:max-md:[&[open]_summary_span:nth-child(3)]:[transform:rotate(-45deg)]
-            tw:max-md:[body.alerts-email-modal-open_&_summary]:w-7 tw:max-md:[body.alerts-email-modal-open_&_summary]:h-5.5
-            tw:max-md:[body.alerts-email-modal-open_&_summary_span]:left-1
-            tw:max-md:[body.alerts-email-modal-open_&_summary_span]:w-5
-            tw:max-md:[body.alerts-email-modal-open_&_summary_span:nth-child(1)]:top-1
-            tw:max-md:[body.alerts-email-modal-open_&_summary_span:nth-child(2)]:top-2.5
-            tw:max-md:[body.alerts-email-modal-open_&_summary_span:nth-child(3)]:top-4
-            tw:max-md:[body.alerts-email-modal-open_&[open]_summary_span:nth-child(1)]:top-2.5
-            tw:max-md:[body.alerts-email-modal-open_&[open]_summary_span:nth-child(3)]:top-2.5
         "
                 >
                     <summary
