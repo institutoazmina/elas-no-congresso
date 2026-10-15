@@ -12,8 +12,8 @@ export type PageHeroContent = { title: string; subtitle: string; heroImage: CmsI
 
 type HeroResponse = { title: string; subtitle: string; hero_image: CmsImage };
 
-/** Top of `/alertas` (`alerts`) or `/reportagens` (`reports`). */
-export async function getPageHero(page: 'alerts' | 'reports'): Promise<PageHeroContent> {
+/** Top of `/alertas` (`alerts`), `/reportagens` (`reports`) or `/atividade-legislativa` (`activity`). */
+export async function getPageHero(page: 'alerts' | 'reports' | 'activity'): Promise<PageHeroContent> {
   const hero = await apiGet<HeroResponse>(`/cms/${page}`);
   return { title: hero.title, subtitle: hero.subtitle, heroImage: hero.hero_image };
 }
