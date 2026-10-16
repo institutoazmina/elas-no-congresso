@@ -11,6 +11,8 @@ npm run dev
 
 No servidor local, GETs públicos bem-sucedidos são reutilizados por até 60 segundos, incluindo requisições simultâneas. Reinicie o servidor para limpar o cache imediatamente. O cache não se aplica ao browser nem ao build de produção; as requisições têm limite de 15 segundos.
 
+No build, GETs públicos sem sinal de cancelamento têm até três tentativas em caso de falha de rede, timeout ou HTTP 502/503/504, com pausas de 500 ms e 1 segundo. Cada tentativa mantém o limite de 15 segundos; os logs identificam a URL. Falhas persistentes continuam interrompendo o build. Requisições no browser ou com cancelamento explícito não são repetidas automaticamente.
+
 ## Verificação e build
 
 ```sh
