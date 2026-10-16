@@ -43,6 +43,14 @@ Os workflows do GitHub Actions são:
 
 Os workflows de testes e avaliação guardam logs e cobertura (quando aplicável) como artifacts por 14 dias, inclusive em falhas. Para exigir esses checks antes do merge, configure as regras de proteção da branch no GitHub depois da primeira execução.
 
+### Segurança
+
+O workflow **Security** (`.github/workflows/security.yml`) roda em pull requests, pushes em `main`, semanalmente e por execução manual. `npm audit --audit-level=high` verifica todo o lockfile, incluindo dependências de desenvolvimento, e falha para vulnerabilidades conhecidas de severidade alta ou crítica. O relatório fica disponível como artifact por 14 dias. Em pull requests, Dependency Review também verifica as mudanças de dependências com o mesmo limite de severidade. CodeQL analisa JavaScript/TypeScript e os workflows do GitHub Actions; os resultados ficam na aba **Security → Code scanning**.
+
+Para repetir a auditoria localmente, use `npm audit --audit-level=high`; ela requer acesso ao registro npm. Uma auditoria sem alertas não substitui revisão de código nem garante ausência de vulnerabilidades.
+
+Secret scanning e push protection são configurações do repositório no GitHub, fora dos arquivos de workflow. O primeiro detecta credenciais reconhecidas no histórico; o segundo bloqueia o envio de segredos suportados antes de entrarem no repositório. Alertas de dependências permanecem ativos, sem criação automática de PRs de atualização. Essas configurações podem ser conferidas em **Settings → Security**.
+
 ## Organização
 
 - `src/pages/`: rotas públicas.
