@@ -4,6 +4,10 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
 
+// Rotas que só redirecionam (Astro.redirect vira página com noindex no build
+// estático) ou que levam noindex: fora do sitemap, que deve listar só URLs canônicas.
+const NOT_INDEXABLE = /^\/(?:acompanhe|apoiadores|metodologia|newsletter|quiteria|ranking|propostas-e-votacoes|alertas\/(?:confirmado|cancelado))\/$|^\/(?:perfil|proposta|propostas-e-votacoes)\//;
+
 export default defineConfig({
   output: 'static',
   cacheDir: process.env.ASTRO_CACHE_DIR || 'node_modules/.astro',
@@ -12,7 +16,7 @@ export default defineConfig({
   },
   site: 'https://www.elasnocongresso.com.br',
   trailingSlash: 'ignore',
-  integrations: [sitemap(), react()],
+  integrations: [sitemap({ filter: (page) => !NOT_INDEXABLE.test(new URL(page).pathname) }), react()],
   image: {
     // Parliamentary photo URLs may redirect; keep their browser-side fallback.
     domains: ['azmina.com.br'],
