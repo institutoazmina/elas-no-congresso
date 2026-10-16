@@ -20,6 +20,29 @@ npm run build
 
 `check` executa a verificação de tipos do Astro/React, Knip, verifica referências e arquivos não utilizados em `public/assets`, e roda os testes com o Node. O build gera `dist/` e precisa acessar a fonte pública de dados.
 
+### Testes e avaliação contínua
+
+Use uma distribuição do Node com suporte a TypeScript (Node 22.12+; o CI testa as versões 22 e 24).
+
+```sh
+npm test
+npm run test:coverage
+npm run build
+npm run test:build
+```
+
+Os testes unitários e de renderização não precisam de rede, `.env` ou credenciais. Cobrem regras de domínio, filtros, alertas, renderização React, paginação, erros e cancelamento de requisições, notícias e cache. As requisições dos novos testes são simuladas com `node:test`. `test:coverage` mostra a cobertura dos módulos TypeScript carregados pelos testes e salva `reports/coverage.lcov`; os bundles React criados em memória não entram nessa medição. A cobertura serve para identificar lacunas, sem um percentual mínimo arbitrário.
+
+`test:build` exige um `dist/` recém-gerado. Verifica conteúdo e metadados das páginas principais, uma página de autoria e uma de proposição, os assets gerados referenciados nesses HTMLs, o sitemap canônico, `robots.txt` e a página 404. O build usa a API pública real: indisponibilidade ou mudanças nesses dados podem quebrar essa avaliação mesmo quando os testes unitários passam. Essas verificações não substituem a [revisão visual e de interações](docs/visual-regression.md).
+
+Os workflows do GitHub Actions são:
+
+- **Tests** (`.github/workflows/test.yml`): em pull requests, pushes em `main` e execução manual; verifica tipos, código/assets sem uso e testes com cobertura no Node 22 e 24.
+- **Production build evaluation** (`.github/workflows/evaluate.yml`): em pull requests, toda segunda-feira às 9h de Brasília e execução manual; faz um build limpo com a API pública e roda `test:build`, sem publicar o site.
+- **Build & Deploy** (`.github/workflows/build.yml`): mantém as verificações existentes e executa `test:build` antes de configurar credenciais e publicar.
+
+Os workflows de testes e avaliação guardam logs e cobertura (quando aplicável) como artifacts por 14 dias, inclusive em falhas. Para exigir esses checks antes do merge, configure as regras de proteção da branch no GitHub depois da primeira execução.
+
 ## Organização
 
 - `src/pages/`: rotas públicas.
