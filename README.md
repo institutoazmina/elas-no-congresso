@@ -49,7 +49,15 @@ O workflow **Security** (`.github/workflows/security.yml`) roda em pull requests
 
 Para repetir a auditoria localmente, use `npm audit --audit-level=high`; ela requer acesso ao registro npm. Uma auditoria sem alertas não substitui revisão de código nem garante ausência de vulnerabilidades.
 
-Secret scanning e push protection são configurações do repositório no GitHub, fora dos arquivos de workflow. O primeiro detecta credenciais reconhecidas no histórico; o segundo bloqueia o envio de segredos suportados antes de entrarem no repositório. Alertas de dependências permanecem ativos, sem criação automática de PRs de atualização. Essas configurações podem ser conferidas em **Settings → Security**.
+Secret scanning e push protection são configurações do repositório no GitHub, fora dos arquivos de workflow. O primeiro detecta credenciais reconhecidas no histórico; o segundo bloqueia o envio de segredos suportados antes de entrarem no repositório. Alertas do Dependabot permanecem ativos; os PRs automáticos de correção do Dependabot ficam desativados para evitar duplicação com o Renovate. Essas configurações podem ser conferidas em **Settings → Security**.
+
+### Atualizações de dependências
+
+O Renovate é o único responsável por propor atualizações de npm e GitHub Actions. `renovate.json` reaproveita o onboarding do [PR #4](https://github.com/institutoazmina/elas-no-congresso/pull/4), com o preset `config:recommended`. A configuração entra em vigor quando chegar a `main`; mantenha o PR de onboarding aberto até lá para não desativar o bot antes da incorporação.
+
+Atualizações regulares podem ser propostas às segundas-feiras entre 0h e 9h, no fuso `America/Sao_Paulo`, com limite de três PRs abertos e dois novos PRs por hora. Atualizações menores e patches são agrupados separadamente para npm e Actions; versões major ficam em PRs próprios. O Dependency Dashboard reúne as atualizações, e nenhum PR é mesclado automaticamente.
+
+Correções de vulnerabilidades detectadas pelos alertas do GitHub podem ser propostas fora da janela e dos limites regulares, desde que o aplicativo Renovate tenha acesso de leitura aos alertas do Dependabot. A configuração não adiciona outro workflow nem exige um token no repositório: usa o aplicativo Renovate já responsável pelo onboarding.
 
 ## Organização
 
