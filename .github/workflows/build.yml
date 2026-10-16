@@ -3,6 +3,8 @@ name: Build & Deploy
 on:
   push:
     branches: [main]
+  # Manual run, e.g. to take down pages right after unapproving propositions.
+  workflow_dispatch:
 
 permissions:
   id-token: write # OIDC
@@ -80,10 +82,12 @@ jobs:
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
 
-      # HTML → always revalidate
+      # HTML → always revalidate. --delete removes pages the build no longer
+      # generates (e.g. propositions unapproved in the admin); only HTML is
+      # touched, so og.png and other files published by the API stay.
       - name: Sync HTML
         run: |
-          aws s3 sync dist/ s3://$BUCKET/ \
+          aws s3 sync dist/ s3://$BUCKET/ --delete \
             --exclude "*" --include "*.html" \
             --cache-control "public,max-age=0,must-revalidate"
         env:
