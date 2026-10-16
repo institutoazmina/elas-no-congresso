@@ -11,6 +11,8 @@ npm run dev
 
 No servidor local, GETs públicos bem-sucedidos são reutilizados por até 60 segundos, incluindo requisições simultâneas. Reinicie o servidor para limpar o cache imediatamente. O cache não se aplica ao browser nem ao build de produção; as requisições têm limite de 15 segundos.
 
+No build, GETs públicos sem sinal de cancelamento têm até três tentativas em caso de falha de rede, timeout ou HTTP 502/503/504, com pausas de 500 ms e 1 segundo. Cada tentativa mantém o limite de 15 segundos; os logs identificam a URL. Falhas persistentes continuam interrompendo o build. Requisições no browser ou com cancelamento explícito não são repetidas automaticamente.
+
 ## Verificação e build
 
 ```sh
@@ -19,6 +21,45 @@ npm run build
 ```
 
 `check` executa a verificação de tipos do Astro/React, Knip, verifica referências e arquivos não utilizados em `public/assets`, e roda os testes com o Node. O build gera `dist/` e precisa acessar a fonte pública de dados.
+
+### Testes e avaliação contínua
+
+Use uma distribuição do Node com suporte a TypeScript (Node 22.12+; o CI testa as versões 22 e 24).
+
+```sh
+npm test
+npm run test:coverage
+npm run build
+npm run test:build
+```
+
+Os testes unitários e de renderização não precisam de rede, `.env` ou credenciais. Cobrem regras de domínio, filtros, alertas, renderização React, paginação, erros e cancelamento de requisições, notícias e cache. As requisições dos novos testes são simuladas com `node:test`. `test:coverage` mostra a cobertura dos módulos TypeScript carregados pelos testes e salva `reports/coverage.lcov`; os bundles React criados em memória não entram nessa medição. A cobertura serve para identificar lacunas, sem um percentual mínimo arbitrário.
+
+`test:build` exige um `dist/` recém-gerado. Verifica conteúdo e metadados das páginas principais, uma página de autoria e uma de proposição, os assets gerados referenciados nesses HTMLs, o sitemap canônico, `robots.txt` e a página 404. O build usa a API pública real: indisponibilidade ou mudanças nesses dados podem quebrar essa avaliação mesmo quando os testes unitários passam. Essas verificações não substituem a [revisão visual e de interações](docs/visual-regression.md).
+
+Os workflows do GitHub Actions são:
+
+- **Tests** (`.github/workflows/test.yml`): em pull requests, pushes em `main` e execução manual; verifica tipos, código/assets sem uso e testes com cobertura no Node 22 e 24.
+- **Production build evaluation** (`.github/workflows/evaluate.yml`): em pull requests, toda segunda-feira às 9h de Brasília e execução manual; faz um build limpo com a API pública e roda `test:build`, sem publicar o site.
+- **Build & Deploy** (`.github/workflows/build.yml`): mantém as verificações existentes e executa `test:build` antes de configurar credenciais e publicar.
+
+Os workflows de testes e avaliação guardam logs e cobertura (quando aplicável) como artifacts por 14 dias, inclusive em falhas. Para exigir esses checks antes do merge, configure as regras de proteção da branch no GitHub depois da primeira execução.
+
+### Segurança
+
+O workflow **Security** (`.github/workflows/security.yml`) roda em pull requests, pushes em `main`, semanalmente e por execução manual. `npm audit --audit-level=high` verifica todo o lockfile, incluindo dependências de desenvolvimento, e falha para vulnerabilidades conhecidas de severidade alta ou crítica. O relatório fica disponível como artifact por 14 dias. Em pull requests, Dependency Review também verifica as mudanças de dependências com o mesmo limite de severidade. CodeQL analisa JavaScript/TypeScript e os workflows do GitHub Actions; os resultados ficam na aba **Security → Code scanning**.
+
+Para repetir a auditoria localmente, use `npm audit --audit-level=high`; ela requer acesso ao registro npm. Uma auditoria sem alertas não substitui revisão de código nem garante ausência de vulnerabilidades.
+
+Secret scanning e push protection são configurações do repositório no GitHub, fora dos arquivos de workflow. O primeiro detecta credenciais reconhecidas no histórico; o segundo bloqueia o envio de segredos suportados antes de entrarem no repositório. Alertas do Dependabot permanecem ativos; os PRs automáticos de correção do Dependabot ficam desativados para evitar duplicação com o Renovate. Essas configurações podem ser conferidas em **Settings → Security**.
+
+### Atualizações de dependências
+
+O Renovate é o único responsável por propor atualizações de npm e GitHub Actions. `renovate.json` reaproveita o onboarding do [PR #4](https://github.com/institutoazmina/elas-no-congresso/pull/4), com o preset `config:recommended`. A configuração entra em vigor quando chegar a `main`; mantenha o PR de onboarding aberto até lá para não desativar o bot antes da incorporação.
+
+Atualizações regulares podem ser propostas às segundas-feiras entre 0h e 9h, no fuso `America/Sao_Paulo`, com limite de três PRs abertos e dois novos PRs por hora. Atualizações menores e patches são agrupados separadamente para npm e Actions; versões major ficam em PRs próprios. O Dependency Dashboard reúne as atualizações, e nenhum PR é mesclado automaticamente.
+
+Correções de vulnerabilidades detectadas pelos alertas do GitHub podem ser propostas fora da janela e dos limites regulares, desde que o aplicativo Renovate tenha acesso de leitura aos alertas do Dependabot. A configuração não adiciona outro workflow nem exige um token no repositório: usa o aplicativo Renovate já responsável pelo onboarding.
 
 ## Organização
 
