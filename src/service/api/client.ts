@@ -1,7 +1,9 @@
 import { API_BASE_URL } from 'astro:env/server';
 import { fetchPublicData } from '../../lib/public-data-fetch';
 import feministAIPreview from './feminist-ai-preview.json';
+import aboutPreview from './about-preview.json';
 import feministAIHero from '../../assets/images/quiteria.png';
+import aboutHero from '../../assets/images/birds.png';
 import feministAIFlowDesktop from '../../assets/images/ia-feminista/processing-flow.svg';
 import feministAIFlowMobile from '../../assets/images/ia-feminista/processing-flow-mobile.png';
 
@@ -17,6 +19,23 @@ const localPreviewData = (path: string, params: Record<string, string | number |
         flow_mobile: { url: feministAIFlowMobile.src, width: feministAIFlowMobile.width, height: feministAIFlowMobile.height },
       },
       ...feministAIPreview.items,
+    };
+  }
+
+  if (path === '/cms/about') {
+    return {
+      content: {
+        seo_title: aboutPreview.seo_title,
+        seo_description: aboutPreview.seo_description,
+        timeline_note_link_text: aboutPreview.timeline_note_link_text,
+        timeline_note_link_url: aboutPreview.timeline_note_link_url,
+        timeline_note_after_link: aboutPreview.timeline_note_after_link,
+        ...Object.fromEntries(aboutPreview.copy.map(({ key, value }) => [key, value])),
+      },
+      hero_image: { url: aboutHero.src, width: aboutHero.width, height: aboutHero.height },
+      timeline: aboutPreview.timeline,
+      challenges: aboutPreview.challenges,
+      partners: aboutPreview.partners.map(({ name, asset_key }) => ({ name, asset_key, logo_url: '' })),
     };
   }
 

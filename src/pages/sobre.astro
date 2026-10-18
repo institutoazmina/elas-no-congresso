@@ -3,39 +3,21 @@ import { Image } from "astro:assets";
 import PageLayout from "../layouts/PageLayout.astro";
 
 import HistoryTimeline from "../components/about/HistoryTimeline.astro";
-import heroIllustration from "../assets/images/birds.png";
+import { getAboutPage } from "../service/api/cms";
 import attention from "../assets/images/activity/attention.svg";
 import halftoneShadow from "../assets/images/hero/halftone-shadow.png";
 import PartnerLogos from "../components/about/PartnerLogos.astro";
 import CuttingMat from "../components/shared/CuttingMat.astro";
 
-const challenges = [
-    [
-        "Volume e complexidade",
-        "a produção parlamentar é altíssima, o que nos obriga a filtrar matérias por palavras-chave, um processo que pode deixar passar projetos com linguagem indireta, técnica ou incomum. Traduzir o “legislativês” também exige trabalho editorial constante.",
-    ],
-    [
-        "Dependência de fontes externas",
-        "a coleta depende das APIs oficiais da Câmara e do Senado, sujeitas a instabilidades que afetam o ritmo de atualização da base. Além disso, emendas e substitutivos alteram os textos originais ao longo da tramitação, exigindo reavaliação permanente.",
-    ],
-    [
-        "Subjetividade da análise",
-        "classificar pautas de gênero com consistência envolve gerenciar a subjetividade inerente à análise política e jurídica. Para isso, criamos critérios analíticos rigorosos aplicados pela rede colaborativa e duas instâncias de supervisão, o Comitê de Governança e o Comitê de Validação, além de enfrentar a resistência e a desconfiança legítimas sobre o uso de IA em direitos humanos. Erros, vieses e ambiguidades do modelo são mitigados por governança compartilhada e supervisão humana permanente.",
-    ],
-    [
-        "Dados e infraestrutura",
-        "treinar um modelo de linguagem exige volume robusto de dados anotados. Podemos construir modelos cada vez mais acurados conforme avaliamos novos projetos ao longo do tempo, o que, por outro lado, demanda investimento em infraestrutura de hardware para comportar modelos maiores.",
-    ],
-    [
-        "Contexto político e sustentabilidade",
-        "a iniciativa opera em um ambiente de forte disputa e de ataques diretos às pautas de gênero e aos direitos reprodutivos, somado ao desafio constante de captar financiamento para garantir a sustentabilidade, a escalabilidade e a autonomia da plataforma.",
-    ],
-];
+const cms = await getAboutPage();
+const c = cms.content;
+const timeline = cms.timeline;
+const challenges = cms.challenges.map(({ title, text }) => [title, text] as const);
 
 ---
 
-<PageLayout title="Sobre o Elas no Congresso | AzMina"
-    description="Conheça o Elas no Congresso, projeto do Instituto AzMina que usa jornalismo, dados e inteligência artificial feminista para monitorar pautas de gênero."
+<PageLayout title={c.seo_title}
+    description={c.seo_description}
     canonical="https://elasnocongresso.com.br/sobre" htmlClass="tw:max-[701px]:max-w-full tw:max-[701px]:overflow-x-clip" bodyClass="tw:max-[701px]:max-w-full tw:max-[701px]:overflow-x-clip" fontVariant="editorial"
     pageClass="sobre-page tw:text-ink tw:font-sans tw:text-lg tw:leading-6  tw:[&_h1]:font-display tw:[&_h1]:[font-variation-settings:'wdth'_75] tw:[&_h1]:font-bold tw:[&_h1]:uppercase tw:[&_h2]:font-display tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:font-bold tw:[&_h2]:uppercase tw:[&_h3]:font-display tw:[&_h3]:[font-variation-settings:'wdth'_75] tw:[&_h3]:font-bold tw:[&_h3]:uppercase tw:max-[701px]:w-full tw:max-[701px]:overflow-x-clip tw:[&_.partner-section]:items-center tw:[&_.partner-section]:[border-top-color:rgba(66,_66,_246,_0.06)] tw:[&_.partner-section]:flex tw:[&_.partner-section]:flex-col tw:[&_.partner-section]:gap-[28px] tw:[&_.partner-section]:pt-16.5 tw:[&_.partner-section]:pb-[42px] tw:[&_.partner-section]:px-0 tw:[&_.partner-section_>_header]:h-11 tw:[&_.partner-section_>_header]:w-205 tw:[&_.partner-section_>_header]:m-0 tw:[&_.partner-section_>_header_i]:bg-ink tw:[&_.partner-section_>_header_i]:shrink-0 tw:[&_.partner-section_>_header_h2]:font-display tw:[&_.partner-section_>_header_h2]:text-4xl tw:[&_.partner-section_>_header_h2]:[font-stretch:normal] tw:[&_.partner-section_>_header_h2]:[font-variation-settings:'wdth'_75] tw:[&_.partner-section_>_header_h2]:font-bold tw:[&_.partner-section_>_header_h2]:tracking-normal tw:[&_.partner-section_>_header_h2]:leading-[42px] tw:[&_.partner-section_>_header_h2]:w-180 tw:max-[901px]:[&_.partner-section]:pl-6 tw:max-[901px]:[&_.partner-section]:pr-6 tw:max-[901px]:[&_.partner-section_>_header]:w-full tw:[body:has(.sobre-page)_&_.partner-section]:pb-[42px] tw:[&_.timeline-scroll]:contents tw:[&_.channels-scroll]:contents tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:block tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:mt-[86px] tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:overflow-x-auto tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:[overscroll-behavior-inline:contain] tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:[scrollbar-width:thin] tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll]:w-full tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll:focus-visible]:outline-2 tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll:focus-visible]:outline-accent tw:max-[701px]:[body:has(.sobre-page)_&_.timeline-scroll:focus-visible]:-outline-offset-1 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll:focus-visible]:outline-2 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll:focus-visible]:outline-accent tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll:focus-visible]:-outline-offset-1 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:block tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:overflow-x-auto tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:[overscroll-behavior-inline:contain] tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:w-screen tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:mt-[60px] tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_&_.channels-scroll]:-mx-6 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:gap-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:pt-16.5 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:pb-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section]:px-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:h-21.5 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:my-0 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header_h2]:text-4xl tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header_h2]:leading-[42px] tw:max-[701px]:[body:has(.sobre-page)_&_.partner-section>header_h2]:w-full"
 >
@@ -55,43 +37,26 @@ const challenges = [
                                 alt=""
                             />
                             <h1 class="tw:max-[701px]:text-[32px] tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-8 tw:max-[701px]:w-full" id="sobre-hero-title">
-                                <span>Sobre </span>
-                                <span class="sobre-hero__title-narrow tw:font-display tw:[font-variation-settings:'wdth'_60] tw:font-normal">o</span>
-                                <span>
-                                    {" "}
-                                    Elas
-                                    <br />
+                                <span>{c.s00_001} </span>
+                                <span class="sobre-hero__title-narrow tw:font-display tw:[font-variation-settings:'wdth'_60] tw:font-normal">{c.s00_002}</span>
+                                <span>{c.s00_x001}<br />
                                 </span>
-                                <span class="sobre-hero__title-narrow tw:font-display tw:[font-variation-settings:'wdth'_60] tw:font-normal">
-                                    no{" "}
-                                </span>
-                                <span>Congresso</span>
+                                <span class="sobre-hero__title-narrow tw:font-display tw:[font-variation-settings:'wdth'_60] tw:font-normal">{c.s00_x002}</span>
+                                <span>{c.s00_003}</span>
                             </h1>
                             <div class="sobre-hero__description tw:text-ink tw:text-lg tw:font-medium tw:tracking-normal tw:leading-6 tw:mix-blend-multiply tw:w-160 tw:[&_strong]:font-extrabold tw:max-[901px]:w-full tw:max-[701px]:text-base tw:max-[701px]:font-medium tw:max-[701px]:leading-6 tw:max-[701px]:max-w-80 tw:max-[701px]:w-full tw:max-[701px]:pt-[6px] tw:max-[701px]:pb-2.5 tw:max-[701px]:px-0">
                                 <p class="tw:[font:inherit] tw:leading-6 tw:max-[701px]:text-base tw:max-[701px]:leading-6">
-                                    <strong>Elas no Congresso </strong>é uma
-                                    iniciativa de tecnologia cívica e
-                                    comunicação feminista do{" "}
-                                    <strong>Instituto AzMina.</strong>
+                                    <strong>{c.s00_004} </strong>{c.s00_x003}<strong>{c.s00_005}</strong>
                                 </p>
                                 <p class="tw:[font:inherit] tw:leading-6 tw:max-[701px]:text-base tw:max-[701px]:leading-6">
-                                    Monitoramos diariamente o que a Câmara dos
-                                    Deputados e o Senado Federal produzem sobre
-                                    os direitos de mulheres, meninas e pessoas
-                                    LGBTQIAPN+, e traduzimos isso em informação
-                                    acessível para jornalistas, pesquisadores,
-                                    movimentos sociais e qualquer pessoa
-                                    interessada em acompanhar o Congresso. Desde
-                                    2025, o projeto conta com QuitérIA, a IA
-                                    Feminista que facilita e agiliza esse
-                                    trabalho.
+                                    {c.s00_006}
                                 </p>
                             </div>
                         </div>
                         <div class="sobre-hero__art tw:items-center tw:flex tw:flex-none tw:h-95 tw:justify-center tw:relative tw:w-145 tw:p-2.5 tw:max-[901px]:bottom-4 tw:max-[901px]:absolute tw:max-[901px]:-right-22 tw:max-[901px]:[transform:scale(0.54)] tw:max-[901px]:origin-[bottom_right] tw:max-[701px]:hidden" aria-hidden="true">
                             <div class="sobre-hero__illustration tw:flex-none tw:h-[488px] tw:overflow-hidden tw:relative tw:w-126.5">
                                 <div class="sobre-hero__illustration-inner tw:h-[390px] tw:left-[50%] tw:absolute tw:top-[50%] tw:[transform:translate(-50%,_-50%)] tw:w-[410px] tw:[&_img]:h-[153.89%] tw:[&_img]:left-[-10.22%] tw:[&_img]:max-w-none tw:[&_img]:absolute tw:[&_img]:top-[-29.5%] tw:[&_img]:w-[116.85%]">
-                                    <Image src={heroIllustration} loading="eager" alt="" />
+                                    <img src={cms.hero_image.url} width={cms.hero_image.width} height={cms.hero_image.height} loading="eager" alt="" />
                                 </div>
                             </div>
                         </div>
@@ -102,48 +67,33 @@ const challenges = [
                     <div class="sobre-narrow tw:w-205 tw:flex-col tw:gap-6 tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:mt-1 tw:[&_h3]:mb-0 tw:[&_h3]:mx-0 tw:max-[901px]:w-full tw:block tw:m-0 tw:max-[701px]:max-w-none tw:max-[701px]:w-full tw:max-[701px]:block tw:max-[701px]:py-0 tw:max-[701px]:px-6 tw:[.partner-section_>_&]:gap-[20px] tw:[.partner-section_>_&]:w-205 tw:[.partner-section_>_&]:m-0 tw:[.partner-section_>_&_p]:text-ink tw:[.partner-section_>_&_p]:font-sans tw:[.partner-section_>_&_p]:text-lg tw:[.partner-section_>_&_p]:font-normal tw:[.partner-section_>_&_p]:tracking-normal tw:[.partner-section_>_&_p]:leading-6 tw:[.partner-section_>_&_p]:m-0 tw:[.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_>_&]:gap-[20px] tw:[.sobre-page_.partner-section_>_&]:w-205 tw:[.sobre-page_.partner-section_>_&]:m-0 tw:[.sobre-page_.partner-section_>_&_p]:text-ink tw:[.sobre-page_.partner-section_>_&_p]:font-sans tw:[.sobre-page_.partner-section_>_&_p]:text-lg tw:[.sobre-page_.partner-section_>_&_p]:font-normal tw:[.sobre-page_.partner-section_>_&_p]:tracking-normal tw:[.sobre-page_.partner-section_>_&_p]:leading-6 tw:[.sobre-page_.partner-section_>_&_p]:m-0 tw:[.sobre-page_.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.sobre-page_.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:h-11 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:m-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:bg-ink tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:shrink-0 tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:min-h-[184px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:pt-[6px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:h-11 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:m-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:bg-ink tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:shrink-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:gap-[20px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mt-[28px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:gap-7 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:w-full tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:m-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&>header]:h-21.5">
                         <header class="tw:flex tw:flex-col tw:gap-4 tw:h-11 tw:relative tw:m-0 tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-4 tw:max-[701px]:h-11! tw:max-[701px]:relative! tw:max-[701px]:w-full tw:max-[701px]:m-0">
                             <i class="tw:bg-ink tw:block tw:h-1 tw:w-24 tw:left-0 tw:absolute tw:top-0 tw:max-[701px]:bg-ink tw:max-[701px]:h-1! tw:max-[701px]:absolute! tw:max-[701px]:w-24! tw:max-[701px]:block! tw:max-[701px]:flex-[0_0_4px]! tw:max-[701px]:left-0! tw:max-[701px]:top-0!"></i>
-                            <h2 class="tw:text-4xl tw:left-0 tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">A nossa história</h2>
+                            <h2 class="tw:text-4xl tw:left-0 tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">{c.s01_007}</h2>
                         </header>
                         <p class="tw:mt-[28px] tw:w-202 tw:max-[701px]:text-lg tw:max-[701px]:leading-6 tw:max-[701px]:mt-[28px] tw:max-[701px]:w-[min(328px,100%)]">
-                            Em 2020, diante do crescimento da disputa por pautas
-                            de gênero no Congresso Nacional, o Instituto AzMina
-                            identificou a necessidade de tornar o monitoramento
-                            legislativo mais acessível. Desde então, a
-                            iniciativa analisa projetos apresentados a partir de
-                            2019.
+                            {c.s01_008}
                         </p>
                     </div>
-                    <div class="timeline-scroll tw:contents tw:max-md:block tw:max-md:w-full tw:max-md:overflow-x-auto tw:max-md:overscroll-x-contain tw:max-md:mt-16" tabindex="0" aria-label="Linha do tempo do projeto. Role horizontalmente para ver todos os períodos."><HistoryTimeline /></div>
+                    <div class="timeline-scroll tw:contents tw:max-md:block tw:max-md:w-full tw:max-md:overflow-x-auto tw:max-md:overscroll-x-contain tw:max-md:mt-16" tabindex="0" aria-label="Linha do tempo do projeto. Role horizontalmente para ver todos os períodos."><HistoryTimeline events={timeline} note={{ link_text: c.timeline_note_link_text, link_url: c.timeline_note_link_url, after_link: c.timeline_note_after_link }} /></div>
                 </section>
                 <section class="sobre-section tw:border-t-[2px] tw:border-solid tw:border-t-[rgba(66,_66,_246,_0.06)] tw:py-16 tw:px-12 tw:[&_h2]:text-4xl tw:[&_h2]:leading-[42px] tw:[&_h2]:m-0 tw:max-[901px]:py-12 tw:max-[901px]:px-6   tw:items-center tw:flex tw:flex-col tw:gap-[28px] tw:pt-16.5 tw:pb-16 tw:max-[701px]:border-t-[2px] tw:max-[701px]:border-solid tw:max-[701px]:border-t-[rgba(66,66,246,.06)] tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-0 tw:max-[701px]:pt-16.5 tw:max-[701px]:pb-0 tw:max-[701px]:px-6 tw:[&:first-of-type]:border-0 tw:[.sobre-history_+_&_>_header]:h-11 tw:[.sobre-history_+_&_>_header]:relative tw:[.sobre-history_+_&_>_header]:w-205 tw:[.sobre-history_+_&_>_header]:m-0 tw:[.sobre-history_+_&_>_header_i]:bg-ink tw:[.sobre-history_+_&_>_header_i]:left-0 tw:[.sobre-history_+_&_>_header_i]:absolute tw:[.sobre-history_+_&_>_header_i]:top-0 tw:[.sobre-history_+_&_>_header_h2]:text-4xl tw:[.sobre-history_+_&_>_header_h2]:left-0 tw:[.sobre-history_+_&_>_header_h2]:leading-[42px] tw:[.sobre-history_+_&_>_header_h2]:absolute tw:[.sobre-history_+_&_>_header_h2]:top-2.5 tw:[.sobre-history_+_&_>_header_h2]:m-0 tw:[.sobre-page_.partner-section_+_&]:pt-16.5 tw:[.sobre-page_.partner-section_+_&]:pb-16 tw:[.sobre-page_.partner-section_+_&]:px-12 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:pt-16.5 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:pb-16 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:px-12 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:pt-16.5 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:pb-[32px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:px-6">
                     <div class="sobre-narrow tw:w-205 tw:flex tw:flex-col tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:mt-1 tw:[&_h3]:mb-0 tw:[&_h3]:mx-0 tw:max-[901px]:w-full tw:gap-7 tw:m-0 tw:max-[701px]:max-w-none tw:max-[701px]:w-full tw:max-[701px]:items-start tw:max-[701px]:gap-7 tw:max-[701px]:m-0 tw:[.partner-section_>_&]:gap-[20px] tw:[.partner-section_>_&]:w-205 tw:[.partner-section_>_&]:m-0 tw:[.partner-section_>_&_p]:text-ink tw:[.partner-section_>_&_p]:font-sans tw:[.partner-section_>_&_p]:text-lg tw:[.partner-section_>_&_p]:font-normal tw:[.partner-section_>_&_p]:tracking-normal tw:[.partner-section_>_&_p]:leading-6 tw:[.partner-section_>_&_p]:m-0 tw:[.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_>_&]:gap-[20px] tw:[.sobre-page_.partner-section_>_&]:w-205 tw:[.sobre-page_.partner-section_>_&]:m-0 tw:[.sobre-page_.partner-section_>_&_p]:text-ink tw:[.sobre-page_.partner-section_>_&_p]:font-sans tw:[.sobre-page_.partner-section_>_&_p]:text-lg tw:[.sobre-page_.partner-section_>_&_p]:font-normal tw:[.sobre-page_.partner-section_>_&_p]:tracking-normal tw:[.sobre-page_.partner-section_>_&_p]:leading-6 tw:[.sobre-page_.partner-section_>_&_p]:m-0 tw:[.sobre-page_.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.sobre-page_.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:h-11 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:m-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:bg-ink tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:shrink-0 tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:min-h-[184px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:pt-[6px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:h-11 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:m-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:bg-ink tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:shrink-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:gap-[20px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mt-[28px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:gap-7 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:w-full tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:m-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&>header]:h-21.5">
                         <header class="tw:flex tw:flex-col tw:gap-4 tw:h-11 tw:relative tw:m-0 tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-4 tw:max-[701px]:h-21.5! tw:max-[701px]:relative! tw:max-[701px]:w-full tw:max-[701px]:m-0">
                             <i class="tw:bg-ink tw:block tw:h-1 tw:w-24 tw:left-0 tw:absolute tw:top-0 tw:max-[701px]:bg-ink tw:max-[701px]:h-1! tw:max-[701px]:absolute! tw:max-[701px]:w-24! tw:max-[701px]:block! tw:max-[701px]:flex-[0_0_4px]! tw:max-[701px]:left-0! tw:max-[701px]:top-0!"></i>
-                            <h2 class="tw:text-4xl tw:left-0 tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">Como avaliamos o legislativo</h2>
+                            <h2 class="tw:text-4xl tw:left-0 tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">{c.s02_009}</h2>
                         </header>
                         <p class="tw:w-205 tw:max-[701px]:text-lg tw:max-[701px]:leading-6 tw:max-[701px]:w-full">
-                            Cada proposição percorre quatro etapas: coleta,
-                            triagem pela IA, análise especializada e curadoria
-                            editorial.
+                            {c.s02_010}
                         </p>
-                        <h3 class="tw:text-[32px]! tw:leading-8 tw:mt-[26px]! tw:mb-0 tw:mx-0 tw:max-[701px]:text-[32px] tw:max-[701px]:leading-8 tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:mt-[26px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0">1. Coleta automatizada</h3>
+                        <h3 class="tw:text-[32px]! tw:leading-8 tw:mt-[26px]! tw:mb-0 tw:mx-0 tw:max-[701px]:text-[32px] tw:max-[701px]:leading-8 tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:mt-[26px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0">{c.s02_011}</h3>
                         <p class="tw:w-205 tw:max-[701px]:text-lg tw:max-[701px]:leading-6 tw:max-[701px]:w-full">
-                            O raspador do Elas no Congresso está conectado às
-                            APIs da Câmara dos Deputados e do Senado Federal. A
-                            cada 24 horas, o código busca palavras-chave
-                            temáticas e armazena título, autoria, ementa e
-                            status na nossa API aberta. Se a ementa ou o texto
-                            integral contiver os termos mapeados, a matéria
-                            entra no fluxo de análise.
+                            {c.s02_012}
                         </p>
-                        <aside class="tw:text-muted tw:text-[0] tw:leading-4 tw:mt-[-1px] tw:w-205 tw:[font:400_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:before:text-muted tw:before:[content:none] tw:before:[font:400_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:after:text-accent tw:after:[content:none] tw:after:[font:700_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:max-[701px]:text-sm tw:max-[701px]:leading-4 tw:max-[701px]:w-full tw:max-[701px]:text-muted tw:max-[701px]:font-sans tw:max-[701px]:font-normal tw:max-[701px]:mt-[4px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0 tw:max-[701px]:before:[content:none] tw:max-[701px]:after:[content:none]">
-                            Para ver todas as palavras, acesse a{" "}
-                            <a class="tw:text-accent tw:[font:700_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:underline tw:underline-offset-1 tw:hover:underline tw:focus-visible:outline-2 tw:focus-visible:outline-accent tw:focus-visible:outline-offset-1 tw:max-[701px]:text-accent tw:max-[701px]:font-sans tw:max-[701px]:text-sm tw:max-[701px]:font-bold tw:max-[701px]:leading-4 tw:max-[701px]:underline tw:max-[701px]:underline-offset-1"
-                                href="https://docs.google.com/document/d/1I22AbP2MhRmCV-z2x9NUe9Zsp20PmwEjyQe1mYr7sTQ/edit?usp=sharing"
+                        <aside class="tw:text-muted tw:text-[0] tw:leading-4 tw:mt-[-1px] tw:w-205 tw:[font:400_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:before:text-muted tw:before:[content:none] tw:before:[font:400_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:after:text-accent tw:after:[content:none] tw:after:[font:700_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:max-[701px]:text-sm tw:max-[701px]:leading-4 tw:max-[701px]:w-full tw:max-[701px]:text-muted tw:max-[701px]:font-sans tw:max-[701px]:font-normal tw:max-[701px]:mt-[4px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0 tw:max-[701px]:before:[content:none] tw:max-[701px]:after:[content:none]">{c.s02_x004}<a class="tw:text-accent tw:[font:700_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:underline tw:underline-offset-1 tw:hover:underline tw:focus-visible:outline-2 tw:focus-visible:outline-accent tw:focus-visible:outline-offset-1 tw:max-[701px]:text-accent tw:max-[701px]:font-sans tw:max-[701px]:text-sm tw:max-[701px]:font-bold tw:max-[701px]:leading-4 tw:max-[701px]:underline tw:max-[701px]:underline-offset-1"
+                                href={c.s02_013}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                lista completa de palavras-chave
+                                {c.s02_014}
                             </a>
                             .
                         </aside>
@@ -152,161 +102,111 @@ const challenges = [
                             class="flow-placeholder tw:relative tw:h-129 tw:w-205 tw:overflow-hidden tw:max-[701px]:w-full tw:max-[701px]:min-h-129"
                             role="img"
                             aria-label="Palavras-chave como stalking, meninas, útero, misoginia, transexual e feminicídio alimentam a API de coleta."
-                        ><div class="tw:absolute tw:inset-0 tw:bg-[url('/src/assets/images/about/keyword-notes.svg')] tw:bg-size-[820px_516px] tw:bg-center tw:bg-no-repeat tw:max-[701px]:hidden" aria-hidden="true"></div><div class="flow-placeholder__mobile tw:[.sobre-page_&]:hidden tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:block tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:inset-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute" aria-hidden="true"><span class="flow-api tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:items-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:bg-periwinkle tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-white tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:flex tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-display tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-xl tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:[font-variation-settings:'wdth'_75] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-bold tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-34.5 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:justify-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:left-[calc(50%_-_70px)] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:uppercase tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:top-[190px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-34.5">API</span><span class="flow-note flow-note--1 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:items-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:bg-[#2bd9d9] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:shadow-[0_4px_0_#0b0f5e] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-ink tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:flex tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-sans tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-bold tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-[92px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:justify-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-[108px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:left-[14.679%] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:top-94 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:[transform:rotate(-5.83deg)]">transexual<br />meninas</span><span class="flow-note flow-note--2 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:items-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:bg-[#2bd9d9] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:shadow-[0_4px_0_#0b0f5e] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-ink tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:flex tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-sans tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-bold tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-[92px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:justify-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-[108px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:right-[28px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:top-[54px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:[transform:rotate(7.5deg)]">feminicídio</span><span class="flow-note flow-note--3 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:items-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:bg-[#2bd9d9] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:shadow-[0_4px_0_#0b0f5e] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-ink tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:flex tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-sans tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-bold tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-[92px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:justify-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-[108px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:left-[11.01%] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:top-13.5 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:[transform:rotate(7.28deg)]">útero</span><span class="flow-note flow-note--4 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:items-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:bg-[#2bd9d9] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:shadow-[0_4px_0_#0b0f5e] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-ink tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:flex tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-sans tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-bold tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-[92px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:justify-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-[108px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:right-[40px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:top-90 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:[transform:rotate(7.28deg)]">misoginia<br />stalking</span></div></CuttingMat>
-                        <h3 class="tw:text-[32px]! tw:leading-8 tw:mt-[26px]! tw:mb-0 tw:mx-0 tw:max-[701px]:text-[32px] tw:max-[701px]:leading-8 tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:mt-[26px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0">2. Triagem pela QuitérIA</h3>
+                        ><div class="tw:absolute tw:inset-0 tw:bg-[url('/src/assets/images/about/keyword-notes.svg')] tw:bg-size-[820px_516px] tw:bg-center tw:bg-no-repeat tw:max-[701px]:hidden" aria-hidden="true"></div><div class="flow-placeholder__mobile tw:[.sobre-page_&]:hidden tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:block tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:inset-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute" aria-hidden="true"><span class="flow-api tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:items-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:bg-periwinkle tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-white tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:flex tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-display tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-xl tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:[font-variation-settings:'wdth'_75] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-bold tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-34.5 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:justify-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:left-[calc(50%_-_70px)] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:uppercase tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:top-[190px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-34.5">{c.s02_015}</span><span class="flow-note flow-note--1 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:items-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:bg-[#2bd9d9] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:shadow-[0_4px_0_#0b0f5e] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-ink tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:flex tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-sans tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-bold tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-[92px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:justify-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-[108px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:left-[14.679%] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:top-94 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:[transform:rotate(-5.83deg)]">{c.s02_016}<br />{c.s02_017}</span><span class="flow-note flow-note--2 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:items-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:bg-[#2bd9d9] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:shadow-[0_4px_0_#0b0f5e] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-ink tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:flex tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-sans tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-bold tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-[92px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:justify-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-[108px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:right-[28px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:top-[54px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:[transform:rotate(7.5deg)]">{c.s02_018}</span><span class="flow-note flow-note--3 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:items-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:bg-[#2bd9d9] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:shadow-[0_4px_0_#0b0f5e] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-ink tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:flex tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-sans tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-bold tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-[92px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:justify-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-[108px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:left-[11.01%] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:top-13.5 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:[transform:rotate(7.28deg)]">{c.s02_019}</span><span class="flow-note flow-note--4 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:items-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:bg-[#2bd9d9] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:shadow-[0_4px_0_#0b0f5e] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-ink tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:flex tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-sans tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:font-bold tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:h-[92px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:justify-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:absolute tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:text-center tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:w-[108px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:right-[40px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:top-90 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_&]:[transform:rotate(7.28deg)]">{c.s02_020}<br />{c.s02_021}</span></div></CuttingMat>
+                        <h3 class="tw:text-[32px]! tw:leading-8 tw:mt-[26px]! tw:mb-0 tw:mx-0 tw:max-[701px]:text-[32px] tw:max-[701px]:leading-8 tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:mt-[26px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0">{c.s02_022}</h3>
                         <p class="tw:w-205 tw:max-[701px]:text-lg tw:max-[701px]:leading-6 tw:max-[701px]:w-full">
-                            A QuitérIA faz a classificação inicial e a avaliação
-                            imediata das matérias coletadas, indicando tema e
-                            grau de desfavorabilidade. É o que permite dar conta
-                            do volume: o que antes levava semanas passa a estar
-                            disponível em horas. Nenhuma classificação da IA é
-                            publicada sem passar pela etapa seguinte.
+                            {c.s02_023}
                         </p>
-                        <aside class="quiteria-note tw:text-muted tw:text-[0] tw:leading-4 tw:[font:400_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:mt-[-1px] tw:w-205 tw:before:[content:'Para_ver_todas_as_palavras,_consulte_a_'] tw:before:text-muted tw:before:[font:400_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:after:[content:none] tw:max-[701px]:text-sm tw:max-[701px]:leading-4 tw:max-[701px]:w-full tw:max-[701px]:mt-[4px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0">
-                            Para entender a arquitetura, o treinamento e a
-                            governança da ferramenta, acesse a página{" "}
-                            <a class="tw:text-accent tw:font-bold tw:no-underline" href="/ia-feminista">QuitérIA</a>.
+                        <aside class="quiteria-note tw:text-muted tw:text-[0] tw:leading-4 tw:[font:400_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:mt-[-1px] tw:w-205 tw:before:[content:'Para_ver_todas_as_palavras,_consulte_a_'] tw:before:text-muted tw:before:[font:400_14px/16px_'Plus_Jakarta_Sans',_sans-serif] tw:after:[content:none] tw:max-[701px]:text-sm tw:max-[701px]:leading-4 tw:max-[701px]:w-full tw:max-[701px]:mt-[4px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0">{c.s02_x005}<a class="tw:text-accent tw:font-bold tw:no-underline" href={c.s02_024}>{c.s02_025}</a>.
                         </aside>
-                        <h3 class="tw:text-[32px]! tw:leading-8 tw:mt-[26px]! tw:mb-0 tw:mx-0 tw:max-[701px]:text-[32px] tw:max-[701px]:leading-8 tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:mt-[26px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0">3. Análise especializada</h3>
+                        <h3 class="tw:text-[32px]! tw:leading-8 tw:mt-[26px]! tw:mb-0 tw:mx-0 tw:max-[701px]:text-[32px] tw:max-[701px]:leading-8 tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:mt-[26px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0">{c.s02_026}</h3>
                         <p class="tw:w-205 tw:max-[701px]:text-lg tw:max-[701px]:leading-6 tw:max-[701px]:w-full">
-                            Nossa base reúne atualmente mais de 3.100
-                            proposições anotadas, apresentadas no Congresso
-                            Nacional entre janeiro de 2019 e abril de 2026.
-                            Consideramos proposições da Câmara e do Senado
-                            (PECs, PLs, PLPs, PLVs, PDCs, PRCs, PLSs, PLNs, PRSs
-                            e PDSs) de autoria de parlamentares, comissões ou do
-                            Poder Executivo. Para evitar duplicidade, cada
-                            projeto é avaliado apenas na Casa em que se
-                            originou.
+                            {c.s02_027}
                         </p>
                         <p class="tw:w-205 tw:max-[701px]:text-lg tw:max-[701px]:leading-6 tw:max-[701px]:w-full">
-                            Especialistas de organizações parceiras analisam os
-                            projetos e atribuem uma classificação de impacto:
+                            {c.s02_028}
                         </p>
                         <ul class="ratings tw:flex tw:flex-col tw:gap-3 tw:list-none tw:p-0 tw:m-0 tw:pt-[6px] tw:max-[701px]:gap-7.5 tw:max-[701px]:pt-[6px] tw:max-[701px]:w-full">
                             <li class="tw:text-lg tw:leading-normal tw:items-start tw:flex tw:h-7.5 tw:max-[561px]:text-base tw:max-[561px]:leading-6 tw:max-[701px]:items-start tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-2.5 tw:max-[701px]:h-auto tw:max-[701px]:leading-6 tw:max-[701px]:w-full">
                                 <b class="rating-chip rating-chip--favorable tw:items-start tw:rounded-none tw:text-ink tw:flex tw:font-sans tw:text-sm tw:font-bold tw:tracking-[1px] tw:leading-[22px] tw:uppercase tw:whitespace-nowrap tw:bg-lime tw:py-1 tw:px-3 tw:mt-[1px] tw:mb-0 tw:mx-0 tw:max-[701px]:text-sm tw:max-[701px]:leading-[22px] tw:max-[701px]:py-1 tw:max-[701px]:px-3 tw:max-[701px]:m-0">
-                                    Favorável
+                                    {c.s02_029}
                                 </b>
                                 <span class="rating-description tw:text-ink tw:[font:400_18px/24px_'Plus_Jakarta_Sans',_sans-serif] tw:mt-[1px] tw:mb-0 tw:mr-0 tw:ml-2.5 tw:max-[701px]:text-lg tw:max-[701px]:leading-[28px] tw:max-[701px]:w-full tw:max-[701px]:m-0">
-                                    amplia direitos, proteção ou acesso;
+                                    {c.s02_030}
                                 </span>
                             </li>
                             <li class="tw:text-lg tw:leading-normal tw:items-start tw:flex tw:h-7.5 tw:max-[561px]:text-base tw:max-[561px]:leading-6 tw:max-[701px]:items-start tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-2.5 tw:max-[701px]:h-auto tw:max-[701px]:leading-6 tw:max-[701px]:w-full">
                                 <b class="rating-chip rating-chip--favorable-caveat tw:items-start tw:rounded-none tw:text-ink tw:flex tw:font-sans tw:text-sm tw:font-bold tw:tracking-[1px] tw:leading-[22px] tw:uppercase tw:whitespace-nowrap tw:[background:rgba(222,_242,_121,_0.25)] tw:py-1 tw:px-3 tw:mt-[1px] tw:mb-0 tw:mx-0 tw:max-[701px]:text-sm tw:max-[701px]:leading-[22px] tw:max-[701px]:py-1 tw:max-[701px]:px-3 tw:max-[701px]:m-0">
-                                    Favorável com ressalvas
+                                    {c.s02_031}
                                 </b>
                                 <span class="rating-description tw:text-ink tw:[font:400_18px/24px_'Plus_Jakarta_Sans',_sans-serif] tw:mt-[1px] tw:mb-0 tw:mr-0 tw:ml-2.5 tw:max-[701px]:text-lg tw:max-[701px]:leading-[28px] tw:max-[701px]:w-full tw:max-[701px]:m-0">
-                                    positiva em sua essência, mas com pontos de
-                                    atenção;
+                                    {c.s02_032}
                                 </span>
                             </li>
                             <li class="tw:text-lg tw:leading-normal tw:items-start tw:flex tw:h-7.5 tw:max-[561px]:text-base tw:max-[561px]:leading-6 tw:max-[701px]:items-start tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-2.5 tw:max-[701px]:h-auto tw:max-[701px]:leading-6 tw:max-[701px]:w-full">
                                 <b class="rating-chip rating-chip--unfavorable-caveat tw:items-start tw:rounded-none tw:text-ink tw:flex tw:font-sans tw:text-sm tw:font-bold tw:tracking-[1px] tw:leading-[22px] tw:uppercase tw:whitespace-nowrap tw:bg-[#ffbeb8] tw:py-1 tw:px-3 tw:mt-[1px] tw:mb-0 tw:mx-0 tw:max-[701px]:text-sm tw:max-[701px]:leading-[22px] tw:max-[701px]:py-1 tw:max-[701px]:px-3 tw:max-[701px]:m-0">
-                                    Desfavorável com ressalvas
+                                    {c.s02_033}
                                 </b>
                                 <span class="rating-description rating-description--tall tw:text-ink tw:[font:400_18px/24px_'Plus_Jakarta_Sans',_sans-serif] tw:leading-[28px] tw:my-0 tw:mr-0 tw:ml-2.5 tw:max-[701px]:text-lg tw:max-[701px]:leading-[28px] tw:max-[701px]:w-full tw:max-[701px]:m-0">
-                                    prejudicial no geral, mas com pontos
-                                    positivos aproveitáveis;
+                                    {c.s02_034}
                                 </span>
                             </li>
                             <li class="tw:text-lg tw:leading-normal tw:items-start tw:flex tw:h-7.5 tw:max-[561px]:text-base tw:max-[561px]:leading-6 tw:max-[701px]:items-start tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-2.5 tw:max-[701px]:h-auto tw:max-[701px]:leading-6 tw:max-[701px]:w-full">
                                 <b class="rating-chip rating-chip--unfavorable tw:items-start tw:rounded-none tw:text-ink tw:flex tw:font-sans tw:text-sm tw:font-bold tw:tracking-[1px] tw:leading-[22px] tw:uppercase tw:whitespace-nowrap tw:bg-[#ff5865] tw:py-1 tw:px-3 tw:mt-[1px] tw:mb-0 tw:mx-0 tw:max-[701px]:text-sm tw:max-[701px]:leading-[22px] tw:max-[701px]:py-1 tw:max-[701px]:px-3 tw:max-[701px]:m-0">
-                                    Desfavorável
+                                    {c.s02_035}
                                 </b>
                                 <span class="rating-description rating-description--tall tw:text-ink tw:[font:400_18px/24px_'Plus_Jakarta_Sans',_sans-serif] tw:leading-[28px] tw:my-0 tw:mr-0 tw:ml-2.5 tw:max-[701px]:text-lg tw:max-[701px]:leading-[28px] tw:max-[701px]:w-full tw:max-[701px]:m-0">
-                                    restringe direitos ou gera discriminação.
+                                    {c.s02_036}
                                 </span>
                             </li>
                         </ul>
                         <p class="tw:w-205 tw:max-[701px]:text-lg tw:max-[701px]:leading-6 tw:max-[701px]:w-full">
-                            Em cada proposição é possível ver qual organização
-                            fez a avaliação. Desde o segundo retreinamento da
-                            QuitérIA, as observações técnicas passaram a ser
-                            obrigatórias sempre que há algum nível de
-                            desfavorabilidade.
+                            {c.s02_037}
                         </p>
-                        <h3 class="tw:text-[32px]! tw:leading-8 tw:mt-[26px]! tw:mb-0 tw:mx-0 tw:max-[701px]:text-[32px] tw:max-[701px]:leading-8 tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:mt-[26px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0">4. Curadoria editorial e distribuição</h3>
+                        <h3 class="tw:text-[32px]! tw:leading-8 tw:mt-[26px]! tw:mb-0 tw:mx-0 tw:max-[701px]:text-[32px] tw:max-[701px]:leading-8 tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:mt-[26px] tw:max-[701px]:mb-0 tw:max-[701px]:mx-0">{c.s02_038}</h3>
                         <p class="tw:w-205 tw:max-[701px]:text-lg tw:max-[701px]:leading-6 tw:max-[701px]:w-full">
-                            Semanalmente, a equipe da AzMina valida as
-                            classificações da IA e faz a mediação jornalística
-                            que traduz o “legislativês” em informação acessível.
-                            O resultado chega até você por três caminhos:
+                            {c.s02_039}
                         </p>
                     </div>
                     <div class="channels tw:grid tw:w-full tw:max-w-336 tw:grid-cols-3 tw:items-start tw:gap-6 tw:mt-1.5 tw:max-[901px]:grid-cols-1 tw:max-[701px]:mt-7">
                         <article class="tw:flex tw:min-w-0 tw:flex-col tw:items-start tw:gap-3.5 tw:border-2 tw:border-ink tw:bg-white tw:px-6.5 tw:py-7.5 tw:[&_h3]:m-0 tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_p]:m-0 tw:[&_p]:text-base tw:[&_p]:leading-6 tw:[&_a]:font-bold tw:[&_a]:text-accent tw:[&_a]:underline tw:min-[902px]:min-h-[310px]">
-                            <h3>Radar Diário</h3><p>Alerta customizável por tema, casa legislativa, comissão ou proposição, entregue por e-mail.<br><a href="/alertas">Cadastre-se aqui</a></p>
+                            <h3>{c.s02_040}</h3><p>{c.s02_041}<br><a href={c.s02_042}>{c.s02_043}</a></p>
                         </article>
                         <article class="tw:flex tw:min-w-0 tw:flex-col tw:items-start tw:gap-3.5 tw:border-2 tw:border-ink tw:bg-white tw:px-6.5 tw:py-7.5 tw:[&_h3]:m-0 tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_p]:m-0 tw:[&_p]:text-base tw:[&_p]:leading-6 tw:[&_a]:font-bold tw:[&_a]:text-accent tw:[&_a]:underline tw:min-[902px]:min-h-[298px]">
-                            <h3>Newsletter com Radar Semanal</h3><p>Principal canal de acompanhamento contínuo do projeto. Reúne, contextualiza e analisa os impactos políticos das tramitações, funcionando como instrumento de transparência e mobilização para a sociedade civil. A newsletter é a mesma para todas as pessoas assinantes; o Radar Semanal que a acompanha é customizável por tema.</p>
+                            <h3>{c.s02_044}</h3><p>{c.s02_045}</p>
                         </article>
                         <article class="tw:flex tw:min-w-0 tw:flex-col tw:items-start tw:gap-3.5 tw:border-2 tw:border-ink tw:bg-white tw:px-6.5 tw:py-7.5 tw:[&_h3]:m-0 tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_p]:m-0 tw:[&_p]:text-base tw:[&_p]:leading-6 tw:[&_a]:font-bold tw:[&_a]:text-accent tw:[&_a]:underline tw:min-[902px]:min-h-[308px]">
-                            <h3>Painel de Atividade Legislativa</h3><p>Na página <a href="/atividade-legislativa">Atividade Legislativa</a> você navega pelas propostas, compara a avaliação da <strong>QuitérIA</strong> com a avaliação humana e filtra por partido, tema e outros critérios.</p>
+                            <h3>{c.s02_046}</h3><p>{c.s02_047} <a href={c.s02_048}>{c.s02_049}</a> {c.s02_050} <strong>{c.s02_051}</strong> {c.s02_052}</p>
                         </article>
                     </div>
                 </section>
                 <section class="sobre-section partner-section tw:border-t-[2px] tw:border-solid tw:border-t-[rgba(66,_66,_246,_0.06)] tw:py-16 tw:px-12 tw:[&_h2]:text-4xl tw:[&_h2]:leading-[42px] tw:[&_h2]:m-0 tw:max-[901px]:py-12 tw:max-[901px]:px-6   tw:max-[701px]:border-t-[2px] tw:max-[701px]:border-solid tw:max-[701px]:border-t-[rgba(66,66,246,.06)] tw:max-[701px]:pt-16.5 tw:max-[701px]:pb-16 tw:max-[701px]:px-6 tw:[&:first-of-type]:border-0 tw:[.sobre-history_+_&_>_header]:h-11 tw:[.sobre-history_+_&_>_header]:relative tw:[.sobre-history_+_&_>_header]:w-205 tw:[.sobre-history_+_&_>_header]:m-0 tw:[.sobre-history_+_&_>_header_i]:bg-ink tw:[.sobre-history_+_&_>_header_i]:left-0 tw:[.sobre-history_+_&_>_header_i]:absolute tw:[.sobre-history_+_&_>_header_i]:top-0 tw:[.sobre-history_+_&_>_header_h2]:text-4xl tw:[.sobre-history_+_&_>_header_h2]:left-0 tw:[.sobre-history_+_&_>_header_h2]:leading-[42px] tw:[.sobre-history_+_&_>_header_h2]:absolute tw:[.sobre-history_+_&_>_header_h2]:top-2.5 tw:[.sobre-history_+_&_>_header_h2]:m-0 tw:[.sobre-page_.partner-section_+_&]:pt-16.5 tw:[.sobre-page_.partner-section_+_&]:pb-16 tw:[.sobre-page_.partner-section_+_&]:px-12 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:pt-16.5 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:pb-16 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:px-12 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:pt-16.5 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:pb-[32px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:px-6">
 <header class="tw:flex tw:flex-col tw:gap-4 tw:mb-7 tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-4 tw:max-[701px]:h-auto tw:max-[701px]:static tw:max-[701px]:w-full tw:max-[701px]:m-0">
                             <i class="tw:bg-[#ff5865] tw:block tw:h-1 tw:w-24 tw:max-[701px]:bg-ink tw:max-[701px]:h-1 tw:max-[701px]:static tw:max-[701px]:w-24"></i>
-                            <h2 class="tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:static! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-auto! tw:max-[701px]:top-auto! tw:max-[701px]:m-0">Rede de organizações parceiras</h2>
+                            <h2 class="tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:static! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-auto! tw:max-[701px]:top-auto! tw:max-[701px]:m-0">{c.s03_053}</h2>
                         </header>
                     <div class="sobre-narrow tw:w-205 tw:flex tw:flex-col tw:gap-6 tw:m-auto tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:mt-1 tw:[&_h3]:mb-0 tw:[&_h3]:mx-0 tw:max-[901px]:w-full tw:max-[701px]:max-w-none tw:max-[701px]:w-full tw:[.partner-section_>_&]:gap-[20px] tw:[.partner-section_>_&]:w-205 tw:[.partner-section_>_&]:m-0 tw:[.partner-section_>_&_p]:text-ink tw:[.partner-section_>_&_p]:font-sans tw:[.partner-section_>_&_p]:text-lg tw:[.partner-section_>_&_p]:font-normal tw:[.partner-section_>_&_p]:tracking-normal tw:[.partner-section_>_&_p]:leading-6 tw:[.partner-section_>_&_p]:m-0 tw:[.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_>_&]:gap-[20px] tw:[.sobre-page_.partner-section_>_&]:w-205 tw:[.sobre-page_.partner-section_>_&]:m-0 tw:[.sobre-page_.partner-section_>_&_p]:text-ink tw:[.sobre-page_.partner-section_>_&_p]:font-sans tw:[.sobre-page_.partner-section_>_&_p]:text-lg tw:[.sobre-page_.partner-section_>_&_p]:font-normal tw:[.sobre-page_.partner-section_>_&_p]:tracking-normal tw:[.sobre-page_.partner-section_>_&_p]:leading-6 tw:[.sobre-page_.partner-section_>_&_p]:m-0 tw:[.sobre-page_.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.sobre-page_.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:h-11 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:m-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:bg-ink tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:shrink-0 tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:min-h-[184px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:pt-[6px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:h-11 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:m-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:bg-ink tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:shrink-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:gap-[20px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mt-[28px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:gap-7 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:w-full tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:m-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&>header]:h-21.5">
 
                         <p class="tw:max-[701px]:text-lg">
-                            Em vez de centralizar as avaliações em uma única
-                            equipe, o projeto adota um modelo colaborativo de
-                            produção de conhecimento. Cada organização contribui
-                            a partir de sua experiência temática, acumulada em
-                            anos de atuação em campos como direitos humanos,
-                            justiça de gênero, diversidade sexual e de gênero,
-                            enfrentamento à violência, saúde, comunicação,
-                            tecnologia, políticas urbanas, direitos reprodutivos
-                            e participação política.
+                            {c.s03_054}
                         </p>
                         <p class="tw:max-[701px]:text-lg">
-                            Essa diversidade de perspectivas fortalece a
-                            qualidade das avaliações, reduz vieses individuais e
-                            amplia a capacidade do projeto de compreender os
-                            diferentes efeitos que uma proposição pode produzir
-                            sobre grupos sociais distintos. As justificativas
-                            técnicas registradas pelas organizações também
-                            alimentam a base de conhecimento do projeto: são
-                            elas a principal fonte de aprendizado da QuitérIA.
+                            {c.s03_055}
                         </p>
                         <p class="tw:max-[701px]:text-lg">
-                            <strong>Fazem parte da rede:</strong> Anis Bioética, Artigo 19, Cepia - Cidadania, Estudo, Pesquisa, Informação e Ação, CFEMEA - Centro Feminista de Estudos e Assessoria, Coletivo Feminista Sexualidade e Saúde, Coletivo Mana a Mana, deFEMde - Rede Feminista de Juristas, Ecos, Empodera, Gepô, Instituto + Diversidade, Instituto Maria da Penha, Instituto Marielle Franco, Instituto Patrícia Galvão, Instituto Update, Juristas Negras, LabCidade, Mulheres Negras Decidem, Observatório da Violência Obstétrica no Brasil, Plan International, Rede Liberdade, SOF - Sempreviva Organização Feminista, SPW - Sexuality Policy Watch, Themis e TretAqui.
+                            <strong>{c.s03_056}</strong> {c.s03_057}
                         </p>
                     </div>
-                    <PartnerLogos />
+                    <PartnerLogos partners={cms.partners} />
                 </section>
                 <section class="sobre-section tw:border-t-[2px] tw:border-solid tw:border-t-[rgba(66,_66,_246,_0.06)] tw:py-16 tw:px-12 tw:[&_h2]:text-4xl tw:[&_h2]:leading-[42px] tw:[&_h2]:m-0 tw:max-[901px]:py-12 tw:max-[901px]:px-6   tw:max-[701px]:border-t-[2px] tw:max-[701px]:border-solid tw:max-[701px]:border-t-[rgba(66,66,246,.06)] tw:max-[701px]:pt-16.5 tw:max-[701px]:pb-16 tw:max-[701px]:px-6 tw:[&:first-of-type]:border-0 tw:[.sobre-history_+_&_>_header]:h-11 tw:[.sobre-history_+_&_>_header]:relative tw:[.sobre-history_+_&_>_header]:w-205 tw:[.sobre-history_+_&_>_header]:m-0 tw:[.sobre-history_+_&_>_header_i]:bg-ink tw:[.sobre-history_+_&_>_header_i]:left-0 tw:[.sobre-history_+_&_>_header_i]:absolute tw:[.sobre-history_+_&_>_header_i]:top-0 tw:[.sobre-history_+_&_>_header_h2]:text-4xl tw:[.sobre-history_+_&_>_header_h2]:left-0 tw:[.sobre-history_+_&_>_header_h2]:leading-[42px] tw:[.sobre-history_+_&_>_header_h2]:absolute tw:[.sobre-history_+_&_>_header_h2]:top-2.5 tw:[.sobre-history_+_&_>_header_h2]:m-0 tw:[.sobre-page_.partner-section_+_&]:pt-16.5 tw:[.sobre-page_.partner-section_+_&]:pb-16 tw:[.sobre-page_.partner-section_+_&]:px-12 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:pt-16.5 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:pb-16 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:px-12 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:pt-16.5 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:pb-[32px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:px-6">
                     <div class="sobre-narrow tw:w-205 tw:flex tw:flex-col tw:gap-6 tw:m-auto tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:mt-1 tw:[&_h3]:mb-0 tw:[&_h3]:mx-0 tw:max-[901px]:w-full tw:max-[701px]:max-w-none tw:max-[701px]:w-full tw:[.partner-section_>_&]:gap-[20px] tw:[.partner-section_>_&]:w-205 tw:[.partner-section_>_&]:m-0 tw:[.partner-section_>_&_p]:text-ink tw:[.partner-section_>_&_p]:font-sans tw:[.partner-section_>_&_p]:text-lg tw:[.partner-section_>_&_p]:font-normal tw:[.partner-section_>_&_p]:tracking-normal tw:[.partner-section_>_&_p]:leading-6 tw:[.partner-section_>_&_p]:m-0 tw:[.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_>_&]:gap-[20px] tw:[.sobre-page_.partner-section_>_&]:w-205 tw:[.sobre-page_.partner-section_>_&]:m-0 tw:[.sobre-page_.partner-section_>_&_p]:text-ink tw:[.sobre-page_.partner-section_>_&_p]:font-sans tw:[.sobre-page_.partner-section_>_&_p]:text-lg tw:[.sobre-page_.partner-section_>_&_p]:font-normal tw:[.sobre-page_.partner-section_>_&_p]:tracking-normal tw:[.sobre-page_.partner-section_>_&_p]:leading-6 tw:[.sobre-page_.partner-section_>_&_p]:m-0 tw:[.sobre-page_.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.sobre-page_.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:h-11 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:m-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:bg-ink tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:shrink-0 tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:min-h-[184px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:pt-[6px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:h-11 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:m-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:bg-ink tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:shrink-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:gap-[20px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mt-[28px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:gap-7 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:w-full tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:m-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&>header]:h-21.5">
                         <header class="tw:flex tw:flex-col tw:gap-4 tw:mb-7 tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-4 tw:max-[701px]:h-auto tw:max-[701px]:static tw:max-[701px]:w-full tw:max-[701px]:m-0">
                             <i class="tw:bg-[#ff5865] tw:block tw:h-1 tw:w-24 tw:max-[701px]:bg-ink tw:max-[701px]:h-1 tw:max-[701px]:static tw:max-[701px]:w-24"></i>
-                            <h2 class="tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:static! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-auto! tw:max-[701px]:top-auto! tw:max-[701px]:m-0">Transparência e dados abertos</h2>
+                            <h2 class="tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:static! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-auto! tw:max-[701px]:top-auto! tw:max-[701px]:m-0">{c.s04_058}</h2>
                         </header>
                         <p class="tw:max-[701px]:text-lg">
-                            O Elas no Congresso adota uma política rigorosa de
-                            dados abertos e Ciência Aberta:
+                            {c.s04_059}
                         </p>
                         <ul class="open-list tw:flex tw:flex-col tw:gap-3 tw:list-none tw:p-0 tw:m-0 tw:[&_li:before]:[content:'→'] tw:[&_li:before]:text-2xl tw:[&_li:before]:left-0 tw:[&_li:before]:absolute tw:[.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow_>_&]:gap-5 tw:[.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow_>_&_li]:leading-6 tw:[.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow_>_&_li]:min-h-[58px] tw:[.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow_>_&_li]:pl-6 tw:[.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow_>_&_li:nth-child(2)]:min-h-[88px] tw:[.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow_>_&_li_b]:text-accent tw:[.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow_>_&_li_b]:text-lg tw:[.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow_>_&_li_b]:font-bold tw:[.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow_>_&_li_b]:leading-[30px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow>&]:gap-5 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow>&_li]:leading-6 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow>&_li]:min-h-[58px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow>&_li]:pl-6 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow>&_li:nth-child(2)]:min-h-[88px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow>&_li_b]:text-accent tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow>&_li_b]:text-lg tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow>&_li_b]:font-bold tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_.sobre-narrow>&_li_b]:leading-[30px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&_li:before]:text-accent tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&_li:before]:font-sans tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&_li:before]:text-lg tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&_li:before]:font-normal tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&_li:before]:h-[30px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&_li:before]:leading-[30px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&_li:before]:top-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&_li:before]:w-[14px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:gap-5 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&_li]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&_li]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&_li]:min-h-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&_li]:pl-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&_li_b]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&_li_b]:leading-[30px]">
                             <li class="tw:text-lg tw:leading-6 tw:pl-6 tw:relative tw:max-[561px]:text-base tw:max-[561px]:leading-6">
-                                <b>API pública e gratuita</b>: permite integrar
-                                nossos dados estruturados a outras aplicações,
-                                pesquisas acadêmicas e ferramentas de controle
-                                social.
+                                <b>{c.s04_060}</b>{c.s04_061}
                             </li>
                             <li class="tw:text-lg tw:leading-6 tw:pl-6 tw:relative tw:max-[561px]:text-base tw:max-[561px]:leading-6">
-                                <b>Código do raspador e bases reutilizáveis</b>:
-                                publicamos periodicamente as bases brutas e a
-                                documentação metodológica para auditoria e livre
-                                reuso por pessoas desenvolvedoras e jornalistas.
+                                <b>{c.s04_062}</b>{c.s04_063}
                             </li>
                             <li class="tw:text-lg tw:leading-6 tw:pl-6 tw:relative tw:max-[561px]:text-base tw:max-[561px]:leading-6">
-                                <b>Repositório de treinamento da QuitérIA</b>:
-                                todo o código usado no treinamento do modelo
-                                está aberto, e contribuições são bem-vindas.
+                                <b>{c.s04_064}</b>{c.s04_065}
                             </li>
                         </ul>
                     </div>
@@ -315,12 +215,9 @@ const challenges = [
                     <div class="sobre-narrow tw:w-205 tw:flex tw:flex-col tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:mt-1 tw:[&_h3]:mb-0 tw:[&_h3]:mx-0 tw:max-[901px]:w-full tw:gap-[20px] tw:m-0 tw:max-[701px]:max-w-none tw:max-[701px]:w-full tw:max-[701px]:gap-[20px] tw:max-[701px]:m-0 tw:[.partner-section_>_&]:gap-[20px] tw:[.partner-section_>_&]:w-205 tw:[.partner-section_>_&]:m-0 tw:[.partner-section_>_&_p]:text-ink tw:[.partner-section_>_&_p]:font-sans tw:[.partner-section_>_&_p]:text-lg tw:[.partner-section_>_&_p]:font-normal tw:[.partner-section_>_&_p]:tracking-normal tw:[.partner-section_>_&_p]:leading-6 tw:[.partner-section_>_&_p]:m-0 tw:[.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_>_&]:gap-[20px] tw:[.sobre-page_.partner-section_>_&]:w-205 tw:[.sobre-page_.partner-section_>_&]:m-0 tw:[.sobre-page_.partner-section_>_&_p]:text-ink tw:[.sobre-page_.partner-section_>_&_p]:font-sans tw:[.sobre-page_.partner-section_>_&_p]:text-lg tw:[.sobre-page_.partner-section_>_&_p]:font-normal tw:[.sobre-page_.partner-section_>_&_p]:tracking-normal tw:[.sobre-page_.partner-section_>_&_p]:leading-6 tw:[.sobre-page_.partner-section_>_&_p]:m-0 tw:[.sobre-page_.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.sobre-page_.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:h-11 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:m-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:bg-ink tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:shrink-0 tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:min-h-[184px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:pt-[6px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:h-11 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:m-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:bg-ink tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:shrink-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:gap-[20px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mt-[28px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:gap-7 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:w-full tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:m-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&>header]:h-21.5">
                         <header class="tw:flex tw:flex-col tw:gap-4 tw:h-11 tw:relative tw:m-0 tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-4 tw:max-[701px]:h-11! tw:max-[701px]:relative! tw:max-[701px]:w-full tw:max-[701px]:mt-0 tw:max-[701px]:mb-2 tw:max-[701px]:mx-0">
                             <i class="tw:bg-ink tw:block tw:h-1 tw:w-24 tw:left-0 tw:absolute tw:top-0 tw:max-[701px]:bg-ink tw:max-[701px]:h-1! tw:max-[701px]:absolute! tw:max-[701px]:w-24! tw:max-[701px]:block! tw:max-[701px]:flex-[0_0_4px]! tw:max-[701px]:left-0! tw:max-[701px]:top-0!"></i>
-                            <h2 class="tw:text-ink tw:text-4xl tw:left-0 tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">Desafios e limitações</h2>
+                            <h2 class="tw:text-ink tw:text-4xl tw:left-0 tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">{c.s05_066}</h2>
                         </header>
-                        <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:min-h-15 tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">
-                            O desenvolvimento e a manutenção do{" "}
-                            <em class="tw:italic">Elas no Congresso</em> enfrentam desafios
-                            técnicos, metodológicos e políticos contínuos.
+                        <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:min-h-15 tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">{c.s05_x006}<em class="tw:italic">{c.s05_067}</em> {c.s05_068}
                         </p>
                         {challenges.map(([title, text]) => (
                             <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:min-h-22.5 tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">
@@ -334,67 +231,32 @@ const challenges = [
                     <div class="sobre-narrow tw:w-205 tw:flex tw:flex-col tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:mt-1 tw:[&_h3]:mb-0 tw:[&_h3]:mx-0 tw:max-[901px]:w-full tw:gap-[20px] tw:m-0 tw:max-[701px]:max-w-none tw:max-[701px]:w-full tw:max-[701px]:gap-[20px] tw:max-[701px]:m-0 tw:[.partner-section_>_&]:gap-[20px] tw:[.partner-section_>_&]:w-205 tw:[.partner-section_>_&]:m-0 tw:[.partner-section_>_&_p]:text-ink tw:[.partner-section_>_&_p]:font-sans tw:[.partner-section_>_&_p]:text-lg tw:[.partner-section_>_&_p]:font-normal tw:[.partner-section_>_&_p]:tracking-normal tw:[.partner-section_>_&_p]:leading-6 tw:[.partner-section_>_&_p]:m-0 tw:[.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_>_&]:gap-[20px] tw:[.sobre-page_.partner-section_>_&]:w-205 tw:[.sobre-page_.partner-section_>_&]:m-0 tw:[.sobre-page_.partner-section_>_&_p]:text-ink tw:[.sobre-page_.partner-section_>_&_p]:font-sans tw:[.sobre-page_.partner-section_>_&_p]:text-lg tw:[.sobre-page_.partner-section_>_&_p]:font-normal tw:[.sobre-page_.partner-section_>_&_p]:tracking-normal tw:[.sobre-page_.partner-section_>_&_p]:leading-6 tw:[.sobre-page_.partner-section_>_&_p]:m-0 tw:[.sobre-page_.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.sobre-page_.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:h-11 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:m-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:bg-ink tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:shrink-0 tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:min-h-[184px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:pt-[6px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:h-11 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:m-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:bg-ink tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:shrink-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:gap-[20px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mt-[28px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:gap-7 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:w-full tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:m-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&>header]:h-21.5">
                         <header class="tw:flex tw:flex-col tw:gap-4 tw:h-11 tw:relative tw:m-0 tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-4 tw:max-[701px]:h-11! tw:max-[701px]:relative! tw:max-[701px]:w-full tw:max-[701px]:mt-0 tw:max-[701px]:mb-2 tw:max-[701px]:mx-0">
                             <i class="tw:bg-ink tw:block tw:h-1 tw:w-24 tw:left-0 tw:absolute tw:top-0 tw:max-[701px]:bg-ink tw:max-[701px]:h-1! tw:max-[701px]:absolute! tw:max-[701px]:w-24! tw:max-[701px]:block! tw:max-[701px]:flex-[0_0_4px]! tw:max-[701px]:left-0! tw:max-[701px]:top-0!"></i>
-                            <h2 class="tw:text-ink tw:text-4xl tw:left-0 tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">Próximos passos</h2>
+                            <h2 class="tw:text-ink tw:text-4xl tw:left-0 tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">{c.s06_069}</h2>
                         </header>
                         <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:min-h-[180px] tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">
-                            O <em class="tw:italic">Elas no Congresso</em> é uma iniciativa em
-                            constante aperfeiçoamento, acompanhando as
-                            transformações do processo legislativo, das
-                            categorias analíticas, das tecnologias de
-                            inteligência artificial e das necessidades da
-                            sociedade civil. Os próximos ciclos de
-                            desenvolvimento buscam consolidar o projeto como uma
-                            infraestrutura pública de monitoramento legislativo
-                            sensível a gênero, ampliando a cobertura,
-                            transparência e capacidade analítica.
+                            {c.s06_070} <em class="tw:italic">{c.s06_071}</em> {c.s06_072}
                         </p>
                         <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:min-h-[150px] tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">
-                            Entre as prioridades estão o fortalecimento da
-                            QuitérIA, com novos ciclos de treinamento sobre uma
-                            base continuamente ampliada e a adoção do Protocolo
-                            de Avaliação de Proposições Legislativas, que
-                            padroniza critérios e qualifica as anotações
-                            humanas, e a realização periódica de avaliações de
-                            desempenho do modelo, com monitoramento de vieses,
-                            testes comparativos, publicação de indicadores de
-                            qualidade e estudos com técnicas de explicabilidade.
+                            {c.s06_073}
                         </p>
                         <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:min-h-[120px] tw:pt-[1px] tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">
-                            Queremos também seguir compartilhando metodologias,
-                            ferramentas e aprendizados com outras organizações
-                            da sociedade civil, estimulando novas iniciativas de
-                            monitoramento legislativo e de tecnologias cívicas
-                            comprometidas com os direitos humanos, a igualdade
-                            de gênero e o fortalecimento da democracia.
+                            {c.s06_074}
                         </p>
-                        <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:min-h-22.5 tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">
-                            Os planos de evolução da plataforma, da metodologia
-                            e da inteligência artificial são atualizados
-                            continuamente e podem ser consultados no{" "}
-                            <a class="tw:text-accent tw:cursor-pointer tw:font-bold tw:leading-[30px] tw:no-underline tw:hover:text-accent tw:hover:no-underline"
-                                href="https://github.com/institutoazmina/ia-feminista-elas-no-congresso"
+                        <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:min-h-22.5 tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">{c.s06_x007}<a class="tw:text-accent tw:cursor-pointer tw:font-bold tw:leading-[30px] tw:no-underline tw:hover:text-accent tw:hover:no-underline"
+                                href={c.s06_075}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                repositório público do projeto
+                                {c.s06_076}
                             </a>
-                            , onde estão registradas as funcionalidades
-                            implementadas, em desenvolvimento e planejadas.
+                            {c.s06_077}
                         </p>
-                        <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:min-h-[120px] tw:pt-[1px] tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">
-                            Sistemas de monitoramento legislativo e inteligência
-                            cívica exigem adaptação permanente às transformações
-                            políticas, tecnológicas e sociais, o que depende de
-                            financiamento contínuo para manutenção e hospedagem
-                            técnica, atualização metodológica, governança de
-                            dados e fortalecimento institucional.{" "}
-                            <a class="tw:text-accent tw:cursor-pointer tw:font-bold tw:leading-[30px] tw:no-underline tw:hover:text-accent tw:hover:no-underline"
-                                href="https://docs.google.com/document/d/19fUYvKdA2UI0ddlUVWnAVzgmIiH-rey3R-pdSemzZw4/edit"
+                        <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:min-h-[120px] tw:pt-[1px] tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">{c.s06_x008}<a class="tw:text-accent tw:cursor-pointer tw:font-bold tw:leading-[30px] tw:no-underline tw:hover:text-accent tw:hover:no-underline"
+                                href={c.s06_078}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Veja como contribuir financeiramente com esta
-                                iniciativa
+                                {c.s06_079}
                             </a>
                             .
                         </p>
@@ -404,206 +266,156 @@ const challenges = [
                     <div class="sobre-narrow tw:w-205 tw:flex tw:flex-col tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:mt-1 tw:[&_h3]:mb-0 tw:[&_h3]:mx-0 tw:max-[901px]:w-full tw:gap-[20px] tw:m-0 tw:max-[701px]:max-w-none tw:max-[701px]:w-full tw:max-[701px]:gap-[20px] tw:max-[701px]:m-0 tw:[.partner-section_>_&]:gap-[20px] tw:[.partner-section_>_&]:w-205 tw:[.partner-section_>_&]:m-0 tw:[.partner-section_>_&_p]:text-ink tw:[.partner-section_>_&_p]:font-sans tw:[.partner-section_>_&_p]:text-lg tw:[.partner-section_>_&_p]:font-normal tw:[.partner-section_>_&_p]:tracking-normal tw:[.partner-section_>_&_p]:leading-6 tw:[.partner-section_>_&_p]:m-0 tw:[.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_>_&]:gap-[20px] tw:[.sobre-page_.partner-section_>_&]:w-205 tw:[.sobre-page_.partner-section_>_&]:m-0 tw:[.sobre-page_.partner-section_>_&_p]:text-ink tw:[.sobre-page_.partner-section_>_&_p]:font-sans tw:[.sobre-page_.partner-section_>_&_p]:text-lg tw:[.sobre-page_.partner-section_>_&_p]:font-normal tw:[.sobre-page_.partner-section_>_&_p]:tracking-normal tw:[.sobre-page_.partner-section_>_&_p]:leading-6 tw:[.sobre-page_.partner-section_>_&_p]:m-0 tw:[.sobre-page_.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.sobre-page_.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:h-11 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:m-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:bg-ink tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:shrink-0 tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:min-h-[184px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:pt-[6px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:h-11 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:m-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:bg-ink tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:shrink-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:gap-[20px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mt-[28px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:gap-7 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:w-full tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:m-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&>header]:h-21.5">
                         <header class="tw:flex tw:flex-col tw:gap-4 tw:h-11 tw:relative tw:mt-0 tw:mb-2 tw:mx-0 tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-4 tw:max-[701px]:h-21.5! tw:max-[701px]:relative! tw:max-[701px]:w-full tw:max-[701px]:mt-0 tw:max-[701px]:mb-2 tw:max-[701px]:mx-0">
                             <i class="tw:bg-ink tw:block tw:h-1 tw:w-24 tw:left-0 tw:absolute tw:top-0 tw:max-[701px]:bg-ink tw:max-[701px]:h-1! tw:max-[701px]:absolute! tw:max-[701px]:w-24! tw:max-[701px]:block! tw:max-[701px]:flex-[0_0_4px]! tw:max-[701px]:left-0! tw:max-[701px]:top-0!"></i>
-                            <h2 class="tw:text-ink tw:font-display tw:text-4xl tw:[font-variation-settings:'wdth'_75] tw:font-bold tw:left-0 tw:tracking-normal tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">Reconhecimento e eventos</h2>
+                            <h2 class="tw:text-ink tw:font-display tw:text-4xl tw:[font-variation-settings:'wdth'_75] tw:font-bold tw:left-0 tw:tracking-normal tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">{c.s07_080}</h2>
                         </header>
                         <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">
-                            Em 2020, o <em>Elas no Congresso</em> venceu o{" "}
-                            <a class="tw:text-accent tw:font-normal tw:underline tw:[text-decoration-thickness:1px] tw:[text-underline-position:from-font]"
-                                href="https://premio.jornalismodedados.org.br/"
+                            {c.s07_081} <em>{c.s07_082}</em>{c.s07_x009}<a class="tw:text-accent tw:font-normal tw:underline tw:[text-decoration-thickness:1px] tw:[text-underline-position:from-font]"
+                                href={c.s07_083}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                Prêmio Cláudio Weber Abramo de Jornalismo de
-                                Dados
-                            </a>{" "}
-                            na categoria Inovação. Os jurados destacaram a
-                            transparência metodológica e a replicabilidade do
-                            projeto.
-                        </p>
+                                {c.s07_084}
+                            </a>{c.s07_x010}</p>
                         <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">
-                            <strong>
-                                Em 2026, a QuitérIA venceu o prêmio{" "}
-                                <a class="tw:text-accent tw:font-normal tw:underline tw:[text-decoration-thickness:1px] tw:[text-underline-position:from-font]"
-                                    href="https://www.premiowsa.com.br/"
+                            <strong>{c.s07_x011}<a class="tw:text-accent tw:font-normal tw:underline tw:[text-decoration-thickness:1px] tw:[text-underline-position:from-font]"
+                                    href={c.s07_085}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    WSA Brasil — World Summit Awards
-                                </a>
-                                , na categoria Engajamento do Governo e do
-                                Cidadão, que celebra soluções digitais capazes
-                                de ampliar o acesso à informação, fortalecer a
-                                transparência, estimular a participação e
-                                contribuir para processos democráticos mais
-                                inclusivos. A premiação é conduzida pela{" "}
-                                <a class="tw:text-accent tw:font-normal tw:underline tw:[text-decoration-thickness:1px] tw:[text-underline-position:from-font]"
-                                    href="https://icnm.net/"
+                                    {c.s07_086}
+                                </a>{c.s07_x012}<a class="tw:text-accent tw:font-normal tw:underline tw:[text-decoration-thickness:1px] tw:[text-underline-position:from-font]"
+                                    href={c.s07_087}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    ICNM
+                                    {c.s07_088}
                                 </a>
-                                , organização austríaca sem fins lucrativos com
-                                sede em Salzburgo e Viena, na Áustria.
+                                {c.s07_089}
                             </strong>
                         </p>
                         <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:text-lg tw:max-[701px]:leading-[30px] tw:max-[701px]:min-h-0! tw:max-[701px]:pt-0! tw:max-[701px]:w-full">
-                            A iniciativa já foi apresentada em eventos como os
-                            Congressos da Abraji, o Simpósio Internacional
-                            LAVITS, a Cryptorave, o CODA, o Parlaméricas e uma
-                            audiência pública do Ministério das Mulheres.
+                            {c.s07_090}
                         </p>
                     </div>
                 </section>
                 <section class="sobre-section credits tw:border-t-[2px] tw:border-solid tw:border-t-[rgba(66,_66,_246,_0.06)] tw:py-16 tw:[&_h2]:text-4xl tw:[&_h2]:leading-[42px] tw:[&_h2]:m-0 tw:max-[901px]:py-12 tw:max-[901px]:px-6   tw:pb-16 tw:items-start tw:flex tw:flex-col tw:gap-8 tw:w-[calc(100%_-_96px)] tw:px-0 tw:my-0 tw:mx-12 tw:max-[901px]:w-full tw:max-[901px]:m-0 tw:max-[701px]:border-t-[2px] tw:max-[701px]:border-solid tw:max-[701px]:border-t-[rgba(66,66,246,.06)] tw:max-[701px]:gap-8 tw:max-[701px]:w-full tw:max-[701px]:pt-16.5 tw:max-[701px]:pb-[16px] tw:max-[701px]:pr-0 tw:max-[701px]:pl-6 tw:max-[701px]:m-0 tw:[&:first-of-type]:border-0 tw:[.sobre-history_+_&_>_header]:h-11 tw:[.sobre-history_+_&_>_header]:relative tw:[.sobre-history_+_&_>_header]:w-205 tw:[.sobre-history_+_&_>_header]:m-0 tw:[.sobre-history_+_&_>_header_i]:bg-ink tw:[.sobre-history_+_&_>_header_i]:left-0 tw:[.sobre-history_+_&_>_header_i]:absolute tw:[.sobre-history_+_&_>_header_i]:top-0 tw:[.sobre-history_+_&_>_header_h2]:text-4xl tw:[.sobre-history_+_&_>_header_h2]:left-0 tw:[.sobre-history_+_&_>_header_h2]:leading-[42px] tw:[.sobre-history_+_&_>_header_h2]:absolute tw:[.sobre-history_+_&_>_header_h2]:top-2.5 tw:[.sobre-history_+_&_>_header_h2]:m-0 tw:[.sobre-page_.partner-section_+_&]:pt-16.5 tw:[.sobre-page_.partner-section_+_&]:pb-16 tw:[.sobre-page_.partner-section_+_&]:px-12 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:pt-16.5 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:pb-16 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_&]:px-12 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:pt-16.5 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:pb-[32px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+&]:px-6">
                     <header class="tw:w-180 tw:flex tw:flex-col tw:gap-4 tw:h-11 tw:relative tw:m-0 tw:max-[901px]:w-full tw:max-[701px]:max-w-none tw:max-[701px]:w-[352px] tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-4 tw:max-[701px]:h-11! tw:max-[701px]:relative! tw:max-[701px]:m-0">
                         <i class="tw:bg-ink tw:block tw:h-1 tw:w-24 tw:left-0 tw:absolute tw:top-0 tw:max-[701px]:bg-ink tw:max-[701px]:h-1! tw:max-[701px]:absolute! tw:max-[701px]:w-24! tw:max-[701px]:block! tw:max-[701px]:flex-[0_0_4px]! tw:max-[701px]:left-0! tw:max-[701px]:top-0!"></i>
-                        <h2 class="tw:text-ink tw:font-display tw:text-4xl tw:[font-variation-settings:'wdth'_75] tw:font-bold tw:left-0 tw:tracking-normal tw:leading-[42px] tw:absolute tw:top-2.5 tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">Expediente</h2>
+                        <h2 class="tw:text-ink tw:font-display tw:text-4xl tw:[font-variation-settings:'wdth'_75] tw:font-bold tw:left-0 tw:tracking-normal tw:leading-[42px] tw:absolute tw:top-2.5 tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:absolute! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-0! tw:max-[701px]:top-5! tw:max-[701px]:m-0">{c.s08_091}</h2>
                     </header>
                     <div class="credits-grid tw:m-0 tw:flex tw:w-full tw:flex-wrap tw:gap-x-16 tw:gap-y-10 tw:[&>div]:min-w-0 tw:[&>div]:w-[calc(50%_-_32px)] tw:[&>div:last-child]:w-full tw:min-[901px]:[&>div:nth-child(-n+2)]:h-[220px] tw:min-[901px]:[&>div:nth-child(3)]:h-[112px] tw:min-[901px]:[&>div:nth-child(4)]:h-[112px] tw:max-[901px]:flex-col tw:max-[901px]:[&>div]:w-full tw:max-[701px]:gap-y-0">
                         <div class="tw:self-start tw:flex tw:flex-col tw:gap-3.5 tw:max-[901px]:min-h-0 tw:max-[701px]:gap-3.5 tw:max-[701px]:min-h-0 tw:max-[701px]:w-[352px] tw:max-[701px]:pb-7.5">
-                            <h3 class="tw:text-ink tw:[font-family:Anybody,sans-serif]! tw:text-lg! tw:[font-variation-settings:'wdth'_100]! tw:font-light! tw:tracking-normal tw:leading-[22px] tw:uppercase tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-lg tw:max-[701px]:[font-variation-settings:'wdth'_100] tw:max-[701px]:font-[300] tw:max-[701px]:leading-[22px] tw:max-[701px]:m-0">Equipe AzMina</h3>
+                            <h3 class="tw:text-ink tw:[font-family:Anybody,sans-serif]! tw:text-lg! tw:[font-variation-settings:'wdth'_100]! tw:font-light! tw:tracking-normal tw:leading-[22px] tw:uppercase tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-lg tw:max-[701px]:[font-variation-settings:'wdth'_100] tw:max-[701px]:font-[300] tw:max-[701px]:leading-[22px] tw:max-[701px]:m-0">{c.s08_092}</h3>
                             <p class="tw:text-ink tw:font-sans tw:text-sm tw:font-normal tw:tracking-normal tw:leading-[22px] tw:flex tw:flex-col tw:gap-1.5 tw:m-0 tw:max-[701px]:text-sm tw:max-[701px]:gap-1.5 tw:max-[701px]:leading-[22px] tw:max-[701px]:w-[352px]">
                                 <span>
-                                    <strong class="tw:font-bold">Diego Rabatone Oliveira</strong> —
-                                    Consultor de Desenvolvimento / ASK-AR
+                                    <strong class="tw:font-bold">{c.s08_093}</strong> {c.s08_094}
                                 </span>
                                 <span>
-                                    <strong class="tw:font-bold">Giulia Santos</strong> — Gerente de
-                                    Arte
+                                    <strong class="tw:font-bold">{c.s08_095}</strong> {c.s08_096}
                                 </span>
                                 <span>
-                                    <strong class="tw:font-bold">Helena Bertho</strong> — Diretoria
-                                    estratégica
+                                    <strong class="tw:font-bold">{c.s08_097}</strong> {c.s08_098}
                                 </span>
                                 <span>
-                                    <strong class="tw:font-bold">Ingrid Fernandes</strong> — Gerente
-                                    de Tecnologia
+                                    <strong class="tw:font-bold">{c.s08_099}</strong> {c.s08_100}
                                 </span>
                                 <span>
-                                    <strong class="tw:font-bold">Maria Ísis Santos</strong> —
-                                    Coordenadora de Projetos de Dados
+                                    <strong class="tw:font-bold">{c.s08_101}</strong> {c.s08_102}
                                 </span>
                                 <span>
-                                    <strong class="tw:font-bold">Marília Moreira</strong> — Diretoria
-                                    institucional
+                                    <strong class="tw:font-bold">{c.s08_103}</strong> {c.s08_104}
                                 </span>
                             </p>
                         </div>
                         <div class="tw:self-start tw:flex tw:flex-col tw:gap-3.5 tw:max-[901px]:min-h-0 tw:max-[701px]:gap-3.5 tw:max-[701px]:min-h-0 tw:max-[701px]:w-[352px] tw:max-[701px]:pb-[28px]">
-                            <h3 class="tw:text-ink tw:[font-family:Anybody,sans-serif]! tw:text-lg! tw:[font-variation-settings:'wdth'_100]! tw:font-light! tw:tracking-normal tw:leading-[22px] tw:uppercase tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-lg tw:max-[701px]:[font-variation-settings:'wdth'_100] tw:max-[701px]:font-[300] tw:max-[701px]:leading-[22px] tw:max-[701px]:m-0">Fornecedores</h3>
+                            <h3 class="tw:text-ink tw:[font-family:Anybody,sans-serif]! tw:text-lg! tw:[font-variation-settings:'wdth'_100]! tw:font-light! tw:tracking-normal tw:leading-[22px] tw:uppercase tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-lg tw:max-[701px]:[font-variation-settings:'wdth'_100] tw:max-[701px]:font-[300] tw:max-[701px]:leading-[22px] tw:max-[701px]:m-0">{c.s08_105}</h3>
                             <p class="tw:text-ink tw:font-sans tw:text-sm tw:font-normal tw:tracking-normal tw:leading-[22px] tw:flex tw:flex-col tw:gap-1.5 tw:m-0 tw:max-[701px]:text-sm tw:max-[701px]:gap-1.5 tw:max-[701px]:leading-[22px] tw:max-[701px]:w-[352px]">
                                 <span>
-                                    <strong class="tw:font-bold">Letícia Oliveira</strong> — UX /
-                                    NOMA Studio
+                                    <strong class="tw:font-bold">{c.s08_106}</strong> {c.s08_107}
                                 </span>
                                 <span>
-                                    <strong class="tw:font-bold">Mariana Nascimento</strong> — UX /
-                                    NOMA Studio
+                                    <strong class="tw:font-bold">{c.s08_108}</strong> {c.s08_109}
                                 </span>
                                 <span>
-                                    <strong class="tw:font-bold">Rafael Chuluc</strong> —
-                                    Desenvolvedor backend / Wura
+                                    <strong class="tw:font-bold">{c.s08_110}</strong> {c.s08_111}
                                 </span>
                                 <span>
-                                    <strong class="tw:font-bold">Talita Santos</strong> —
-                                    Desenvolvedora frontend / Wura
+                                    <strong class="tw:font-bold">{c.s08_112}</strong> {c.s08_113}
                                 </span>
                                 <span>
-                                    <strong class="tw:font-bold">Téo Calvo</strong> — Desenvolvedor
-                                    IA / Wura
+                                    <strong class="tw:font-bold">{c.s08_114}</strong> {c.s08_115}
                                 </span>
                                 <span>
-                                    <strong class="tw:font-bold">Vinicius Sueiro</strong> —
-                                    Visualização de Dados
+                                    <strong class="tw:font-bold">{c.s08_116}</strong> {c.s08_117}
                                 </span>
                             </p>
                         </div>
                         <div class="tw:self-start tw:flex tw:flex-col tw:gap-3.5 tw:max-[901px]:min-h-0 tw:max-[701px]:gap-3.5 tw:max-[701px]:min-h-0 tw:max-[701px]:w-[352px]">
-                            <h3 class="tw:text-ink tw:[font-family:Anybody,sans-serif]! tw:text-lg! tw:[font-variation-settings:'wdth'_100]! tw:font-light! tw:tracking-normal tw:leading-[22px] tw:uppercase tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-lg tw:max-[701px]:[font-variation-settings:'wdth'_100] tw:max-[701px]:font-[300] tw:max-[701px]:leading-[22px] tw:max-[701px]:m-0">Comitê de Governança / QuitérIA</h3>
+                            <h3 class="tw:text-ink tw:[font-family:Anybody,sans-serif]! tw:text-lg! tw:[font-variation-settings:'wdth'_100]! tw:font-light! tw:tracking-normal tw:leading-[22px] tw:uppercase tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-lg tw:max-[701px]:[font-variation-settings:'wdth'_100] tw:max-[701px]:font-[300] tw:max-[701px]:leading-[22px] tw:max-[701px]:m-0">{c.s08_118}</h3>
                             <p class="tw:text-ink tw:font-sans tw:text-sm tw:font-normal tw:tracking-normal tw:leading-[22px] tw:flex tw:flex-col tw:gap-1.5 tw:m-0 tw:max-[701px]:text-sm tw:max-[701px]:gap-1.5 tw:max-[701px]:leading-[22px] tw:max-[701px]:w-[352px]">
-                                <span>Fernanda Martins</span>
-                                <span>Haydée Svab</span>
-                                <span>Vitória Régia da Silva</span>
+                                <span>{c.s08_119}</span>
+                                <span>{c.s08_120}</span>
+                                <span>{c.s08_121}</span>
                             </p>
                         </div>
                         <div class="tw:self-start tw:flex tw:flex-col tw:gap-3.5 tw:max-[901px]:min-h-0 tw:max-[701px]:gap-3.5 tw:max-[701px]:min-h-0 tw:max-[701px]:w-[352px] tw:max-[701px]:pb-7.5">
-                            <h3 class="tw:text-ink tw:[font-family:Anybody,sans-serif]! tw:text-lg! tw:[font-variation-settings:'wdth'_100]! tw:font-light! tw:tracking-normal tw:leading-[22px] tw:uppercase tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-lg tw:max-[701px]:[font-variation-settings:'wdth'_100] tw:max-[701px]:font-[300] tw:max-[701px]:leading-[22px] tw:max-[701px]:m-0">Comitê de Validação / QuitérIA</h3>
+                            <h3 class="tw:text-ink tw:[font-family:Anybody,sans-serif]! tw:text-lg! tw:[font-variation-settings:'wdth'_100]! tw:font-light! tw:tracking-normal tw:leading-[22px] tw:uppercase tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-lg tw:max-[701px]:[font-variation-settings:'wdth'_100] tw:max-[701px]:font-[300] tw:max-[701px]:leading-[22px] tw:max-[701px]:m-0">{c.s08_122}</h3>
                             <p class="tw:text-ink tw:font-sans tw:text-sm tw:font-normal tw:tracking-normal tw:leading-[22px] tw:flex tw:flex-col tw:gap-1.5 tw:m-0 tw:max-[701px]:text-sm tw:max-[701px]:gap-1.5 tw:max-[701px]:leading-[22px] tw:max-[701px]:w-[352px]">
-                                <span>Ana Carolina Araújo</span>
-                                <span>Rachel de Andrade</span>
-                                <span>Regina Célia Barbosa</span>
-                                <span>Roberta Viola</span>
+                                <span>{c.s08_123}</span>
+                                <span>{c.s08_124}</span>
+                                <span>{c.s08_125}</span>
+                                <span>{c.s08_126}</span>
                             </p>
                         </div>
                         <div class="credits-previous tw:self-start tw:flex tw:flex-col tw:gap-3.5 tw:max-[901px]:min-h-0 tw:max-[701px]:gap-3.5 tw:max-[701px]:min-h-0 tw:max-[701px]:w-[352px]">
-                            <h3 class="tw:text-ink tw:[font-family:Anybody,sans-serif]! tw:text-lg! tw:[font-variation-settings:'wdth'_100]! tw:font-light! tw:tracking-normal tw:leading-[22px] tw:uppercase tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-lg tw:max-[701px]:[font-variation-settings:'wdth'_100] tw:max-[701px]:font-[300] tw:max-[701px]:leading-[22px] tw:max-[701px]:m-0">Edições anteriores</h3>
+                            <h3 class="tw:text-ink tw:[font-family:Anybody,sans-serif]! tw:text-lg! tw:[font-variation-settings:'wdth'_100]! tw:font-light! tw:tracking-normal tw:leading-[22px] tw:uppercase tw:[font-stretch:normal] tw:not-italic tw:m-0 tw:max-[701px]:text-lg tw:max-[701px]:[font-variation-settings:'wdth'_100] tw:max-[701px]:font-[300] tw:max-[701px]:leading-[22px] tw:max-[701px]:m-0">{c.s08_127}</h3>
                             <div class="credits-previous__lists tw:gap-16 tw:h-42 tw:w-full tw:max-[901px]:gap-0 tw:max-[901px]:h-auto tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-0 tw:max-[701px]:h-auto tw:max-[701px]:w-[352px] tw:flex tw:[&>*]:min-w-0 tw:[&>*]:flex-1 tw:[&>*]:grow tw:max-[901px]:flex-col">
                                 <p class="tw:text-ink tw:font-sans tw:text-sm tw:font-normal tw:tracking-normal tw:leading-[22px] tw:flex tw:flex-col tw:gap-0 tw:whitespace-nowrap tw:m-0 tw:max-[901px]:whitespace-normal tw:max-[701px]:text-sm tw:max-[701px]:gap-1.5 tw:max-[701px]:leading-[22px] tw:max-[701px]:w-[352px] tw:max-[701px]:whitespace-normal">
                                     <span>
-                                        <strong class="tw:font-bold">Adriano Belisário</strong> —
-                                        Desenvolvimento de IA e modelagem de
-                                        dados
+                                        <strong class="tw:font-bold">{c.s08_128}</strong> {c.s08_129}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Ana Carolina Araújo</strong> —
-                                        Gestora de Programas e Projetos
+                                        <strong class="tw:font-bold">{c.s08_130}</strong> {c.s08_131}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Bárbara Libório</strong> —
-                                        Diretoria
+                                        <strong class="tw:font-bold">{c.s08_132}</strong> {c.s08_133}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Carolina Oms</strong> —
-                                        Diretoria
+                                        <strong class="tw:font-bold">{c.s08_134}</strong> {c.s08_135}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Diego Rabatone Oliveira</strong>{" "}
-                                        — Consultor de Desenvolvimento / ASK-AR
+                                        <strong class="tw:font-bold">{c.s08_136}</strong>{c.s08_x013}</span>
+                                    <span>
+                                        <strong class="tw:font-bold">{c.s08_137}</strong> {c.s08_138}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Haydée Svab</strong> —
-                                        Consultora de Desenvolvimento / ASK-AR
+                                        <strong class="tw:font-bold">{c.s08_139}</strong> {c.s08_140}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Helena Bertho</strong> —
-                                        Diretoria Estratégica
-                                    </span>
-                                    <span>
-                                        <strong class="tw:font-bold">Ingrid Fernandes</strong> —
-                                        Gerente de Tecnologia
+                                        <strong class="tw:font-bold">{c.s08_141}</strong> {c.s08_142}
                                     </span>
                                 </p>
                                 <p class="tw:text-ink tw:font-sans tw:text-sm tw:font-normal tw:tracking-normal tw:leading-[22px] tw:flex tw:flex-col tw:gap-0 tw:whitespace-nowrap tw:m-0 tw:max-[901px]:whitespace-normal tw:max-[701px]:text-sm tw:max-[701px]:gap-1.5 tw:max-[701px]:leading-[22px] tw:max-[701px]:w-[352px] tw:max-[701px]:whitespace-normal tw:max-[701px]:[order:-1]">
                                     <span>
-                                        <strong class="tw:font-bold">Lucas Ansei</strong> —
-                                        Desenvolvedor e modelagem de dados / App
-                                        Cívico
+                                        <strong class="tw:font-bold">{c.s08_143}</strong> {c.s08_144}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Natali Carvalho</strong> —
-                                        Newsletter
+                                        <strong class="tw:font-bold">{c.s08_145}</strong> {c.s08_146}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Renata Hirota</strong> —
-                                        Estatística
+                                        <strong class="tw:font-bold">{c.s08_147}</strong> {c.s08_148}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Roberta Viola</strong> —
-                                        Desenvolvimento de IA e modelagem de
-                                        dados
+                                        <strong class="tw:font-bold">{c.s08_149}</strong> {c.s08_150}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Robson Sobral</strong> —
-                                        Desenvolvedor de frontend / App Cívico
+                                        <strong class="tw:font-bold">{c.s08_151}</strong> {c.s08_152}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Thais Fôlego</strong> —
-                                        Diretoria
+                                        <strong class="tw:font-bold">{c.s08_153}</strong> {c.s08_154}
                                     </span>
                                     <span>
-                                        <strong class="tw:font-bold">Vinícius Pereira</strong> —
-                                        Desenvolvedor de dataviz
+                                        <strong class="tw:font-bold">{c.s08_155}</strong> {c.s08_156}
                                     </span>
                                 </p>
                             </div>
@@ -614,18 +426,10 @@ const challenges = [
                     <div class="sobre-narrow tw:w-205 tw:flex tw:flex-col tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:mt-1 tw:[&_h3]:mb-0 tw:[&_h3]:mx-0 tw:max-[901px]:w-full tw:gap-[28px] tw:m-0 tw:max-[701px]:max-w-none tw:max-[701px]:w-full tw:max-[701px]:gap-[28px] tw:max-[701px]:m-0 tw:[.partner-section_>_&]:gap-[20px] tw:[.partner-section_>_&]:w-205 tw:[.partner-section_>_&]:m-0 tw:[.partner-section_>_&_p]:text-ink tw:[.partner-section_>_&_p]:font-sans tw:[.partner-section_>_&_p]:text-lg tw:[.partner-section_>_&_p]:font-normal tw:[.partner-section_>_&_p]:tracking-normal tw:[.partner-section_>_&_p]:leading-6 tw:[.partner-section_>_&_p]:m-0 tw:[.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_>_&]:gap-[20px] tw:[.sobre-page_.partner-section_>_&]:w-205 tw:[.sobre-page_.partner-section_>_&]:m-0 tw:[.sobre-page_.partner-section_>_&_p]:text-ink tw:[.sobre-page_.partner-section_>_&_p]:font-sans tw:[.sobre-page_.partner-section_>_&_p]:text-lg tw:[.sobre-page_.partner-section_>_&_p]:font-normal tw:[.sobre-page_.partner-section_>_&_p]:tracking-normal tw:[.sobre-page_.partner-section_>_&_p]:leading-6 tw:[.sobre-page_.partner-section_>_&_p]:m-0 tw:[.sobre-page_.partner-section_>_&_strong]:font-bold tw:max-[901px]:[.sobre-page_.partner-section_>_&]:w-full tw:[.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:h-11 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header]:m-0 tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:bg-ink tw:[.sobre-page_.partner-section_+_.sobre-section_&_>_header_i]:shrink-0 tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(3)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(5)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:min-h-[124px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(6)]:pt-[6px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:min-h-[184px] tw:[.sobre-page_.sobre-challenges_&_>_p:nth-of-type(4)]:pt-[6px] tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:gap-7 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:w-205 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:my-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&]:mx-auto tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:h-11 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header]:m-0 tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:bg-ink tw:[body:has(.sobre-page)_.sobre-page_.partner-section_+_.sobre-section_&>header_i]:shrink-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:gap-[20px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:w-[calc(100%_-_48px)] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mt-[28px] tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mb-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&]:mx-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:text-lg tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section>&_p]:leading-6 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:gap-7 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:w-full tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&]:m-0 tw:max-[701px]:[body:has(.sobre-page)_.sobre-page_.partner-section+.sobre-section_&>header]:h-21.5">
                         <header class="tw:flex tw:flex-col tw:gap-4 tw:h-11 tw:relative tw:w-180 tw:m-0 tw:max-[701px]:flex tw:max-[701px]:flex-col tw:max-[701px]:gap-4 tw:max-[701px]:h-11 tw:max-[701px]:static tw:max-[701px]:w-full tw:max-[701px]:m-0">
                             <i class="tw:bg-ink tw:block tw:h-1 tw:w-24 tw:left-0 tw:absolute tw:top-0 tw:max-[701px]:bg-ink tw:max-[701px]:h-1 tw:max-[701px]:static tw:max-[701px]:w-24"></i>
-                            <h2 class="tw:text-ink tw:font-display tw:text-4xl tw:[font-stretch:normal] tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:font-bold tw:left-0 tw:tracking-normal tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:static! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-auto! tw:max-[701px]:top-auto! tw:max-[701px]:m-0">Apoio</h2>
+                            <h2 class="tw:text-ink tw:font-display tw:text-4xl tw:[font-stretch:normal] tw:not-italic tw:[font-variation-settings:'wdth'_75] tw:font-bold tw:left-0 tw:tracking-normal tw:leading-[42px] tw:absolute tw:top-2.5 tw:m-0 tw:max-[701px]:text-4xl tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-[42px] tw:max-[701px]:static! tw:max-[701px]:[text-box-edge:cap_alphabetic] tw:max-[701px]:[text-box-trim:trim-both] tw:max-[701px]:w-full tw:max-[701px]:left-auto! tw:max-[701px]:top-auto! tw:max-[701px]:m-0">{c.s09_157}</h2>
                         </header>
                         <p class="tw:text-ink tw:font-sans tw:text-lg tw:font-normal tw:tracking-normal tw:leading-[30px] tw:w-205 tw:h-[150px] tw:m-0 tw:max-[901px]:w-full tw:max-[901px]:h-auto tw:max-[701px]:text-lg tw:max-[701px]:h-auto tw:max-[701px]:leading-[30px] tw:max-[701px]:w-83 tw:max-[701px]:max-w-full">
-                            Este projeto conta com o apoio da Rede Feminista de
-                            IA da América Latina e do Caribe, do Codesinfo
-                            (Fundo de Inovação para o Jornalismo, coordenado
-                            pelo Projor com apoio da Google News Initiative), do
-                            Fundo ELAS+ Doar Para Transformar e da Agence
-                            Française de Développement (AFD). As ideias e
-                            opiniões expressas neste projeto são de
-                            responsabilidade das autoras e não refletem,
-                            necessariamente, o ponto de vista destes apoiadores.
+                            {c.s09_158}
                         </p>
                     </div>
                 </section>

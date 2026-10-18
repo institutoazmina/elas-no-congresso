@@ -26,47 +26,47 @@ import spw from "../../assets/images/logos/spw.webp";
 import themis from "../../assets/images/logos/themis.webp";
 import tretaqui from "../../assets/images/logos/tretaqui.webp";
 
-const partners = [
-    { name: "Anis Bioética", src: anis },
-    { name: "Artigo 19", src: artigo19 },
-    { name: "Cepia - Cidadania, Estudo, Pesquisa, Informação e Ação", src: cepia },
-    { name: "CFEMEA - Centro Feminista de Estudos e Assessoria", src: cfemea },
-    { name: "Coletivo Feminista Sexualidade e Saúde", src: coletivoFeminista },
-    { name: "Coletivo Mana a Mana", src: manaAMana },
-    { name: "deFEMde - Rede Feminista de Juristas", src: deFEMde },
-    { name: "Ecos", src: ecos },
-    { name: "Empodera", src: empodera },
-    { name: "Gepô", src: gepo },
-    { name: "Instituto + Diversidade", src: maisDiversidade },
-    { name: "Instituto Maria da Penha", src: mariaDaPenha },
-    { name: "Instituto Marielle Franco", src: marielleFranco },
-    { name: "Instituto Patrícia Galvão", src: patriciaGalvao },
-    { name: "Instituto Update", src: update },
-    { name: "Juristas Negras", src: juristasNegras },
-    { name: "LabCidade", src: labCidade },
-    { name: "Mulheres Negras Decidem", src: mulheresNegrasDecidem },
-    { name: "Observatório da Violência Obstétrica no Brasil", src: ovoBr },
-    { name: "Plan International", src: planInternational },
-    { name: "Rede Liberdade", src: redeLiberdade },
-    { name: "SOF - Sempreviva Organização Feminista", src: sof },
-    { name: "SPW - Sexuality Policy Watch", src: spw },
-    { name: "Themis", src: themis },
-    { name: "TretAqui", src: tretaqui },
-];
+const staticLogos = {
+    anis: anis,
+    artigo19: artigo19,
+    cepia: cepia,
+    cfemea: cfemea,
+    coletivoFeminista: coletivoFeminista,
+    manaAMana: manaAMana,
+    deFEMde: deFEMde,
+    ecos: ecos,
+    empodera: empodera,
+    gepo: gepo,
+    maisDiversidade: maisDiversidade,
+    mariaDaPenha: mariaDaPenha,
+    marielleFranco: marielleFranco,
+    patriciaGalvao: patriciaGalvao,
+    update: update,
+    juristasNegras: juristasNegras,
+    labCidade: labCidade,
+    mulheresNegrasDecidem: mulheresNegrasDecidem,
+    ovoBr: ovoBr,
+    planInternational: planInternational,
+    redeLiberdade: redeLiberdade,
+    sof: sof,
+    spw: spw,
+    themis: themis,
+    tretaqui: tretaqui,
+};
+
+const { partners } = Astro.props as { partners: { name: string; asset_key: string; logo_url: string }[] };
 ---
 
 <ul class="tw:grid tw:grid-cols-3 tw:gap-6 tw:pt-12 tw:md:grid-cols-5 tw:md:gap-10 tw:md:pt-20">
-    {partners.map(({ name, src }) => (
+    {partners.map(({ name, asset_key, logo_url }) => (
         <li class="tw:flex tw:items-center tw:justify-center">
-            <Image
-                src={src}
-                alt={name}
-                title={name}
-                loading="lazy"
-                width={160}
-                densities={[1, 2]}
-                class="tw:h-auto tw:w-20 tw:md:w-40"
-            />
+            {logo_url ? (
+                <img src={logo_url} alt={name} title={name} loading="lazy" width="160" class="tw:h-auto tw:w-20 tw:md:w-40" />
+            ) : staticLogos[asset_key as keyof typeof staticLogos] ? (
+                <Image src={staticLogos[asset_key as keyof typeof staticLogos]} alt={name} title={name} loading="lazy" width={160} densities={[1, 2]} class="tw:h-auto tw:w-20 tw:md:w-40" />
+            ) : (
+                <span>{name}</span>
+            )}
         </li>
     ))}
 </ul>

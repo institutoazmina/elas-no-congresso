@@ -7,6 +7,7 @@
  */
 import { apiGet } from './client';
 import feministAIPreview from './feminist-ai-preview.json';
+import aboutPreview from './about-preview.json';
 
 type CmsImage = { url: string; width: number; height: number };
 export type PageHeroContent = { title: string; subtitle: string; heroImage: CmsImage };
@@ -37,4 +38,20 @@ export type FeministAIPageContent = {
 /** Conteúdo editorial de `/ia-feminista`, lido no build após cada salvamento no admin. */
 export function getFeministAIPage(): Promise<FeministAIPageContent> {
   return apiGet<FeministAIPageContent>('/cms/feminist-ai');
+}
+
+type AboutTimelineEvent = WithoutPosition<typeof aboutPreview.timeline[number]>;
+type AboutChallenge = WithoutPosition<typeof aboutPreview.challenges[number]>;
+
+export type AboutPageContent = {
+  content: Record<string, string>;
+  hero_image: CmsImage;
+  timeline: AboutTimelineEvent[];
+  challenges: AboutChallenge[];
+  partners: { name: string; asset_key: string; logo_url: string }[];
+};
+
+/** Textos, links e linha do tempo de `/sobre`, lidos no build. */
+export function getAboutPage(): Promise<AboutPageContent> {
+  return apiGet<AboutPageContent>('/cms/about');
 }
