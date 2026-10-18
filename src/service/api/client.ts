@@ -1,8 +1,24 @@
 import { API_BASE_URL } from 'astro:env/server';
 import { fetchPublicData } from '../../lib/public-data-fetch';
+import feministAIPreview from './feminist-ai-preview.json';
+import feministAIHero from '../../assets/images/quiteria.png';
+import feministAIFlowDesktop from '../../assets/images/ia-feminista/processing-flow.svg';
+import feministAIFlowMobile from '../../assets/images/ia-feminista/processing-flow-mobile.png';
 
 const localPreviewData = (path: string, params: Record<string, string | number | undefined>): unknown => {
   if (!import.meta.env.DEV) return undefined;
+
+  if (path === '/cms/feminist-ai') {
+    return {
+      content: feministAIPreview.page,
+      images: {
+        hero: { url: feministAIHero.src, width: feministAIHero.width, height: feministAIHero.height },
+        flow_desktop: { url: feministAIFlowDesktop.src, width: feministAIFlowDesktop.width, height: feministAIFlowDesktop.height },
+        flow_mobile: { url: feministAIFlowMobile.src, width: feministAIFlowMobile.width, height: feministAIFlowMobile.height },
+      },
+      ...feministAIPreview.items,
+    };
+  }
 
   if (path === '/stats/propositions/genders') {
     return { women: { favorable: 0.8331, unfavorable: 0.1669 }, men: { favorable: 0.7346, unfavorable: 0.2654 } };
