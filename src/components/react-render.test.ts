@@ -155,6 +155,20 @@ test("author proposals render on the server with the API pace, including the des
 });
 
 test("interactive islands render without browser globals or hydration-only data", () => {
+    const homeContent = {
+        party_title_before: "Estes são os partidos que mais têm",
+        party_title_after: "Nossos direitos",
+        party_subtitle: "Atuação dos partidos",
+        party_caption: "Veja em detalhes",
+        party_caption_url: "/atividade-legislativa",
+        uf_title: "Projetos por UF",
+        uf_subtitle: "Atuação das bancadas",
+        uf_caption: "Veja os estados",
+        uf_cta_text: "Veja o seu estado",
+        uf_cta_url: "/atividade-legislativa",
+        parliamentarians_title: "Parlamentares que jogam contra",
+        parliamentarians_subtitle: "Projetos apresentados",
+    };
     const fixtures: [number, Record<string, unknown>][] = [
         [0, {}],
         [3, { number: "PL 10/2026", house: "camara" }],
@@ -171,6 +185,7 @@ test("interactive islands render without browser globals or hydration-only data"
                     },
                 ],
                 gap: 2,
+                content: homeContent,
             },
         ],
         [
@@ -186,10 +201,11 @@ test("interactive islands render without browser globals or hydration-only data"
                 highlights: [],
                 ufData: {},
                 ufLabels: { SP: "São Paulo" },
+                content: homeContent,
             },
         ],
         [8, { projects: [proposal], variant: "fast" }],
-        [9, { people: [] }],
+        [9, { people: [], content: homeContent }],
         [10, { initialPosts: [], totalPages: 0 }],
         [11, { currentPath: "/alertas" }],
     ];

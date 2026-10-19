@@ -2,8 +2,12 @@ import { API_BASE_URL } from 'astro:env/server';
 import { fetchPublicData } from '../../lib/public-data-fetch';
 import feministAIPreview from './feminist-ai-preview.json';
 import aboutPreview from './about-preview.json';
+import homePreview from './home-preview.json';
 import feministAIHero from '../../assets/images/quiteria.png';
 import aboutHero from '../../assets/images/birds.png';
+import homeHero from '../../assets/images/hero/hero-congress-illustration.webp';
+import homeExplore from '../../assets/images/explore/screen-tool-@3x.png';
+import homeQuiteria from '../../assets/images/quiteria-banner.png';
 import feministAIFlowDesktop from '../../assets/images/ia-feminista/processing-flow.svg';
 import feministAIFlowMobile from '../../assets/images/ia-feminista/processing-flow-mobile.png';
 
@@ -36,6 +40,26 @@ const localPreviewData = (path: string, params: Record<string, string | number |
       timeline: aboutPreview.timeline,
       challenges: aboutPreview.challenges,
       partners: aboutPreview.partners.map(({ name, asset_key }) => ({ name, asset_key, logo_url: '' })),
+    };
+  }
+
+  if (path === '/cms/home') {
+    return {
+      content: Object.fromEntries(homePreview.copy.map(({ key, value }) => [key, value])),
+      images: {
+        hero: { url: homeHero.src, width: homeHero.width, height: homeHero.height },
+        explore: { url: homeExplore.src, width: homeExplore.width, height: homeExplore.height },
+        quiteria: { url: homeQuiteria.src, width: homeQuiteria.width, height: homeQuiteria.height },
+      },
+    };
+  }
+
+  if (path === '/cms/footer-alerts') {
+    return {
+      title: 'Receba nossos alertas',
+      text: 'Quer saber quando uma nova proposta sobre gênero é apresentada, ou quando algo de muita importância avança? A gente te avisa!',
+      cta_text: 'Saiba mais',
+      cta_url: '/alertas',
     };
   }
 

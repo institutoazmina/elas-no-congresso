@@ -50,6 +50,7 @@ export default function UfProjectsChart({
     highlights,
     ufData,
     ufLabels,
+    content,
 }: {
     views: {
         stance: Stance;
@@ -63,6 +64,7 @@ export default function UfProjectsChart({
     }[];
     ufData: Record<string, { favorable: number; unfavorable: number }>;
     ufLabels: Record<string, string>;
+    content: Record<string, string>;
 }) {
     const [stance, setStance] = useState<Stance>("unfavorable");
     const [panel, setPanel] = useState("map");
@@ -152,7 +154,7 @@ export default function UfProjectsChart({
                 "
                             id="uf-projects-chart-title"
                         >
-                            Estas são as UFs dos parlamentares que apresentam mais projetos
+                            {content.uf_title}
                         </h2>
                         <div className="uf-state-selector tw:min-[821px]:m-0">
                             <StanceToggle
@@ -163,11 +165,7 @@ export default function UfProjectsChart({
                         </div>
                     </div>
                     <p>
-                        Boa parte das bancadas dos estados do Centro-Oeste, além das de Tocantins,
-                        <br className="tw:max-md:hidden" /> Espírito Santo e Santa Catarina, lidera a
-                        apresentação de propostas que restringem
-                        <br className="tw:max-md:hidden" /> direitos de mulheres, meninas e da população
-                        LGBTQIAPN+
+                        {content.uf_subtitle}
                     </p>
                 </header>
 
@@ -536,7 +534,7 @@ export default function UfProjectsChart({
                 tw:max-md:[&_span]:mt-1 tw:max-md:[&_img]:flex-none tw:max-md:[&_img]:m-0 tw:min-[821px]:[&_span]:mt-1
                 tw:min-[821px]:[&_span]:ml-3 tw:min-[821px]:[&_span]:text-ink
             "
-                    content="A atuação das bancadas regionais revela estados com atuação mais conservadora"
+                    content={content.uf_caption}
                 />
             </div>
             <a
@@ -549,9 +547,9 @@ export default function UfProjectsChart({
         tw:focus-visible:outline-offset-1 tw:max-md:relative tw:max-md:bottom-auto tw:max-md:left-[50%]
         tw:max-md:max-w-full tw:min-[821px]:bottom-0 tw:min-[821px]:w-73.5 tw:min-[821px]:h-14
     "
-                href="/atividade-legislativa"
+                href={content.uf_cta_url}
             >
-                Veja como está o seu estado <Image src={buttonChevron} alt="" />
+                {content.uf_cta_text} <Image src={buttonChevron} alt="" />
             </a>
             <div
                 className="

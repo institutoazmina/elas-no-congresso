@@ -1,4 +1,6 @@
 ---
+import { getFooterAlerts } from "../../service/api/cms";
+const footerAlerts = await getFooterAlerts();
 import { Image } from "astro:assets";
 import CuttingMat from "../shared/CuttingMat.astro";
 import elasLogo from "../../assets/images/footer/elas-no-congresso.svg";
@@ -34,16 +36,16 @@ import elasFunder from "../../assets/images/funders/elas.png";
             tw:[&_p]:w-89 tw:[&_p]:text-white tw:[&_p]:font-sans tw:[&_p]:text-base tw:[&_p]:font-normal
             tw:max-md:w-full tw:max-md:p-0 tw:max-md:[&_p]:w-79 tw:max-md:[&_p]:max-w-full tw:focus-visible:outline-2
             tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px]
-        " href="/alertas" aria-labelledby="footer-alerts-title">
-            <h2 class="" id="footer-alerts-title">Receba nossos alertas</h2>
-            <p class="">Quer saber quando uma nova proposta sobre gênero é apresentada, ou quando algo de muita importância avança? A gente te avisa!</p>
+        " href={footerAlerts.cta_url} aria-labelledby="footer-alerts-title">
+            <h2 class="" id="footer-alerts-title">{footerAlerts.title}</h2>
+            <p class="">{footerAlerts.text}</p>
             <span class={String.raw`
                 site-footer__button tw:flex tw:h-14 tw:items-center tw:justify-center tw:border-0 tw:bg-accent tw:text-white
                 tw:font-display tw:text-xl tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:no-underline
                 tw:uppercase tw:whitespace-nowrap tw:pt-4.5 tw:pb-3.5 tw:px-6 tw:hover:bg-ink tw:hover:outline-1
                 tw:hover:outline-white tw:[.site-footer\_\_alerts:hover_&]:bg-ink tw:[.site-footer\_\_alerts:hover_&]:outline-1
                 tw:[.site-footer\_\_alerts:hover_&]:outline-white
-            `}>Saiba mais</span>
+            `}>{footerAlerts.cta_text}</span>
         </a>
 
         <section class="

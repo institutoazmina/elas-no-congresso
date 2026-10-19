@@ -12,6 +12,7 @@ import { Fragment, useState } from "react";
 export default function PartyRightsChart({
     views,
     gap,
+    content,
 }: {
     views: {
         stance: Stance;
@@ -19,6 +20,7 @@ export default function PartyRightsChart({
         parties: { name: string; percentage: string; width: number; negative: number; positive: number }[];
     }[];
     gap: number;
+    content: Record<string, string>;
 }) {
     const [stance, setStance] = useState<Stance>("unfavorable");
     return (
@@ -82,7 +84,7 @@ export default function PartyRightsChart({
                     tw:max-md:w-full tw:max-md:h-auto tw:max-md:text-[28px] tw:max-md:leading-8
                 "
                         >
-                            Estes são os partidos que mais têm
+                            {content.party_title_before}
                         </span>
                         <div className="tw:contents tw:min-[984px]:flex tw:min-[984px]:w-full tw:min-[984px]:items-center tw:min-[984px]:gap-4">
                             <div className="tw:contents tw:min-[984px]:block tw:min-[984px]:w-57.5 tw:min-[984px]:shrink-0">
@@ -99,14 +101,14 @@ export default function PartyRightsChart({
                     tw:max-md:left-0 tw:max-md:h-auto tw:max-md:text-[28px] tw:max-md:leading-8 tw:max-md:whitespace-nowrap
                 "
                             >
-                                Nossos direitos
+                                {content.party_title_after}
                                 <span className="party-rights-chart__mobile-question tw:hidden tw:max-md:inline">
                                     ?
                                 </span>
                             </span>
                         </div>
                     </h2>
-                    <p>Extrema-direita, centro e esquerda têm atuação diferente em relação ao gênero</p>
+                    <p>{content.party_subtitle}</p>
                 </header>
 
                 {views.map((view) => (
@@ -255,8 +257,8 @@ export default function PartyRightsChart({
                 tw:max-md:[&_img]:w-28.5 tw:max-md:[&_img]:h-3 tw:max-md:[&_img]:mt-1.5 tw:max-md:[&_img]:mb-0
                 tw:max-md:[&_img]:mx-0
             "
-                    content="Acesse a aba Atividade de Legislativa para ver em detalhes"
-                    href="/atividade-legislativa"
+                    content={content.party_caption}
+                    href={content.party_caption_url}
                 />
             </div>
         </section>

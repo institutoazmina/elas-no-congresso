@@ -1,4 +1,5 @@
 ---
+const { content } = Astro.props;
 import CuttingMat from "../shared/CuttingMat.astro";
 import HomeNewsList from "./HomeNewsList";
 ---
@@ -9,10 +10,10 @@ import HomeNewsList from "./HomeNewsList";
         tw:lg:h-[62px] tw:lg:px-0 tw:max-md:items-start tw:max-md:text-left
     ">
         <h2 id="home-news-title" class="tw:m-0 tw:text-[32px] tw:font-bold tw:leading-8 tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75] tw:max-md:ml-0 tw:max-md:mr-0 tw:max-md:text-left">
-            Reportagens
+            {content.reports_title}
         </h2>
         <p class="tw:m-0 tw:mt-[6px] tw:text-lg tw:font-normal tw:leading-6 tw:max-md:ml-0 tw:max-md:mr-0 tw:max-md:text-left">
-            O que os dados do Elas no Congresso revelam sobre o que está em disputa no Congresso e na vida das mulheres
+            {content.reports_subtitle}
         </p>
     </header>
 

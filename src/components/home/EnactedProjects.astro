@@ -1,4 +1,5 @@
 ---
+const { content } = Astro.props;
 import ProposalCarousel from "./ProposalCarousel.astro";
 import { Image } from "astro:assets";
 import attention from "../../assets/images/party-chart/attention.svg";
@@ -31,8 +32,8 @@ try {
         tw:max-md:[&_p]:p-0 tw:max-md:[&_p]:m-0
     ">
         <Image src={attention} alt="" />
-        <h2 id="enacted-projects-title">Projetos que viraram lei</h2>
-        <p>Projetos favoráveis e desfavoráveis que viraram lei<span class="enacted-projects__desktop-period tw:max-md:hidden"></span></p>
+        <h2 id="enacted-projects-title">{content.enacted_title}</h2>
+        <p>{content.enacted_subtitle}<span class="enacted-projects__desktop-period tw:max-md:hidden"></span></p>
     </header>
     <ProposalCarousel projects={projects} variant="enacted" />
 </section>}

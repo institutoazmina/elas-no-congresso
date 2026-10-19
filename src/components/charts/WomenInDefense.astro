@@ -1,4 +1,5 @@
 ---
+const { content } = Astro.props;
 import { Image } from "astro:assets";
 import attention from "../../assets/images/activity/attention.svg";
 import thumbsUp from "../../assets/images/thumbs-up.svg";
@@ -37,8 +38,8 @@ const charts = [
             tw:max-md:[&_p]:leading-6 tw:md:w-180 tw:md:h-33 tw:md:[&>img]:w-24 tw:md:[&>img]:h-1 tw:md:[&_p]:w-180
         ">
             <Image class="tw:h-1 tw:w-24" src={attention} alt="" />
-            <h2 id="women-defense-title">Mulheres na defesa</h2>
-            <p>O número de projetos protocolados por mulheres deu um salto na última legislatura, refletindo o aumento histórico de mulheres eleitas em 2022 e o seu engajamento em blindar direitos já conquistados.</p>
+            <h2 id="women-defense-title">{content.women_title}</h2>
+            <p>{content.women_text}</p>
         </header>
 
         <figure class="
@@ -104,7 +105,7 @@ const charts = [
             tw:font-bold tw:leading-6 tw:text-center tw:py-12 tw:px-6 tw:mt-3 tw:mb-12 tw:mx-auto tw:md:absolute
             tw:md:top-[354px] tw:md:left-[-112px] tw:md:m-0 tw:min-[821px]:gap-2.5
             tw:min-[821px]:[transform:rotate(5deg)] tw:min-[821px]:z-2
-        ">A cada 100 proposições sobre gênero assinadas por mulheres, {women.favorable} são favoráveis</aside>
+        ">{content.women_postit_before.trim()}{" "}{women.favorable}{" "}{content.women_postit_after.trim()}</aside>
 
         <SectionDivider
             class="
@@ -113,7 +114,7 @@ const charts = [
                 tw:leading-4 tw:md:absolute tw:md:bottom-12 tw:md:left-12 tw:md:w-180 tw:md:h-8 tw:[&_span]:mt-1
                 tw:[&_img]:w-[114px] tw:[&_img]:h-3 tw:[&_img]:mt-1.5 tw:[&_img]:mb-0 tw:[&_img]:mx-2
             "
-            content="No Congresso Nacional não há dados sobre pessoas não-binárias"
+            content={content.women_caption}
         />
     </div>
 </section>
@@ -131,6 +132,6 @@ const charts = [
         women-defense-fact__content tw:flex tw:w-full tw:h-auto tw:flex-none tw:flex-col tw:items-start tw:justify-start
         tw:gap-4 tw:md:w-180
     ">
-        <p>A extrema direita saiu fortalecida das urnas em 2026 e terá ainda mais poder para definir os rumos do próximo Congresso. Veja como partidos como o PL, que elegeu 121 deputados federais e 19 senadores, costuma atuar em projetos sensíveis a gênero.</p>
+        <p>{content.women_followup}</p>
     </div>
 </div>

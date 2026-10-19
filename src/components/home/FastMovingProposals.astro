@@ -1,4 +1,5 @@
 ---
+const { content } = Astro.props;
 import ProposalCarousel from "./ProposalCarousel.astro";
 import { Image } from "astro:assets";
 import attention from "../../assets/images/party-chart/attention.svg";
@@ -23,8 +24,8 @@ const proposals = await fetchFastUnfavorable(API_BASE_URL);
         tw:max-md:[&_p]:h-auto tw:max-md:[&_p]:text-sm tw:max-md:[&_p]:font-normal tw:max-md:[&_p]:leading-6
     ">
         <Image class="" src={attention} alt="" />
-        <h2 class="" id="fast-moving-proposals-title">Veja o que restringe nossos direitos<br class="tw:max-md:hidden" />e tá tramitando rapidinho <Image src={rocketEmoji} alt="" class="fast-moving-proposals__emoji tw:inline-block tw:h-[1em] tw:w-auto tw:[vertical-align:-0.12em] " /></h2>
-        <p class="">Projetos desfavoráveis que estão avançando nas comissões e no Plenário</p>
+        <h2 class="" id="fast-moving-proposals-title">{content.fast_title} <Image src={rocketEmoji} alt="" class="fast-moving-proposals__emoji tw:inline-block tw:h-[1em] tw:w-auto tw:[vertical-align:-0.12em] " /></h2>
+        <p class="">{content.fast_subtitle}</p>
     </header>
     <ProposalCarousel projects={proposals} variant="fast" />
 </section>}

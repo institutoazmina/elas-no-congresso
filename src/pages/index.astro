@@ -14,25 +14,28 @@ import ExploreCongress from "../components/home/ExploreCongress.astro";
 import ParliamentariansCarousel from "../components/home/ParliamentariansCarousel.astro";
 import QuiteriaAndFunders from "../components/home/QuiteriaAndFunders.astro";
 import HomeNews from "../components/home/HomeNews.astro";
+import { getHomePage } from "../service/api/cms";
+
+const home = await getHomePage();
 ---
 
-<PageLayout title="Elas no Congresso: monitoramento de pautas de gênero"
-    description="Acompanhe a atuação parlamentar sobre direitos das mulheres e pessoas LGBTQIAPN+ com uma inteligência artificial feminista."
+<PageLayout title={home.content.seo_title}
+    description={home.content.seo_description}
     canonical="https://www.elasnocongresso.com.br/" htmlClass="tw:motion-safe:[scroll-behavior:smooth]"
     pageClass="site-home-background site-shared-background tw:[.site-home-background_>_&]:bg-transparent tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
 >
-            <Hero />
-            <RightsUnderAttack />
-            <LegislativeSetbacks />
-            <HomeNews />
-            <WomenInDefense />
-            <PartyRightsChart />
-            <UfProjectsChart />
-            <HomeAlerts />
-            <FastMovingProposals />
-            <SlowMovingProposals />
-            <EnactedProjects />
-            <ExploreCongress />
-            <ParliamentariansCarousel />
-            <QuiteriaAndFunders />
+            <Hero content={home.content} image={home.images.hero} />
+            <RightsUnderAttack content={home.content} />
+            <LegislativeSetbacks content={home.content} />
+            <HomeNews content={home.content} />
+            <WomenInDefense content={home.content} />
+            <PartyRightsChart content={home.content} />
+            <UfProjectsChart content={home.content} />
+            <HomeAlerts content={home.content} />
+            <FastMovingProposals content={home.content} />
+            <SlowMovingProposals content={home.content} />
+            <EnactedProjects content={home.content} />
+            <ExploreCongress content={home.content} image={home.images.explore} />
+            <ParliamentariansCarousel content={home.content} />
+            <QuiteriaAndFunders content={home.content} image={home.images.quiteria} />
 </PageLayout>

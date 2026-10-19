@@ -1,6 +1,6 @@
 ---
+const { content, image } = Astro.props;
 import { Image } from "astro:assets";
-import quiteria from "../../assets/images/quiteria-banner.png";
 import chevron from "../../assets/images/home-news/chevron-right.svg";
 ---
 
@@ -10,13 +10,15 @@ import chevron from "../../assets/images/home-news/chevron-right.svg";
         tw:overflow-hidden tw:mt-6 tw:mb-12 tw:mx-auto tw:max-md:py-7.5 tw:max-md:px-[16px] tw:max-md:my-0
         tw:max-md:mx-auto tw:md:w-180 tw:md:h-auto tw:md:pb-12 tw:md:mt-6 tw:md:mb-0 tw:md:mx-auto
     ">
-        <Image
+        <img
             class="
                 quiteria-funders__image tw:w-full tw:h-auto tw:object-contain tw:max-md:aspect-[2/1] tw:max-md:object-contain
                 tw:md:w-180 tw:md:h-90 tw:md:object-contain
             "
-            src={quiteria}
-            alt="QuitérIA, inteligência artificial feminista"
+            src={image.url}
+            width={image.width}
+            height={image.height}
+            alt={content.quiteria_image_alt}
         />
         <div class="
             quiteria-funders__explanation-frame tw:flex tw:w-full tw:h-auto tw:min-w-0 tw:flex-none tw:items-center
@@ -33,21 +35,20 @@ import chevron from "../../assets/images/home-news/chevron-right.svg";
                 ">
                     <p class="tw:max-md:min-w-0 tw:max-md:[overflow-wrap:anywhere]">
                         <span class="tw:leading-6 ">
-                            Nossos levantamentos são feitos com base em análises da{" "}
+                            {content.quiteria_before_name.trim()}{" "}
                         </span>
                         <span class="
                             quiteria-funders__explanation-quiteria tw:leading-6 tw:text-accent tw:font-sans tw:font-bold tw:underline
                             tw:[text-decoration-thickness:1px] tw:underline-offset-0
                         ">
-                            QuitérIA
+                            {content.quiteria_name}
                         </span>
-                        <span class="tw:leading-6 ">, que segue os princípios da </span>
+                        <span class="tw:leading-6 ">{content.quiteria_between.trim()}{" "}</span>
                         <span class="quiteria-funders__explanation-ia tw:font-sans tw:font-bold tw:leading-6 ">
-                            IA feminista
+                            {content.quiteria_ai}
                         </span>
                         <span class="tw:leading-6 ">
-                            {" "}
-                            e monitora pautas de gênero no Congresso Nacional diariamente, e com validação humana.
+                            {" "}{content.quiteria_after.trim()}
                         </span>
                     </p>
                 </div>
@@ -60,8 +61,8 @@ import chevron from "../../assets/images/home-news/chevron-right.svg";
             tw:[transition:background-color_220ms_ease-out] tw:pt-4.5 tw:pb-3.5 tw:px-6 tw:[&_img]:block
             tw:[&_img]:w-[14px] tw:[&_img]:h-[10px] tw:[&_img]:[transform:rotate(-90deg)] tw:hover:bg-ink
             tw:focus-visible:outline-2 tw:focus-visible:outline-ink tw:focus-visible:outline-offset-1
-        " href="/ia-feminista">
-            Veja como ela funciona <Image class="" src={chevron} alt="" />
+        " href={content.quiteria_cta_url}>
+            {content.quiteria_cta_text} <Image class="" src={chevron} alt="" />
         </a>
     </div>
 </section>

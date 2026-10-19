@@ -13,8 +13,10 @@ import type { getCurrentParliamentarians } from "../../service/api/parliamentari
 
 export default function ParliamentariansCarousel({
     people,
+    content,
 }: {
     people: Awaited<ReturnType<typeof getCurrentParliamentarians>>;
+    content: Record<string, string>;
 }) {
     const { trackRef, index: active, move, style } = useCarousel(people.length);
     const itemCount = people.length;
@@ -54,11 +56,9 @@ export default function ParliamentariansCarousel({
                     className="parliamentarians__attention tw:block tw:w-24 tw:h-1 tw:bg-ink"
                     aria-hidden="true"
                 ></span>
-                <h2 id="parliamentarians-title">Parlamentares que jogam contra</h2>
+                <h2 id="parliamentarians-title">{content.parliamentarians_title}</h2>
                 <p>
-                    Esses são os políticos que mais apresentam projetos desfavoráveis aos direitos de meninas,
-                    mulheres e pessoas LGBTQIAPN+. Consideramos parlamentares com cinco ou mais proposições,
-                    das quais 40% ou mais são desfavoráveis.
+                    {content.parliamentarians_subtitle}
                 </p>
             </header>
 

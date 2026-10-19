@@ -5,11 +5,13 @@ import { getAuthorPaths, type AuthorPageProps } from "../../../lib/author-paths"
 import { API_BASE_URL } from "astro:env/server";
 import { PUBLIC_API_BASE_URL } from "astro:env/client";
 import { withAuthorCacheKeys } from "../../../lib/author-build-cache";
+import { getFooterAlerts } from "../../../service/api/cms";
 
 export async function getStaticPaths() {
+    const footerAlerts = await getFooterAlerts();
     return withAuthorCacheKeys(
         await getAuthorPaths(API_BASE_URL),
-        JSON.stringify([import.meta.env.OG_IMAGE_BASE_URL || '', PUBLIC_API_BASE_URL]),
+        JSON.stringify([import.meta.env.OG_IMAGE_BASE_URL || '', PUBLIC_API_BASE_URL, footerAlerts]),
     );
 }
 

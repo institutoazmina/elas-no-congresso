@@ -1,4 +1,5 @@
 ---
+const { content } = Astro.props;
 import { Image } from "astro:assets";
 import siren from "../../assets/images/home-alerts/alert-siren.png";
 import chevron from "../../assets/images/home-news/chevron-right.svg";
@@ -22,9 +23,9 @@ import CuttingMat from "../shared/CuttingMat.astro";
         tw:text-center tw:pt-52.5 tw:pb-16 tw:px-8 tw:max-md:w-full tw:max-md:items-start tw:max-md:text-left
         tw:max-md:pt-34 tw:max-md:pb-16 tw:max-md:px-0
     ">
-        <h2 class="" id="home-alerts-title">A gente te avisa</h2>
-        <p class="home-alerts__intro tw:text-lg tw:font-normal tw:leading-6 tw:max-md:w-full tw:max-md:text-left ">Pra evitar retrocessos, é essencial saber o que<br class="tw:max-md:hidden" />está acontecendo no Congresso e agir!</p>
-        <p class="home-alerts__detail tw:text-lg tw:font-normal tw:leading-6 tw:[&_strong]:font-bold tw:max-md:w-full tw:max-md:text-left ">Por isso, temos uma IA que faz esse <strong class="">monitoramento</strong> pra você</p>
+        <h2 class="" id="home-alerts-title">{content.alerts_title}</h2>
+        <p class="home-alerts__intro tw:text-lg tw:font-normal tw:leading-6 tw:max-md:w-full tw:max-md:text-left ">{content.alerts_intro}</p>
+        <p class="home-alerts__detail tw:text-lg tw:font-normal tw:leading-6 tw:[&_strong]:font-bold tw:max-md:w-full tw:max-md:text-left ">{content.alerts_detail_before.trim()}{" "}<strong class="">{content.alerts_detail_highlight}</strong>{" "}{content.alerts_detail_after.trim()}</p>
         <a class="
             home-alerts__button tw:flex tw:w-47.5 tw:h-14 tw:items-center tw:justify-center tw:gap-4 tw:border-0 tw:bg-accent
             tw:text-white tw:font-display tw:text-lg tw:font-bold tw:leading-6 tw:uppercase
@@ -32,7 +33,7 @@ import CuttingMat from "../shared/CuttingMat.astro";
             tw:[&_img]:h-[10px] tw:[&_img]:[transform:rotate(-90deg)] tw:hover:bg-ink tw:hover:outline-1
             tw:hover:outline-white tw:focus-visible:outline-2 tw:focus-visible:outline-white
             tw:focus-visible:outline-offset-[4px]
-        " href="/alertas">Receba alertas <Image class="" src={chevron} alt="" /></a>
+        " href={content.alerts_cta_url}>{content.alerts_cta_text} <Image class="" src={chevron} alt="" /></a>
     </div>
 </CuttingMat>
 
