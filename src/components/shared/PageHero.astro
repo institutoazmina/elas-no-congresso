@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import attention from "../../assets/images/activity/attention.svg";
 import type { PageHeroContent } from "../../service/api/cms";
+import InlineMarkdown from "./InlineMarkdown.astro";
 
 interface Props {
     content: PageHeroContent;
@@ -22,12 +23,12 @@ const { title, subtitle, heroImage } = Astro.props.content;
             <Image class="tw:h-1 tw:w-24 tw:md:h-2" src={attention} loading="eager" alt="" />
             <h1
                 id="page-hero-title"
-                class="tw:m-0 tw:font-display tw:text-[clamp(42px,11vw,58px)] tw:leading-[0.98] tw:font-bold tw:uppercase tw:[font-variation-settings:'wdth'_75] tw:mix-blend-multiply tw:md:text-[58px] tw:md:leading-15 tw:lg:text-7xl tw:lg:leading-18"
+                class="tw:m-0 tw:font-display tw:text-[clamp(42px,11vw,58px)] tw:leading-[0.98] tw:font-normal tw:uppercase tw:[font-variation-settings:'wdth'_60] tw:mix-blend-multiply tw:[&_strong]:font-bold tw:[&_strong]:[font-variation-settings:'wdth'_75] tw:md:text-[58px] tw:md:leading-15 tw:lg:text-7xl tw:lg:leading-18"
             >
-                {title}
+                <InlineMarkdown text={title} />
             </h1>
-            <p class="tw:m-0 tw:w-full tw:font-sans tw:text-lg tw:leading-6 tw:font-bold tw:mix-blend-multiply tw:md:max-w-160">
-                {subtitle}
+            <p class="tw:m-0 tw:w-full tw:font-sans tw:text-lg tw:leading-6 tw:font-medium tw:mix-blend-multiply tw:[&_strong]:font-bold tw:md:max-w-160">
+                <InlineMarkdown text={subtitle} />
             </p>
             <slot />
         </div>

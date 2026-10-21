@@ -130,24 +130,24 @@ const localPreviewData = (path: string, params: Record<string, string | number |
 
   if (path === '/cms/activity') {
     return {
-      title: 'Atividade Legislativa',
-      subtitle: 'Use filtros e explore as movimentações do Legislativo sensíveis a gênero, atualizadas diariamente pela nossa robô que monitora o Congresso.',
+      title: '**Atividade Legislativa**',
+      subtitle: '**Use filtros e explore as movimentações do Legislativo sensíveis a gênero, atualizadas diariamente pela nossa robô que monitora o Congresso.**',
       hero_image: { url: 'https://www.elasnocongresso.com.br/cms/atividade-legislativa/hero.webp', width: 1080, height: 1350 },
     };
   }
 
   if (path === '/cms/reports') {
     return {
-      title: 'Reportagens',
-      subtitle: 'Veja as histórias que os dados do Congresso nos contam.',
+      title: '**Reportagens**',
+      subtitle: '**Veja as histórias que os dados do Congresso nos contam.**',
       hero_image: { url: 'https://www.elasnocongresso.com.br/cms/reportagens/hero.webp', width: 1080, height: 1350 },
     };
   }
 
   if (path === '/cms/alerts') {
     return {
-      title: 'Alertas',
-      subtitle: 'Acompanhe as movimentações do Legislativo no Radar do Congresso',
+      title: '**Alertas**',
+      subtitle: '**Acompanhe as movimentações do Legislativo no Radar do Congresso**',
       hero_image: { url: 'https://www.elasnocongresso.com.br/cms/alertas/hero.webp', width: 1080, height: 1350 },
     };
   }

@@ -4,6 +4,7 @@ import attention from "../assets/images/activity/attention.svg";
 import halftoneShadow from "../assets/images/hero/halftone-shadow.png";
 import { Image } from "astro:assets";
 import { getFeministAIPage } from "../service/api/cms";
+import InlineMarkdown from "../components/shared/InlineMarkdown.astro";
 
 const cms = await getFeministAIPage();
 const c = cms.content;
@@ -40,11 +41,10 @@ const limitationParts = c.limitations_heading.match(/^(.*)\s+(\S+\s+\S+)$/);
                                 loading="eager"
                                 alt=""
                             />
-                            <h1 class="tw:max-md:text-[32px]! tw:max-md:leading-8! tw:max-md:w-full tw:max-md:max-w-60 tw:max-md:whitespace-normal" id="ia-hero-title">
-                                <span class="hero__title-narrow tw:[font-variation-settings:'wdth'_60] tw:font-normal">{c.hero_title_prefix}{" "}</span>
-                                <strong class="tw:[font-variation-settings:'wdth'_75] tw:max-md:whitespace-nowrap">{c.hero_title_emphasis}</strong>
+                            <h1 class="tw:font-normal! tw:[font-variation-settings:'wdth'_60]! tw:[&_strong]:font-bold tw:[&_strong]:[font-variation-settings:'wdth'_75] tw:max-md:text-[32px]! tw:max-md:leading-8! tw:max-md:w-full tw:max-md:max-w-60 tw:max-md:whitespace-normal" id="ia-hero-title">
+                                <InlineMarkdown text={c.hero_title} />
                             </h1>
-                            <p class="tw:max-md:max-w-80 tw:max-md:w-full tw:max-md:text-lg tw:max-md:font-medium tw:max-md:leading-6 tw:max-md:pt-[6px] tw:max-md:pb-0">{c.hero_description}</p>
+                            <p class="tw:[&_strong]:font-bold tw:max-md:max-w-80 tw:max-md:w-full tw:max-md:text-lg tw:max-md:font-medium tw:max-md:leading-6 tw:max-md:pt-[6px] tw:max-md:pb-0"><InlineMarkdown text={c.hero_description} /></p>
                         </div>
                         <div class="ia-hero__art tw:items-center tw:flex tw:flex-none tw:h-95 tw:justify-center tw:absolute tw:w-145 tw:bottom-6 tw:overflow-visible tw:right-12 tw:p-2.5 tw:max-md:hidden">
                             <div class="ia-hero__illustration tw:h-full tw:w-full">

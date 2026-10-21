@@ -8,6 +8,7 @@ import attention from "../assets/images/activity/attention.svg";
 import halftoneShadow from "../assets/images/hero/halftone-shadow.png";
 import PartnerLogos from "../components/about/PartnerLogos.astro";
 import CuttingMat from "../components/shared/CuttingMat.astro";
+import InlineMarkdown from "../components/shared/InlineMarkdown.astro";
 
 const cms = await getAboutPage();
 const c = cms.content;
@@ -37,19 +38,19 @@ const challenges = cms.challenges.map(({ title, text }) => [title, text] as cons
                                 alt=""
                             />
                             <h1 class="tw:max-[701px]:text-[32px] tw:max-[701px]:[font-variation-settings:'wdth'_75] tw:max-[701px]:font-bold tw:max-[701px]:leading-8 tw:max-[701px]:w-full" id="sobre-hero-title">
-                                <span>{c.s00_001} </span>
-                                <span class="sobre-hero__title-narrow tw:font-display tw:[font-variation-settings:'wdth'_60] tw:font-normal">{c.s00_002}</span>
-                                <span>{c.s00_x001}<br />
+                                <span><InlineMarkdown text={c.s00_001} />{" "}</span>
+                                <span class="sobre-hero__title-narrow tw:font-display tw:[font-variation-settings:'wdth'_60] tw:font-normal tw:[&_strong]:font-bold"><InlineMarkdown text={c.s00_002} /></span>
+                                <span><InlineMarkdown text={c.s00_x001} /><br />
                                 </span>
-                                <span class="sobre-hero__title-narrow tw:font-display tw:[font-variation-settings:'wdth'_60] tw:font-normal">{c.s00_x002}</span>
-                                <span>{c.s00_003}</span>
+                                <span class="sobre-hero__title-narrow tw:font-display tw:[font-variation-settings:'wdth'_60] tw:font-normal tw:[&_strong]:font-bold"><InlineMarkdown text={c.s00_x002} /></span>
+                                <span><InlineMarkdown text={c.s00_003} /></span>
                             </h1>
                             <div class="sobre-hero__description tw:text-ink tw:text-lg tw:font-medium tw:tracking-normal tw:leading-6 tw:mix-blend-multiply tw:w-160 tw:[&_strong]:font-extrabold tw:max-[901px]:w-full tw:max-[701px]:text-base tw:max-[701px]:font-medium tw:max-[701px]:leading-6 tw:max-[701px]:max-w-80 tw:max-[701px]:w-full tw:max-[701px]:pt-[6px] tw:max-[701px]:pb-2.5 tw:max-[701px]:px-0">
                                 <p class="tw:[font:inherit] tw:leading-6 tw:max-[701px]:text-base tw:max-[701px]:leading-6">
-                                    <strong>{c.s00_004} </strong>{c.s00_x003}<strong>{c.s00_005}</strong>
+                                    <InlineMarkdown text={c.s00_004} />{" "}<InlineMarkdown text={c.s00_x003} />{" "}<InlineMarkdown text={c.s00_005} />
                                 </p>
                                 <p class="tw:[font:inherit] tw:leading-6 tw:max-[701px]:text-base tw:max-[701px]:leading-6">
-                                    {c.s00_006}
+                                    <InlineMarkdown text={c.s00_006} />
                                 </p>
                             </div>
                         </div>
