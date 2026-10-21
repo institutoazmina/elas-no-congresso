@@ -6,6 +6,8 @@ on:
   # The API admin dispatches this on every CMS save.
   repository_dispatch:
     types: [cms-content-updated]
+  # Manual run, e.g. to take down pages right after unapproving propositions.
+  workflow_dispatch:
 
 permissions:
   id-token: write # OIDC
@@ -51,6 +53,9 @@ jobs:
         env:
           OG_IMAGE_BASE_URL: https://www.elasnocongresso.com.br
 
+      - name: Test generated site before deployment
+        run: npm run test:build
+
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -68,7 +73,7 @@ jobs:
       # never delete them here.
       - name: Sync immutable assets
         run: |
-          aws s3 sync dist/ s3://$BUCKET/ --delete \
+          aws s3 sync dist/ "s3://$BUCKET/" --delete \
             --exclude "assets/*" \
             --exclude "cms/*" \
             --exclude "*.html" \
@@ -83,15 +88,17 @@ jobs:
       # Stable public asset URLs → cache 1 hour, then revalidate.
       - name: Sync public assets
         run: |
-          aws s3 sync dist/assets/ s3://$BUCKET/assets/ --delete \
+          aws s3 sync dist/assets/ "s3://$BUCKET/assets/" --delete \
             --cache-control "public,max-age=3600,must-revalidate"
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
 
-      # HTML → always revalidate
+      # HTML → always revalidate. --delete removes pages the build no longer
+      # generates (e.g. propositions unapproved in the admin); only HTML is
+      # touched, so og.png and other files published by the API stay.
       - name: Sync HTML
         run: |
-          aws s3 sync dist/ s3://$BUCKET/ \
+          aws s3 sync dist/ "s3://$BUCKET/" --delete \
             --exclude "*" --include "*.html" \
             --cache-control "public,max-age=0,must-revalidate"
         env:
@@ -100,7 +107,7 @@ jobs:
       # Data / sitemap / robots → short cache, revalidate so updates propagate
       - name: Sync data & metadata
         run: |
-          aws s3 sync dist/ s3://$BUCKET/ \
+          aws s3 sync dist/ "s3://$BUCKET/" \
             --exclude "*" \
             --include "*.json" --include "*.xml" --include "robots.txt" \
             --cache-control "public,max-age=3600,must-revalidate"
@@ -108,6 +115,6 @@ jobs:
           BUCKET: ${{ secrets.S3_BUCKET }}
 
       - name: Invalidate CloudFront
-        run: aws cloudfront create-invalidation --distribution-id $DIST --paths "/*"
+        run: aws cloudfront create-invalidation --distribution-id "$DIST" --paths "/*"
         env:
           DIST: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}

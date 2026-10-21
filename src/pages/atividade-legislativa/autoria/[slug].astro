@@ -20,7 +20,6 @@ const { authorId, house, initial } = Astro.props;
 const name = initial.person.social_name || initial.person.full_name || initial.activity.author.name;
 const title = `${name} | Atividade Legislativa | Elas no Congresso`;
 const description = `Acompanhe a atuação de ${name} no Congresso Nacional e consulte suas propostas sobre gênero e direitos das mulheres e pessoas LGBTQIAPN+.`;
-const canonical = new URL(Astro.url.pathname, Astro.site);
 // Publicada pela API (elas-no-congresso-api, apps/og) direto no bucket, no mesmo caminho.
 const ogImage = `${Astro.url.pathname.replace(/\/$/, "")}/og.png`;
 ---
@@ -30,8 +29,5 @@ const ogImage = `${Astro.url.pathname.replace(/\/$/, "")}/og.png`;
     ogImage={{ src: ogImage, width: 1200, height: 630, alt: `Foto, partido, estado e favorabilidade de ${name}` }}
     pageClass="author-route-page tw:min-w-80 tw:overflow-x-clip tw:[body:has(&)]:bg-white tw:[body:has(&)]:m-0"
 >
-    <Fragment slot="head">
-        <link rel="canonical" href={canonical} />
-    </Fragment>
             <AuthorPage authorId={authorId} house={house} initial={initial} />
 </PageLayout>

@@ -21,7 +21,7 @@ const home = await getHomePage();
 
 <PageLayout title={home.content.seo_title}
     description={home.content.seo_description}
-    canonical="https://www.elasnocongresso.com.br/" htmlClass="tw:motion-safe:[scroll-behavior:smooth]"
+    htmlClass="tw:motion-safe:[scroll-behavior:smooth]"
     pageClass="site-home-background site-shared-background tw:[.site-home-background_>_&]:bg-transparent tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
 >
             <Hero content={home.content} image={home.images.hero} />

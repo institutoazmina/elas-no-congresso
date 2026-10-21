@@ -1,0 +1,47 @@
+name: Production build evaluation
+
+on:
+  pull_request:
+  schedule:
+    # Weekly clean build against public data (Monday, 09:00 Brasilia).
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evaluation-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  production-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ASTRO_INCREMENTAL: 'off'
+      ASTRO_TELEMETRY_DISABLED: '1'
+      OG_IMAGE_BASE_URL: https://www.elasnocongresso.com.br
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Build against the public API
+        run: |
+          mkdir -p reports
+          set -o pipefail
+          npm run build 2>&1 | tee reports/build.txt
+      - name: Evaluate generated pages, assets and sitemap
+        run: |
+          set -o pipefail
+          npm run test:build 2>&1 | tee reports/build-tests.txt
+      - name: Save evaluation results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-build-evaluation
+          path: reports/
+          retention-days: 14

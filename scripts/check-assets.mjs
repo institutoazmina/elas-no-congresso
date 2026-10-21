@@ -9,7 +9,7 @@ const walk = async (directory) => (await Promise.all(
 )).flat();
 
 // Astro/Vite resolve src asset imports and CSS URLs; check unbundled public URLs here.
-// Template substitutions match one path segment. A directory URL (papelada)
+// Template substitutions match one path segment. A directory URL (paperwork)
 // means the caller selects filenames at runtime, so keep its contents.
 const sources = (await walk('src')).filter((file) => /\.(astro|tsx?|css|less|js)$/.test(file));
 const assets = await walk('public/assets');
