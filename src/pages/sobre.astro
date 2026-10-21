@@ -54,9 +54,9 @@ const challenges = cms.challenges.map(({ title, text }) => [title, text] as cons
                             </div>
                         </div>
                         <div class="sobre-hero__art tw:items-center tw:flex tw:flex-none tw:h-95 tw:justify-center tw:relative tw:w-145 tw:p-2.5 tw:max-[901px]:bottom-4 tw:max-[901px]:absolute tw:max-[901px]:-right-22 tw:max-[901px]:[transform:scale(0.54)] tw:max-[901px]:origin-[bottom_right] tw:max-[701px]:hidden" aria-hidden="true">
-                            <div class="sobre-hero__illustration tw:flex-none tw:h-[488px] tw:overflow-hidden tw:relative tw:w-126.5">
-                                <div class="sobre-hero__illustration-inner tw:h-[390px] tw:left-[50%] tw:absolute tw:top-[50%] tw:[transform:translate(-50%,_-50%)] tw:w-[410px] tw:[&_img]:h-[153.89%] tw:[&_img]:left-[-10.22%] tw:[&_img]:max-w-none tw:[&_img]:absolute tw:[&_img]:top-[-29.5%] tw:[&_img]:w-[116.85%]">
-                                    <img src={cms.hero_image.url} width={cms.hero_image.width} height={cms.hero_image.height} loading="eager" alt="" />
+                            <div class="sobre-hero__illustration tw:flex tw:h-[488px] tw:items-center tw:justify-center tw:overflow-hidden tw:relative tw:w-126.5">
+                                <div class="sobre-hero__illustration-inner tw:absolute tw:inset-0 tw:flex tw:items-center tw:justify-center">
+                                    <img class="tw:h-auto tw:max-h-full tw:w-auto tw:max-w-full tw:object-contain" src={cms.hero_image.url} width={cms.hero_image.width} height={cms.hero_image.height} loading="eager" alt="" />
                                 </div>
                             </div>
                         </div>
