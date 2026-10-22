@@ -6,7 +6,6 @@
  * o layout comporta. Imagens só são substituídas, nunca removidas.
  */
 import { apiGet } from './client';
-import feministAIPreview from './feminist-ai-preview.json';
 import aboutPreview from './about-preview.json';
 
 type CmsImage = { url: string; width: number; height: number };
@@ -20,26 +19,34 @@ export async function getPageHero(page: 'alerts' | 'reports' | 'activity'): Prom
   return { title: hero.title, subtitle: hero.subtitle, heroImage: hero.hero_image };
 }
 
-type WithoutPosition<T> = Omit<T, 'position'>;
-type FeministAIItems = typeof feministAIPreview.items;
+type FeministAIPageResponse = {
+  seo_title: string;
+  seo_description: string;
+  title: string;
+  subtitle: string;
+  hero_image: CmsImage;
+  content: string;
+};
 
 export type FeministAIPageContent = {
-  content: typeof feministAIPreview.page;
-  images: { hero: CmsImage; flow_desktop: CmsImage; flow_mobile: CmsImage };
-  categories: WithoutPosition<FeministAIItems['categories'][number]>[];
-  limitations: WithoutPosition<FeministAIItems['limitations'][number]>[];
-  evaluation_metrics: WithoutPosition<FeministAIItems['evaluation_metrics'][number]>[];
-  evaluation_partitions: WithoutPosition<FeministAIItems['evaluation_partitions'][number]>[];
-  thematic_metrics: WithoutPosition<FeministAIItems['thematic_metrics'][number]>[];
-  thematic_partitions: WithoutPosition<FeministAIItems['thematic_partitions'][number]>[];
-  open_links: WithoutPosition<FeministAIItems['open_links'][number]>[];
+  seo_title: string;
+  seo_description: string;
+  hero: PageHeroContent;
+  content: string;
 };
 
 /** Conteúdo editorial de `/ia-feminista`, lido no build após cada salvamento no admin. */
-export function getFeministAIPage(): Promise<FeministAIPageContent> {
-  return apiGet<FeministAIPageContent>('/cms/feminist-ai');
+export async function getFeministAIPage(): Promise<FeministAIPageContent> {
+  const page = await apiGet<FeministAIPageResponse>('/cms/feminist-ai');
+  return {
+    seo_title: page.seo_title,
+    seo_description: page.seo_description,
+    hero: { title: page.title, subtitle: page.subtitle, heroImage: page.hero_image },
+    content: page.content,
+  };
 }
 
+type WithoutPosition<T> = Omit<T, 'position'>;
 type AboutTimelineEvent = WithoutPosition<typeof aboutPreview.timeline[number]>;
 type AboutChallenge = WithoutPosition<typeof aboutPreview.challenges[number]>;
 

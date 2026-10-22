@@ -16,13 +16,11 @@ const localPreviewData = (path: string, params: Record<string, string | number |
 
   if (path === '/cms/feminist-ai') {
     return {
-      content: feministAIPreview.page,
-      images: {
-        hero: { url: feministAIHero.src, width: feministAIHero.width, height: feministAIHero.height },
-        flow_desktop: { url: feministAIFlowDesktop.src, width: feministAIFlowDesktop.width, height: feministAIFlowDesktop.height },
-        flow_mobile: { url: feministAIFlowMobile.src, width: feministAIFlowMobile.width, height: feministAIFlowMobile.height },
-      },
-      ...feministAIPreview.items,
+      ...feministAIPreview,
+      hero_image: { url: feministAIHero.src, width: feministAIHero.width, height: feministAIHero.height },
+      content: feministAIPreview.content
+        .replace('/media/cms/ia-feminista/flow-desktop.webp', feministAIFlowDesktop.src)
+        .replace('/media/cms/ia-feminista/flow-mobile.webp', feministAIFlowMobile.src),
     };
   }
 
