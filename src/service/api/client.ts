@@ -124,6 +124,8 @@ const localPreviewData = (path: string, params: Record<string, string | number |
 
   if (path === '/cms/activity') {
     return {
+      seo_title: 'Atividade Legislativa e pautas de gênero | Elas no Congresso',
+      seo_description: 'Explore dados sobre projetos de lei e pautas de gênero no Congresso Nacional em um dashboard interativo sobre atividade legislativa e direitos.',
       title: '**Atividade Legislativa**',
       subtitle: '**Use filtros e explore as movimentações do Legislativo sensíveis a gênero, atualizadas diariamente pela nossa robô que monitora o Congresso.**',
       hero_image: { url: 'https://www.elasnocongresso.com.br/cms/atividade-legislativa/hero.webp', width: 1080, height: 1350 },
@@ -132,6 +134,8 @@ const localPreviewData = (path: string, params: Record<string, string | number |
 
   if (path === '/cms/reports') {
     return {
+      seo_title: 'Reportagens: Congresso e política de gênero | AzMina',
+      seo_description: 'Leia reportagens da Revista AzMina sobre o Congresso Nacional, projetos de lei, política de gênero e direitos das mulheres e pessoas LGBTQIAPN+.',
       title: '**Reportagens**',
       subtitle: '**Veja as histórias que os dados do Congresso nos contam.**',
       hero_image: { url: 'https://www.elasnocongresso.com.br/cms/reportagens/hero.webp', width: 1080, height: 1350 },
@@ -140,6 +144,8 @@ const localPreviewData = (path: string, params: Record<string, string | number |
 
   if (path === '/cms/alerts') {
     return {
+      seo_title: 'Receba alertas sobre gênero no Congresso | Elas no Congresso',
+      seo_description: 'Receba alertas sobre projetos de lei e pautas de gênero que afetam os direitos de meninas, mulheres e pessoas LGBTQIAPN+ no Congresso Nacional.',
       title: '**Alertas**',
       subtitle: '**Acompanhe as movimentações do Legislativo no Radar do Congresso**',
       hero_image: { url: 'https://www.elasnocongresso.com.br/cms/alertas/hero.webp', width: 1080, height: 1350 },

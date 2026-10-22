@@ -10,8 +10,8 @@ const hero = await getPageHero("reports");
 ---
 
 <PageLayout
-    title="Reportagens: Congresso e política de gênero | AzMina"
-    description="Leia reportagens da Revista AzMina sobre o Congresso Nacional, projetos de lei, política de gênero e direitos das mulheres e pessoas LGBTQIAPN+."
+    title={hero.seo_title}
+    description={hero.seo_description}
 >
     <main class="tw:text-ink">
         <PageHero content={hero} />

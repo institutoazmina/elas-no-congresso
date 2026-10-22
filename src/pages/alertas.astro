@@ -14,8 +14,8 @@ const [propositionPage, categories, hero] = await Promise.all([
 ---
 
 <PageLayout
-    title="Receba alertas sobre gênero no Congresso | Elas no Congresso"
-    description="Receba alertas sobre projetos de lei e pautas de gênero que afetam os direitos de meninas, mulheres e pessoas LGBTQIAPN+ no Congresso Nacional."
+    title={hero.seo_title}
+    description={hero.seo_description}
 >
     <main class="tw:bg-white">
         <PageHero content={hero}>

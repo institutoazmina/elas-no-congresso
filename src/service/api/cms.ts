@@ -9,13 +9,26 @@ import { apiGet } from './client';
 
 type CmsImage = { url: string; width: number; height: number };
 export type PageHeroContent = { title: string; subtitle: string; heroImage: CmsImage };
+export type SeoPageHeroContent = PageHeroContent & { seo_title: string; seo_description: string };
 
-type HeroResponse = { title: string; subtitle: string; hero_image: CmsImage };
+type HeroResponse = {
+  seo_title: string;
+  seo_description: string;
+  title: string;
+  subtitle: string;
+  hero_image: CmsImage;
+};
 
 /** Top of `/alertas` (`alerts`), `/reportagens` (`reports`) or `/atividade-legislativa` (`activity`). */
-export async function getPageHero(page: 'alerts' | 'reports' | 'activity'): Promise<PageHeroContent> {
+export async function getPageHero(page: 'alerts' | 'reports' | 'activity'): Promise<SeoPageHeroContent> {
   const hero = await apiGet<HeroResponse>(`/cms/${page}`);
-  return { title: hero.title, subtitle: hero.subtitle, heroImage: hero.hero_image };
+  return {
+    seo_title: hero.seo_title,
+    seo_description: hero.seo_description,
+    title: hero.title,
+    subtitle: hero.subtitle,
+    heroImage: hero.hero_image,
+  };
 }
 
 type FeministAIPageResponse = {
