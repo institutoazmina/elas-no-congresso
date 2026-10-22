@@ -6,7 +6,6 @@
  * o layout comporta. Imagens só são substituídas, nunca removidas.
  */
 import { apiGet } from './client';
-import aboutPreview from './about-preview.json';
 
 type CmsImage = { url: string; width: number; height: number };
 export type PageHeroContent = { title: string; subtitle: string; heroImage: CmsImage };
@@ -46,21 +45,39 @@ export async function getFeministAIPage(): Promise<FeministAIPageContent> {
   };
 }
 
-type WithoutPosition<T> = Omit<T, 'position'>;
-type AboutTimelineEvent = WithoutPosition<typeof aboutPreview.timeline[number]>;
-type AboutChallenge = WithoutPosition<typeof aboutPreview.challenges[number]>;
-
 export type AboutPageContent = {
-  content: Record<string, string>;
-  hero_image: CmsImage;
-  timeline: AboutTimelineEvent[];
-  challenges: AboutChallenge[];
-  partners: { name: string; asset_key: string; logo_url: string }[];
+  seo_title: string;
+  seo_description: string;
+  hero: PageHeroContent;
+  content: string;
+  partners: { name: string; logo_url: string }[];
+  team: AboutTeamGroup[];
 };
 
-/** Textos, links e linha do tempo de `/sobre`, lidos no build. */
-export function getAboutPage(): Promise<AboutPageContent> {
-  return apiGet<AboutPageContent>('/cms/about');
+export type AboutTeamGroup = {
+  key: string;
+  title: string;
+  wide: boolean;
+  members: { name: string; role: string }[];
+};
+
+type AboutPageResponse = Omit<AboutPageContent, 'hero'> & {
+  title: string;
+  subtitle: string;
+  hero_image: CmsImage;
+};
+
+/** Hero, Markdown e organizações parceiras de `/sobre`, lidos no build. */
+export async function getAboutPage(): Promise<AboutPageContent> {
+  const page = await apiGet<AboutPageResponse>('/cms/about');
+  return {
+    seo_title: page.seo_title,
+    seo_description: page.seo_description,
+    hero: { title: page.title, subtitle: page.subtitle, heroImage: page.hero_image },
+    content: page.content,
+    partners: page.partners,
+    team: page.team,
+  };
 }
 
 export type HomePageContent = {

@@ -1,0 +1,20 @@
+---
+import type { AboutTeamGroup } from "../../service/api/cms";
+
+const { groups } = Astro.props as { groups: AboutTeamGroup[] };
+---
+
+<div class="tw:mx-[50%] tw:mt-8 tw:grid tw:w-[min(1344px,calc(100vw-96px))] tw:-translate-x-1/2 tw:grid-cols-2 tw:gap-x-16 tw:gap-y-10 tw:max-[900px]:mx-0 tw:max-[900px]:w-full tw:max-[900px]:translate-x-0 tw:max-[900px]:grid-cols-1 tw:max-[900px]:gap-7.5">
+    {groups.map((group) => (
+        <section class:list={[group.wide && "tw:col-span-full tw:max-[900px]:col-span-1"]}>
+            <h3 class="tw:mb-3.5 tw:text-lg tw:font-light tw:leading-5.5 tw:[font-variation-settings:'wdth'_100]">{group.title}</h3>
+            <ul class:list={["tw:m-0 tw:list-none tw:gap-1.5 tw:p-0 tw:text-sm tw:leading-5.5", group.wide && "tw:columns-2 tw:gap-x-16 tw:max-[900px]:columns-1"]}>
+                {group.members.map((member) => (
+                    <li class="tw:break-inside-avoid">
+                        <strong>{member.name}</strong>{member.role && <> {member.role}</>}
+                    </li>
+                ))}
+            </ul>
+        </section>
+    ))}
+</div>

@@ -1,72 +1,11 @@
 ---
-import { Image } from "astro:assets";
-import anis from "../../assets/images/logos/anis.webp";
-import artigo19 from "../../assets/images/logos/article19.svg";
-import cepia from "../../assets/images/logos/cepia.webp";
-import cfemea from "../../assets/images/logos/cfemea.webp";
-import coletivoFeminista from "../../assets/images/logos/coletivo-feminista-sexualidade-e-saude.webp";
-import manaAMana from "../../assets/images/logos/mana-a-mana.webp";
-import deFEMde from "../../assets/images/logos/deFEMde.webp";
-import ecos from "../../assets/images/logos/ecos.webp";
-import empodera from "../../assets/images/logos/empodera.webp";
-import gepo from "../../assets/images/logos/grupo-de-estudos-de-genero-e-politica.webp";
-import maisDiversidade from "../../assets/images/logos/logo_instituto-mais-diversidade_5colorido.webp";
-import mariaDaPenha from "../../assets/images/logos/instituto-maria-da-penha.webp";
-import marielleFranco from "../../assets/images/logos/instituto-marielle-franco.webp";
-import patriciaGalvao from "../../assets/images/logos/instituto-patricia-galvao.webp";
-import update from "../../assets/images/logos/instituto-update.svg";
-import juristasNegras from "../../assets/images/logos/instituto-juristas-negras.webp";
-import labCidade from "../../assets/images/logos/lab-cidade.webp";
-import mulheresNegrasDecidem from "../../assets/images/logos/mulheres-negras-decidem.webp";
-import ovoBr from "../../assets/images/logos/observatorio-da-violencia-obstetricao-no-brasil.webp";
-import planInternational from "../../assets/images/logos/plan-international.webp";
-import redeLiberdade from "../../assets/images/logos/rede-liberdade.webp";
-import sof from "../../assets/images/logos/sempreviva-organizacao-feminista.webp";
-import spw from "../../assets/images/logos/spw.webp";
-import themis from "../../assets/images/logos/themis.webp";
-import tretaqui from "../../assets/images/logos/tretaqui.webp";
-
-const staticLogos = {
-    anis: anis,
-    artigo19: artigo19,
-    cepia: cepia,
-    cfemea: cfemea,
-    coletivoFeminista: coletivoFeminista,
-    manaAMana: manaAMana,
-    deFEMde: deFEMde,
-    ecos: ecos,
-    empodera: empodera,
-    gepo: gepo,
-    maisDiversidade: maisDiversidade,
-    mariaDaPenha: mariaDaPenha,
-    marielleFranco: marielleFranco,
-    patriciaGalvao: patriciaGalvao,
-    update: update,
-    juristasNegras: juristasNegras,
-    labCidade: labCidade,
-    mulheresNegrasDecidem: mulheresNegrasDecidem,
-    ovoBr: ovoBr,
-    planInternational: planInternational,
-    redeLiberdade: redeLiberdade,
-    sof: sof,
-    spw: spw,
-    themis: themis,
-    tretaqui: tretaqui,
-};
-
-const { partners } = Astro.props as { partners: { name: string; asset_key: string; logo_url: string }[] };
+const { partners } = Astro.props as { partners: { name: string; logo_url: string }[] };
 ---
 
-<ul class="tw:grid tw:grid-cols-3 tw:gap-6 tw:pt-12 tw:md:grid-cols-5 tw:md:gap-10 tw:md:pt-20">
-    {partners.map(({ name, asset_key, logo_url }) => (
+<ul class="tw:mx-auto tw:grid tw:w-[min(1344px,calc(100vw-96px))] tw:grid-cols-3 tw:gap-6 tw:pt-12 tw:md:grid-cols-5 tw:md:gap-10 tw:md:pt-20 tw:max-[900px]:w-full">
+    {partners.map(({ name, logo_url }) => (
         <li class="tw:flex tw:items-center tw:justify-center">
-            {logo_url ? (
-                <img src={logo_url} alt={name} title={name} loading="lazy" width="160" class="tw:h-auto tw:w-20 tw:md:w-40" />
-            ) : staticLogos[asset_key as keyof typeof staticLogos] ? (
-                <Image src={staticLogos[asset_key as keyof typeof staticLogos]} alt={name} title={name} loading="lazy" width={160} densities={[1, 2]} class="tw:h-auto tw:w-20 tw:md:w-40" />
-            ) : (
-                <span>{name}</span>
-            )}
+            <img src={logo_url} alt={name} title={name} loading="lazy" width="160" class="tw:h-auto tw:w-20 tw:md:w-40" />
         </li>
     ))}
 </ul>

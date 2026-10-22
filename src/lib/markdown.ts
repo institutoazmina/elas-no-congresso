@@ -29,6 +29,27 @@ markdown
         render: (tokens: Token[], index: number) => tokens[index].nesting === 1
             ? '<div class="markdown-table markdown-table--transparent">\n'
             : "</div>\n",
+    })
+    .use(markdownItContainer, "list", {
+        validate: (params) => params.trim() === "list arrows",
+        render: (tokens: Token[], index: number) => tokens[index].nesting === 1
+            ? '<div class="markdown-arrow-list">\n'
+            : "</div>\n",
+    })
+    .use(markdownItContainer, "ratings", {
+        validate: (params) => params.trim() === "ratings",
+        render: (tokens: Token[], index: number) => tokens[index].nesting === 1
+            ? '<ul class="markdown-ratings">\n'
+            : "</ul>\n",
+    })
+    .use(markdownItContainer, "rating", {
+        validate: (params) => /^rating\s+(favorable|favorable-caveat|unfavorable-caveat|unfavorable)$/.test(params.trim()),
+        render: (tokens: Token[], index: number) => {
+            if (tokens[index].nesting === -1) return "</li>\n";
+
+            const variant = tokens[index].info.trim().split(/\s+/)[1];
+            return `<li class="markdown-rating markdown-rating--${variant}">\n`;
+        },
     });
 
 markdown.inline.ruler.before("text", "trend-marker", (state, silent) => {
@@ -96,6 +117,31 @@ export function splitMarkdownSections(source: string): string[] {
         .split(/^\s*---\s*$/m)
         .map((section) => section.trim())
         .filter(Boolean);
+}
+
+export type MarkdownComponent =
+    | { type: "markdown"; content: string }
+    | { type: "logo-grid" }
+    | { type: "timeline"; content: string }
+    | { type: "team" };
+
+export function splitMarkdownComponents(source: string): MarkdownComponent[] {
+    const marker = /^\s*::: (logo grid|team) :::\s*$|^\s*::::: timeline\s*$[\s\S]*?^\s*:::::\s*$/gm;
+    const parts: MarkdownComponent[] = [];
+    let start = 0;
+
+    for (const match of source.matchAll(marker)) {
+        const content = source.slice(start, match.index).trim();
+        if (content) parts.push({ type: "markdown", content });
+        parts.push(match[1]
+            ? { type: match[1] === "team" ? "team" : "logo-grid" }
+            : { type: "timeline", content: match[0].trim() });
+        start = (match.index ?? 0) + match[0].length;
+    }
+
+    const content = source.slice(start).trim();
+    if (content) parts.push({ type: "markdown", content });
+    return parts;
 }
 
 export function renderMarkdown(source: string): string {

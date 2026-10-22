@@ -26,18 +26,14 @@ const localPreviewData = (path: string, params: Record<string, string | number |
 
   if (path === '/cms/about') {
     return {
-      content: {
-        seo_title: aboutPreview.seo_title,
-        seo_description: aboutPreview.seo_description,
-        timeline_note_link_text: aboutPreview.timeline_note_link_text,
-        timeline_note_link_url: aboutPreview.timeline_note_link_url,
-        timeline_note_after_link: aboutPreview.timeline_note_after_link,
-        ...Object.fromEntries(aboutPreview.copy.map(({ key, value }) => [key, value])),
-      },
+      seo_title: aboutPreview.seo_title,
+      seo_description: aboutPreview.seo_description,
+      title: aboutPreview.title,
+      subtitle: aboutPreview.subtitle,
       hero_image: { url: aboutHero.src, width: aboutHero.width, height: aboutHero.height },
-      timeline: aboutPreview.timeline,
-      challenges: aboutPreview.challenges,
-      partners: aboutPreview.partners.map(({ name, asset_key }) => ({ name, asset_key, logo_url: '' })),
+      content: aboutPreview.content,
+      partners: aboutPreview.partners,
+      team: aboutPreview.team,
     };
   }
 

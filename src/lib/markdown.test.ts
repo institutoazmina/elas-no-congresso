@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { renderMarkdown, splitMarkdownSections } from "./markdown.ts";
+import { parseTimeline } from "../components/about/history-timeline.ts";
+import { renderMarkdown, splitMarkdownComponents, splitMarkdownSections } from "./markdown.ts";
 
 test("full-page Markdown renders the supported editorial elements", () => {
     const html = renderMarkdown(`## Título
@@ -113,4 +114,77 @@ test("horizontal dividers split page sections without splitting table separators
         "# Hero",
         "## Seção\n\n| A |\n| --- |",
     ]);
+});
+
+test("external component markers only reserve their position", () => {
+    assert.deepEqual(splitMarkdownComponents("Antes\n\n::: logo grid :::\n\n::: team :::\n\nDepois"), [
+        { type: "markdown", content: "Antes" },
+        { type: "logo-grid" },
+        { type: "team" },
+        { type: "markdown", content: "Depois" },
+    ]);
+});
+
+test("timeline Markdown is reserved for its component and parsed as data", () => {
+    const source = `::::: timeline
+
+:::: milestones
+
+::: milestone
+*Março de*
+
+### 2020
+
+Primeiro marco.
+
+**Nasce o projeto**
+:::
+
+::::
+
+> [Nota](https://example.com).
+
+:::::`;
+    const parts = splitMarkdownComponents(`Antes\n\n${source}\n\nDepois`);
+    const timeline = parseTimeline(source);
+
+    assert.deepEqual(parts, [
+        { type: "markdown", content: "Antes" },
+        { type: "timeline", content: source },
+        { type: "markdown", content: "Depois" },
+    ]);
+    assert.deepEqual(timeline.milestones, [{
+        prefix: "<em>Março de</em>",
+        year: "2020",
+        description: "Primeiro marco.",
+        tag: "<strong>Nasce o projeto</strong>",
+    }]);
+    assert.equal(timeline.footer, '<a href="https://example.com">Nota</a>.');
+});
+
+test("about-page ratings render controlled semantic markup", () => {
+    const html = renderMarkdown(`:::: ratings
+
+::: rating favorable
+#### Favorável
+
+Amplia direitos.
+:::
+
+::: rating unfavorable
+#### Desfavorável
+
+Restringe direitos.
+:::
+
+::::`);
+
+    assert.match(html, /class="markdown-rating markdown-rating--favorable"/);
+    assert.match(html, /class="markdown-rating markdown-rating--unfavorable"/);
+});
+
+test("about-page components reject unsupported variants", () => {
+    const html = renderMarkdown("::: rating neutral\nTexto\n:::");
+
+    assert.doesNotMatch(html, /markdown-rating/);
 });
