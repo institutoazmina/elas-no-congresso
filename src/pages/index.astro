@@ -14,28 +14,44 @@ import ExploreCongress from "../components/home/ExploreCongress.astro";
 import ParliamentariansCarousel from "../components/home/ParliamentariansCarousel.astro";
 import QuiteriaAndFunders from "../components/home/QuiteriaAndFunders.astro";
 import HomeNews from "../components/home/HomeNews.astro";
+import { parseHomeContent } from "../components/home/home-content";
 import { getHomePage } from "../service/api/cms";
 
 const home = await getHomePage();
+const sections = parseHomeContent(home.content);
 ---
 
-<PageLayout title={home.content.seo_title}
-    description={home.content.seo_description}
+<PageLayout title={home.seo_title}
+    description={home.seo_description}
     htmlClass="tw:motion-safe:[scroll-behavior:smooth]"
     pageClass="site-home-background site-shared-background tw:[.site-home-background_>_&]:bg-transparent tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
 >
-            <Hero content={home.content} image={home.images.hero} />
-            <RightsUnderAttack content={home.content} />
-            <LegislativeSetbacks content={home.content} />
-            <HomeNews content={home.content} />
-            <WomenInDefense content={home.content} />
-            <PartyRightsChart content={home.content} />
-            <UfProjectsChart content={home.content} />
-            <HomeAlerts content={home.content} />
-            <FastMovingProposals content={home.content} />
-            <SlowMovingProposals content={home.content} />
-            <EnactedProjects content={home.content} />
-            <ExploreCongress content={home.content} image={home.images.explore} />
-            <ParliamentariansCarousel content={home.content} />
-            <QuiteriaAndFunders content={home.content} image={home.images.quiteria} />
+    <Hero content={home.hero} cta={home.cta} />
+    {sections.map((section) => section.component === "chart rights-under-attack" ? (
+        <RightsUnderAttack content={section.content} />
+    ) : section.component === "chart legislative-setbacks" ? (
+        <LegislativeSetbacks content={section.content} />
+    ) : section.component === "reports" ? (
+        <HomeNews content={section.content} />
+    ) : section.component === "chart women-in-defense" ? (
+        <WomenInDefense content={section.content} />
+    ) : section.component === "chart party-rights" ? (
+        <PartyRightsChart content={section.content} />
+    ) : section.component === "chart state-projects" ? (
+        <UfProjectsChart content={section.content} />
+    ) : section.component === "alerts" ? (
+        <HomeAlerts content={section.content} />
+    ) : section.component === "proposals fast" ? (
+        <FastMovingProposals content={section.content} />
+    ) : section.component === "proposals slow" ? (
+        <SlowMovingProposals content={section.content} />
+    ) : section.component === "proposals enacted" ? (
+        <EnactedProjects content={section.content} />
+    ) : section.component === "explore" ? (
+        <ExploreCongress content={section.content} image={home.images.explore} />
+    ) : section.component === "parliamentarians" ? (
+        <ParliamentariansCarousel content={section.content} />
+    ) : (
+        <QuiteriaAndFunders content={section.content} image={home.images.quiteria} />
+    ))}
 </PageLayout>

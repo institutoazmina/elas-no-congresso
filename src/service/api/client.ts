@@ -39,9 +39,9 @@ const localPreviewData = (path: string, params: Record<string, string | number |
 
   if (path === '/cms/home') {
     return {
-      content: Object.fromEntries(homePreview.copy.map(({ key, value }) => [key, value])),
+      ...homePreview,
+      hero_image: { url: homeHero.src, width: homeHero.width, height: homeHero.height },
       images: {
-        hero: { url: homeHero.src, width: homeHero.width, height: homeHero.height },
         explore: { url: homeExplore.src, width: homeExplore.width, height: homeExplore.height },
         quiteria: { url: homeQuiteria.src, width: homeQuiteria.width, height: homeQuiteria.height },
       },

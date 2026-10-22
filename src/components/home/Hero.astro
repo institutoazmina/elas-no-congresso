@@ -1,11 +1,22 @@
 ---
-const { content, image } = Astro.props;
 import { Image } from "astro:assets";
 import attentionMark from "../../assets/images/activity/attention.svg";
 import highlighterOne from "../../assets/images/hero/highlighter-unfavorable-1.svg";
 import highlighterTwo from "../../assets/images/hero/highlighter-unfavorable-2.svg";
 import halftoneShadow from "../../assets/images/hero/halftone-shadow.png";
 import InlineMarkdown from "../shared/InlineMarkdown.astro";
+import type { PageHeroContent } from "../../service/api/cms";
+
+const { content, cta } = Astro.props as {
+    content: PageHeroContent;
+    cta: { text: string; url: string };
+};
+const { title, subtitle, heroImage: image } = content;
+const titleLines = title.split(/\r?\n/);
+const unfavorable = subtitle.match(/^(.*?)~~(.+?)~~([\s\S]*)$/);
+const subtitleBefore = unfavorable?.[1] ?? subtitle;
+const subtitleHighlight = unfavorable?.[2] ?? "";
+const subtitleAfter = unfavorable?.[3] ?? "";
 ---
 
 <section
@@ -29,18 +40,18 @@ import InlineMarkdown from "../shared/InlineMarkdown.astro";
         ">
             <Image class="hero__attention tw:block tw:h-1 tw:w-8 tw:min-[761px]:h-2 tw:min-[761px]:w-24" src={attentionMark} loading="eager" alt="" />
             <h1 id="hero-title" class="
-                hero__title tw:text-ink tw:font-display tw:text-[32px] tw:[font-variation-settings:'wdth'_75] tw:font-bold
+                hero__title tw:text-ink tw:font-display tw:text-[32px] tw:[font-variation-settings:'wdth'_60] tw:font-normal
                 tw:tracking-normal tw:leading-8 tw:mix-blend-multiply tw:uppercase tw:m-0 tw:min-[761px]:text-[58px]
-                tw:min-[761px]:leading-15 tw:min-[761px]:whitespace-nowrap tw:min-[1101px]:text-7xl tw:min-[1101px]:leading-18
+                tw:min-[761px]:leading-15 tw:min-[1101px]:text-7xl tw:min-[1101px]:leading-18
+                tw:[&_strong]:font-bold tw:[&_strong]:[font-variation-settings:'wdth'_75]
             ">
-                <InlineMarkdown text={content.hero_title_before_nas.trim()} />{" "}<span class="hero__title-narrow tw:[font-variation-settings:'wdth'_60] tw:font-normal tw:[&_strong]:font-bold"><InlineMarkdown text={content.hero_title_nas} /></span>{" "}<InlineMarkdown text={content.hero_title_after_nas.trim()} /><br class="hero__title-break-desktop tw:hidden tw:min-[761px]:inline" />
-                <span class="hero__title-narrow tw:[font-variation-settings:'wdth'_60] tw:font-normal tw:ml-2 tw:[&_strong]:font-bold"><InlineMarkdown text={content.hero_title_no} /></span>{" "}<InlineMarkdown text={content.hero_title_after_no.trim()} />
+                {titleLines.map((line, index) => <>{index > 0 && <br />}<InlineMarkdown text={line} /></>)}
             </h1>
             <p class="
                 hero__description tw:text-ink tw:font-sans tw:text-lg tw:font-bold tw:leading-6 tw:relative
                 tw:whitespace-pre-wrap tw:max-w-80 tw:w-full tw:m-0 tw:min-[761px]:text-lg tw:min-[761px]:leading-6
                 tw:min-[761px]:max-w-160 tw:min-[761px]:min-h-36 tw:min-[761px]:w-160
-            "><span class="hero__description-text tw:relative tw:z-1"><InlineMarkdown text={content.hero_subtitle_before.trim()} />{" "}</span><span class="hero__highlighted-word tw:inline-block tw:isolate tw:relative tw:z-1"><span class="
+            "><span class="hero__description-text tw:relative tw:z-1"><InlineMarkdown text={subtitleBefore} /></span>{subtitleHighlight && <span class="hero__highlighted-word tw:inline-block tw:isolate tw:relative tw:z-1"><span class="
                 hero__highlighter tw:aspect-[152.629/35.967] tw:left-[50%] tw:z-[-1] tw:pointer-events-none tw:absolute
                 tw:top-[calc(50%_+_4px)] tw:[transform:translate(-50%,_-50%)] tw:w-[calc(100%_+_24px)] tw:[&_img]:block
                 tw:[&_img]:absolute tw:[&_img]:h-full tw:[&_img]:inset-0 tw:[&_img]:max-w-none tw:[&_img]:w-full
@@ -61,7 +72,7 @@ import InlineMarkdown from "../shared/InlineMarkdown.astro";
                             <Image src={highlighterTwo} loading="eager" alt="" />
                         </span>
                     </span>
-                </span><span class="hero__highlighted-word-text tw:relative tw:z-1"><InlineMarkdown text={content.hero_subtitle_highlight} /></span></span><span class="hero__description-text tw:relative tw:z-1">{" "}<InlineMarkdown text={content.hero_subtitle_after.trim()} /></span></p>
+                </span><span class="hero__highlighted-word-text tw:relative tw:z-1"><InlineMarkdown text={subtitleHighlight} /></span></span>}<span class="hero__description-text tw:relative tw:z-1"><InlineMarkdown text={subtitleAfter} /></span></p>
             <a class="
                 hero__cta tw:items-center tw:bg-accent tw:text-white tw:cursor-pointer tw:flex tw:font-display tw:text-lg
                 tw:[font-variation-settings:'wdth'_75] tw:font-bold tw:h-[46px] tw:justify-center tw:leading-6 tw:static tw:w-fit
@@ -72,7 +83,7 @@ import InlineMarkdown from "../shared/InlineMarkdown.astro";
                 tw:min-[761px]:text-xl tw:min-[761px]:h-14 tw:min-[761px]:left-[50%] tw:min-[761px]:leading-6
                 tw:min-[761px]:absolute tw:min-[761px]:top-[calc(100%_-_32px)] tw:min-[761px]:[transform:translateX(-50%)]
                 tw:min-[761px]:w-auto tw:min-[761px]:pt-4.5 tw:min-[761px]:pb-3.5 tw:min-[761px]:px-6 tw:min-[761px]:m-0
-            " href={content.hero_scroll_url}>{content.hero_scroll_text}</a>
+            " href={cta.url}>{cta.text}</a>
         </div>
 
         <div class="

@@ -81,13 +81,33 @@ export async function getAboutPage(): Promise<AboutPageContent> {
 }
 
 export type HomePageContent = {
-  content: Record<string, string>;
-  images: { hero: CmsImage; explore: CmsImage; quiteria: CmsImage };
+  seo_title: string;
+  seo_description: string;
+  hero: PageHeroContent;
+  cta: { text: string; url: string };
+  content: string;
+  images: { explore: CmsImage; quiteria: CmsImage };
 };
 
-/** Textos, links e imagens editoriais da home, lidos no build. */
-export function getHomePage(): Promise<HomePageContent> {
-  return apiGet<HomePageContent>('/cms/home');
+type HomePageResponse = Omit<HomePageContent, 'hero' | 'cta'> & {
+  title: string;
+  subtitle: string;
+  cta_text: string;
+  cta_url: string;
+  hero_image: CmsImage;
+};
+
+/** Hero, Markdown e imagens editoriais da Home, lidos no build. */
+export async function getHomePage(): Promise<HomePageContent> {
+  const page = await apiGet<HomePageResponse>('/cms/home');
+  return {
+    seo_title: page.seo_title,
+    seo_description: page.seo_description,
+    hero: { title: page.title, subtitle: page.subtitle, heroImage: page.hero_image },
+    cta: { text: page.cta_text, url: page.cta_url },
+    content: page.content,
+    images: page.images,
+  };
 }
 
 export type FooterAlertsContent = {
