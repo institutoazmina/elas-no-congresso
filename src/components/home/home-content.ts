@@ -21,7 +21,7 @@ export type HomeSection = {
 };
 
 const componentPattern = /^::: (chart [a-z-]+|reports|alerts|proposals (?:fast|slow|enacted)|explore|parliamentarians|quiteria) :::$/m;
-const markdownImagePattern = /!\[((?:\\.|[^\]])*)]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
+const markdownImagePattern = /!\[([^\]\r\n]*)]\(([^)\s]+)(?:[ \t]+"[^"\r\n]*")?\)/g;
 
 const plain = (value: string) => value
     .replace(/\*\*(.*?)\*\*/g, "$1")
@@ -56,7 +56,7 @@ function links(source: string): { text: string; url: string }[] {
 function image(source: string, label: string): { alt: string; url: string } {
     const match = [...source.matchAll(markdownImagePattern)].find((candidate) => safeUrl(candidate[2]));
     return {
-        alt: required(match?.[1].replace(/\\([\\\]])/g, "$1"), `${label} image alt text`),
+        alt: required(match?.[1], `${label} image alt text`),
         url: required(match?.[2], `${label} image URL`),
     };
 }

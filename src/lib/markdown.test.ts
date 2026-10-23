@@ -55,7 +55,7 @@ test("trend markers render styled and accessible arrows", () => {
 test("raw HTML and unsafe links are not rendered", () => {
     const html = renderMarkdown('<script>alert(1)</script> [x](javascript:alert(1))');
 
-    assert.doesNotMatch(html, /<script>/);
+    assert.doesNotMatch(html, /<script>/i);
     assert.doesNotMatch(html, /href="javascript:/);
     assert.match(html, /&lt;script&gt;/);
 });
