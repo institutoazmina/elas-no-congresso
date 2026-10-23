@@ -62,12 +62,13 @@ jobs:
 
       # Hashed build files → cache 1 year. Public assets have stable URLs.
       # Exclude HTML, JSON and the sitemap/robots, which are not fingerprinted
-      # and must be revalidated when content changes. Author og.png images are
-      # published by the API straight to the bucket: never delete them here.
+      # and must be revalidated when content changes. Author og.png images and
+      # CMS images are published by the API straight to the bucket: never delete them here.
       - name: Sync immutable assets
         run: |
           aws s3 sync dist/ "s3://$BUCKET/" --delete \
             --exclude "assets/*" \
+            --exclude "cms/*" \
             --exclude "*.html" \
             --exclude "*.json" \
             --exclude "*/og.png" \
