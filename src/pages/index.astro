@@ -48,10 +48,10 @@ const sections = parseHomeContent(home.content);
     ) : section.component === "proposals enacted" ? (
         <EnactedProjects content={section.content} />
     ) : section.component === "explore" ? (
-        <ExploreCongress content={section.content} image={home.images.explore} />
+        <ExploreCongress content={section.content} />
     ) : section.component === "parliamentarians" ? (
         <ParliamentariansCarousel content={section.content} />
     ) : (
-        <QuiteriaAndFunders content={section.content} image={home.images.quiteria} />
+        <QuiteriaAndFunders content={section.content} />
     ))}
 </PageLayout>

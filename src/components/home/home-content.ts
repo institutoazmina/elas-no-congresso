@@ -21,6 +21,7 @@ export type HomeSection = {
 };
 
 const componentPattern = /^::: (chart [a-z-]+|reports|alerts|proposals (?:fast|slow|enacted)|explore|parliamentarians|quiteria) :::$/m;
+const markdownImagePattern = /!\[((?:\\.|[^\]])*)]\(([^)\s]+)(?:\s+"[^"]*")?\)/g;
 
 const plain = (value: string) => value
     .replace(/\*\*(.*?)\*\*/g, "$1")
@@ -37,17 +38,27 @@ function container(source: string, name: string): string {
     return source.match(new RegExp(`^::: ${escaped}\\s*\\n([\\s\\S]*?)\\n:::\\s*$`, "m"))?.[1].trim() ?? "";
 }
 
+function safeUrl(url: string): boolean {
+    if ((url.startsWith("/") && !url.startsWith("//")) || url.startsWith("#")) return true;
+    try {
+        return ["http:", "https:"].includes(new URL(url).protocol);
+    } catch {
+        return false;
+    }
+}
+
 function links(source: string): { text: string; url: string }[] {
     return [...source.matchAll(/\[([^\]]+)]\(([^)\s]+)(?:\s+"[^"]*")?\)/g)]
         .map((match) => ({ text: plain(match[1]), url: match[2] }))
-        .filter(({ url }) => {
-            if ((url.startsWith("/") && !url.startsWith("//")) || url.startsWith("#")) return true;
-            try {
-                return ["http:", "https:"].includes(new URL(url).protocol);
-            } catch {
-                return false;
-            }
-        });
+        .filter(({ url }) => safeUrl(url));
+}
+
+function image(source: string, label: string): { alt: string; url: string } {
+    const match = [...source.matchAll(markdownImagePattern)].find((candidate) => safeUrl(candidate[2]));
+    return {
+        alt: required(match?.[1].replace(/\\([\\\]])/g, "$1"), `${label} image alt text`),
+        url: required(match?.[2], `${label} image URL`),
+    };
 }
 
 function blocks(source: string): { title: string; paragraphs: string[] } {
@@ -56,6 +67,7 @@ function blocks(source: string): { title: string; paragraphs: string[] } {
         .replace(/^##\s+.+$/m, "")
         .replace(componentPattern, "")
         .replace(/^::: [a-z ]+\s*\n[\s\S]*?\n:::\s*$/gm, "")
+        .replace(markdownImagePattern, "")
         .trim();
     return {
         title,
@@ -67,9 +79,11 @@ function parseSection(source: string): HomeSection {
     const component = required(source.match(componentPattern)?.[1], "a ::: component ::: marker") as HomeComponent;
 
     if (component === "quiteria") {
+        const sectionImage = image(source, "the QuitérIA");
         const body = source
             .replace(componentPattern, "")
             .replace(/^::: [a-z ]+\s*\n[\s\S]*?\n:::\s*$/gm, "")
+            .replace(markdownImagePattern, "")
             .trim();
         const emphasis = [...body.matchAll(/\*\*(.*?)\*\*/g)];
         if (emphasis.length !== 2) throw new Error("The QuitérIA section requires two bold spans");
@@ -83,7 +97,8 @@ function parseSection(source: string): HomeSection {
                 quiteria_between: body.slice((emphasis[0].index ?? 0) + emphasis[0][0].length, emphasis[1].index),
                 quiteria_ai: emphasis[1][1],
                 quiteria_after: body.slice((emphasis[1].index ?? 0) + emphasis[1][0].length),
-                quiteria_image_alt: required(container(source, "image alt"), "the QuitérIA image alt text"),
+                quiteria_image_url: sectionImage.url,
+                quiteria_image_alt: sectionImage.alt,
                 quiteria_cta_text: cta,
                 quiteria_cta_url: ctaUrl,
             },
@@ -190,10 +205,12 @@ function parseSection(source: string): HomeSection {
 
     if (component === "explore") {
         const cta = links(container(source, "cta"))[0];
+        const sectionImage = image(source, "the Explore");
         return { component, content: {
             explore_title: plain(title),
             explore_subtitle: plain(required(paragraphs[0], "the Explore introduction")),
-            explore_image_alt: plain(required(container(source, "image alt"), "the Explore image alt text")),
+            explore_image_url: sectionImage.url,
+            explore_image_alt: sectionImage.alt,
             explore_cta_text: required(cta?.text, "the Explore CTA"),
             explore_cta_url: required(cta?.url, "the Explore CTA URL"),
         } };

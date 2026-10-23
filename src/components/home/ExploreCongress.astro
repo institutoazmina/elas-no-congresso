@@ -1,5 +1,5 @@
 ---
-const { content, image } = Astro.props;
+const { content } = Astro.props;
 import { Image } from "astro:assets";
 import CuttingMat from "../shared/CuttingMat.astro";
 import chevron from "../../assets/images/home-news/chevron-right.svg";
@@ -26,7 +26,7 @@ import chevron from "../../assets/images/home-news/chevron-right.svg";
             explore-congress__screen-wrap tw:flex tw:w-full tw:max-w-165 tw:h-auto tw:items-start tw:justify-center tw:p-0
             tw:mt-0 tw:mb-7 tw:mx-0 tw:max-md:justify-start tw:md:w-165
         ">
-            <img class="explore-congress__screen tw:block tw:w-full tw:h-auto tw:flex-none tw:border-[2px] tw:border-solid tw:border-accent tw:rounded-2xl tw:bg-white " src={image.url} width={image.width} height={image.height} alt={content.explore_image_alt} loading="lazy" />
+            <img class="explore-congress__screen tw:block tw:w-full tw:h-auto tw:flex-none tw:border-[2px] tw:border-solid tw:border-accent tw:rounded-2xl tw:bg-white " src={content.explore_image_url} width="1440" height="1080" alt={content.explore_image_alt} loading="lazy" />
         </div>
         <span id="explore-congress-cta" class="
             explore-congress__button tw:flex tw:w-full tw:max-w-85 tw:h-14 tw:items-center tw:justify-center tw:gap-2

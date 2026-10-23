@@ -41,10 +41,9 @@ const localPreviewData = (path: string, params: Record<string, string | number |
     return {
       ...homePreview,
       hero_image: { url: homeHero.src, width: homeHero.width, height: homeHero.height },
-      images: {
-        explore: { url: homeExplore.src, width: homeExplore.width, height: homeExplore.height },
-        quiteria: { url: homeQuiteria.src, width: homeQuiteria.width, height: homeQuiteria.height },
-      },
+      content: homePreview.content
+        .replace('/media/cms/markdown/74f5b946d93741f6a9c735e6df082cf5.webp', homeExplore.src)
+        .replace('/media/cms/markdown/b766dd167511410aa590f8814672c8e7.webp', homeQuiteria.src),
     };
   }
 

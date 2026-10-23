@@ -85,7 +85,7 @@ O deploy configura cache de uma hora com revalidação para `/assets/`, e um ano
 
 `https://api.elasnocongresso.com.br/api/v1` fornece os dados legislativos para o build e as interações no navegador. Veja [a documentação dos filtros](docs/activity-explorer-api.md).
 
-Textos e imagens editáveis vêm do CMS no admin da API (`GET /cms/<página>`, em `src/service/api/cms.ts`); hoje, título, subtítulo e ilustração do topo de `/alertas`. Cada salvamento no admin dispara este workflow via `repository_dispatch`; os deploys rodam um por vez. As imagens do CMS ficam no bucket em `cms/`, um arquivo por campo (a API publica os originais e o admin só os substitui); o deploy nunca as apaga.
+Textos e imagens editáveis vêm do CMS no admin da API (`GET /cms/<página>`, em `src/service/api/cms.ts`). Cada salvamento no admin dispara este workflow via `repository_dispatch`; os deploys rodam um por vez. As imagens do CMS ficam no bucket em `cms/`; imagens editoriais podem ser inseridas e reutilizadas pela galeria dos campos Markdown. O deploy nunca as apaga.
 
 ## Interatividade
 

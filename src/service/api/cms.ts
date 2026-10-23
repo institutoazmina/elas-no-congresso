@@ -99,7 +99,6 @@ export type HomePageContent = {
   hero: PageHeroContent;
   cta: { text: string; url: string };
   content: string;
-  images: { explore: CmsImage; quiteria: CmsImage };
 };
 
 type HomePageResponse = Omit<HomePageContent, 'hero' | 'cta'> & {
@@ -110,7 +109,7 @@ type HomePageResponse = Omit<HomePageContent, 'hero' | 'cta'> & {
   hero_image: CmsImage;
 };
 
-/** Hero, Markdown e imagens editoriais da Home, lidos no build. */
+/** Hero e Markdown da Home, lidos no build. */
 export async function getHomePage(): Promise<HomePageContent> {
   const page = await apiGet<HomePageResponse>('/cms/home');
   return {
@@ -119,7 +118,6 @@ export async function getHomePage(): Promise<HomePageContent> {
     hero: { title: page.title, subtitle: page.subtitle, heroImage: page.hero_image },
     cta: { text: page.cta_text, url: page.cta_url },
     content: page.content,
-    images: page.images,
   };
 }
 

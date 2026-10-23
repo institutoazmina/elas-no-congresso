@@ -1,5 +1,5 @@
 ---
-const { content, image } = Astro.props;
+const { content } = Astro.props;
 import { Image } from "astro:assets";
 import chevron from "../../assets/images/home-news/chevron-right.svg";
 ---
@@ -15,9 +15,9 @@ import chevron from "../../assets/images/home-news/chevron-right.svg";
                 quiteria-funders__image tw:w-full tw:h-auto tw:object-contain tw:max-md:aspect-[2/1] tw:max-md:object-contain
                 tw:md:w-180 tw:md:h-90 tw:md:object-contain
             "
-            src={image.url}
-            width={image.width}
-            height={image.height}
+            src={content.quiteria_image_url}
+            width="1920"
+            height="1080"
             alt={content.quiteria_image_alt}
         />
         <div class="
