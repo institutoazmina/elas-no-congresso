@@ -159,28 +159,35 @@ jobs:
       - name: Repair cache metadata
         if: github.event_name == 'workflow_dispatch' && inputs.repair_cache_metadata
         run: |
+          set -o pipefail
           log="${RUNNER_TEMP}/rclone-cache-repair.log"
           args=(
             --ignore-times --metadata --server-side-across-configs
             --fast-list --s3-no-check-bucket --transfers 64 --checkers 64
-            --exclude "/cms/**" --exclude "**/og.png" --verbose
+            --verbose
+          )
+          protected=(
+            --filter "- /cms/**"
+            --filter "- **/og.png"
           )
 
           rclone copy "deploy:${BUCKET}/_astro" "repair:${BUCKET}/_astro" \
-            "${args[@]}" \
+            "${args[@]}" "${protected[@]}" \
             --metadata-set "cache-control=public,max-age=31536000,immutable" \
             2>&1 | tee -a "$log"
           rclone copy "deploy:${BUCKET}/assets" "repair:${BUCKET}/assets" \
-            "${args[@]}" \
+            "${args[@]}" "${protected[@]}" \
             --metadata-set "cache-control=public,max-age=3600,must-revalidate" \
             2>&1 | tee -a "$log"
           rclone copy "deploy:${BUCKET}" "repair:${BUCKET}" \
-            "${args[@]}" --include "*.html" \
+            "${args[@]}" "${protected[@]}" \
+            --filter "+ **/" --filter "+ *.html" --filter "- **" \
             --metadata-set "cache-control=public,max-age=0,must-revalidate" \
             2>&1 | tee -a "$log"
           rclone copy "deploy:${BUCKET}" "repair:${BUCKET}" \
-            "${args[@]}" \
-            --include "*.json" --include "*.xml" --include "/robots.txt" \
+            "${args[@]}" "${protected[@]}" \
+            --filter "+ **/" --filter "+ *.json" --filter "+ *.xml" \
+            --filter "+ /robots.txt" --filter "- **" \
             --metadata-set "cache-control=public,max-age=3600,must-revalidate" \
             2>&1 | tee -a "$log"
 
