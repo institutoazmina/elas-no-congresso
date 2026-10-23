@@ -17,6 +17,11 @@ on:
     types: [cms-content-updated]
   # Manual run, e.g. to take down pages right after unapproving propositions.
   workflow_dispatch:
+    inputs:
+      repair_cache_metadata:
+        description: Repair cache headers with server-side S3 copies
+        type: boolean
+        default: false
 
 permissions:
   id-token: write # OIDC
@@ -37,6 +42,10 @@ jobs:
       RCLONE_CONFIG_DEPLOY_PROVIDER: AWS
       RCLONE_CONFIG_DEPLOY_ENV_AUTH: "true"
       RCLONE_CONFIG_DEPLOY_REGION: us-east-2
+      RCLONE_CONFIG_REPAIR_TYPE: s3
+      RCLONE_CONFIG_REPAIR_PROVIDER: AWS
+      RCLONE_CONFIG_REPAIR_ENV_AUTH: "true"
+      RCLONE_CONFIG_REPAIR_REGION: us-east-2
 
     steps:
       - uses: actions/checkout@v4
@@ -106,7 +115,7 @@ jobs:
             --exclude "**/og.png" \
             --exclude "*.xml" \
             --exclude "/robots.txt" \
-            --metadata-set "cache-control=public,max-age=31536000,immutable"
+            --header-upload "Cache-Control: public,max-age=31536000,immutable"
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
 
@@ -116,7 +125,7 @@ jobs:
           rclone sync dist/assets/ "deploy:${BUCKET}/assets" \
             --checksum --fast-list --delete-after --s3-no-check-bucket \
             --transfers 64 --checkers 64 \
-            --metadata-set "cache-control=public,max-age=3600,must-revalidate"
+            --header-upload "Cache-Control: public,max-age=3600,must-revalidate"
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
 
@@ -129,7 +138,7 @@ jobs:
             --checksum --fast-list --delete-after --s3-no-check-bucket \
             --transfers 64 --checkers 64 \
             --include "*.html" \
-            --metadata-set "cache-control=public,max-age=0,must-revalidate"
+            --header-upload "Cache-Control: public,max-age=0,must-revalidate"
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
 
@@ -140,7 +149,49 @@ jobs:
             --checksum --fast-list --s3-no-check-bucket \
             --transfers 64 --checkers 64 \
             --include "*.json" --include "*.xml" --include "/robots.txt" \
-            --metadata-set "cache-control=public,max-age=3600,must-revalidate"
+            --header-upload "Cache-Control: public,max-age=3600,must-revalidate"
+        env:
+          BUCKET: ${{ secrets.S3_BUCKET }}
+
+      # One-time repair for objects uploaded before Cache-Control used the
+      # standard HTTP header. Different remote names force in-place S3 copies;
+      # --metadata makes S3 replace metadata without transferring object bodies.
+      - name: Repair cache metadata
+        if: github.event_name == 'workflow_dispatch' && inputs.repair_cache_metadata
+        run: |
+          log="${RUNNER_TEMP}/rclone-cache-repair.log"
+          args=(
+            --ignore-times --metadata --server-side-across-configs
+            --fast-list --s3-no-check-bucket --transfers 64 --checkers 64
+            --exclude "/cms/**" --exclude "**/og.png" --verbose
+          )
+
+          rclone copy "deploy:${BUCKET}/_astro" "repair:${BUCKET}/_astro" \
+            "${args[@]}" \
+            --metadata-set "cache-control=public,max-age=31536000,immutable" \
+            2>&1 | tee -a "$log"
+          rclone copy "deploy:${BUCKET}/assets" "repair:${BUCKET}/assets" \
+            "${args[@]}" \
+            --metadata-set "cache-control=public,max-age=3600,must-revalidate" \
+            2>&1 | tee -a "$log"
+          rclone copy "deploy:${BUCKET}" "repair:${BUCKET}" \
+            "${args[@]}" --include "*.html" \
+            --metadata-set "cache-control=public,max-age=0,must-revalidate" \
+            2>&1 | tee -a "$log"
+          rclone copy "deploy:${BUCKET}" "repair:${BUCKET}" \
+            "${args[@]}" \
+            --include "*.json" --include "*.xml" --include "/robots.txt" \
+            --metadata-set "cache-control=public,max-age=3600,must-revalidate" \
+            2>&1 | tee -a "$log"
+
+          if grep "Copied (" "$log" | grep -v "Copied (server-side copy)"; then
+            echo "Cache repair transferred object contents instead of using S3 copies" >&2
+            exit 1
+          fi
+          if ! grep -q "Copied (server-side copy)" "$log"; then
+            echo "Cache repair made no server-side copies" >&2
+            exit 1
+          fi
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
 
