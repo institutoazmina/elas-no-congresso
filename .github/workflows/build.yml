@@ -3,6 +3,15 @@ name: Build & Deploy
 on:
   push:
     branches: [main]
+    paths:
+      - .github/workflows/build.yml
+      - astro.config.mjs
+      - package.json
+      - package-lock.json
+      - public/**
+      - scripts/**
+      - src/**
+      - tsconfig.json
   # The API admin dispatches this on every CMS save.
   repository_dispatch:
     types: [cms-content-updated]
@@ -23,6 +32,11 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      RCLONE_CONFIG_DEPLOY_TYPE: s3
+      RCLONE_CONFIG_DEPLOY_PROVIDER: AWS
+      RCLONE_CONFIG_DEPLOY_ENV_AUTH: "true"
+      RCLONE_CONFIG_DEPLOY_REGION: us-east-2
 
     steps:
       - uses: actions/checkout@v4
@@ -62,9 +76,18 @@ jobs:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
           aws-region: us-east-2
 
-      # ~15k small files: the CLI default of 10 parallel requests dominates the sync time.
-      - name: Tune S3 transfers
-        run: aws configure set default.s3.max_concurrent_requests 64
+      - name: Install rclone
+        env:
+          RCLONE_VERSION: 1.75.2
+        run: |
+          archive="rclone-v${RCLONE_VERSION}-linux-amd64.zip"
+          curl -fsSLO "https://downloads.rclone.org/v${RCLONE_VERSION}/${archive}"
+          echo "349ac8fba6ff65d6247043f1750cdcb518ec5d500ef91463a10d37c0ccdf3702  ${archive}" \
+            | sha256sum --check -
+          unzip -q "$archive"
+          sudo install -m 0755 \
+            "rclone-v${RCLONE_VERSION}-linux-amd64/rclone" \
+            /usr/local/bin/rclone
 
       # Hashed build files → cache 1 year. Public assets have stable URLs.
       # Exclude HTML, JSON and the sitemap/robots, which are not fingerprinted
@@ -73,44 +96,51 @@ jobs:
       # never delete them here.
       - name: Sync immutable assets
         run: |
-          aws s3 sync dist/ "s3://$BUCKET/" --delete \
-            --exclude "assets/*" \
-            --exclude "cms/*" \
+          rclone sync dist/ "deploy:${BUCKET}" \
+            --checksum --fast-list --delete-after --s3-no-check-bucket \
+            --transfers 64 --checkers 64 \
+            --exclude "/assets/**" \
+            --exclude "/cms/**" \
             --exclude "*.html" \
             --exclude "*.json" \
-            --exclude "*/og.png" \
+            --exclude "**/og.png" \
             --exclude "*.xml" \
-            --exclude "robots.txt" \
-            --cache-control "public,max-age=31536000,immutable"
+            --exclude "/robots.txt" \
+            --metadata-set "cache-control=public,max-age=31536000,immutable"
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
 
       # Stable public asset URLs → cache 1 hour, then revalidate.
       - name: Sync public assets
         run: |
-          aws s3 sync dist/assets/ "s3://$BUCKET/assets/" --delete \
-            --cache-control "public,max-age=3600,must-revalidate"
+          rclone sync dist/assets/ "deploy:${BUCKET}/assets" \
+            --checksum --fast-list --delete-after --s3-no-check-bucket \
+            --transfers 64 --checkers 64 \
+            --metadata-set "cache-control=public,max-age=3600,must-revalidate"
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
 
-      # HTML → always revalidate. --delete removes pages the build no longer
+      # HTML → always revalidate. Sync removes pages the build no longer
       # generates (e.g. propositions unapproved in the admin); only HTML is
       # touched, so og.png and other files published by the API stay.
       - name: Sync HTML
         run: |
-          aws s3 sync dist/ "s3://$BUCKET/" --delete \
-            --exclude "*" --include "*.html" \
-            --cache-control "public,max-age=0,must-revalidate"
+          rclone sync dist/ "deploy:${BUCKET}" \
+            --checksum --fast-list --delete-after --s3-no-check-bucket \
+            --transfers 64 --checkers 64 \
+            --include "*.html" \
+            --metadata-set "cache-control=public,max-age=0,must-revalidate"
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
 
       # Data / sitemap / robots → short cache, revalidate so updates propagate
       - name: Sync data & metadata
         run: |
-          aws s3 sync dist/ "s3://$BUCKET/" \
-            --exclude "*" \
-            --include "*.json" --include "*.xml" --include "robots.txt" \
-            --cache-control "public,max-age=3600,must-revalidate"
+          rclone copy dist/ "deploy:${BUCKET}" \
+            --checksum --fast-list --s3-no-check-bucket \
+            --transfers 64 --checkers 64 \
+            --include "*.json" --include "*.xml" --include "/robots.txt" \
+            --metadata-set "cache-control=public,max-age=3600,must-revalidate"
         env:
           BUCKET: ${{ secrets.S3_BUCKET }}
 
