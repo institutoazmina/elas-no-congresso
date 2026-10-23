@@ -1,4 +1,4 @@
-import { Image, cx } from "./react-utils";
+import { Image } from "./react-utils";
 import { resolveNewsImage, type WpPost } from "../../lib/wp";
 import chevronRight from "../../assets/images/home-news/chevron-right.svg";
 
@@ -22,16 +22,10 @@ export default function NewsCard({ post, dark = false, imageLoading = "lazy" }: 
         : undefined;
 
     return (
-        <article
-            className={cx([
-                "news-card tw:[&_h3]:font-display tw:[&_h3]:font-bold tw:[&_h3]:[font-variation-settings:'wdth'_75] tw:[&_h3]:uppercase tw:[&_h3]:text-ink tw:[&_h3]:text-2xl tw:[&_h3]:leading-8 tw:[&_h3]:min-h-16 tw:[&_h3]:m-0 tw:flex tw:flex-[0_0_384px] tw:flex-col tw:gap-4 tw:[scroll-snap-align:start]",
-                { "news-card--dark tw:[&_h3]:text-white tw:[&_h3]:min-h-24": dark },
-            ])}
-        >
+        <article className="tw:flex tw:min-w-0 tw:snap-start tw:flex-col tw:gap-4">
             <a
                 href={post.link}
-                className="news-card__image tw:block tw:h-54 tw:w-full tw:shrink-0 tw:overflow-hidden tw:border-2 tw:border-accent tw:cursor-pointer"
-                data-news-link
+                className="tw:block tw:aspect-384/216 tw:w-full tw:overflow-hidden tw:border-2 tw:border-accent"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Ler: ${plainTitle}`}
@@ -45,53 +39,37 @@ export default function NewsCard({ post, dark = false, imageLoading = "lazy" }: 
                         height="216"
                         loading={imageLoading}
                         decoding="async"
-                        data-news-image
                     />
                 )}
             </a>
-            <h3>
+            <h3
+                className={`tw:font-display tw:text-2xl tw:leading-8 tw:font-bold tw:uppercase tw:[font-variation-settings:'wdth'_75] ${dark ? "tw:text-white tw:md:min-h-24" : "tw:text-ink tw:md:min-h-16"}`}
+            >
                 <a
                     href={post.link}
-                    className="
-                news-card__title-link tw:text-inherit tw:no-underline tw:hover:text-inherit tw:hover:no-underline
-                tw:focus-visible:outline-2 tw:focus-visible:outline-accent tw:focus-visible:outline-offset-1
-            "
-                    data-news-link
+                    className="tw:focus-visible:outline-2 tw:focus-visible:outline-offset-1 tw:focus-visible:outline-accent"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Ler: ${plainTitle}`}
                 >
-                    <span data-news-title dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                    <span dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                 </a>
             </h3>
-            <div className="news-card__details tw:items-start tw:flex tw:flex-col tw:gap-4 tw:justify-center tw:overflow-hidden">
+            <div className="tw:flex tw:flex-col tw:items-start tw:gap-4">
                 <a
                     href={post.link}
-                    className="
-                news-card__link tw:font-display tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:uppercase
-                tw:items-center tw:self-start tw:bg-accent tw:text-white tw:flex tw:text-lg tw:gap-2 tw:h-9.5 tw:justify-center
-                tw:leading-6 tw:no-underline tw:pt-2 tw:pb-1.5 tw:pr-3 tw:pl-3.5 tw:[&_>_span:last-child]:items-center
-                tw:[&_>_span:last-child]:flex tw:[&_>_span:last-child]:h-6 tw:[&_>_span:last-child]:justify-end
-                tw:[&_>_span:last-child]:w-3 tw:[&_img]:block tw:[&_img]:h-1.5 tw:[&_img]:[transform:rotate(-90deg)]
-                tw:[&_img]:w-3
-            "
-                    data-news-link
+                    className="tw:flex tw:h-9.5 tw:items-center tw:gap-2 tw:bg-accent tw:pt-2 tw:pr-3 tw:pb-1.5 tw:pl-3.5 tw:font-display tw:text-lg tw:leading-6 tw:font-bold tw:text-white tw:uppercase tw:[font-variation-settings:'wdth'_75]"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    <span>Ler reportagem</span>
-                    <span aria-hidden="true">
-                        <Image src={chevronRight} alt="" />
-                    </span>
+                    Ler reportagem
+                    <Image className="tw:h-1.5 tw:w-3 tw:-rotate-90" src={chevronRight} alt="" />
                 </a>
-                <time
-                    className="news-card__date tw:text-navy tw:text-sm tw:font-normal tw:tracking-normal tw:leading-4 tw:m-0 tw:[.news-card--dark_&]:text-white"
-                    dateTime={post.modified}
-                    data-news-date
-                    hidden={!updatedAt}
-                >
-                    {updatedAt && <>Atualizada em {updatedAt}</>}
-                </time>
+                {updatedAt && (
+                    <time className={`tw:text-sm tw:leading-4 ${dark ? "tw:text-white" : "tw:text-navy"}`} dateTime={post.modified}>
+                        Atualizada em {updatedAt}
+                    </time>
+                )}
             </div>
         </article>
     );

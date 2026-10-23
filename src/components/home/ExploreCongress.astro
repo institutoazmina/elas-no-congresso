@@ -1,32 +1,32 @@
 ---
+const { content } = Astro.props;
 import { Image } from "astro:assets";
-import pattern from "../../assets/images/explore/bg-pattern-cutting-mat.svg";
+import CuttingMat from "../shared/CuttingMat.astro";
 import chevron from "../../assets/images/home-news/chevron-right.svg";
-import screenTool from "../../assets/images/explore/screen-tool-@3x.png";
 ---
 
-<section class="
+<CuttingMat class="
     explore-congress tw:flex tw:w-full tw:min-h-0 tw:h-auto tw:mt-12 tw:items-center tw:justify-center
-    tw:overflow-clip tw:shadow-[0_-48px_0_#fff] tw:bg-[image:var(--explore-pattern)] tw:bg-repeat tw:bg-top
-    tw:bg-size-[200px_200px] tw:py-16 tw:px-6 tw:[&_h2]:w-auto tw:[&_h2]:h-auto tw:[&_h2]:text-white
+    tw:overflow-clip tw:shadow-[0_-48px_0_#fff]
+    tw:py-16 tw:px-6 tw:[&_h2]:w-auto tw:[&_h2]:h-auto tw:[&_h2]:text-white
     tw:[&_h2]:font-display tw:[&_h2]:text-[32px] tw:[&_h2]:font-bold tw:[&_h2]:[font-variation-settings:'wdth'_75]
     tw:[&_h2]:leading-8 tw:[&_h2]:text-center tw:[&_h2]:uppercase tw:[&_h2]:mt-0 tw:[&_h2]:mb-3 tw:[&_h2]:mx-0
     tw:max-md:w-full tw:max-md:min-h-0 tw:max-md:items-start tw:max-md:justify-start tw:max-md:py-13
     tw:max-md:px-6 tw:max-md:[&_h2]:w-auto tw:max-md:[&_h2]:h-auto tw:max-md:[&_h2]:text-[28px]
     tw:max-md:[&_h2]:leading-8 tw:max-md:[&_h2]:text-left tw:md:p-[64px_max(24px,_calc((100vw_-_660px)_/_2))]
-" aria-labelledby="explore-congress-title" style={`--explore-pattern: url(${pattern.src})`}>
-    <a href="/atividade-legislativa" aria-labelledby="explore-congress-title explore-congress-cta" class="explore-congress__content tw:group tw:no-underline tw:cursor-pointer tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-4 tw:flex tw:w-full tw:h-auto tw:min-w-0 tw:flex-col tw:items-center tw:gap-0 tw:max-md:items-start tw:md:w-165 tw:md:min-w-0 ">
-        <h2 class="" id="explore-congress-title">Explore</h2>
+" aria-labelledby="explore-congress-title">
+    <a href={content.explore_cta_url} aria-labelledby="explore-congress-title explore-congress-cta" class="explore-congress__content tw:group tw:no-underline tw:cursor-pointer tw:focus-visible:outline-2 tw:focus-visible:outline-white tw:focus-visible:outline-offset-4 tw:flex tw:w-full tw:h-auto tw:min-w-0 tw:flex-col tw:items-center tw:gap-0 tw:max-md:items-start tw:md:w-165 tw:md:min-w-0 ">
+        <h2 class="" id="explore-congress-title">{content.explore_title}</h2>
         <p class="
             explore-congress__subtitle tw:max-md:max-w-full tw:max-md:text-lg tw:max-md:leading-6 tw:max-md:text-center
             tw:md:w-165 tw:md:h-auto tw:w-full tw:h-auto tw:text-white tw:font-sans tw:text-lg
             tw:font-normal tw:leading-6 tw:text-center tw:mt-0 tw:mb-7 tw:mx-0
-        ">Quer saber mais sobre o que tá tramitando sobre<br class="" />pautas de gênero, raça e LGBTQIAPN+?</p>
+        ">{content.explore_subtitle}</p>
         <div class="
             explore-congress__screen-wrap tw:flex tw:w-full tw:max-w-165 tw:h-auto tw:items-start tw:justify-center tw:p-0
             tw:mt-0 tw:mb-7 tw:mx-0 tw:max-md:justify-start tw:md:w-165
         ">
-            <Image class="explore-congress__screen tw:block tw:w-full tw:h-auto tw:flex-none tw:border-[2px] tw:border-solid tw:border-accent tw:rounded-2xl tw:bg-white " src={screenTool} alt="" />
+            <img class="explore-congress__screen tw:block tw:w-full tw:h-auto tw:flex-none tw:border-[2px] tw:border-solid tw:border-accent tw:rounded-2xl tw:bg-white " src={content.explore_image_url} width="1440" height="1080" alt={content.explore_image_alt} loading="lazy" />
         </div>
         <span id="explore-congress-cta" class="
             explore-congress__button tw:flex tw:w-full tw:max-w-85 tw:h-14 tw:items-center tw:justify-center tw:gap-2
@@ -37,6 +37,6 @@ import screenTool from "../../assets/images/explore/screen-tool-@3x.png";
             tw:max-md:w-max
             tw:max-md:max-w-full tw:max-md:self-start tw:max-md:justify-start tw:max-md:text-base tw:max-md:whitespace-nowrap
             tw:md:w-85 tw:md:max-w-none
-        ">Explore a produção do Congresso <Image class="" src={chevron} alt="" /></span>
+        ">{content.explore_cta_text} <Image class="" src={chevron} alt="" /></span>
     </a>
-</section>
+</CuttingMat>

@@ -1,0 +1,51 @@
+---
+import { Image } from "astro:assets";
+import attention from "../../assets/images/activity/attention.svg";
+import type { PageHeroContent } from "../../service/api/cms";
+import InlineMarkdown from "./InlineMarkdown.astro";
+
+interface Props {
+    content: PageHeroContent;
+}
+
+// Page top: title, subtitle and illustration from the CMS. The default slot
+// renders below the subtitle (e.g. a call to action).
+const { title, subtitle, heroImage } = Astro.props.content;
+---
+
+<section
+    class="tw:relative tw:overflow-hidden tw:pb-6 tw:text-ink tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-size-[400px] tw:bg-top tw:md:h-125 tw:md:pb-0"
+    data-page-hero
+    aria-labelledby="page-hero-title"
+>
+    <div class="tw:relative tw:z-2 tw:flex tw:items-start tw:justify-between tw:gap-12 tw:px-4 tw:py-12 tw:md:h-119 tw:md:items-center tw:md:p-12">
+        <div class="tw:flex tw:min-w-0 tw:max-w-86.5 tw:flex-1 tw:flex-col tw:items-start tw:gap-4 tw:md:max-w-240 tw:md:gap-6">
+            <Image class="tw:h-1 tw:w-24 tw:md:h-2" src={attention} loading="eager" alt="" />
+            <h1
+                id="page-hero-title"
+                class="tw:m-0 tw:font-display tw:text-[clamp(42px,11vw,58px)] tw:leading-[0.98] tw:font-normal tw:uppercase tw:[font-variation-settings:'wdth'_60] tw:mix-blend-multiply tw:[&_strong]:font-bold tw:[&_strong]:[font-variation-settings:'wdth'_75] tw:md:text-[58px] tw:md:leading-15 tw:lg:text-7xl tw:lg:leading-18"
+            >
+                <InlineMarkdown text={title} />
+            </h1>
+            <p class="tw:m-0 tw:w-full tw:font-sans tw:text-lg tw:leading-6 tw:font-medium tw:mix-blend-multiply tw:[&_strong]:font-bold tw:md:max-w-160">
+                <InlineMarkdown text={subtitle} />
+            </p>
+            <slot />
+        </div>
+        <div class="tw:hidden tw:h-full tw:min-w-0 tw:flex-1 tw:items-center tw:justify-center tw:lg:flex">
+            <img
+                class="tw:h-auto tw:max-h-full tw:w-auto tw:max-w-full tw:object-contain"
+                src={heroImage.url}
+                width={heroImage.width}
+                height={heroImage.height}
+                loading="eager"
+                alt={heroImage.alt}
+            />
+        </div>
+    </div>
+    <div
+        class="tw:pointer-events-none tw:absolute tw:bottom-0 tw:left-0 tw:z-3 tw:h-6 tw:w-full tw:bg-[url('/src/assets/images/hero/halftone-shadow.png')] tw:bg-size-[1440px_24px] tw:bg-bottom-left tw:bg-repeat-x tw:mix-blend-multiply"
+        aria-hidden="true"
+    >
+    </div>
+</section>

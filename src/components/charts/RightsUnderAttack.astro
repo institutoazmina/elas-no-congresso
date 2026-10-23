@@ -1,4 +1,5 @@
 ---
+const { content } = Astro.props;
 import { Image } from "astro:assets";
 import Paperwork from "./Paperwork.astro";
 import { pileGap } from "../../lib/paperwork";
@@ -47,14 +48,10 @@ import imageAsset2 from "../../assets/images/paperwork/proposition-unfavorable-9
                     tw:md:[text-box-edge:cap_alphabetic]
                 "
             >
-                Os direitos das mulheres e pessoas LGBTQIA+ nunca foram tão
-                atacados
+                {content.rights_title}
             </h2>
             <p class="tw:m-0 tw:w-full tw:font-[Plus_Jakarta_Sans] tw:text-lg tw:leading-6 tw:lg:h-18 tw:max-md:text-sm tw:max-md:leading-6">
-                Legislar sobre nossos direitos não é sinônimo de fortalecê-los.
-                Muito do trabalho legislativo faz o contrário: retrocesso e
-                restrição de direitos já conquistados. E o atual Congresso tem
-                sido campeão nos ataques:
+                {content.rights_text}
             </p>
         </header>
 
@@ -145,7 +142,7 @@ import imageAsset2 from "../../assets/images/paperwork/proposition-unfavorable-9
         </figure>
 
         <a
-            href="https://hoy.bio/8b8bfhoigr"
+            href={content.rights_postit_mobile_url}
             target="_blank"
             rel="noopener noreferrer"
             class="
@@ -159,10 +156,9 @@ import imageAsset2 from "../../assets/images/paperwork/proposition-unfavorable-9
             aria-label="Contexto"
         >
             <p>
-                Em 2023 começou o mandato da bancada mais conservadora desde
-                1964
+                {content.rights_postit_text}
             </p>
-            <span>Ler mais →</span>
+            <span>{content.rights_postit_cta}</span>
         </a>
 
         <footer class="
@@ -179,14 +175,14 @@ import imageAsset2 from "../../assets/images/paperwork/proposition-unfavorable-9
                         alt=""
                     />
                 </span>
-                <span>Cada folha representa 1 proposição</span>
+                <span>{content.rights_caption}</span>
             </div>
             <span class="
                 tw:lg:absolute tw:lg:left-0 tw:lg:top-14 tw:max-md:flex tw:max-md:w-full tw:max-md:h-10
                 tw:max-md:items-center tw:max-md:justify-center tw:max-md:box-border tw:max-md:text-sm tw:max-md:leading-4
                 tw:max-md:py-1 tw:max-md:px-0
             ">
-                *Foram avaliadas proposições até março de 2026
+                {content.rights_footnote}
             </span>
             <span
                 class="
@@ -200,7 +196,7 @@ import imageAsset2 from "../../assets/images/paperwork/proposition-unfavorable-9
         </footer>
 
         <a
-            href="https://azmina.com.br/reportagens/ataques-direitos-lgbtqia-aborto-congresso/"
+            href={content.rights_postit_desktop_url}
             target="_blank"
             rel="noopener noreferrer"
             class="
@@ -212,11 +208,10 @@ import imageAsset2 from "../../assets/images/paperwork/proposition-unfavorable-9
             aria-label="Contexto"
         >
             <p class="tw:m-0 tw:w-48 tw:text-lg tw:font-bold tw:leading-6">
-                Em 2023 começou o mandato da bancada mais conservadora desde
-                1964
+                {content.rights_postit_text}
             </p>
             <span class="tw:w-48 tw:font-[Plus_Jakarta_Sans] tw:text-sm tw:leading-4">
-                Ler mais →
+                {content.rights_postit_cta}
             </span>
         </a>
     </div>

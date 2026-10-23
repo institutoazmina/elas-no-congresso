@@ -1,8 +1,60 @@
 import { API_BASE_URL } from 'astro:env/server';
 import { fetchPublicData } from '../../lib/public-data-fetch';
+import feministAIPreview from './feminist-ai-preview.json';
+import aboutPreview from './about-preview.json';
+import homePreview from './home-preview.json';
+import feministAIHero from '../../assets/images/quiteria.png';
+import aboutHero from '../../assets/images/birds.png';
+import homeHero from '../../assets/images/hero/hero-congress-illustration.webp';
+import homeExplore from '../../assets/images/explore/screen-tool-@3x.png';
+import homeQuiteria from '../../assets/images/quiteria-banner.png';
+import feministAIFlowDesktop from '../../assets/images/ia-feminista/processing-flow.svg';
+import feministAIFlowMobile from '../../assets/images/ia-feminista/processing-flow-mobile.png';
 
 const localPreviewData = (path: string, params: Record<string, string | number | undefined>): unknown => {
   if (!import.meta.env.DEV) return undefined;
+
+  if (path === '/cms/feminist-ai') {
+    return {
+      ...feministAIPreview,
+      hero_image: { url: feministAIHero.src, width: feministAIHero.width, height: feministAIHero.height, alt: 'Ilustração de Maria Quitéria' },
+      content: feministAIPreview.content
+        .replace('/media/cms/ia-feminista/flow-desktop.webp', feministAIFlowDesktop.src)
+        .replace('/media/cms/ia-feminista/flow-mobile.webp', feministAIFlowMobile.src),
+    };
+  }
+
+  if (path === '/cms/about') {
+    return {
+      seo_title: aboutPreview.seo_title,
+      seo_description: aboutPreview.seo_description,
+      title: aboutPreview.title,
+      subtitle: aboutPreview.subtitle,
+      hero_image: { url: aboutHero.src, width: aboutHero.width, height: aboutHero.height, alt: '' },
+      content: aboutPreview.content,
+      partners: aboutPreview.partners,
+      team: aboutPreview.team,
+    };
+  }
+
+  if (path === '/cms/home') {
+    return {
+      ...homePreview,
+      hero_image: { url: homeHero.src, width: homeHero.width, height: homeHero.height, alt: '' },
+      content: homePreview.content
+        .replace('/media/cms/markdown/74f5b946d93741f6a9c735e6df082cf5.webp', homeExplore.src)
+        .replace('/media/cms/markdown/b766dd167511410aa590f8814672c8e7.webp', homeQuiteria.src),
+    };
+  }
+
+  if (path === '/cms/footer-alerts') {
+    return {
+      title: 'Receba nossos alertas',
+      text: 'Quer saber quando uma nova proposta sobre gênero é apresentada, ou quando algo de muita importância avança? A gente te avisa!',
+      cta_text: 'Saiba mais',
+      cta_url: '/alertas',
+    };
+  }
 
   if (path === '/stats/propositions/genders') {
     return { women: { favorable: 0.8331, unfavorable: 0.1669 }, men: { favorable: 0.7346, unfavorable: 0.2654 } };
@@ -66,6 +118,36 @@ const localPreviewData = (path: string, params: Record<string, string | number |
         },
       ],
       count: 1,
+    };
+  }
+
+  if (path === '/cms/activity') {
+    return {
+      seo_title: 'Atividade Legislativa e pautas de gênero | Elas no Congresso',
+      seo_description: 'Explore dados sobre projetos de lei e pautas de gênero no Congresso Nacional em um dashboard interativo sobre atividade legislativa e direitos.',
+      title: '**Atividade Legislativa**',
+      subtitle: '**Use filtros e explore as movimentações do Legislativo sensíveis a gênero, atualizadas diariamente pela nossa robô que monitora o Congresso.**',
+      hero_image: { url: 'https://www.elasnocongresso.com.br/cms/atividade-legislativa/hero.webp', width: 1080, height: 1350, alt: 'Ilustração de um robô feito de papel' },
+    };
+  }
+
+  if (path === '/cms/reports') {
+    return {
+      seo_title: 'Reportagens: Congresso e política de gênero | AzMina',
+      seo_description: 'Leia reportagens da Revista AzMina sobre o Congresso Nacional, projetos de lei, política de gênero e direitos das mulheres e pessoas LGBTQIAPN+.',
+      title: '**Reportagens**',
+      subtitle: '**Veja as histórias que os dados do Congresso nos contam.**',
+      hero_image: { url: 'https://www.elasnocongresso.com.br/cms/reportagens/hero.webp', width: 1080, height: 1350, alt: '' },
+    };
+  }
+
+  if (path === '/cms/alerts') {
+    return {
+      seo_title: 'Receba alertas sobre gênero no Congresso | Elas no Congresso',
+      seo_description: 'Receba alertas sobre projetos de lei e pautas de gênero que afetam os direitos de meninas, mulheres e pessoas LGBTQIAPN+ no Congresso Nacional.',
+      title: '**Alertas**',
+      subtitle: '**Acompanhe as movimentações do Legislativo no Radar do Congresso**',
+      hero_image: { url: 'https://www.elasnocongresso.com.br/cms/alertas/hero.webp', width: 1080, height: 1350, alt: '' },
     };
   }
 

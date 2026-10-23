@@ -49,6 +49,10 @@ export default defineConfig({
           target: new URL(process.env.PUBLIC_API_BASE_URL || 'https://api.elasnocongresso.com.br/api/v1').origin,
           changeOrigin: true,
         },
+        '/media': {
+          target: new URL(process.env.PUBLIC_API_BASE_URL || 'https://api.elasnocongresso.com.br/api/v1').origin,
+          changeOrigin: true,
+        },
       },
     },
   },

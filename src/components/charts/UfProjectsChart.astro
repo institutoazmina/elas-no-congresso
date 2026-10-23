@@ -1,5 +1,6 @@
 ---
 import UfProjectsChart from "./UfProjectsChart";
+const { content } = Astro.props;
 
 
 
@@ -68,4 +69,4 @@ const ufLabels: Record<string, string> = {
     SC: "Santa Catarina", SP: "São Paulo", SE: "Sergipe", TO: "Tocantins",
 };
 ---
-<UfProjectsChart views={views} highlights={highlights} ufData={ufData} ufLabels={ufLabels} client:visible />
+<UfProjectsChart views={views} highlights={highlights} ufData={ufData} ufLabels={ufLabels} content={content} client:visible />

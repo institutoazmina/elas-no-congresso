@@ -14,25 +14,44 @@ import ExploreCongress from "../components/home/ExploreCongress.astro";
 import ParliamentariansCarousel from "../components/home/ParliamentariansCarousel.astro";
 import QuiteriaAndFunders from "../components/home/QuiteriaAndFunders.astro";
 import HomeNews from "../components/home/HomeNews.astro";
+import { parseHomeContent } from "../components/home/home-content";
+import { getHomePage } from "../service/api/cms";
+
+const home = await getHomePage();
+const sections = parseHomeContent(home.content);
 ---
 
-<PageLayout title="Elas no Congresso: monitoramento de pautas de gênero"
-    description="Acompanhe a atuação parlamentar sobre direitos das mulheres e pessoas LGBTQIAPN+ com uma inteligência artificial feminista."
+<PageLayout title={home.seo_title}
+    description={home.seo_description}
     htmlClass="tw:motion-safe:[scroll-behavior:smooth]"
     pageClass="site-home-background site-shared-background tw:[.site-home-background_>_&]:bg-transparent tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
 >
-            <Hero />
-            <RightsUnderAttack />
-            <LegislativeSetbacks />
-            <HomeNews />
-            <WomenInDefense />
-            <PartyRightsChart />
-            <UfProjectsChart />
-            <HomeAlerts />
-            <FastMovingProposals />
-            <SlowMovingProposals />
-            <EnactedProjects />
-            <ExploreCongress />
-            <ParliamentariansCarousel />
-            <QuiteriaAndFunders />
+    <Hero content={home.hero} cta={home.cta} />
+    {sections.map((section) => section.component === "chart rights-under-attack" ? (
+        <RightsUnderAttack content={section.content} />
+    ) : section.component === "chart legislative-setbacks" ? (
+        <LegislativeSetbacks content={section.content} />
+    ) : section.component === "reports" ? (
+        <HomeNews content={section.content} />
+    ) : section.component === "chart women-in-defense" ? (
+        <WomenInDefense content={section.content} />
+    ) : section.component === "chart party-rights" ? (
+        <PartyRightsChart content={section.content} />
+    ) : section.component === "chart state-projects" ? (
+        <UfProjectsChart content={section.content} />
+    ) : section.component === "alerts" ? (
+        <HomeAlerts content={section.content} />
+    ) : section.component === "proposals fast" ? (
+        <FastMovingProposals content={section.content} />
+    ) : section.component === "proposals slow" ? (
+        <SlowMovingProposals content={section.content} />
+    ) : section.component === "proposals enacted" ? (
+        <EnactedProjects content={section.content} />
+    ) : section.component === "explore" ? (
+        <ExploreCongress content={section.content} />
+    ) : section.component === "parliamentarians" ? (
+        <ParliamentariansCarousel content={section.content} />
+    ) : (
+        <QuiteriaAndFunders content={section.content} />
+    ))}
 </PageLayout>

@@ -16,127 +16,60 @@ import label5a from "../../assets/images/about/timeline/label-5a.svg";
 import label5b from "../../assets/images/about/timeline/label-5b.svg";
 import label5c from "../../assets/images/about/timeline/label-5c.svg";
 import label5d from "../../assets/images/about/timeline/label-5d.svg";
+import { parseTimeline } from "./history-timeline";
 
-const timeline = [
-    [
-        "Março de",
-        "2020",
-        "Lançamento da robô @elasnocongresso no Twitter (X), projeto selecionado pelo Google News Initiative entre mais de 300 concorrentes na América Latina. A automação acompanhou as tramitações diárias até junho de 2023, quando foi descontinuada com o fechamento do acesso gratuito à API da plataforma.",
-        "Nasce o projeto",
-    ],
-    [
-        "Junho de",
-        "2020",
-        "Primeiro levantamento e análise de atividade legislativa, primeiro ranking parlamentar e estreia da newsletter, com curadoria de projetos e análise política semanal.",
-        "1ª newsletter",
-    ],
-    [
-        "De 2020 a",
-        "2024",
-        "Edições periódicas do Ranking dos Parlamentares, metodologicamente inspirado no Ruralômetro (Repórter Brasil).",
-        "Ranking",
-    ],
-    [
-        "Ano de",
-        "2024",
-        "Na revisão metodológica que antecedeu a criação da inteligência artificial, optamos por descontinuar o ranking e concentrar esforços na análise qualitativa das proposições — tirando o foco da ação individual dos parlamentares em favor de uma abordagem mais contextual. No fim do ano, lançamos a QuitérIA.",
-        "Fim do ranking",
-    ],
-    [
-        "Ano de",
-        "2026",
-        "Retreinamento da QuitérIA, criação da API, relançamento do site com evolução do painel público e sistema automatizado de alertas diários e semanais.",
-        "QuitérIA 2.0",
-    ],
-];
-const timelineLabelClasses = [
+const { source } = Astro.props as { source: string };
+const { milestones, footer } = parseTimeline(source);
+
+const labelClasses = [
     ["tw:left-[-2px] tw:top-[-6px] tw:w-[130px]", "tw:left-[16px] tw:top-[-1px] tw:w-[114px]"],
     ["tw:left-[4px] tw:top-[-2px] tw:w-[106px]", "tw:left-[-2px] tw:top-[-2px] tw:w-[110px]", "tw:left-[-2px] tw:top-[6px] tw:w-[112px]", "tw:left-[14px] tw:top-[10px] tw:w-[96px]"],
     ["tw:left-[2px] tw:top-[-1px] tw:w-[72px] tw:-scale-x-100", "tw:left-[2px] tw:top-[-1px] tw:w-[76px] tw:-scale-x-100", "tw:left-[1px] tw:top-[8px] tw:w-[76px] tw:-scale-x-100", "tw:left-[1px] tw:top-[10px] tw:w-[66px] tw:-scale-x-100"],
     ["tw:left-[-6px] tw:top-[-10px] tw:w-[130px]", "tw:left-[14px] tw:top-[-6px] tw:w-[114px]"],
     ["tw:left-[2px] tw:top-[-1px] tw:w-[100px]", "tw:left-[-4px] tw:top-[-1px] tw:w-[104px]", "tw:left-[-4px] tw:top-[6px] tw:w-[104px]", "tw:left-[12px] tw:top-[10px] tw:w-[90px]"],
 ];
-const timelineLabelAssets = [
+const labelAssets = [
     [label1a, label1b],
     [label2a, label2b, label2c, label2d],
     [label3a, label3b, label3c, label3d],
     [label4a, label4b],
     [label5a, label5b, label5c, label5d],
 ];
+const tagWidths = ["tw:w-33", "tw:w-27.5", "tw:w-18.5", "tw:-left-0.5 tw:-top-px tw:w-30", "tw:w-24.5"];
+
+if (milestones.length !== labelAssets.length) {
+    throw new Error(`The about timeline requires exactly ${labelAssets.length} milestones`);
+}
 ---
 
-<div class="timeline tw:w-336 tw:max-w-full tw:pt-10 tw:pb-0 tw:max-[701px]:w-377.5 tw:max-[701px]:max-w-none tw:max-[701px]:px-6 tw:max-[701px]:pb-6" aria-label="Linha do tempo do projeto">
-    <div class="tw:relative tw:flex tw:items-stretch">
-        <span aria-hidden="true" class="tw:absolute tw:inset-x-0 tw:top-3 tw:h-0.5 tw:bg-ink tw:after:absolute tw:after:right-0 tw:after:-top-2 tw:after:border-y-8 tw:after:border-y-transparent tw:after:border-l-14 tw:after:border-l-ink tw:after:content-['']"></span>
-        {timeline.map(([prefix, year, text, tag], index) => (
-            <article class="tw:relative tw:flex tw:min-w-0 tw:flex-1 tw:flex-col tw:gap-3.5">
-                <span aria-hidden="true" class:list={["tw:relative tw:z-1 tw:block tw:size-6 tw:shrink-0 tw:border-2 tw:border-ink", index === timeline.length - 1 ? "tw:bg-lime" : "tw:bg-white"]}></span>
-                <div class:list={["tw:relative tw:flex tw:min-h-87 tw:flex-1 tw:flex-col tw:gap-3 tw:pr-7 tw:pb-6", index > 0 && "tw:pl-6 tw:before:absolute tw:before:inset-y-0 tw:before:left-0 tw:before:w-0.5 tw:before:bg-accent/25 tw:before:content-['']"]}>
-                    <h3 class="tw:m-0 tw:flex tw:min-h-14.5 tw:flex-col tw:gap-1.5 tw:font-display tw:text-xl tw:font-bold tw:uppercase tw:leading-6 tw:[font-variation-settings:'wdth'_75]">
-                        <em class="tw:block tw:font-sans tw:text-sm tw:font-light tw:not-italic tw:uppercase tw:leading-7 tw:tracking-[1px]">{prefix}</em>
-                        {year}
-                    </h3>
-                    {index === 0 ? (
-                        <p class="tw:m-0 tw:text-sm tw:leading-6">
-                            Lançamento da{" "}
-                            <a class="tw:text-accent tw:underline tw:decoration-1 tw:[text-underline-position:from-font]"
-                                href="https://azmina.com.br/reportagens/uma-robo-para-monitorar-direitos-das-mulheres-azmina-lanca-o-elas-no-congresso/"
-                                target="_blank"
-                            >
-                                robô @elasnocongresso no
-                                Twitter (X)
-                            </a>
-                            , projeto selecionado pelo
-                            Google News Initiative entre
-                            mais de 300 concorrentes na
-                            América Latina. A automação
-                            acompanhou as tramitações
-                            diárias até junho de 2023,
-                            quando foi descontinuada com o
-                            fechamento do acesso gratuito à
-                            API da plataforma.
-                        </p>
-                    ) : index === 2 ? (
-                        <p class="tw:m-0 tw:text-sm tw:leading-6">
-                            Edições periódicas do Ranking
-                            dos Parlamentares,
-                            metodologicamente inspirado no{" "}
-                            <a class="tw:text-accent tw:underline tw:decoration-1 tw:[text-underline-position:from-font]"
-                                href="https://ruralometro.reporterbrasil.org.br/"
-                                target="_blank"
-                            >
-                                Ruralômetro
-                            </a>{" "}
-                            (Repórter Brasil).
-                        </p>
-                    ) : (
-                        <p class="tw:m-0 tw:text-sm tw:leading-6">{text}</p>
-                    )}
-                    <span
-                        class:list={[
-                            "timeline__tag tw:relative tw:h-5 tw:shrink-0 tw:self-start tw:overflow-visible",
-                            `timeline__tag--${index + 1}`,
-                            ["tw:w-33", "tw:w-27.5", "tw:w-18.5", "tw:w-30 tw:-left-0.5 tw:-top-px", "tw:w-24.5"][index],
-                        ]}
-                    >
-                        {timelineLabelAssets[index].map(
-                            (asset, layerIndex) => (
-                                <Image
-                                    class:list={["tw:absolute tw:z-0 tw:h-auto tw:max-w-none", timelineLabelClasses[index][layerIndex]]}
-                                    src={asset}
-                                    alt=""
-                                    aria-hidden="true"
-                                />
-                            ),
-                        )}
-                        <b class="tw:relative tw:z-1 tw:inline-block tw:whitespace-nowrap tw:px-2 tw:py-1 tw:font-sans tw:text-[12px] tw:font-bold tw:uppercase tw:leading-3.5 tw:tracking-[1px]">{tag}</b>
-                    </span>
-
-                </div>
-            </article>
-        ))}
+<div
+    class="tw:mx-auto tw:mt-7 tw:w-[min(1344px,calc(100vw-96px))] tw:overflow-x-auto tw:overscroll-x-contain tw:scrollbar-thin tw:focus-visible:-outline-offset-1 tw:focus-visible:outline-2 tw:focus-visible:outline-accent tw:max-[701px]:-ml-6 tw:max-[701px]:w-[calc(100vw-24px)]"
+    tabindex="0"
+    role="region"
+    aria-label="Linha do tempo do projeto. Role horizontalmente para ver todos os períodos."
+>
+    <div class="tw:w-336 tw:max-w-full tw:pt-10 tw:pb-6 tw:max-[701px]:w-377.5 tw:max-[701px]:max-w-none tw:max-[701px]:px-6">
+        <div class="tw:relative tw:flex tw:items-stretch">
+            <span aria-hidden="true" class="tw:absolute tw:inset-x-0 tw:top-3 tw:h-0.5 tw:bg-ink tw:after:absolute tw:after:right-0 tw:after:-top-2 tw:after:border-y-8 tw:after:border-y-transparent tw:after:border-l-14 tw:after:border-l-ink tw:after:content-['']"></span>
+            {milestones.map((milestone, index) => (
+                <article class="tw:relative tw:flex tw:min-w-0 tw:flex-1 tw:flex-col tw:gap-3.5">
+                    <span aria-hidden="true" class:list={["tw:relative tw:z-1 tw:block tw:size-6 tw:shrink-0 tw:border-2 tw:border-ink", index === milestones.length - 1 ? "tw:bg-lime" : "tw:bg-white"]}></span>
+                    <div class:list={["tw:relative tw:flex tw:min-h-87 tw:flex-1 tw:flex-col tw:gap-3 tw:pr-7 tw:pb-6", index > 0 && "tw:pl-6 tw:before:absolute tw:before:inset-y-0 tw:before:left-0 tw:before:w-0.5 tw:before:bg-accent/25 tw:before:content-['']"]}>
+                        <h3 class="tw:m-0 tw:flex tw:min-h-14.5 tw:flex-col tw:gap-1.5 tw:font-display tw:text-xl tw:font-bold tw:uppercase tw:leading-6 tw:[font-variation-settings:'wdth'_75]">
+                            <span class="tw:block tw:font-sans tw:text-sm tw:font-light tw:not-italic tw:uppercase tw:leading-7 tw:tracking-[1px] tw:[&_em]:not-italic" set:html={milestone.prefix} />
+                            <span set:html={milestone.year} />
+                        </h3>
+                        <p class="tw:m-0 tw:flex-1 tw:text-sm tw:leading-6 tw:[&_a]:text-accent tw:[&_a]:underline tw:[&_a]:decoration-1 tw:[&_a]:[text-underline-position:from-font]" set:html={milestone.description} />
+                        <span class:list={["tw:relative tw:h-5 tw:shrink-0 tw:self-start tw:overflow-visible", tagWidths[index]]}>
+                            {labelAssets[index].map((asset, layerIndex) => (
+                                <Image class:list={["tw:absolute tw:z-0 tw:h-auto tw:max-w-none", labelClasses[index][layerIndex]]} src={asset} alt="" aria-hidden="true" />
+                            ))}
+                            <span class="tw:relative tw:z-1 tw:inline-block tw:whitespace-nowrap tw:px-2 tw:py-1 tw:font-sans tw:text-[12px] tw:font-bold tw:uppercase tw:leading-3.5 tw:tracking-[1px] tw:[&_strong]:font-bold" set:html={milestone.tag} />
+                        </span>
+                    </div>
+                </article>
+            ))}
+        </div>
+        {footer && <small class="tw:mt-3.5 tw:block tw:w-108 tw:max-w-full tw:text-sm tw:leading-6 tw:text-muted tw:[&_a]:text-accent tw:[&_a]:underline tw:[&_a]:decoration-1 tw:[&_a]:[text-underline-position:from-font]" set:html={footer} />}
     </div>
-    <small class="tw:mt-3.5 tw:block tw:w-108 tw:text-sm tw:leading-6 tw:text-muted">
-        <a class="tw:text-accent tw:underline tw:decoration-1 tw:[text-underline-position:from-font]" href="https://www.instagram.com/p/DFVVODpRP9A/" target="_blank">Em 2025, a AzMina encerrou definitivamente suas atividades no X</a>.
-    </small>
 </div>

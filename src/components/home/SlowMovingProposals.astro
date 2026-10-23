@@ -1,4 +1,5 @@
 ---
+const { content } = Astro.props;
 import ProposalCarousel from "./ProposalCarousel.astro";
 import { Image } from "astro:assets";
 import attention from "../../assets/images/party-chart/attention.svg";
@@ -28,6 +29,6 @@ try {
         tw:max-md:items-start tw:max-md:gap-4 tw:max-md:py-0 tw:max-md:my-0 tw:max-md:mx-auto tw:max-md:[&_p]:w-[344px]
         tw:max-md:[&_p]:max-w-full tw:max-md:[&>p]:h-auto tw:max-md:[&>p]:text-sm tw:max-md:[&>p]:font-normal
         tw:max-md:[&>p]:leading-6
-    "><Image class="" src={attention} alt="" /><h2 class="" id="slow-moving-proposals-title">E o que é bom pra gente, mas tá indo beeeem devagar: <Image src={turtleEmoji} alt="" class="slow-moving-proposals__emoji tw:inline-block tw:h-[1em] tw:w-auto tw:[vertical-align:-0.12em]" /></h2><p class="">Projetos favoráveis que ainda aguardam relatoria, parecer ou votação</p></header>
+    "><Image class="" src={attention} alt="" /><h2 class="" id="slow-moving-proposals-title">{content.slow_title} <Image src={turtleEmoji} alt="" class="slow-moving-proposals__emoji tw:inline-block tw:h-[1em] tw:w-auto tw:[vertical-align:-0.12em]" /></h2><p class="">{content.slow_subtitle}</p></header>
     <ProposalCarousel projects={proposals} variant="slow" />
 </section>}

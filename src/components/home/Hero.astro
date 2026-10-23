@@ -4,7 +4,19 @@ import attentionMark from "../../assets/images/activity/attention.svg";
 import highlighterOne from "../../assets/images/hero/highlighter-unfavorable-1.svg";
 import highlighterTwo from "../../assets/images/hero/highlighter-unfavorable-2.svg";
 import halftoneShadow from "../../assets/images/hero/halftone-shadow.png";
-import heroIllustration from "../../assets/images/hero/hero-congress-illustration.webp";
+import InlineMarkdown from "../shared/InlineMarkdown.astro";
+import type { PageHeroContent } from "../../service/api/cms";
+
+const { content, cta } = Astro.props as {
+    content: PageHeroContent;
+    cta: { text: string; url: string };
+};
+const { title, subtitle, heroImage: image } = content;
+const titleLines = title.split(/\r?\n/);
+const unfavorable = subtitle.match(/^(.*?)~~(.+?)~~([\s\S]*)$/);
+const subtitleBefore = unfavorable?.[1] ?? subtitle;
+const subtitleHighlight = unfavorable?.[2] ?? "";
+const subtitleAfter = unfavorable?.[3] ?? "";
 ---
 
 <section
@@ -28,18 +40,18 @@ import heroIllustration from "../../assets/images/hero/hero-congress-illustratio
         ">
             <Image class="hero__attention tw:block tw:h-1 tw:w-8 tw:min-[761px]:h-2 tw:min-[761px]:w-24" src={attentionMark} loading="eager" alt="" />
             <h1 id="hero-title" class="
-                hero__title tw:text-ink tw:font-display tw:text-[32px] tw:[font-variation-settings:'wdth'_75] tw:font-bold
+                hero__title tw:text-ink tw:font-display tw:text-[32px] tw:[font-variation-settings:'wdth'_60] tw:font-normal
                 tw:tracking-normal tw:leading-8 tw:mix-blend-multiply tw:uppercase tw:m-0 tw:min-[761px]:text-[58px]
-                tw:min-[761px]:leading-15 tw:min-[761px]:whitespace-nowrap tw:min-[1101px]:text-7xl tw:min-[1101px]:leading-18
+                tw:min-[761px]:leading-15 tw:min-[1101px]:text-7xl tw:min-[1101px]:leading-18
+                tw:[&_strong]:font-bold tw:[&_strong]:[font-variation-settings:'wdth'_75]
             ">
-                De olho <span class="hero__title-narrow tw:[font-variation-settings:'wdth'_60] tw:font-normal">nas</span> pautas de gênero<br class="hero__title-break-desktop tw:hidden tw:min-[761px]:inline" />
-                <span class="hero__title-narrow tw:[font-variation-settings:'wdth'_60] tw:font-normal tw:ml-2">no</span> Congresso Nacional
+                {titleLines.map((line, index) => <>{index > 0 && <br />}<InlineMarkdown text={line} /></>)}
             </h1>
             <p class="
                 hero__description tw:text-ink tw:font-sans tw:text-lg tw:font-bold tw:leading-6 tw:relative
                 tw:whitespace-pre-wrap tw:max-w-80 tw:w-full tw:m-0 tw:min-[761px]:text-lg tw:min-[761px]:leading-6
                 tw:min-[761px]:max-w-160 tw:min-[761px]:min-h-36 tw:min-[761px]:w-160
-            "><span class="hero__description-text tw:relative tw:z-1">{`Nos últimos 8 anos, mais de 700 proposições  apresentadas na Câmara dos Deputados e no Senado Federal  são    `}</span><span class="hero__highlighted-word tw:inline-block tw:isolate tw:relative tw:z-1"><span class="
+            "><span class="hero__description-text tw:relative tw:z-1"><InlineMarkdown text={subtitleBefore} /></span>{subtitleHighlight && <span class="hero__highlighted-word tw:inline-block tw:isolate tw:relative tw:z-1"><span class="
                 hero__highlighter tw:aspect-[152.629/35.967] tw:left-[50%] tw:z-[-1] tw:pointer-events-none tw:absolute
                 tw:top-[calc(50%_+_4px)] tw:[transform:translate(-50%,_-50%)] tw:w-[calc(100%_+_24px)] tw:[&_img]:block
                 tw:[&_img]:absolute tw:[&_img]:h-full tw:[&_img]:inset-0 tw:[&_img]:max-w-none tw:[&_img]:w-full
@@ -60,7 +72,7 @@ import heroIllustration from "../../assets/images/hero/hero-congress-illustratio
                             <Image src={highlighterTwo} loading="eager" alt="" />
                         </span>
                     </span>
-                </span><span class="hero__highlighted-word-text tw:relative tw:z-1">desfavoráveis</span></span><span class="hero__description-text tw:relative tw:z-1">{`    aos direitos de mulheres, meninas e pessoas LGBTQIAPN+`}</span></p>
+                </span><span class="hero__highlighted-word-text tw:relative tw:z-1"><InlineMarkdown text={subtitleHighlight} /></span></span>}<span class="hero__description-text tw:relative tw:z-1"><InlineMarkdown text={subtitleAfter} /></span></p>
             <a class="
                 hero__cta tw:items-center tw:bg-accent tw:text-white tw:cursor-pointer tw:flex tw:font-display tw:text-lg
                 tw:[font-variation-settings:'wdth'_75] tw:font-bold tw:h-[46px] tw:justify-center tw:leading-6 tw:static tw:w-fit
@@ -71,14 +83,14 @@ import heroIllustration from "../../assets/images/hero/hero-congress-illustratio
                 tw:min-[761px]:text-xl tw:min-[761px]:h-14 tw:min-[761px]:left-[50%] tw:min-[761px]:leading-6
                 tw:min-[761px]:absolute tw:min-[761px]:top-[calc(100%_-_32px)] tw:min-[761px]:[transform:translateX(-50%)]
                 tw:min-[761px]:w-auto tw:min-[761px]:pt-4.5 tw:min-[761px]:pb-3.5 tw:min-[761px]:px-6 tw:min-[761px]:m-0
-            " href="#o-que-descobrimos">O que descobrimos?</a>
+            " href={cta.url}>{cta.text}</a>
         </div>
 
         <div class="
             hero__illustration tw:hidden tw:flex-none tw:h-[390px] tw:relative tw:w-[514px] tw:m-2.5 tw:min-[761px]:block
             tw:min-[761px]:[transform:scale(0.86)] tw:min-[761px]:origin-[right_center] tw:min-[1101px]:[transform:none]
         " aria-hidden="true">
-            <span class="hero__illustration-image tw:inset-0 tw:absolute tw:[&_img]:block tw:[&_img]:h-auto tw:[&_img]:max-w-full tw:[&_img]:w-full"><Image decoding="async" height={389} width={513} src={heroIllustration} loading="eager" fetchpriority="high" alt="" /></span>
+            <span class="hero__illustration-image tw:absolute tw:inset-0 tw:flex tw:items-center tw:justify-center"><img class="tw:block tw:h-auto tw:max-h-full tw:w-auto tw:max-w-full tw:object-contain" decoding="async" height={image.height} width={image.width} src={image.url} loading="eager" fetchpriority="high" alt={image.alt} /></span>
         </div>
     </div>
 

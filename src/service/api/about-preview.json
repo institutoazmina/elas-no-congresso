@@ -1,0 +1,282 @@
+{
+  "seo_title": "Sobre o Elas no Congresso | AzMina",
+  "seo_description": "Conheça o Elas no Congresso, projeto do Instituto AzMina que usa jornalismo, dados e inteligência artificial feminista para monitorar pautas de gênero.",
+  "title": "**Sobre** o **Elas** no **Congresso**",
+  "subtitle": "**Elas no Congresso** é uma iniciativa de tecnologia cívica e comunicação feminista do **Instituto AzMina.** Monitoramos diariamente o que a Câmara dos Deputados e o Senado Federal produzem sobre os direitos de mulheres, meninas e pessoas LGBTQIAPN+, e traduzimos isso em informação acessível para jornalistas, pesquisadores, movimentos sociais e qualquer pessoa interessada em acompanhar o Congresso. Desde 2025, o projeto conta com QuitérIA, a IA Feminista que facilita e agiliza esse trabalho.",
+  "content": "## A nossa história\n\nEm 2020, diante do crescimento da disputa por pautas de gênero no Congresso Nacional, o Instituto AzMina identificou a necessidade de tornar o monitoramento legislativo mais acessível. Desde então, a iniciativa analisa projetos apresentados a partir de 2019.\n\n::::: timeline\n\n:::: milestones\n\n::: milestone\n\n*Março de*\n\n### 2020\n\nLançamento da [robô @elasnocongresso no Twitter (X)](https://azmina.com.br/reportagens/uma-robo-para-monitorar-direitos-das-mulheres-azmina-lanca-o-elas-no-congresso/), projeto selecionado pelo Google News Initiative entre mais de 300 concorrentes na América Latina. A automação acompanhou as tramitações diárias até junho de 2023, quando foi descontinuada com o fechamento do acesso gratuito à API da plataforma.\n\n**Nasce o projeto**\n\n:::\n\n::: milestone\n\n*Junho de*\n\n### 2020\n\nPrimeiro levantamento e análise de atividade legislativa, primeiro ranking parlamentar e estreia da newsletter, com curadoria de projetos e análise política semanal.\n\n**1ª newsletter**\n\n:::\n\n::: milestone\n\n*De 2020 a*\n\n### 2024\n\nEdições periódicas do Ranking dos Parlamentares, metodologicamente inspirado no [Ruralômetro](https://ruralometro.reporterbrasil.org.br/) (Repórter Brasil).\n\n**Ranking**\n\n:::\n\n::: milestone\n\n*Ano de*\n\n### 2024\n\nNa revisão metodológica que antecedeu a criação da inteligência artificial, optamos por descontinuar o ranking e concentrar esforços na análise qualitativa das proposições — tirando o foco da ação individual dos parlamentares em favor de uma abordagem mais contextual. No fim do ano, lançamos a QuitérIA.\n\n**Fim do ranking**\n\n:::\n\n::: milestone\n\n*Ano de*\n\n### 2026\n\nRetreinamento da QuitérIA, criação da API, relançamento do site com evolução do painel público e sistema automatizado de alertas diários e semanais.\n\n**QuitérIA 2.0**\n\n:::\n\n::::\n\n> [Em 2025, a AzMina encerrou definitivamente suas atividades no X](https://www.instagram.com/p/DFVVODpRP9A/).\n\n:::::\n\n---\n\n## Como avaliamos o legislativo\n\nCada proposição percorre quatro etapas: coleta, triagem pela IA, análise especializada e curadoria editorial.\n\n### 1. Coleta automatizada\n\nO raspador do Elas no Congresso está conectado às APIs da Câmara dos Deputados e do Senado Federal. A cada 24 horas, o código busca palavras-chave temáticas e armazena título, autoria, ementa e status na nossa API aberta. Se a ementa ou o texto integral contiver os termos mapeados, a matéria entra no fluxo de análise.\n\n![Palavras-chave como stalking, meninas, útero, misoginia, transexual e feminicídio alimentam a API de coleta.](/images/about/keyword-notes.svg)\n\n> Para ver todas as palavras, acesse a [lista completa de palavras-chave](https://docs.google.com/document/d/1I22AbP2MhRmCV-z2x9NUe9Zsp20PmwEjyQe1mYr7sTQ/edit?usp=sharing).\n\n### 2. Triagem pela QuitérIA\n\nA QuitérIA faz a classificação inicial e a avaliação imediata das matérias coletadas, indicando tema e grau de desfavorabilidade. É o que permite dar conta do volume: o que antes levava semanas passa a estar disponível em horas. Nenhuma classificação da IA é publicada sem passar pela etapa seguinte.\n\n> Para entender a arquitetura, o treinamento e a governança da ferramenta, acesse a página [QuitérIA](/ia-feminista).\n\n### 3. Análise especializada\n\nNossa base reúne atualmente mais de 3.100 proposições anotadas, apresentadas no Congresso Nacional entre janeiro de 2019 e abril de 2026. Consideramos proposições da Câmara e do Senado (PECs, PLs, PLPs, PLVs, PDCs, PRCs, PLSs, PLNs, PRSs e PDSs) de autoria de parlamentares, comissões ou do Poder Executivo. Para evitar duplicidade, cada projeto é avaliado apenas na Casa em que se originou.\n\nEspecialistas de organizações parceiras analisam os projetos e atribuem uma classificação de impacto:\n\n:::: ratings\n\n::: rating favorable\n\n#### Favorável\n\namplia direitos, proteção ou acesso;\n\n:::\n\n::: rating favorable-caveat\n\n#### Favorável com ressalvas\n\npositiva em sua essência, mas com pontos de atenção;\n\n:::\n\n::: rating unfavorable-caveat\n\n#### Desfavorável com ressalvas\n\nprejudicial no geral, mas com pontos positivos aproveitáveis;\n\n:::\n\n::: rating unfavorable\n\n#### Desfavorável\n\nrestringe direitos ou gera discriminação.\n\n:::\n\n::::\n\nEm cada proposição é possível ver qual organização fez a avaliação. Desde o segundo retreinamento da QuitérIA, as observações técnicas passaram a ser obrigatórias sempre que há algum nível de desfavorabilidade.\n\n### 4. Curadoria editorial e distribuição\n\nSemanalmente, a equipe da AzMina valida as classificações da IA e faz a mediação jornalística que traduz o “legislativês” em informação acessível. O resultado chega até você por três caminhos:\n\n:::: cards 3\n\n::: card\n#### Radar Diário\n\nAlerta customizável por tema, casa legislativa, comissão ou proposição, entregue por e-mail.  \n[Cadastre-se aqui](/alertas)\n:::\n\n::: card\n#### Newsletter com Radar Semanal\n\nPrincipal canal de acompanhamento contínuo do projeto. Reúne, contextualiza e analisa os impactos políticos das tramitações, funcionando como instrumento de transparência e mobilização para a sociedade civil. A newsletter é a mesma para todas as pessoas assinantes; o Radar Semanal que a acompanha é customizável por tema.\n:::\n\n::: card\n#### Painel de Atividade Legislativa\n\nNa página [Atividade Legislativa](/atividade-legislativa) você navega pelas propostas, compara a avaliação da **QuitérIA** com a avaliação humana e filtra por partido, tema e outros critérios.\n:::\n\n::::\n\n---\n\n## Rede de organizações parceiras\n\nEm vez de centralizar as avaliações em uma única equipe, o projeto adota um modelo colaborativo de produção de conhecimento. Cada organização contribui a partir de sua experiência temática, acumulada em anos de atuação em campos como direitos humanos, justiça de gênero, diversidade sexual e de gênero, enfrentamento à violência, saúde, comunicação, tecnologia, políticas urbanas, direitos reprodutivos e participação política.\n\nEssa diversidade de perspectivas fortalece a qualidade das avaliações, reduz vieses individuais e amplia a capacidade do projeto de compreender os diferentes efeitos que uma proposição pode produzir sobre grupos sociais distintos. As justificativas técnicas registradas pelas organizações também alimentam a base de conhecimento do projeto: são elas a principal fonte de aprendizado da QuitérIA.\n\n**Fazem parte da rede:**\n\n::: logo grid :::\n\n---\n\n## Transparência e dados abertos\n\nO Elas no Congresso adota uma política rigorosa de dados abertos e Ciência Aberta:\n\n::: list arrows\n\n- **API pública e gratuita**: permite integrar nossos dados estruturados a outras aplicações, pesquisas acadêmicas e ferramentas de controle social.\n\n- **Código do raspador e bases reutilizáveis**: publicamos periodicamente as bases brutas e a documentação metodológica para auditoria e livre reuso por pessoas desenvolvedoras e jornalistas.\n\n- **Repositório de treinamento da QuitérIA**: todo o código usado no treinamento do modelo está aberto, e contribuições são bem-vindas.\n\n:::\n\n---\n\n## Desafios e limitações\n\nO desenvolvimento e a manutenção do *Elas no Congresso* enfrentam desafios técnicos, metodológicos e políticos contínuos.\n\n**Volume e complexidade —** a produção parlamentar é altíssima, o que nos obriga a filtrar matérias por palavras-chave, um processo que pode deixar passar projetos com linguagem indireta, técnica ou incomum. Traduzir o “legislativês” também exige trabalho editorial constante.\n\n**Dependência de fontes externas —** a coleta depende das APIs oficiais da Câmara e do Senado, sujeitas a instabilidades que afetam o ritmo de atualização da base. Além disso, emendas e substitutivos alteram os textos originais ao longo da tramitação, exigindo reavaliação permanente.\n\n**Subjetividade da análise —** classificar pautas de gênero com consistência envolve gerenciar a subjetividade inerente à análise política e jurídica. Para isso, criamos critérios analíticos rigorosos aplicados pela rede colaborativa e duas instâncias de supervisão, o Comitê de Governança e o Comitê de Validação, além de enfrentar a resistência e a desconfiança legítimas sobre o uso de IA em direitos humanos. Erros, vieses e ambiguidades do modelo são mitigados por governança compartilhada e supervisão humana permanente.\n\n**Dados e infraestrutura —** treinar um modelo de linguagem exige volume robusto de dados anotados. Podemos construir modelos cada vez mais acurados conforme avaliamos novos projetos ao longo do tempo, o que, por outro lado, demanda investimento em infraestrutura de hardware para comportar modelos maiores.\n\n**Contexto político e sustentabilidade —** a iniciativa opera em um ambiente de forte disputa e de ataques diretos às pautas de gênero e aos direitos reprodutivos, somado ao desafio constante de captar financiamento para garantir a sustentabilidade, a escalabilidade e a autonomia da plataforma.\n\n---\n\n## Próximos passos\n\nO *Elas no Congresso* é uma iniciativa em constante aperfeiçoamento, acompanhando as transformações do processo legislativo, das categorias analíticas, das tecnologias de inteligência artificial e das necessidades da sociedade civil. Os próximos ciclos de desenvolvimento buscam consolidar o projeto como uma infraestrutura pública de monitoramento legislativo sensível a gênero, ampliando a cobertura, transparência e capacidade analítica.\n\nEntre as prioridades estão o fortalecimento da QuitérIA, com novos ciclos de treinamento sobre uma base continuamente ampliada e a adoção do Protocolo de Avaliação de Proposições Legislativas, que padroniza critérios e qualifica as anotações humanas, e a realização periódica de avaliações de desempenho do modelo, com monitoramento de vieses, testes comparativos, publicação de indicadores de qualidade e estudos com técnicas de explicabilidade.\n\nQueremos também seguir compartilhando metodologias, ferramentas e aprendizados com outras organizações da sociedade civil, estimulando novas iniciativas de monitoramento legislativo e de tecnologias cívicas comprometidas com os direitos humanos, a igualdade de gênero e o fortalecimento da democracia.\n\nOs planos de evolução da plataforma, da metodologia e da inteligência artificial são atualizados continuamente e podem ser consultados no [repositório público do projeto](https://github.com/institutoazmina/ia-feminista-elas-no-congresso), onde estão registradas as funcionalidades implementadas, em desenvolvimento e planejadas.\n\nSistemas de monitoramento legislativo e inteligência cívica exigem adaptação permanente às transformações políticas, tecnológicas e sociais, o que depende de financiamento contínuo para manutenção e hospedagem técnica, atualização metodológica, governança de dados e fortalecimento institucional. [Veja como contribuir financeiramente com esta iniciativa](https://docs.google.com/document/d/19fUYvKdA2UI0ddlUVWnAVzgmIiH-rey3R-pdSemzZw4/edit).\n\n---\n\n## Reconhecimento e eventos\n\nEm 2020, o *Elas no Congresso* venceu o [Prêmio Cláudio Weber Abramo de Jornalismo de Dados](https://premio.jornalismodedados.org.br/) na categoria Inovação. Os jurados destacaram a transparência metodológica e a replicabilidade do projeto.\n\n**Em 2026, a QuitérIA venceu o prêmio [WSA Brasil — World Summit Awards](https://www.premiowsa.com.br/), na categoria Engajamento do Governo e do Cidadão, que celebra soluções digitais capazes de ampliar o acesso à informação, fortalecer a transparência, estimular a participação e contribuir para processos democráticos mais inclusivos. A premiação é conduzida pela [ICNM](https://icnm.net/), organização austríaca sem fins lucrativos com sede em Salzburgo e Viena, na Áustria.**\n\nA iniciativa já foi apresentada em eventos como os Congressos da Abraji, o Simpósio Internacional LAVITS, a Cryptorave, o CODA, o Parlaméricas e uma audiência pública do Ministério das Mulheres.\n\n---\n\n## Expediente\n\n::: team :::\n\n---\n\n## Apoio\n\nEste projeto conta com o apoio da Rede Feminista de IA da América Latina e do Caribe, do Codesinfo (Fundo de Inovação para o Jornalismo, coordenado pelo Projor com apoio da Google News Initiative), do Fundo ELAS+ Doar Para Transformar e da Agence Française de Développement (AFD). As ideias e opiniões expressas neste projeto são de responsabilidade das autoras e não refletem, necessariamente, o ponto de vista destes apoiadores.\n",
+  "partners": [
+    {
+      "name": "Anis Bioética",
+      "logo_url": "/src/assets/images/logos/anis.webp"
+    },
+    {
+      "name": "Artigo 19",
+      "logo_url": "/src/assets/images/logos/article19.svg"
+    },
+    {
+      "name": "Cepia - Cidadania, Estudo, Pesquisa, Informação e Ação",
+      "logo_url": "/src/assets/images/logos/cepia.webp"
+    },
+    {
+      "name": "CFEMEA - Centro Feminista de Estudos e Assessoria",
+      "logo_url": "/src/assets/images/logos/cfemea.webp"
+    },
+    {
+      "name": "Coletivo Feminista Sexualidade e Saúde",
+      "logo_url": "/src/assets/images/logos/coletivo-feminista-sexualidade-e-saude.webp"
+    },
+    {
+      "name": "Coletivo Mana a Mana",
+      "logo_url": "/src/assets/images/logos/mana-a-mana.webp"
+    },
+    {
+      "name": "deFEMde - Rede Feminista de Juristas",
+      "logo_url": "/src/assets/images/logos/deFEMde.webp"
+    },
+    {
+      "name": "Ecos",
+      "logo_url": "/src/assets/images/logos/ecos.webp"
+    },
+    {
+      "name": "Empodera",
+      "logo_url": "/src/assets/images/logos/empodera.webp"
+    },
+    {
+      "name": "Gepô",
+      "logo_url": "/src/assets/images/logos/grupo-de-estudos-de-genero-e-politica.webp"
+    },
+    {
+      "name": "Instituto + Diversidade",
+      "logo_url": "/src/assets/images/logos/logo_instituto-mais-diversidade_5colorido.webp"
+    },
+    {
+      "name": "Instituto Maria da Penha",
+      "logo_url": "/src/assets/images/logos/instituto-maria-da-penha.webp"
+    },
+    {
+      "name": "Instituto Marielle Franco",
+      "logo_url": "/src/assets/images/logos/instituto-marielle-franco.webp"
+    },
+    {
+      "name": "Instituto Patrícia Galvão",
+      "logo_url": "/src/assets/images/logos/instituto-patricia-galvao.webp"
+    },
+    {
+      "name": "Instituto Update",
+      "logo_url": "/src/assets/images/logos/instituto-update.svg"
+    },
+    {
+      "name": "Juristas Negras",
+      "logo_url": "/src/assets/images/logos/instituto-juristas-negras.webp"
+    },
+    {
+      "name": "LabCidade",
+      "logo_url": "/src/assets/images/logos/lab-cidade.webp"
+    },
+    {
+      "name": "Mulheres Negras Decidem",
+      "logo_url": "/src/assets/images/logos/mulheres-negras-decidem.webp"
+    },
+    {
+      "name": "Observatório da Violência Obstétrica no Brasil",
+      "logo_url": "/src/assets/images/logos/observatorio-da-violencia-obstetricao-no-brasil.webp"
+    },
+    {
+      "name": "Plan International",
+      "logo_url": "/src/assets/images/logos/plan-international.webp"
+    },
+    {
+      "name": "Rede Liberdade",
+      "logo_url": "/src/assets/images/logos/rede-liberdade.webp"
+    },
+    {
+      "name": "SOF - Sempreviva Organização Feminista",
+      "logo_url": "/src/assets/images/logos/sempreviva-organizacao-feminista.webp"
+    },
+    {
+      "name": "SPW - Sexuality Policy Watch",
+      "logo_url": "/src/assets/images/logos/spw.webp"
+    },
+    {
+      "name": "Themis",
+      "logo_url": "/src/assets/images/logos/themis.webp"
+    },
+    {
+      "name": "TretAqui",
+      "logo_url": "/src/assets/images/logos/tretaqui.webp"
+    }
+  ],
+  "team": [
+    {
+      "key": "azmina",
+      "title": "Equipe AzMina",
+      "wide": false,
+      "members": [
+        {
+          "name": "Diego Rabatone Oliveira",
+          "role": "— Consultor de Desenvolvimento / ASK-AR"
+        },
+        {
+          "name": "Giulia Santos",
+          "role": "— Gerente de Arte"
+        },
+        {
+          "name": "Helena Bertho",
+          "role": "— Diretoria estratégica"
+        },
+        {
+          "name": "Ingrid Fernandes",
+          "role": "— Gerente de Tecnologia"
+        },
+        {
+          "name": "Maria Ísis Santos",
+          "role": "— Coordenadora de Projetos de Dados"
+        },
+        {
+          "name": "Marília Moreira",
+          "role": "— Diretoria institucional"
+        }
+      ]
+    },
+    {
+      "key": "suppliers",
+      "title": "Fornecedores",
+      "wide": false,
+      "members": [
+        {
+          "name": "Letícia Oliveira",
+          "role": "— UX / NOMA Studio"
+        },
+        {
+          "name": "Mariana Nascimento",
+          "role": "— UX / NOMA Studio"
+        },
+        {
+          "name": "Rafael Chuluc",
+          "role": "— Desenvolvedor backend / Wura"
+        },
+        {
+          "name": "Talita Santos",
+          "role": "— Desenvolvedora frontend / Wura"
+        },
+        {
+          "name": "Téo Calvo",
+          "role": "— Desenvolvedor IA / Wura"
+        },
+        {
+          "name": "Vinicius Sueiro",
+          "role": "— Visualização de Dados"
+        }
+      ]
+    },
+    {
+      "key": "governance",
+      "title": "Comitê de Governança / QuitérIA",
+      "wide": false,
+      "members": [
+        {
+          "name": "Fernanda Martins",
+          "role": ""
+        },
+        {
+          "name": "Haydée Svab",
+          "role": ""
+        },
+        {
+          "name": "Vitória Régia da Silva",
+          "role": ""
+        }
+      ]
+    },
+    {
+      "key": "validation",
+      "title": "Comitê de Validação / QuitérIA",
+      "wide": false,
+      "members": [
+        {
+          "name": "Ana Carolina Araújo",
+          "role": ""
+        },
+        {
+          "name": "Rachel de Andrade",
+          "role": ""
+        },
+        {
+          "name": "Regina Célia Barbosa",
+          "role": ""
+        },
+        {
+          "name": "Roberta Viola",
+          "role": ""
+        }
+      ]
+    },
+    {
+      "key": "previous",
+      "title": "Edições anteriores",
+      "wide": true,
+      "members": [
+        {
+          "name": "Adriano Belisário",
+          "role": "— Desenvolvimento de IA e modelagem de dados"
+        },
+        {
+          "name": "Ana Carolina Araújo",
+          "role": "— Gestora de Programas e Projetos"
+        },
+        {
+          "name": "Bárbara Libório",
+          "role": "— Diretoria"
+        },
+        {
+          "name": "Carolina Oms",
+          "role": "— Diretoria"
+        },
+        {
+          "name": "Diego Rabatone Oliveira",
+          "role": "— Consultor de Desenvolvimento / ASK-AR"
+        },
+        {
+          "name": "Haydée Svab",
+          "role": "— Consultora de Desenvolvimento / ASK-AR"
+        },
+        {
+          "name": "Helena Bertho",
+          "role": "— Diretoria Estratégica"
+        },
+        {
+          "name": "Ingrid Fernandes",
+          "role": "— Gerente de Tecnologia"
+        },
+        {
+          "name": "Lucas Ansei",
+          "role": "— Desenvolvedor e modelagem de dados / App Cívico"
+        },
+        {
+          "name": "Natali Carvalho",
+          "role": "— Newsletter"
+        },
+        {
+          "name": "Renata Hirota",
+          "role": "— Estatística"
+        },
+        {
+          "name": "Roberta Viola",
+          "role": "— Desenvolvimento de IA e modelagem de dados"
+        },
+        {
+          "name": "Robson Sobral",
+          "role": "— Desenvolvedor de frontend / App Cívico"
+        },
+        {
+          "name": "Thais Fôlego",
+          "role": "— Diretoria"
+        },
+        {
+          "name": "Vinícius Pereira",
+          "role": "— Desenvolvedor de dataviz"
+        }
+      ]
+    }
+  ]
+}

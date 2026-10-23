@@ -1,16 +1,20 @@
 ---
 import PageLayout from "../layouts/PageLayout.astro";
-import ActivityHero from "../components/activity/ActivityHero.astro";
+import PageHero from "../components/shared/PageHero.astro";
 import ActivityExplorer from "../components/activity/ActivityExplorer.astro";
+import { getPageHero } from "../service/api/cms";
+
+const hero = await getPageHero("activity");
 ---
 
-<PageLayout title="Atividade Legislativa e pautas de gênero | Elas no Congresso"
-    description="Explore dados sobre projetos de lei e pautas de gênero no Congresso Nacional em um dashboard interativo sobre atividade legislativa e direitos."
+<PageLayout
+    title={hero.seo_title}
+    description={hero.seo_description}
     htmlClass="tw:[scroll-behavior:smooth]"
-    pageClass="activity-page site-shared-background tw:min-w-80 tw:overflow-x-clip tw:bg-none tw:bg-white tw:[&_.activity-hero]:isolate tw:bg-white tw:bg-[url('/src/assets/images/background/bg-pattern-rough-paper.png')] tw:bg-top tw:bg-repeat tw:bg-size-[400px_400px]"
+    pageClass="tw:min-w-80 tw:overflow-x-clip"
 >
-            <main class="tw:relative tw:bg-white">
-                <ActivityHero />
-                <ActivityExplorer />
-            </main>
+    <main class="tw:relative tw:bg-white">
+        <PageHero content={hero} />
+        <ActivityExplorer />
+    </main>
 </PageLayout>

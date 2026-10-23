@@ -1,5 +1,6 @@
 ---
 import PartyRightsChart from "./PartyRightsChart";
+const { content } = Astro.props;
 
 
 
@@ -43,4 +44,4 @@ const views = [
     { stance: "favorable" as const, caption: "defendem", parties: toView(favourableRanking, "favorable") },
 ];
 ---
-<PartyRightsChart views={views} gap={gap} client:visible />
+<PartyRightsChart views={views} gap={gap} content={content} client:visible />

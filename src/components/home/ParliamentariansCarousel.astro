@@ -1,6 +1,7 @@
 ---
 import ParliamentariansCarousel from "./ParliamentariansCarousel";
+const { content } = Astro.props;
 import { getCurrentParliamentarians } from "../../service/api/parliamentarians";
 const people = await getCurrentParliamentarians(50);
 ---
-<ParliamentariansCarousel people={people} client:visible={{ rootMargin: "400px" }} />
+<ParliamentariansCarousel people={people} content={content} client:visible={{ rootMargin: "400px" }} />

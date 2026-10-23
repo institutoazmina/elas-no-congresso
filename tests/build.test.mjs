@@ -31,6 +31,23 @@ for (const route of routes) {
     });
 }
 
+test("CMS hero images preserve their managed alt descriptions", async () => {
+    const activity = await readFile(path.join(output, "atividade-legislativa/index.html"), "utf8");
+    const feministAI = await readFile(path.join(output, "ia-feminista/index.html"), "utf8");
+
+    assert.match(activity, /<img\b[^>]*alt="Ilustração de um robô feito de papel"[^>]*>/);
+    assert.match(feministAI, /<img\b[^>]*alt="Ilustração de Maria Quitéria"[^>]*>/);
+});
+
+test("CMS editorial output preserves the pre-CMS partner list and table labels", async () => {
+    const about = await readFile(path.join(output, "sobre/index.html"), "utf8");
+    const feministAI = await readFile(path.join(output, "ia-feminista/index.html"), "utf8");
+
+    assert.match(about, /Fazem parte da rede:<\/strong> Anis Bioética,[\s\S]* Instituto Update,[\s\S]* e TretAqui\./);
+    assert.doesNotMatch(feministAI, />Tendência<\/th>/);
+    assert.doesNotMatch(feministAI, />Métricas<\/th>\s*<th>Valor<\/th>/);
+});
+
 for (const kind of ["autoria", "proposicao"]) {
     test(`build includes populated ${kind} pages from the API`, async () => {
         const directory = `atividade-legislativa/${kind}`;

@@ -1,4 +1,5 @@
 ---
+const { content } = Astro.props;
 import { Image } from "astro:assets";
 import Paperwork from "./Paperwork.astro";
 import SectionDivider from "../shared/SectionDivider.astro";
@@ -87,13 +88,12 @@ const themes = categories.map((category) => {
                     tw:max-md:leading-8 tw:min-[821px]:h-16.5 tw:min-[821px]:leading-8!
                 "
             >
-                Estes são Os temas com mais<br class="tw:hidden tw:sm:block" /> retrocesso
-                no legislativo
+                {content.setbacks_title}
             </h2>
             <p
                 class="tw:m-0 tw:w-full tw:font-[Plus_Jakarta_Sans] tw:text-lg tw:leading-6 tw:max-md:text-sm tw:max-md:leading-6"
             >
-Violência contra a mulher, direito ao aborto e de pessoas LGBTQIAPN+ são os mais atacados no Congresso
+{content.setbacks_text}
             </p>
         </header>
 
@@ -199,8 +199,8 @@ Violência contra a mulher, direito ao aborto e de pessoas LGBTQIAPN+ são os ma
         </figure>
 
         <SectionDivider
-            href="/atividade-legislativa"
-            content="Acesse a aba Atividade de Legislativa para ver em detalhes"
+            href={content.setbacks_caption_url}
+            content={content.setbacks_caption}
             class="
                 tw:flex tw:w-full tw:items-start tw:justify-between tw:gap-6 tw:border-t tw:border-[#0B0F5E] tw:pt-2
                 tw:font-[Plus_Jakarta_Sans] tw:text-sm tw:leading-4 tw:lg:h-8

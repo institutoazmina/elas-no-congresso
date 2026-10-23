@@ -1,6 +1,8 @@
 ---
+import { getFooterAlerts } from "../../service/api/cms";
+const footerAlerts = await getFooterAlerts();
 import { Image } from "astro:assets";
-import pattern from "../../assets/images/explore/bg-pattern-cutting-mat.svg";
+import CuttingMat from "../shared/CuttingMat.astro";
 import elasLogo from "../../assets/images/footer/elas-no-congresso.svg";
 import creativeCommons from "../../assets/images/footer/creative-commons.svg";
 import instagram from "../../assets/images/footer/instagram.svg";
@@ -21,12 +23,10 @@ import elasFunder from "../../assets/images/funders/elas.png";
 ---
 
 <footer class="
-    site-footer tw:w-full tw:text-white tw:[&_h2]:m-0 tw:[&_p]:m-0 tw:max-md:[body.alerts-email-modal-open_&]:mt-7.5
-    tw:max-md:[body.alerts-email-modal-open_&]:[order:2]
-" style={`--footer-pattern: url(${pattern.src})`}>
-    <div class="
-        site-footer__main tw:flex tw:w-full tw:h-90 tw:items-start tw:justify-between tw:bg-[image:var(--footer-pattern)]
-        tw:bg-repeat tw:bg-top tw:bg-size-[200px_200px] tw:py-6 tw:px-12 tw:max-md:h-auto tw:max-md:flex-col
+    site-footer tw:w-full tw:text-white tw:[&_h2]:m-0 tw:[&_p]:m-0
+">
+    <CuttingMat as="div" class="
+        site-footer__main tw:flex tw:w-full tw:h-90 tw:items-start tw:justify-between tw:py-6 tw:px-12 tw:max-md:h-auto tw:max-md:flex-col
         tw:max-md:justify-start tw:max-md:gap-8 tw:max-md:py-8 tw:max-md:px-6
     ">
         <a class="
@@ -36,23 +36,22 @@ import elasFunder from "../../assets/images/funders/elas.png";
             tw:[&_p]:w-89 tw:[&_p]:text-white tw:[&_p]:font-sans tw:[&_p]:text-base tw:[&_p]:font-normal
             tw:max-md:w-full tw:max-md:p-0 tw:max-md:[&_p]:w-79 tw:max-md:[&_p]:max-w-full tw:focus-visible:outline-2
             tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px]
-            tw:max-md:[body.alerts-email-modal-open_&]:pb-8
-        " href="/alertas" aria-labelledby="footer-alerts-title">
-            <h2 class="" id="footer-alerts-title">Receba nossos alertas</h2>
-            <p class="">Quer saber quando uma nova proposta sobre gênero é apresentada, ou quando algo de muita importância avança? A gente te avisa!</p>
+        " href={footerAlerts.cta_url} aria-labelledby="footer-alerts-title">
+            <h2 class="" id="footer-alerts-title">{footerAlerts.title}</h2>
+            <p class="">{footerAlerts.text}</p>
             <span class={String.raw`
                 site-footer__button tw:flex tw:h-14 tw:items-center tw:justify-center tw:border-0 tw:bg-accent tw:text-white
                 tw:font-display tw:text-xl tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-6 tw:no-underline
                 tw:uppercase tw:whitespace-nowrap tw:pt-4.5 tw:pb-3.5 tw:px-6 tw:hover:bg-ink tw:hover:outline-1
                 tw:hover:outline-white tw:[.site-footer\_\_alerts:hover_&]:bg-ink tw:[.site-footer\_\_alerts:hover_&]:outline-1
                 tw:[.site-footer\_\_alerts:hover_&]:outline-white
-            `}>Saiba mais</span>
+            `}>{footerAlerts.cta_text}</span>
         </a>
 
         <section class="
             site-footer__identity tw:flex tw:w-67 tw:flex-col tw:items-start tw:gap-16 tw:p-8 tw:[&>a]:block tw:[&>a]:w-51
             tw:[&>a]:h-24 tw:max-md:w-full tw:max-md:gap-4 tw:max-md:p-0 tw:[&_>_a_img]:block tw:[&_>_a_img]:w-51
-            tw:[&_>_a_img]:h-24 tw:max-md:[body.alerts-email-modal-open_&]:gap-18
+            tw:[&_>_a_img]:h-24
         " aria-labelledby="footer-social-title">
             <a class="
                 tw:bg-white tw:[-webkit-mask:var(--site-footer-elas-logo)_center_/_contain_no-repeat]
@@ -82,7 +81,7 @@ import elasFunder from "../../assets/images/funders/elas.png";
                 </nav>
             </div>
         </section>
-    </div>
+    </CuttingMat>
 
     <section class="
         site-footer__funders tw:flex tw:w-full tw:h-[130px] tw:items-center tw:justify-between tw:overflow-hidden
@@ -90,22 +89,20 @@ import elasFunder from "../../assets/images/funders/elas.png";
         tw:[&_h2]:[font-variation-settings:'wdth'_75] tw:[&_h2]:leading-8 tw:[&_h2]:uppercase tw:[&_h2]:whitespace-nowrap
         tw:[&_h2]:my-0 tw:[&_h2]:-mr-6 tw:[&_h2]:ml-0 tw:max-md:h-auto tw:max-md:items-start tw:max-md:flex-col
         tw:max-md:justify-start tw:max-md:gap-5 tw:max-md:py-6 tw:max-md:px-8 tw:max-md:[&_h2]:mr-0
-        tw:max-md:[&_h2]:whitespace-normal tw:max-md:[body.alerts-email-modal-open_&_h2]:text-lg!
-        tw:max-md:[body.alerts-email-modal-open_&_h2]:leading-6!
-        tw:max-md:[body.alerts-email-modal-open_&_h2]:whitespace-nowrap
+        tw:max-md:[&_h2]:whitespace-normal
     " aria-labelledby="footer-funders-title">
         <h2 class="" id="footer-funders-title">Organizações financiadoras</h2>
         <div class="
             site-footer__funder-logos tw:flex tw:items-center tw:gap-8 tw:[&_img]:block tw:[&_img]:object-cover
             tw:[&_img]:flex-none tw:max-md:[&_img]:w-auto tw:max-md:[&_img]:max-w-[18%] tw:max-md:[&_img]:max-h-12
             tw:max-md:[&_img]:h-auto tw:max-md:[&_img]:object-contain tw:max-md:w-[min(100%,_312px)] tw:max-md:gap-2
-            tw:max-md:[body.alerts-email-modal-open_&]:h-12 tw:max-md:flex
+            tw:max-md:flex
         ">
             <Image class="site-footer__ia tw:w-[122px] tw:h-[60px] tw:md:block tw:md:w-[122px] tw:md:h-[60px] tw:md:flex-[0_0_122px] tw:md:object-contain tw:md:max-w-[122px]" src={iaFeminista} alt="IA Feminista" />
             <Image class="site-footer__codesinfo tw:w-34.5 tw:h-9.5 tw:md:block tw:md:w-34.5 tw:md:h-9.5 tw:md:flex-[0_0_138px] tw:md:object-contain tw:md:max-w-34.5" src={codesInfo} alt="Codesinfo" />
             <Image class="site-footer__projor tw:md:block tw:md:w-[62px] tw:md:h-[26px] tw:md:flex-[0_0_62px] tw:md:object-contain tw:md:max-w-[62px]" src={projor} alt="Projor" />
             <Image class="site-footer__afd tw:w-[90px] tw:h-[54px] " src={franceAfd} alt="Agence Française de Développement" />
-            <Image class="site-footer__elas-funder tw:w-[58px] tw:h-[82px] tw:max-md:[body.alerts-email-modal-open_&]:h-12!" src={elasFunder} alt="Elas" />
+            <Image class="site-footer__elas-funder tw:w-[58px] tw:h-[82px]" src={elasFunder} alt="Elas" />
         </div>
     </section>
 
@@ -114,14 +111,11 @@ import elasFunder from "../../assets/images/funders/elas.png";
         tw:overflow-clip tw:bg-lime tw:text-ink tw:py-6 tw:px-12 tw:[&_p]:text-ink tw:[&_p]:font-sans
         tw:[&_p]:font-bold  tw:[&_p]:whitespace-nowrap tw:md:[&>img]:block tw:md:[&>img]:w-[76px]
         tw:md:[&>img]:h-[24px] tw:md:[&>img]:flex-none tw:max-md:h-auto tw:max-md:flex-col tw:max-md:flex-nowrap
-        tw:max-md:gap-3.5 tw:max-md:py-4.5 tw:max-md:px-6 tw:max-md:[body.alerts-email-modal-open_&_p]:text-sm!
-        tw:max-md:[body.alerts-email-modal-open_&_p]:leading-4!
+        tw:max-md:gap-3.5 tw:max-md:py-4.5 tw:max-md:px-6
     ">
         <Image class={String.raw`
             site-footer__azmina tw:block tw:w-16 tw:h-[36px] tw:flex-none tw:max-md:w-11.5 tw:max-md:h-auto
-            tw:max-md:[order:2] tw:max-md:[body.alerts-email-modal-open_.site-footer\_\_banner_>_&]:w-12.5!
-            tw:max-md:[body.alerts-email-modal-open_.site-footer\_\_banner_>_&]:h-8.5!
-            tw:max-md:[body.alerts-email-modal-open_.site-footer\_\_banner_>_&]:object-contain
+            tw:max-md:[order:2]
         `} src={azminaLogo} alt="AzMina" />
         <p class="
             tw:text-lg tw:leading-6 tw:max-md:w-full tw:max-md:[order:1] tw:max-md:text-[14px] tw:max-md:leading-[18px] tw:max-md:whitespace-normal

@@ -1,24 +1,25 @@
 ---
-import cuttingMatPattern from "../../assets/images/home-news/bg-pattern-cutting-mat.svg";
+const { content } = Astro.props;
+import CuttingMat from "../shared/CuttingMat.astro";
 import HomeNewsList from "./HomeNewsList";
 ---
 
-<section class="tw:overflow-hidden tw:bg-[#0B0F5E] tw:py-12 tw:text-white tw:lg:py-24" style={`background-image: url('${cuttingMatPattern.src}'); background-position: center top; background-repeat: repeat; background-size: 200px 200px;`} aria-labelledby="home-news-title">
+<CuttingMat class="tw:overflow-hidden tw:py-12 tw:lg:py-24" aria-labelledby="home-news-title">
     <header class="
         tw:mx-auto tw:flex tw:w-full tw:max-w-[720px] tw:flex-col tw:items-center tw:px-[16px] tw:text-center
         tw:lg:h-[62px] tw:lg:px-0 tw:max-md:items-start tw:max-md:text-left
     ">
         <h2 id="home-news-title" class="tw:m-0 tw:text-[32px] tw:font-bold tw:leading-8 tw:uppercase tw:font-display tw:[font-variation-settings:'wdth'_75] tw:max-md:ml-0 tw:max-md:mr-0 tw:max-md:text-left">
-            Reportagens
+            {content.reports_title}
         </h2>
         <p class="tw:m-0 tw:mt-[6px] tw:text-lg tw:font-normal tw:leading-6 tw:max-md:ml-0 tw:max-md:mr-0 tw:max-md:text-left">
-            O que os dados do Elas no Congresso revelam sobre o que está em disputa no Congresso e na vida das mulheres
+            {content.reports_subtitle}
         </p>
     </header>
 
     <div class="tw:mt-10 tw:overflow-x-auto tw:overflow-y-hidden tw:px-[16px] tw:lg:mt-2.5 tw:lg:overflow-hidden tw:lg:px-12 tw:lg:pt-12" aria-label="Lista de reportagens em destaque">
         <HomeNewsList client:visible />
     </div>
-</section>
+</CuttingMat>
 
 

@@ -1,72 +1,11 @@
 ---
-import { Image } from "astro:assets";
-import anis from "../../assets/images/logos/anis.webp";
-import artigo19 from "../../assets/images/logos/article19.svg";
-import cepia from "../../assets/images/logos/cepia.webp";
-import cfemea from "../../assets/images/logos/cfemea.webp";
-import coletivoFeminista from "../../assets/images/logos/coletivo-feminista-sexualidade-e-saude.webp";
-import manaAMana from "../../assets/images/logos/mana-a-mana.webp";
-import deFEMde from "../../assets/images/logos/deFEMde.webp";
-import ecos from "../../assets/images/logos/ecos.webp";
-import empodera from "../../assets/images/logos/empodera.webp";
-import gepo from "../../assets/images/logos/grupo-de-estudos-de-genero-e-politica.webp";
-import maisDiversidade from "../../assets/images/logos/logo_instituto-mais-diversidade_5colorido.webp";
-import mariaDaPenha from "../../assets/images/logos/instituto-maria-da-penha.webp";
-import marielleFranco from "../../assets/images/logos/instituto-marielle-franco.webp";
-import patriciaGalvao from "../../assets/images/logos/instituto-patricia-galvao.webp";
-import update from "../../assets/images/logos/instituto-update.svg";
-import juristasNegras from "../../assets/images/logos/instituto-juristas-negras.webp";
-import labCidade from "../../assets/images/logos/lab-cidade.webp";
-import mulheresNegrasDecidem from "../../assets/images/logos/mulheres-negras-decidem.webp";
-import ovoBr from "../../assets/images/logos/observatorio-da-violencia-obstetricao-no-brasil.webp";
-import planInternational from "../../assets/images/logos/plan-international.webp";
-import redeLiberdade from "../../assets/images/logos/rede-liberdade.webp";
-import sof from "../../assets/images/logos/sempreviva-organizacao-feminista.webp";
-import spw from "../../assets/images/logos/spw.webp";
-import themis from "../../assets/images/logos/themis.webp";
-import tretaqui from "../../assets/images/logos/tretaqui.webp";
-
-const partners = [
-    { name: "Anis Bioética", src: anis },
-    { name: "Artigo 19", src: artigo19 },
-    { name: "Cepia - Cidadania, Estudo, Pesquisa, Informação e Ação", src: cepia },
-    { name: "CFEMEA - Centro Feminista de Estudos e Assessoria", src: cfemea },
-    { name: "Coletivo Feminista Sexualidade e Saúde", src: coletivoFeminista },
-    { name: "Coletivo Mana a Mana", src: manaAMana },
-    { name: "deFEMde - Rede Feminista de Juristas", src: deFEMde },
-    { name: "Ecos", src: ecos },
-    { name: "Empodera", src: empodera },
-    { name: "Gepô", src: gepo },
-    { name: "Instituto + Diversidade", src: maisDiversidade },
-    { name: "Instituto Maria da Penha", src: mariaDaPenha },
-    { name: "Instituto Marielle Franco", src: marielleFranco },
-    { name: "Instituto Patrícia Galvão", src: patriciaGalvao },
-    { name: "Instituto Update", src: update },
-    { name: "Juristas Negras", src: juristasNegras },
-    { name: "LabCidade", src: labCidade },
-    { name: "Mulheres Negras Decidem", src: mulheresNegrasDecidem },
-    { name: "Observatório da Violência Obstétrica no Brasil", src: ovoBr },
-    { name: "Plan International", src: planInternational },
-    { name: "Rede Liberdade", src: redeLiberdade },
-    { name: "SOF - Sempreviva Organização Feminista", src: sof },
-    { name: "SPW - Sexuality Policy Watch", src: spw },
-    { name: "Themis", src: themis },
-    { name: "TretAqui", src: tretaqui },
-];
+const { partners } = Astro.props as { partners: { name: string; logo_url: string }[] };
 ---
 
-<ul class="tw:grid tw:grid-cols-3 tw:gap-6 tw:pt-12 tw:md:grid-cols-5 tw:md:gap-10 tw:md:pt-20">
-    {partners.map(({ name, src }) => (
+<ul class="tw:mx-auto tw:grid tw:w-[min(1344px,calc(100vw-96px))] tw:grid-cols-3 tw:gap-6 tw:pt-12 tw:md:grid-cols-5 tw:md:gap-10 tw:md:pt-20 tw:max-[900px]:w-full">
+    {partners.map(({ name, logo_url }) => (
         <li class="tw:flex tw:items-center tw:justify-center">
-            <Image
-                src={src}
-                alt={name}
-                title={name}
-                loading="lazy"
-                width={160}
-                densities={[1, 2]}
-                class="tw:h-auto tw:w-20 tw:md:w-40"
-            />
+            <img src={logo_url} alt={name} title={name} loading="lazy" width="160" class="tw:h-auto tw:w-20 tw:md:w-40" />
         </li>
     ))}
 </ul>
