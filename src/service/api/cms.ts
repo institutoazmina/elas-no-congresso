@@ -7,7 +7,7 @@
  */
 import { apiGet } from './client';
 
-type CmsImage = { url: string; width: number; height: number };
+type CmsImage = { url: string; width: number; height: number; alt: string };
 export type PageHeroContent = { title: string; subtitle: string; heroImage: CmsImage };
 export type SeoPageHeroContent = PageHeroContent & { seo_title: string; seo_description: string };
 

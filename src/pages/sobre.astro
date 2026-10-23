@@ -13,7 +13,13 @@ import {
 import { getAboutPage } from "../service/api/cms";
 
 const page = await getAboutPage();
-const content = page.content.replace("/images/about/keyword-notes.svg", keywordNotes.src);
+const partnerNames = page.partners.map(({ name }) => name);
+const partnerList = partnerNames.length < 2
+    ? partnerNames.join("")
+    : `${partnerNames.slice(0, -1).join(", ")} e ${partnerNames.at(-1)}`;
+const content = page.content
+    .replace("/images/about/keyword-notes.svg", keywordNotes.src)
+    .replace("**Fazem parte da rede:**", `**Fazem parte da rede:** ${partnerList}.`);
 const sections = splitMarkdownSections(content).map((source) => ({
     parts: splitMarkdownComponents(source),
     partners: source.includes("::: logo grid :::"),
@@ -36,7 +42,7 @@ const sections = splitMarkdownSections(content).map((source) => ({
                 "markdown-section",
                 {
                     "markdown-section--tinted": index % 2 === 1,
-                    "markdown-section--partners": section.partners,
+                    "markdown-section--network": section.partners,
                 },
             ]}>
                 {section.parts.map((part) => part.type === "logo-grid" ? (
