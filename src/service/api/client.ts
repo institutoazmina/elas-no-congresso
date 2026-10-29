@@ -10,6 +10,11 @@ import homeExplore from '../../assets/images/explore/screen-tool-@3x.png';
 import homeQuiteria from '../../assets/images/quiteria-banner.png';
 import feministAIFlowDesktop from '../../assets/images/ia-feminista/processing-flow.svg';
 import feministAIFlowMobile from '../../assets/images/ia-feminista/processing-flow-mobile.png';
+import codesInfo from '../../assets/images/funders/codesinfo.png';
+import iaFeminista from '../../assets/images/funders/ia-feminista-figma-original.png';
+import projor from '../../assets/images/funders/projor.png';
+import franceAfd from '../../assets/images/funders/france-afd.png';
+import elasFunder from '../../assets/images/funders/elas.png';
 
 const localPreviewData = (path: string, params: Record<string, string | number | undefined>): unknown => {
   if (!import.meta.env.DEV) return undefined;
@@ -53,6 +58,23 @@ const localPreviewData = (path: string, params: Record<string, string | number |
       text: 'Quer saber quando uma nova proposta sobre gênero é apresentada, ou quando algo de muita importância avança? A gente te avisa!',
       cta_text: 'Saiba mais',
       cta_url: '/alertas',
+      social_links: [
+        { icon: 'instagram', label: 'Instagram da AzMina', url: 'https://instagram.com/revistaazmina' },
+        { icon: 'tiktok', label: 'TikTok da AzMina', url: 'https://www.tiktok.com/@revistaazmina' },
+        { icon: 'substack', label: 'Substack da AzMina', url: 'https://substack.com/@institutoazmina' },
+        { icon: 'youtube', label: 'YouTube da AzMina', url: 'https://www.youtube.com/channel/UCoyYnOCs_pr0oaXSitYi35g' },
+        { icon: 'github', label: 'GitHub da AzMina', url: 'https://github.com/institutoazmina' },
+        { icon: 'bluesky', label: 'Bluesky da AzMina', url: 'https://bsky.app/profile/revistaazmina.bsky.social' },
+        { icon: 'linkedin', label: 'LinkedIn da AzMina', url: 'https://br.linkedin.com/company/instituto-azmina' },
+        { icon: 'whatsapp', label: 'Comunidade no WhatsApp da AzMina', url: 'https://whatsapp.com/channel/0029VaNjCFjAe5VhB6mbY844' },
+      ],
+      funders: [
+        { name: 'IA Feminista', logo_url: iaFeminista.src },
+        { name: 'Codesinfo', logo_url: codesInfo.src },
+        { name: 'Projor', logo_url: projor.src },
+        { name: 'Agence Française de Développement', logo_url: franceAfd.src },
+        { name: 'Elas', logo_url: elasFunder.src },
+      ],
     };
   }
 

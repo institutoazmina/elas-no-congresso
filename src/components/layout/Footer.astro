@@ -15,11 +15,8 @@ import linkedin from "../../assets/images/footer/linkedin.svg";
 import whatsapp from "../../assets/images/footer/whatsapp.svg";
 
 import azminaLogo from "../../assets/images/footer/azmina-footer.svg";
-import codesInfo from "../../assets/images/funders/codesinfo.png";
-import iaFeminista from "../../assets/images/funders/ia-feminista-figma-original.png";
-import projor from "../../assets/images/funders/projor.png";
-import franceAfd from "../../assets/images/funders/france-afd.png";
-import elasFunder from "../../assets/images/funders/elas.png";
+
+const socialIcons = { instagram, tiktok, substack, youtube, github, bluesky, linkedin, whatsapp };
 ---
 
 <footer class="
@@ -70,14 +67,9 @@ import elasFunder from "../../assets/images/funders/elas.png";
             ">
                 <h2 class="" id="footer-social-title">Siga AzMina</h2>
                 <nav class="tw:grid  tw:grid-cols-8 tw:md:grid-cols-4 tw:gap-6" aria-label="Redes sociais da AzMina">
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://instagram.com/revistaazmina" target="_blank" rel="noopener noreferrer" aria-label="Instagram da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={instagram} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://www.tiktok.com/@revistaazmina" target="_blank" rel="noopener noreferrer" aria-label="TikTok da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={tiktok} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://substack.com/@institutoazmina" target="_blank" rel="noopener noreferrer" aria-label="Substack da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={substack} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://www.youtube.com/channel/UCoyYnOCs_pr0oaXSitYi35g" target="_blank" rel="noopener noreferrer" aria-label="YouTube da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={youtube} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://github.com/institutoazmina" target="_blank" rel="noopener noreferrer" aria-label="GitHub da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={github} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://bsky.app/profile/revistaazmina.bsky.social" target="_blank" rel="noopener noreferrer" aria-label="Bluesky da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={bluesky} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://br.linkedin.com/company/instituto-azmina" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={linkedin} alt="" /></a>
-                    <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href="https://whatsapp.com/channel/0029VaNjCFjAe5VhB6mbY844" target="_blank" rel="noopener noreferrer" aria-label="Comuniadade no WhatsApp da AzMina"><Image class="tw:block tw:w-6 tw:h-6" src={whatsapp} alt="" /></a>
+                    {footerAlerts.social_links.map((link) => (
+                        <a class="tw:block tw:w-6 tw:h-6 tw:focus-visible:outline-2 tw:focus-visible:outline-current tw:focus-visible:outline-offset-[4px] tw:hover:opacity-72" href={link.url} target="_blank" rel="noopener noreferrer" aria-label={link.label}><Image class="tw:block tw:w-6 tw:h-6" src={socialIcons[link.icon]} alt="" /></a>
+                    ))}
                 </nav>
             </div>
         </section>
@@ -93,16 +85,14 @@ import elasFunder from "../../assets/images/funders/elas.png";
     " aria-labelledby="footer-funders-title">
         <h2 class="" id="footer-funders-title">Organizações financiadoras</h2>
         <div class="
-            site-footer__funder-logos tw:flex tw:items-center tw:gap-8 tw:[&_img]:block tw:[&_img]:object-cover
+            site-footer__funder-logos tw:flex tw:items-center tw:gap-8 tw:[&_img]:block tw:[&_img]:object-contain
             tw:[&_img]:flex-none tw:max-md:[&_img]:w-auto tw:max-md:[&_img]:max-w-[18%] tw:max-md:[&_img]:max-h-12
             tw:max-md:[&_img]:h-auto tw:max-md:[&_img]:object-contain tw:max-md:w-[min(100%,_312px)] tw:max-md:gap-2
             tw:max-md:flex
         ">
-            <Image class="site-footer__ia tw:w-[122px] tw:h-[60px] tw:md:block tw:md:w-[122px] tw:md:h-[60px] tw:md:flex-[0_0_122px] tw:md:object-contain tw:md:max-w-[122px]" src={iaFeminista} alt="IA Feminista" />
-            <Image class="site-footer__codesinfo tw:w-34.5 tw:h-9.5 tw:md:block tw:md:w-34.5 tw:md:h-9.5 tw:md:flex-[0_0_138px] tw:md:object-contain tw:md:max-w-34.5" src={codesInfo} alt="Codesinfo" />
-            <Image class="site-footer__projor tw:md:block tw:md:w-[62px] tw:md:h-[26px] tw:md:flex-[0_0_62px] tw:md:object-contain tw:md:max-w-[62px]" src={projor} alt="Projor" />
-            <Image class="site-footer__afd tw:w-[90px] tw:h-[54px] " src={franceAfd} alt="Agence Française de Développement" />
-            <Image class="site-footer__elas-funder tw:w-[58px] tw:h-[82px]" src={elasFunder} alt="Elas" />
+            {footerAlerts.funders.map((funder) => (
+                <img class="tw:block tw:w-auto tw:h-auto tw:max-w-34.5 tw:max-h-16 tw:object-contain" src={funder.logo_url} alt={funder.name} loading="lazy" />
+            ))}
         </div>
     </section>
 

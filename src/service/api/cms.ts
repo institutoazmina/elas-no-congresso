@@ -126,7 +126,19 @@ export type FooterAlertsContent = {
   text: string;
   cta_text: string;
   cta_url: string;
+  social_links: { icon: FooterSocialIcon; label: string; url: string }[];
+  funders: { name: string; logo_url: string }[];
 };
+
+type FooterSocialIcon =
+  | 'instagram'
+  | 'tiktok'
+  | 'substack'
+  | 'youtube'
+  | 'github'
+  | 'bluesky'
+  | 'linkedin'
+  | 'whatsapp';
 
 /** Chamada para alertas compartilhada por todas as páginas. */
 let footerAlertsForBuild: Promise<FooterAlertsContent> | undefined;
