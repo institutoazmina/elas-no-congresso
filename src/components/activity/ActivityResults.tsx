@@ -1,4 +1,4 @@
-import type { ActivityDashboardRow, ActivityProposition } from "../../lib/activity-api";
+import type { ActivityDashboardRow, ActivityProposition, House } from "../../lib/activity-api";
 import { authorRoute } from "../../lib/author-page";
 import { propositionRoute } from "../../lib/proposition-utils";
 import { formatPresentedDate } from "../../lib/canonical";
@@ -7,12 +7,13 @@ import thumbsUp from "../../assets/images/activity/thumbs-up.svg";
 import thumbsDown from "../../assets/images/activity/thumbs-down.svg";
 
 const number = new Intl.NumberFormat("pt-BR");
-const HOUSE_LABELS: Record<string, string> = { camara: "Câmara", senado: "Senado" };
+const HOUSE_LABELS: Record<House, string> = { camara: "Câmara", senado: "Senado" };
 
-function HouseLabel({ item }: { item: ActivityProposition }) {
-    const origin = HOUSE_LABELS[item.house] ?? item.house;
-    const current = item.current_house ? HOUSE_LABELS[item.current_house] ?? item.current_house : origin;
-    return <small>{current !== origin ? `${origin} → ${current}` : origin}</small>;
+function houseJourney({ house, current_house }: ActivityProposition): string {
+    const origin = HOUSE_LABELS[house];
+    return current_house && current_house !== house
+        ? `${origin} → ${HOUSE_LABELS[current_house]}`
+        : origin;
 }
 
 function Stance({ item }: { item: ActivityProposition }) {
@@ -93,7 +94,7 @@ export function PropositionRow({ item }: { item: ActivityProposition }) {
                 <a href={propositionRoute(item.number_label, item.house) ?? "/atividade-legislativa"}>
                     {item.number_label}
                 </a>
-                <HouseLabel item={item} />
+                <small>{houseJourney(item)}</small>
             </td>
             <td>
                 <Author item={item} />
@@ -160,7 +161,7 @@ export function PropositionCard({ item }: { item: ActivityProposition }) {
                     <a href={propositionRoute(item.number_label, item.house) ?? "/atividade-legislativa"}>
                         {item.number_label}
                     </a>
-                    <HouseLabel item={item} />
+                    <small>{houseJourney(item)}</small>
                 </div>
                 <Stance item={item} />
             </header>
