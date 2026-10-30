@@ -1,4 +1,5 @@
-import type { ActivityDashboardRow, ActivityProposition, House } from "../../lib/activity-api";
+import type { ActivityDashboardRow, ActivityProposition } from "../../lib/activity-api";
+import { HOUSE_LABELS } from "../../lib/house-labels";
 import { authorRoute } from "../../lib/author-page";
 import { propositionRoute } from "../../lib/proposition-utils";
 import { formatPresentedDate } from "../../lib/canonical";
@@ -7,12 +8,10 @@ import thumbsUp from "../../assets/images/activity/thumbs-up.svg";
 import thumbsDown from "../../assets/images/activity/thumbs-down.svg";
 
 const number = new Intl.NumberFormat("pt-BR");
-const HOUSE_LABELS: Record<House, string> = { camara: "Câmara", senado: "Senado" };
-
 function houseJourney({ house, current_house }: ActivityProposition): string {
-    const origin = HOUSE_LABELS[house];
+    const origin = HOUSE_LABELS[house].short;
     return current_house && current_house !== house
-        ? `${origin} → ${HOUSE_LABELS[current_house]}`
+        ? `${origin} → ${HOUSE_LABELS[current_house].short}`
         : origin;
 }
 
