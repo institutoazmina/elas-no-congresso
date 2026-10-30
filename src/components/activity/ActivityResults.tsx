@@ -1,5 +1,5 @@
 import type { ActivityDashboardRow, ActivityProposition } from "../../lib/activity-api";
-import { HOUSE_LABELS } from "../../lib/house-labels";
+import { formatHouseJourney } from "../../lib/house-labels";
 import { authorRoute } from "../../lib/author-page";
 import { propositionRoute } from "../../lib/proposition-utils";
 import { formatPresentedDate } from "../../lib/canonical";
@@ -8,13 +8,6 @@ import thumbsUp from "../../assets/images/activity/thumbs-up.svg";
 import thumbsDown from "../../assets/images/activity/thumbs-down.svg";
 
 const number = new Intl.NumberFormat("pt-BR");
-function houseJourney({ house, current_house }: ActivityProposition): string {
-    const origin = HOUSE_LABELS[house].short;
-    return current_house && current_house !== house
-        ? `${origin} → ${HOUSE_LABELS[current_house].short}`
-        : origin;
-}
-
 function Stance({ item }: { item: ActivityProposition }) {
     const stance = item.is_favorable === null ? "neutral" : item.is_favorable ? "favorable" : "unfavorable";
     return (
@@ -93,7 +86,7 @@ export function PropositionRow({ item }: { item: ActivityProposition }) {
                 <a href={propositionRoute(item.number_label, item.house) ?? "/atividade-legislativa"}>
                     {item.number_label}
                 </a>
-                <small>{houseJourney(item)}</small>
+                <small>{formatHouseJourney(item.house, item.current_house, "short")}</small>
             </td>
             <td>
                 <Author item={item} />
@@ -160,7 +153,7 @@ export function PropositionCard({ item }: { item: ActivityProposition }) {
                     <a href={propositionRoute(item.number_label, item.house) ?? "/atividade-legislativa"}>
                         {item.number_label}
                     </a>
-                    <small>{houseJourney(item)}</small>
+                    <small>{formatHouseJourney(item.house, item.current_house, "short")}</small>
                 </div>
                 <Stance item={item} />
             </header>
