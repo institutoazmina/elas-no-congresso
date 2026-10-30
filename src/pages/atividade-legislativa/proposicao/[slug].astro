@@ -60,6 +60,9 @@ const house = /sen/i.test(activity.house)
   : /dep|câm|cam/i.test(activity.house)
     ? "Câmara dos Deputados"
     : activity.house?.trim() || "Indisponível";
+const houseJourney = activity.current_house && activity.current_house !== activity.house
+  ? `${house} → ${activity.current_house === "senado" ? "Senado Federal" : "Câmara dos Deputados"}`
+  : house;
 const activityHouse = activity.house === "senado" ? "senado" : activity.house === "camara" ? "camara" : "";
 const officialLink = activity.tramitation_url?.trim().replace(/^http:/, "https:") || null;
 const category = activity.category_label?.trim() || activity.category?.trim() || null;
@@ -143,7 +146,7 @@ const description = `Consulte a ementa, a autoria e a tramitação do ${activity
                 <p>
                   <span class="tw:block tw:text-muted tw:text-sm tw:leading-4">Data de apresentação:</span>
                   {presentedDate}<br />
-                  {house}
+                  {houseJourney}
                 </p>
                 <p>
                   <span class="tw:block tw:text-muted tw:text-sm tw:leading-4">Última movimentação:</span>

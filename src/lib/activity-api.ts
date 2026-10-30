@@ -19,11 +19,13 @@ type ActivityEvent = {
   situation: string | null;
   committee_acronym: string | null;
   committee_name: string | null;
+  source_house?: string | null;
 };
 
 export type ActivityProposition = {
   id: number;
   house: string;
+  current_house?: string | null;
   number_label: string;
   ementa: string;
   presented_at: string;

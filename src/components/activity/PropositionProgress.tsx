@@ -95,6 +95,9 @@ export default function PropositionProgress({ number, house }: { number: string;
                             >
                                 <header>
                                     <strong>
+                                        {activity.current_house && activity.current_house !== house && event.source_house
+                                            ? `${event.source_house === "senado" ? "Senado" : "Câmara"} · `
+                                            : ""}
                                         {event.title || event.situation || "Movimentação legislativa"}
                                     </strong>
                                     <time dateTime={event.event_at}>{formatEventDate(event.event_at)}</time>
