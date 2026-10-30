@@ -1,5 +1,7 @@
 import { fetchPublicData } from "./public-data-fetch.ts";
 
+export type House = "camara" | "senado";
+
 type ActivityAuthor = {
   id: number | null;
   name: string;
@@ -19,11 +21,13 @@ type ActivityEvent = {
   situation: string | null;
   committee_acronym: string | null;
   committee_name: string | null;
+  source_house?: House | null;
 };
 
 export type ActivityProposition = {
   id: number;
-  house: string;
+  house: House;
+  current_house?: House | null;
   number_label: string;
   ementa: string;
   presented_at: string;

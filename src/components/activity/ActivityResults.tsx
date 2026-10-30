@@ -1,4 +1,5 @@
 import type { ActivityDashboardRow, ActivityProposition } from "../../lib/activity-api";
+import { formatHouseJourney } from "../../lib/house-labels";
 import { authorRoute } from "../../lib/author-page";
 import { propositionRoute } from "../../lib/proposition-utils";
 import { formatPresentedDate } from "../../lib/canonical";
@@ -82,10 +83,10 @@ export function PropositionRow({ item }: { item: ActivityProposition }) {
     return (
         <tr>
             <td>
-                <a href={propositionRoute(item.number_label) ?? "/atividade-legislativa"}>
+                <a href={propositionRoute(item.number_label, item.house) ?? "/atividade-legislativa"}>
                     {item.number_label}
                 </a>
-                <small>{item.house.toLowerCase().startsWith("sen") ? "Senado" : "Câmara"}</small>
+                <small>{formatHouseJourney(item.house, item.current_house, "short")}</small>
             </td>
             <td>
                 <Author item={item} />
@@ -101,7 +102,7 @@ export function PropositionRow({ item }: { item: ActivityProposition }) {
                 {item.assessment_comments && (
                     <a
                         className="tw:block tw:mt-1 tw:text-accent tw:text-xs"
-                        href={propositionRoute(item.number_label) ?? "/atividade-legislativa"}
+                        href={propositionRoute(item.number_label, item.house) ?? "/atividade-legislativa"}
                     >
                         Ler comentários
                     </a>
@@ -149,10 +150,10 @@ export function PropositionCard({ item }: { item: ActivityProposition }) {
             ">
             <header>
                 <div>
-                    <a href={propositionRoute(item.number_label) ?? "/atividade-legislativa"}>
+                    <a href={propositionRoute(item.number_label, item.house) ?? "/atividade-legislativa"}>
                         {item.number_label}
                     </a>
-                    <small>{item.house.toLowerCase().startsWith("sen") ? "Senado" : "Câmara"}</small>
+                    <small>{formatHouseJourney(item.house, item.current_house, "short")}</small>
                 </div>
                 <Stance item={item} />
             </header>

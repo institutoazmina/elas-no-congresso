@@ -13,6 +13,7 @@ import { authorRoute, normalizePhotoUrl } from "../../../lib/author-page";
 import { propositionSlug } from "../../../lib/proposition-utils";
 import { formatPresentedDate } from "../../../lib/canonical";
 import { fetchActivity, fetchFastUnfavorable, type ActivityProposition } from "../../../lib/activity-api";
+import { formatHouseJourney } from "../../../lib/house-labels";
 import { API_BASE_URL } from "astro:env/server";
 
 export async function getStaticPaths() {
@@ -55,12 +56,7 @@ const authors = activity.authors.map((author) => ({
   photo: author.photo_url,
 }));
 const assessment = activity.is_favorable === true ? "Favorável" : activity.is_favorable === false ? "Desfavorável" : "Sem avaliação";
-const house = /sen/i.test(activity.house)
-  ? "Senado Federal"
-  : /dep|câm|cam/i.test(activity.house)
-    ? "Câmara dos Deputados"
-    : activity.house?.trim() || "Indisponível";
-const activityHouse = activity.house === "senado" ? "senado" : activity.house === "camara" ? "camara" : "";
+const houseJourney = formatHouseJourney(activity.house, activity.current_house, "full");
 const officialLink = activity.tramitation_url?.trim().replace(/^http:/, "https:") || null;
 const category = activity.category_label?.trim() || activity.category?.trim() || null;
 const presentedDate = formatPresentedDate(activity.presented_at);
@@ -143,7 +139,7 @@ const description = `Consulte a ementa, a autoria e a tramitação do ${activity
                 <p>
                   <span class="tw:block tw:text-muted tw:text-sm tw:leading-4">Data de apresentação:</span>
                   {presentedDate}<br />
-                  {house}
+                  {houseJourney}
                 </p>
                 <p>
                   <span class="tw:block tw:text-muted tw:text-sm tw:leading-4">Última movimentação:</span>
@@ -157,6 +153,6 @@ const description = `Consulte a ementa, a autoria e a tramitação do ${activity
           </div>
         </section>
 
-        <PropositionProgress number={activity.number_label} house={activityHouse} client:visible={{ rootMargin: "240px" }} />
+        <PropositionProgress number={activity.number_label} house={activity.house} client:visible={{ rootMargin: "240px" }} />
       </main>
 </PageLayout>

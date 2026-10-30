@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import type { ActivityProposition } from "../../lib/activity-api";
+import type { ActivityProposition, House } from "../../lib/activity-api";
 import { clientApiBase } from "../../lib/client-api";
+import { HOUSE_LABELS } from "../../lib/house-labels";
 const formatEventDate = (value: string) =>
     new Intl.DateTimeFormat("pt-BR", {
         day: "2-digit",
@@ -8,7 +9,7 @@ const formatEventDate = (value: string) =>
         year: "2-digit",
         timeZone: "UTC",
     }).format(new Date(value));
-export default function PropositionProgress({ number, house }: { number: string; house: string }) {
+export default function PropositionProgress({ number, house }: { number: string; house: House }) {
     const [activity, setActivity] = useState<ActivityProposition | null>(null);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
@@ -95,6 +96,8 @@ export default function PropositionProgress({ number, house }: { number: string;
                             >
                                 <header>
                                     <strong>
+                                        {event.source_house &&
+                                            `${HOUSE_LABELS[event.source_house].short} · `}
                                         {event.title || event.situation || "Movimentação legislativa"}
                                     </strong>
                                     <time dateTime={event.event_at}>{formatEventDate(event.event_at)}</time>
