@@ -2,14 +2,19 @@ import { useEffect, useState } from "react";
 import type { AlertProposition } from "../../service/api/alerts";
 import { clientApiBase, SEARCH_MAX_LENGTH } from "../../lib/client-api";
 import {
+    buildAlertsQueryUrl,
     parseAlertsQueryState,
-    updateAlertsQueryState,
-    onAlertsQueryStateChange,
     type AlertsQueryState,
 } from "../../lib/alerts/query-state";
+import { useUrlQueryState, type UrlQueryStateCodec } from "../../hooks/useUrlQueryState";
 import AlertCard from "./AlertCard";
 import AlertsSortSelect from "./AlertsSortSelect";
 const pageSize = 5;
+const alertsQueryCodec: UrlQueryStateCodec<AlertsQueryState> = {
+    defaultValue: { q: "", page: 1, sort: "newest" },
+    parse: parseAlertsQueryState,
+    buildUrl: buildAlertsQueryUrl,
+};
 const formatDate = (date: string) => date.split("-").reverse().join("/");
 export default function AlertsList({
     propositions,
@@ -18,7 +23,7 @@ export default function AlertsList({
     propositions: AlertProposition[];
     total: number;
 }) {
-    const [state, setState] = useState<AlertsQueryState>({ q: "", page: 1, sort: "newest" });
+    const [state, setState, { ready }] = useUrlQueryState(alertsQueryCodec);
     const [draft, setDraft] = useState("");
     const [items, setItems] = useState(propositions.slice(0, pageSize));
     const [count, setCount] = useState(total);
@@ -26,18 +31,13 @@ export default function AlertsList({
     const [error, setError] = useState(false);
     const pageCount = Math.ceil(count / pageSize);
     useEffect(() => {
-        const sync = (next: AlertsQueryState) => {
-            setState(next);
-            setDraft(next.q);
-        };
-        sync(parseAlertsQueryState(location.href));
-        return onAlertsQueryStateChange(sync);
-    }, []);
+        setDraft(state.q);
+    }, [state.q]);
     function navigate(next: AlertsQueryState) {
-        setState(next);
-        updateAlertsQueryState(next, "push");
+        setState(next, { history: "push" });
     }
     useEffect(() => {
+        if (!ready) return;
         const controller = new AbortController();
         setError(false);
         if (!state.q && state.sort === "newest" && state.page === 1) {
@@ -74,8 +74,7 @@ export default function AlertsList({
                     const last = Math.max(1, Math.ceil(data.count / pageSize));
                     if (state.page > last) {
                         const next = { ...state, page: last };
-                        setState(next);
-                        updateAlertsQueryState(next, "replace");
+                        setState(next, { history: "replace" });
                         return;
                     }
                     setCount(data.count);
@@ -98,7 +97,7 @@ export default function AlertsList({
                 if (!controller.signal.aborted) setLoading(false);
             });
         return () => controller.abort();
-    }, [state, propositions, total]);
+    }, [ready, setState, state, propositions, total]);
     return (
         <>
             <div className="alerts-toolbar tw:items-center tw:flex tw:gap-4 tw:h-14 tw:w-204 tw:max-[941px]:w-full tw:max-md:block tw:max-md:h-14 tw:max-md:[&_>_.alerts-sort-island]:hidden">

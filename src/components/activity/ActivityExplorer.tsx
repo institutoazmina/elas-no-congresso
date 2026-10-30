@@ -53,6 +53,14 @@ import { DashboardRows, PropositionCard, PropositionRow } from "./ActivityResult
 import InfoPopover from "../shared/InfoPopover";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { useDialogFocus } from "../../hooks/useDialogFocus";
+import { useUrlQueryState, type UrlQueryStateCodec } from "../../hooks/useUrlQueryState";
+import {
+    ACTIVITY_PAGE_SIZES,
+    buildActivityPaginationUrl,
+    defaultActivityPagination,
+    parseActivityPagination,
+    type ActivityPaginationState,
+} from "../../lib/activity-query-state";
 const formatNumber = new Intl.NumberFormat("pt-BR");
 type Filters = {
     search: string;
@@ -87,10 +95,14 @@ const emptyFilters: Filters = {
     evaluator: [],
 };
 const defaultControls = {
-    items: "10",
     party_sort: DEFAULT_DASHBOARD_ORDER,
     author_sort: DEFAULT_DASHBOARD_ORDER,
     author_minimum: String(MIN_PROPOSITIONS_PER_PARLIAMENTARIAN),
+};
+const activityPaginationCodec: UrlQueryStateCodec<ActivityPaginationState> = {
+    defaultValue: defaultActivityPagination,
+    parse: parseActivityPagination,
+    buildUrl: buildActivityPaginationUrl,
 };
 export default function ActivityExplorer() {
     const rootRef = useRef<HTMLElement>(null);
@@ -99,7 +111,7 @@ export default function ActivityExplorer() {
     const panelSnapshot = useRef(emptyFilters);
     const [applied, setApplied] = useState(emptyFilters);
     const [settings, setSettings] = useState(defaultControls);
-    const [page, setPage] = useState(1);
+    const [pagination, setPagination, { ready: paginationReady }] = useUrlQueryState(activityPaginationCodec);
     const [sort, setSort] = useState("updated");
     const [direction, setDirection] = useState<"ascending" | "descending">("descending");
     const [panelOpen, setPanelOpen] = useState(false);
@@ -110,19 +122,19 @@ export default function ActivityExplorer() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [retry, setRetry] = useState(0);
-    const [customPageSize, setCustomPageSize] = useState(false);
     const mobile = useMediaQuery("(max-width: 767px)");
+    const pageSize = pagination.pageSize ?? (mobile ? MOBILE_ITEMS_PER_PAGE : 10);
     const controls = {
         ...filters,
         ...settings,
-        items: customPageSize ? settings.items : mobile ? String(MOBILE_ITEMS_PER_PAGE) : "10",
+        items: String(pageSize),
     };
     const params = new URLSearchParams();
     for (const [name, selected] of Object.entries(applied)) {
         if (Array.isArray(selected)) selected.forEach((value) => params.append(name, value));
         else if (selected) params.set(name, selected);
     }
-    params.set("page", String(page));
+    params.set("page", String(pagination.page));
     params.set("page_size", controls.items);
     params.set("sort", sort);
     params.set("direction", direction);
@@ -130,6 +142,7 @@ export default function ActivityExplorer() {
         params.set(name, settings[name]);
     const query = params.toString();
     useEffect(() => {
+        if (!paginationReady) return;
         const controller = new AbortController();
         setLoading(true);
         setError(false);
@@ -139,7 +152,11 @@ export default function ActivityExplorer() {
                 return response.json();
             })
             .then((result: ActivityExplorerResponse) => {
-                if (!controller.signal.aborted) setExplorer(result);
+                if (controller.signal.aborted) return;
+                setExplorer(result);
+                if (result.page !== pagination.page) {
+                    setPagination({ ...pagination, page: result.page }, { history: "replace" });
+                }
             })
             .catch(() => {
                 if (!controller.signal.aborted) setError(true);
@@ -148,27 +165,31 @@ export default function ActivityExplorer() {
                 if (!controller.signal.aborted) setLoading(false);
             });
         return () => controller.abort();
-    }, [query, retry]);
+    }, [pagination, paginationReady, query, retry, setPagination]);
     useEffect(() => {
         if (mobile || panelOpen || filters.search === applied.search) return;
         const timeout = setTimeout(() => {
             setApplied(filters);
-            setPage(1);
+            setPagination({ ...pagination, page: 1 }, { history: "replace" });
         }, 250);
         return () => clearTimeout(timeout);
     }, [filters, applied.search, mobile, panelOpen]);
     function change(name: string, value: string | string[]) {
+        if (name === "items") {
+            const nextPageSize = Number(value) as ActivityPaginationState["pageSize"];
+            setPagination({ page: 1, pageSize: nextPageSize }, { history: "push" });
+            return;
+        }
         if (name in settings) {
             setSettings((previous) => ({ ...previous, [name]: value }));
-            if (name === "items") setCustomPageSize(true);
-            setPage(1);
+            setPagination({ ...pagination, page: 1 }, { history: "replace" });
             return;
         }
         const next = { ...filters, [name]: value };
         setFilters(next);
         if (!panelOpen && name !== "search") {
             setApplied(next);
-            setPage(1);
+            setPagination({ ...pagination, page: 1 }, { history: "replace" });
         }
     }
     function changeRange(start: string, end: string) {
@@ -176,19 +197,19 @@ export default function ActivityExplorer() {
         setFilters(next);
         if (!panelOpen) {
             setApplied(next);
-            setPage(1);
+            setPagination({ ...pagination, page: 1 }, { history: "replace" });
         }
     }
     function apply() {
         setApplied(filters);
-        setPage(1);
+        setPagination({ ...pagination, page: 1 }, { history: "replace" });
         setPanelOpen(false);
     }
     function reset() {
         setFilters(emptyFilters);
         setApplied(emptyFilters);
-        setSettings((previous) => ({ ...defaultControls, items: previous.items }));
-        setPage(1);
+        setSettings(defaultControls);
+        setPagination({ ...pagination, page: 1 }, { history: "replace" });
         setPanelOpen(false);
     }
     function openPanel(expanded: boolean) {
@@ -204,10 +225,13 @@ export default function ActivityExplorer() {
     function sortBy(next: string) {
         setDirection(sort === next && direction === "descending" ? "ascending" : "descending");
         setSort(next);
-        setPage(1);
+        setPagination({ ...pagination, page: 1 }, { history: "replace" });
     }
     function changePage(delta: number) {
-        setPage((explorer?.page ?? page) + delta);
+        setPagination(
+            { page: (explorer?.page ?? pagination.page) + delta, pageSize },
+            { history: "push" },
+        );
         rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
     function mapLabel(uf: string) {
@@ -1353,7 +1377,7 @@ export default function ActivityExplorer() {
                         value={String(controls.items ?? "")}
                         onChange={(value) => change("items", value)}
                         label="Itens por página"
-                        options={[5, 10, 20, 50].map((value) => ({
+                        options={ACTIVITY_PAGE_SIZES.map((value) => ({
                             value: String(value),
                             label: String(value),
                         }))}

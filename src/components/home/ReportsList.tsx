@@ -3,36 +3,28 @@ import NewsCard from "../shared/NewsCard";
 import { fetchNewsPage, type WpPost } from "../../lib/wp";
 import { RECENT_REPORT_COUNT } from "./RecentReports";
 import ReportsPagination from "./ReportsPagination";
+import { useUrlQueryState, type UrlQueryStateCodec } from "../../hooks/useUrlQueryState";
+import { buildReportsPageUrl, parseReportsPage } from "../../lib/reports-query-state";
 const POSTS_PER_PAGE = 9;
+const reportsPageCodec: UrlQueryStateCodec<number> = {
+    defaultValue: 1,
+    parse: parseReportsPage,
+    buildUrl: buildReportsPageUrl,
+};
 
 export default function ReportsList() {
     const [posts, setPosts] = useState<WpPost[]>([]);
     // Unknown until the first response arrives.
     const [allPostsTotalPages, setTotalPages] = useState(0);
-    const [page, setPage] = useState(1);
+    const [page, setPage, { ready }] = useUrlQueryState(reportsPageCodec);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [retry, setRetry] = useState(0);
-    useEffect(() => {
-        const read = () => {
-            const value = Number(new URLSearchParams(location.search).get("pagina"));
-            setPage(Number.isInteger(value) && value > 0 ? value : 1);
-        };
-        read();
-        window.addEventListener("popstate", read);
-        return () => window.removeEventListener("popstate", read);
-    }, []);
     function navigate(next: number) {
-        setPage(next);
-        const url = new URL(location.href);
-        if (next === 1) {
-            url.searchParams.delete("pagina");
-        } else {
-            url.searchParams.set("pagina", String(next));
-        }
-        history.pushState({}, "", url);
+        setPage(next, { history: "push" });
     }
     useEffect(() => {
+        if (!ready) return;
         const controller = new AbortController();
         setError(false);
         setLoading(true);
@@ -53,7 +45,7 @@ export default function ReportsList() {
             setTotalPages(Math.ceil(Math.max(result.total - RECENT_REPORT_COUNT, 0) / POSTS_PER_PAGE));
         });
         return () => controller.abort();
-    }, [page, retry]);
+    }, [page, ready, retry]);
     return (
         <section
             className="tw:pt-16 tw:pb-21.5 tw:md:pt-18 tw:md:pb-0"
