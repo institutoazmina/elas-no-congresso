@@ -96,7 +96,7 @@ export default function PropositionProgress({ number, house }: { number: string;
                             >
                                 <header>
                                     <strong>
-                                        {activity.current_house && activity.current_house !== house && event.source_house &&
+                                        {event.source_house &&
                                             `${HOUSE_LABELS[event.source_house].short} · `}
                                         {event.title || event.situation || "Movimentação legislativa"}
                                     </strong>
