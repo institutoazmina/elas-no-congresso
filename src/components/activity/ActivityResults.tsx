@@ -7,6 +7,14 @@ import thumbsUp from "../../assets/images/activity/thumbs-up.svg";
 import thumbsDown from "../../assets/images/activity/thumbs-down.svg";
 
 const number = new Intl.NumberFormat("pt-BR");
+const HOUSE_LABELS: Record<string, string> = { camara: "Câmara", senado: "Senado" };
+
+function HouseLabel({ item }: { item: ActivityProposition }) {
+    const origin = HOUSE_LABELS[item.house] ?? item.house;
+    const current = item.current_house ? HOUSE_LABELS[item.current_house] ?? item.current_house : origin;
+    return <small>{current !== origin ? `${origin} → ${current}` : origin}</small>;
+}
+
 function Stance({ item }: { item: ActivityProposition }) {
     const stance = item.is_favorable === null ? "neutral" : item.is_favorable ? "favorable" : "unfavorable";
     return (
@@ -85,7 +93,7 @@ export function PropositionRow({ item }: { item: ActivityProposition }) {
                 <a href={propositionRoute(item.number_label, item.house) ?? "/atividade-legislativa"}>
                     {item.number_label}
                 </a>
-                <small>{item.current_house === "senado" && item.house === "camara" ? "Câmara → Senado" : item.house.toLowerCase().startsWith("sen") ? "Senado" : "Câmara"}</small>
+                <HouseLabel item={item} />
             </td>
             <td>
                 <Author item={item} />
@@ -152,7 +160,7 @@ export function PropositionCard({ item }: { item: ActivityProposition }) {
                     <a href={propositionRoute(item.number_label, item.house) ?? "/atividade-legislativa"}>
                         {item.number_label}
                     </a>
-                    <small>{item.current_house === "senado" && item.house === "camara" ? "Câmara → Senado" : item.house.toLowerCase().startsWith("sen") ? "Senado" : "Câmara"}</small>
+                    <HouseLabel item={item} />
                 </div>
                 <Stance item={item} />
             </header>

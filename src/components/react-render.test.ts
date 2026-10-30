@@ -108,6 +108,13 @@ test("API text is escaped in desktop and mobile proposition results", () => {
     }
 });
 
+test("both proposition views label original and current houses", () => {
+    for (const name of ["PropositionRow", "PropositionCard"]) {
+        assert.ok(render(1, { item: { ...proposal, current_house: "senado" } }, name).includes("Câmara → Senado"));
+        assert.ok(render(1, { item: { ...proposal, house: "senado" } }, name).includes("Senado"));
+    }
+});
+
 test("author proposals render on the server with the API pace, including the desktop table", () => {
     const activity = buildAuthorActivityFromApi([proposal], 1)!;
     const initial: AuthorInitialData = {
