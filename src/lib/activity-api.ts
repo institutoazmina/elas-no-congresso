@@ -24,6 +24,12 @@ type ActivityEvent = {
   source_house?: House | null;
 };
 
+type ActivityAssessment = {
+  organization: string;
+  is_favorable: boolean | null;
+  comments: string | null;
+};
+
 export type ActivityProposition = {
   id: number;
   house: House;
@@ -39,6 +45,7 @@ export type ActivityProposition = {
   is_favorable: boolean | null;
   assessment_organization: string | null;
   assessment_comments: string | null;
+  assessments?: ActivityAssessment[];
   relevance: string | null;
   authors: ActivityAuthor[];
   celerity: {
