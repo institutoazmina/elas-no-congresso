@@ -1,11 +1,9 @@
 ---
 import PropositionProgress from "../../../components/activity/PropositionProgress";
+import AssessmentCarousel from "../../../components/activity/AssessmentCarousel";
 import BackLink from "../../../components/shared/BackLink";
 import { Photo } from "../../../components/shared/react-utils";
-import { Image } from "astro:assets";
 import PageLayout from "../../../layouts/PageLayout.astro";
-import thumbsUp from "../../../assets/images/activity/thumbs-up.svg";
-import thumbsDown from "../../../assets/images/activity/thumbs-down.svg";
 import paper from "../../../assets/images/activity/author-hero-paper.png";
 import paperclip from "../../../assets/images/activity/author-paperclip.png";
 import statusLabel from "../../../assets/images/activity/proposition-status-label.svg";
@@ -55,7 +53,6 @@ const authors = activity.authors.map((author) => ({
   state: author.state,
   photo: author.photo_url,
 }));
-const assessment = activity.is_favorable === true ? "Favorável" : activity.is_favorable === false ? "Desfavorável" : "Sem avaliação";
 const houseJourney = formatHouseJourney(activity.house, activity.current_house, "full");
 const officialLink = activity.tramitation_url?.trim().replace(/^http:/, "https:") || null;
 const category = activity.category_label?.trim() || activity.category?.trim() || null;
@@ -93,20 +90,7 @@ const description = `Consulte a ementa, a autoria e a tramitação do ${activity
 
             <article class="proposition-column proposition-assessment tw:min-w-0 tw:max-md:[&_h2]:mb-5 tw:max-md:[&_h2]:text-[28px] tw:max-md:[&_h2]:leading-8 tw:pt-[4px]" aria-label="Avaliação da proposição">
               <h2 class="tw:text-ink tw:font-display tw:text-[32px] tw:font-bold tw:[font-variation-settings:'wdth'_75] tw:leading-8 tw:[text-box-edge:cap_alphabetic] tw:[text-box-trim:trim-both] tw:uppercase tw:mt-0 tw:mb-[24px] tw:mx-0">Avaliação</h2>
-              <div class:list={[
-                "proposition-assessment__value tw:flex tw:min-h-8 tw:items-center tw:gap-2 tw:text-ink tw:[&_img]:block tw:[&_img]:w-8 tw:[&_img]:h-8 tw:[&_strong]:font-display tw:[&_strong]:text-lg tw:[&_strong]:font-bold tw:[&_strong]:[font-variation-settings:'wdth'_75] tw:[&_strong]:leading-6 tw:[&_strong]:uppercase",
-                { "is-favorable": assessment === "Favorável", "is-unfavorable": assessment === "Desfavorável", [String.raw`is-unrated tw:[.proposition-assessment\_\_value&]:text-muted tw:[.activity-table\_\_stance&]:text-muted tw:[.author-table\_\_stance&]:text-muted`]: assessment === "Sem avaliação" },
-              ]}>
-                {assessment === "Favorável" && <Image src={thumbsUp} alt="" loading="eager" />}
-                {assessment === "Desfavorável" && <Image src={thumbsDown} alt="" loading="eager" />}
-                <strong>{assessment}</strong>
-              </div>
-              <p class="proposition-assessment__comment tw:text-ink tw:text-lg tw:leading-6 tw:mt-4 tw:mb-0 tw:mr-2 tw:ml-0">
-                {activity.assessment_comments ? `“${activity.assessment_comments}”` : "Indisponível"}
-              </p>
-              <p class="proposition-assessment__evaluator tw:text-ink tw:text-lg tw:leading-6 tw:mt-4 tw:mb-0 tw:mr-2 tw:ml-0">
-                <span aria-hidden="true">— </span><strong>{activity.assessment_organization?.trim() || "Indisponível"}</strong>
-              </p>
+              <AssessmentCarousel activity={activity} client:load />
             </article>
 
             <article class="proposition-column proposition-authors tw:min-w-0 tw:max-md:[&_h2]:mb-5 tw:max-md:[&_h2]:text-[28px] tw:max-md:[&_h2]:leading-8" aria-labelledby="proposition-authors-title">

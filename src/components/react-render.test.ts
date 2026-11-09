@@ -25,6 +25,7 @@ const components = [
     "home/ReportsList",
     "layout/Header",
     "charts/Paperwork",
+    "activity/AssessmentCarousel",
 ];
 const bundle = await build({
     stdin: {
@@ -98,6 +99,33 @@ const proposal: ActivityProposition = {
     celerity: { label: "Rápida", days_without_movement: 2, movements_last_90_days: 7 },
     events: [],
 };
+
+test("assessment carousel renders every evaluator, including unrated comments, and escapes text", () => {
+    const html = render(13, { activity: { ...proposal, assessments: [
+        { organization: "AzMina", is_favorable: false, comments: '<script>alert("x")</script>' },
+        { organization: "Parceira", is_favorable: true, comments: "Proteção ampliada" },
+        { organization: "Terceira organização", is_favorable: null, comments: "Em análise" },
+        { organization: "QuitérIA", is_favorable: true, comments: null },
+    ] } });
+    for (const text of ["AzMina", "Parceira", "Terceira organização", "QuitérIA", "Em análise", "Sem avaliação", "Comentário não informado.", "Próxima avaliação", "Avaliação anterior"]) {
+        assert.ok(html.includes(text), text);
+    }
+    assert.ok(html.includes("&lt;script&gt;"));
+    assert.ok(!html.includes("<script>"));
+    assert.equal((html.match(/hidden=""/g) || []).length, 3);
+});
+
+test("assessment carousel handles empty, single and legacy assessments without navigation", () => {
+    const empty = render(13, { activity: { ...proposal, assessments: [] } });
+    assert.ok(empty.includes("Sem avaliação"));
+    assert.ok(!empty.includes("Próxima avaliação"));
+    const single = render(13, { activity: { ...proposal, assessments: [{ organization: "QuitérIA", is_favorable: true, comments: "" }] } });
+    assert.ok(single.includes("QuitérIA"));
+    assert.ok(!single.includes("Próxima avaliação"));
+    const legacy = render(13, { activity: proposal });
+    assert.ok(legacy.includes("Parecer"));
+    assert.ok(!legacy.includes("Próxima avaliação"));
+});
 
 test("API text is escaped in desktop and mobile proposition results", () => {
     for (const name of ["PropositionRow", "PropositionCard"]) {
