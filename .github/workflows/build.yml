@@ -63,7 +63,22 @@ jobs:
         run: npm run check
 
       - name: Build
-        run: npm run build
+        # API outages can outlast the per-request retries during static generation.
+        shell: bash
+        run: |
+          for attempt in 1 2 3; do
+            echo "Build attempt ${attempt}/3"
+            if npm run build; then
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              echo "::error::Build failed after 3 attempts"
+              exit 1
+            fi
+            delay=$((30 * attempt))
+            echo "::warning::Build failed; retrying in ${delay}s"
+            sleep "$delay"
+          done
         env:
           OG_IMAGE_BASE_URL: https://www.elasnocongresso.com.br
 
