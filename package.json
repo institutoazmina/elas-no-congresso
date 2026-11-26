@@ -24,7 +24,7 @@
         "@astrojs/sitemap": "3.7.4",
         "@base-ui/react": "^1.8.0",
         "@tailwindcss/vite": "^4.2.3",
-        "astro": "7.3.8",
+        "astro": "7.4.7",
         "markdown-it": "^15.0.3",
         "markdown-it-container": "^4.0.0",
         "react": "^19.3.0",
